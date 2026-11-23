@@ -2893,6 +2893,584 @@
       }
     }
 
+
+    /* =========================================
+       STAGE 1 NEW: BENTO COMMAND DECK + ANIME-DNA X-RAY
+       ========================================= */
+    .hero {
+      display: block;
+      text-align: left;
+      padding-top: 4px;
+    }
+
+    .bento-deck {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
+      width: 100%;
+    }
+
+    .bento-pilot {
+      grid-column: span 5;
+      grid-row: span 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+      gap: 12px;
+      padding: 22px 20px 20px;
+    }
+
+    .pilot-top-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: rgba(var(--light), 0.50);
+    }
+
+    .pilot-id-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pilot-id-tag::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgb(var(--bright));
+      box-shadow: 0 0 8px rgba(var(--bright), 0.9);
+    }
+
+    .bento-pilot .avatar-wrap {
+      width: 112px;
+      height: 112px;
+      margin: 2px 0 0;
+    }
+
+    .bento-pilot .hero-nick {
+      font-size: clamp(24px, 2.8vw, 31px);
+      margin-top: 2px;
+      line-height: 1.15;
+    }
+
+    .pilot-bio-line {
+      font-size: 12px;
+      color: rgba(var(--light), 0.72);
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95);
+      margin-top: -4px;
+    }
+
+    .bento-pilot .hero-badges {
+      margin-top: 0;
+      gap: 7px;
+    }
+
+    .bento-pilot .rank-badge {
+      padding: 5px 14px;
+      font-size: 10px;
+      letter-spacing: 1.8px;
+    }
+
+    .bento-pilot .solo-badge {
+      padding: 5px 12px;
+      font-size: 9.5px;
+      letter-spacing: 1.4px;
+    }
+
+    .pilot-socials {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 7px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(var(--bright), 0.12);
+    }
+
+    .pilot-socials .social-pill {
+      font-size: 11.5px;
+      padding: 4px 10px;
+    }
+
+    .bento-discord-slot {
+      grid-column: span 7;
+      display: flex;
+    }
+
+    .bento-discord-slot .discord-card {
+      max-width: none;
+      width: 100%;
+      margin-top: 0;
+      padding: 14px 18px;
+      border-radius: var(--radius-lg);
+      background: var(--glass-bg);
+      border-color: var(--glass-border);
+    }
+
+    .bento-discord-slot .discord-card.is-spotify {
+      border-color: rgba(110, 231, 183, 0.38);
+    }
+
+    .bento-telemetry {
+      grid-column: span 7;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 20px 22px;
+    }
+
+    .bento-telemetry .progress-track {
+      margin: 12px 0;
+    }
+
+    .telemetry-footer {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 14px 18px;
+      padding-top: 13px;
+      border-top: 1px solid rgba(var(--bright), 0.14);
+    }
+
+    .telemetry-manga-compact {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .telemetry-manga-compact .manga-stat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(6, 8, 13, 0.62);
+      border: 1px solid rgba(var(--bright), 0.20);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: rgba(var(--light), 0.78);
+    }
+
+    .telemetry-manga-compact .manga-stat-chip b {
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .telemetry-lifetime-compact {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .telemetry-lifetime-compact .lifetime-head {
+      margin-bottom: 0;
+      font-size: 11.5px;
+    }
+
+    .telemetry-lifetime-compact .milestones {
+      gap: 4px;
+    }
+
+    .telemetry-lifetime-compact .milestone {
+      flex-direction: row;
+      justify-content: center;
+      gap: 4px;
+      font-size: 9.5px;
+    }
+
+    .telemetry-lifetime-compact .milestone .ms-dot {
+      width: 14px;
+      height: 14px;
+      font-size: 8px;
+    }
+
+    /* =========================================
+       TILE 4: ANIME-DNA // TASTE X-RAY
+       ========================================= */
+    .bento-dna {
+      grid-column: span 12;
+      padding: 20px 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .dna-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .dna-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .dna-pulse-icon {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgb(var(--bright));
+      box-shadow: 0 0 12px rgba(var(--bright), 0.95);
+    }
+
+    .dna-sub-note {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: rgba(var(--light), 0.52);
+    }
+
+    .dna-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 1.05fr 1.17fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .dna-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 13px;
+      background: rgba(6, 8, 13, 0.50);
+      border: 1px solid rgba(var(--bright), 0.14);
+      min-width: 0;
+    }
+
+    .dna-col-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .dna-col-label {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: rgba(var(--light), 0.58);
+    }
+
+    .dna-col-pill {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: rgb(232, 238, 248);
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(var(--bright), 0.12);
+      border: 1px solid rgba(var(--bright), 0.24);
+      white-space: nowrap;
+    }
+
+    /* Col 1: Archetype + 2x2 KPI */
+    .dna-archetype-box {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(var(--bright), 0.12), rgba(10, 13, 20, 0.65));
+      border: 1px solid rgba(var(--bright), 0.26);
+    }
+
+    .dna-archetype-name {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.25;
+      text-shadow: 0 0 14px rgba(var(--bright), 0.35);
+    }
+
+    .dna-archetype-desc {
+      font-size: 11.5px;
+      color: rgba(var(--light), 0.72);
+      margin-top: 3px;
+      line-height: 1.38;
+    }
+
+    .dna-kpis {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .dna-kpi {
+      padding: 8px 10px;
+      border-radius: 9px;
+      background: rgba(9, 12, 19, 0.66);
+      border: 1px solid rgba(var(--bright), 0.13);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: border-color 0.22s ease, transform 0.2s ease;
+    }
+
+    .dna-kpi:hover {
+      border-color: rgba(var(--bright), 0.45);
+      transform: translateY(-1px);
+    }
+
+    .dna-kpi-lbl {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: rgba(var(--light), 0.54);
+    }
+
+    .dna-kpi-val {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .dna-kpi-sub {
+      font-size: 10px;
+      color: rgba(var(--light), 0.60);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Col 2: Score Distribution Histogram 1..10 */
+    .dna-scores-chart {
+      flex: 1;
+      min-height: 128px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 5px;
+      padding-top: 8px;
+    }
+
+    .dna-score-col {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .dna-score-val {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      color: rgba(var(--light), 0.54);
+      line-height: 1;
+      transition: color 0.2s ease;
+    }
+
+    .dna-score-track {
+      width: 100%;
+      height: 86px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .dna-score-bar {
+      width: 82%;
+      min-height: 4px;
+      border-radius: 5px 5px 2px 2px;
+      background: linear-gradient(to top, rgba(var(--accent-dark), 0.72), rgba(var(--bright), 0.75));
+      transition: height 0.7s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .dna-score-col.is-elite .dna-score-bar {
+      background: linear-gradient(to top, rgba(var(--bright), 0.85), #ffffff);
+      box-shadow: 0 0 12px rgba(var(--bright), 0.45);
+    }
+
+    .dna-scores-chart:has(.dna-score-col:hover) .dna-score-col:not(:hover) .dna-score-bar {
+      opacity: 0.38;
+    }
+
+    .dna-score-col:hover .dna-score-bar,
+    .dna-score-col.is-active .dna-score-bar {
+      background: linear-gradient(to top, rgba(var(--bright), 0.98), #ffffff);
+      box-shadow: 0 0 16px rgba(var(--bright), 0.75);
+    }
+
+    .dna-score-col:hover .dna-score-val,
+    .dna-score-col.is-active .dna-score-val,
+    .dna-score-col:hover .dna-score-num,
+    .dna-score-col.is-active .dna-score-num {
+      color: #fff;
+    }
+
+    .dna-score-num {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: rgba(var(--light), 0.62);
+      transition: color 0.2s ease;
+    }
+
+    .dna-score-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(var(--bright), 0.10);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: rgba(var(--light), 0.62);
+    }
+
+    .dna-score-foot strong {
+      color: #fff;
+    }
+
+    /* Col 3: Switchable X-Ray (Genres / Studios / Eras) */
+    .dna-tabs {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(10, 13, 20, 0.72);
+      border: 1px solid rgba(var(--bright), 0.18);
+      border-radius: 999px;
+      padding: 2px;
+    }
+
+    .dna-tab-btn {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 0;
+      background: transparent;
+      color: rgba(var(--light), 0.65);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.6px;
+      cursor: pointer;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .dna-tab-btn:hover {
+      color: #fff;
+    }
+
+    .dna-tab-btn.active {
+      color: #fff;
+      background: rgba(var(--bright), 0.24);
+      box-shadow: 0 0 10px rgba(var(--bright), 0.20);
+    }
+
+    .dna-bars-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .dna-bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .dna-bar-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11.5px;
+    }
+
+    .dna-bar-name {
+      color: rgb(232, 238, 248);
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dna-bar-stat {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(var(--light), 0.68);
+      white-space: nowrap;
+    }
+
+    .dna-bar-track {
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .dna-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(var(--bright), 0.65), #ffffff);
+      box-shadow: 0 0 10px rgba(var(--bright), 0.40);
+      transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .dna-format-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding-top: 8px;
+      border-top: 1px solid rgba(var(--bright), 0.10);
+    }
+
+    .dna-format-chip {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(12, 16, 24, 0.72);
+      border: 1px solid rgba(var(--bright), 0.18);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: rgba(var(--light), 0.76);
+    }
+
+    .dna-format-chip b {
+      color: #fff;
+      margin-left: 3px;
+    }
+
+    @media (max-width: 1020px) {
+      .bento-pilot,
+      .bento-discord-slot,
+      .bento-telemetry {
+        grid-column: span 12;
+        grid-row: auto;
+      }
+      .dna-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .telemetry-footer {
+        grid-template-columns: 1fr;
+      }
+    }
+
     /* =========================================
        NATIVE SVG ARROW CURSOR (MONOCHROME THEME)
        ========================================= */
@@ -2922,6 +3500,9 @@
       .intro-overlay,
       .social-pill,
       .spotify-tab,
+      .dna-score-col,
+      .dna-score-col *,
+      .dna-tab-btn,
       .mode-chip {
         cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23edf3ff%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%271.35%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M16.5%2015.2%20L19.8%2018.5%20L16.5%2021.8%20L13.2%2018.5%20Z%27%20fill%3D%27%23adbfde%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%270.9%27/%3E%3C/svg%3E") 3 2, pointer !important;
       }
@@ -3037,107 +3618,192 @@
     </header>
 
     <main class="container">
-      <!-- HERO & STATS -->
+      <!-- HERO BENTO COMMAND DECK & ANIME-DNA -->
       <section class="hero" id="profile">
-        <div class="avatar-wrap">
-          <div class="avatar-beat-ring" aria-hidden="true"></div>
-          <img
-            id="profile-avatar"
-            class="avatar-img"
-            src="https://shikimori.one/system/users/x160/1308586.png"
-            alt="undereror nyashka"
-          />
-        </div>
-        <h1 class="hero-nick" id="profile-nick">undereror nyashka</h1>
-        <div class="hero-meta">
-          <span id="profile-bio-meta">муж. · 20 лет · на сайте с 2023 г.</span>
-          <a class="social-pill" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">♪ TikTok @undexeror</a>
-          <a class="social-pill" id="shiki-profile-link" href="https://shikimori.one/undereror+nyashka" target="_blank" rel="noopener noreferrer">◈ Shikimori</a>
-          <a class="social-pill" href="https://github.com/undexerorrr" target="_blank" rel="noopener noreferrer">⌘ GitHub</a>
-          <button type="button" class="social-pill" id="hero-spotify-btn" style="font-family:inherit;">♫ Spotify</button>
-        </div>
-        <div class="hero-badges">
-          <span class="rank-badge" id="rank-badge">★ 400+ ТАЙТЛОВ · АНИМЕ ПСИХ</span>
-          <span class="solo-badge">SOLO PLAYER · ВНЕ ГИЛЬДИЙ</span>
-        </div>
+        <div class="bento-deck">
+          <!-- TILE 1: PILOT DOSSIER -->
+          <div class="glass-card bento-pilot">
+            <div class="pilot-top-bar">
+              <span class="pilot-id-tag">DOSSIER // 1308586</span>
+              <span>53.9° N · ARCHIVE</span>
+            </div>
 
-        <!-- Live Discord / Spotify Presence (Lanyard API) -->
-        <div class="discord-card" id="discord-card">
-          <div class="discord-art-wrap">
-            <img id="discord-art" class="discord-art is-round" src="https://shikimori.one/system/users/x160/1308586.png" alt="Discord" />
-            <span class="discord-status-badge offline" id="discord-status-dot" title="Статус Discord"></span>
-          </div>
-          <div class="discord-body">
-            <div class="discord-kicker">
-              <span id="discord-state-label">DISCORD · SYNCING</span>
-              <span id="discord-username"></span>
+            <div class="avatar-wrap">
+              <div class="avatar-beat-ring" aria-hidden="true"></div>
+              <img
+                id="profile-avatar"
+                class="avatar-img"
+                src="https://shikimori.one/system/users/x160/1308586.png"
+                alt="undereror nyashka"
+              />
             </div>
-            <div class="discord-main-title" id="discord-main-title">Подключение к Lanyard...</div>
-            <div class="discord-sub" id="discord-sub">Проверка онлайна, игр и Spotify</div>
-            <div class="spotify-progress" id="spotify-progress">
-              <span class="spotify-bar-time" id="sp-time-cur">0:00</span>
-              <div class="spotify-bar-track"><div class="spotify-bar-fill" id="sp-bar-fill"></div></div>
-              <span class="spotify-bar-time end" id="sp-time-end">0:00</span>
-            </div>
-          </div>
-          <div class="discord-actions">
-            <button type="button" class="spotify-open-pill" id="discord-spotify-btn">♫ Плейлисты</button>
-          </div>
-        </div>
 
-        <div class="stats-grid">
-          <!-- Anime List Stats -->
-          <div class="glass-card">
-            <div class="card-kicker">Список аниме</div>
-            <div class="stat-top">
-              <div>
-                <span class="stat-hero-val" id="anime-completed">415</span>
-                <span class="stat-hero-label">просмотрено</span>
-              </div>
-              <div class="stat-total">
-                Всего в списке
-                <strong id="anime-total">625</strong>
-              </div>
+            <div>
+              <h1 class="hero-nick" id="profile-nick">undereror nyashka</h1>
+              <div class="pilot-bio-line" id="profile-bio-meta">муж. · 20 лет · на сайте с 2023 г.</div>
             </div>
-            <div class="progress-track" id="anime-progress">
-              <div class="prog-seg prog-completed" style="width: 66.4%"></div>
-              <div class="prog-seg prog-watching" style="width: 2.6%"></div>
-              <div class="prog-seg prog-planned" style="width: 27.5%"></div>
-              <div class="prog-seg prog-other" style="width: 3.5%"></div>
+
+            <div class="hero-badges">
+              <span class="rank-badge" id="rank-badge">★ 400+ ТАЙТЛОВ · АНИМЕ ПСИХ</span>
+              <span class="solo-badge">SOLO PLAYER · ВНЕ ГИЛЬДИЙ</span>
             </div>
-            <div class="mini-stats">
-              <div class="mini-stat"><span class="lbl">Заплан.</span><span class="num" id="st-planned">172</span></div>
-              <div class="mini-stat"><span class="lbl">Смотрю</span><span class="num" id="st-watching">16</span></div>
-              <div class="mini-stat"><span class="lbl">Просм.</span><span class="num" id="st-completed">415</span></div>
-              <div class="mini-stat"><span class="lbl">Отлож.</span><span class="num" id="st-onhold">10</span></div>
-              <div class="mini-stat"><span class="lbl">Брошено</span><span class="num" id="st-dropped">12</span></div>
+
+            <div class="pilot-socials">
+              <a class="social-pill" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">♪ TikTok</a>
+              <a class="social-pill" id="shiki-profile-link" href="https://shikimori.one/undereror+nyashka" target="_blank" rel="noopener noreferrer">◈ Shikimori</a>
+              <a class="social-pill" href="https://github.com/undexerorrr" target="_blank" rel="noopener noreferrer">⌘ GitHub</a>
+              <button type="button" class="social-pill" id="hero-spotify-btn" style="font-family:inherit;">♫ Spotify</button>
             </div>
           </div>
 
-          <!-- Manga & Lifetime Stats -->
-          <div class="glass-card">
-            <div class="card-kicker">Список манги</div>
-            <div class="stat-top">
-              <div>
-                <span class="stat-hero-val" id="manga-completed">13</span>
-                <span class="stat-hero-label">прочитано</span>
+          <!-- TILE 2: LIVE DISCORD / SPOTIFY PRESENCE (LANYARD API) -->
+          <div class="bento-discord-slot">
+            <div class="discord-card" id="discord-card">
+              <div class="discord-art-wrap">
+                <img id="discord-art" class="discord-art is-round" src="https://shikimori.one/system/users/x160/1308586.png" alt="Discord" />
+                <span class="discord-status-badge offline" id="discord-status-dot" title="Статус Discord"></span>
               </div>
-              <div class="manga-pills">
-                <span class="manga-pill">Читаю <b id="manga-reading">5</b></span>
-                <span class="manga-pill">Прочитано <b id="manga-done-pill">13</b></span>
+              <div class="discord-body">
+                <div class="discord-kicker">
+                  <span id="discord-state-label">DISCORD · SYNCING</span>
+                  <span id="discord-username"></span>
+                </div>
+                <div class="discord-main-title" id="discord-main-title">Подключение к Lanyard...</div>
+                <div class="discord-sub" id="discord-sub">Проверка онлайна, игр и Spotify</div>
+                <div class="spotify-progress" id="spotify-progress">
+                  <span class="spotify-bar-time" id="sp-time-cur">0:00</span>
+                  <div class="spotify-bar-track"><div class="spotify-bar-fill" id="sp-bar-fill"></div></div>
+                  <span class="spotify-bar-time end" id="sp-time-end">0:00</span>
+                </div>
+              </div>
+              <div class="discord-actions">
+                <button type="button" class="spotify-open-pill" id="discord-spotify-btn">♫ Плейлисты</button>
               </div>
             </div>
-            <div class="lifetime-box">
-              <div class="lifetime-head">
-                <span class="lifetime-label">Время за аниме и мангой</span>
-                <span class="lifetime-val" id="lifetime-text">5 месяцев и 3 недели</span>
+          </div>
+
+          <!-- TILE 3: UNIFIED ANIME & MANGA TELEMETRY -->
+          <div class="glass-card bento-telemetry">
+            <div>
+              <div class="card-kicker">Телеметрия списков · Shikimori</div>
+              <div class="stat-top">
+                <div>
+                  <span class="stat-hero-val" id="anime-completed">415</span>
+                  <span class="stat-hero-label">просмотрено</span>
+                </div>
+                <div class="stat-total">
+                  Всего в списке
+                  <strong id="anime-total">625</strong>
+                </div>
               </div>
-              <div class="milestones" id="milestones-row">
-                <div class="milestone checked"><span class="ms-dot">✓</span><span>1 нед.</span></div>
-                <div class="milestone checked"><span class="ms-dot">✓</span><span>1 мес.</span></div>
-                <div class="milestone checked"><span class="ms-dot">✓</span><span>3 мес.</span></div>
-                <div class="milestone next"><span class="ms-dot">○</span><span>6 мес.</span></div>
-                <div class="milestone"><span class="ms-dot">○</span><span>1 год</span></div>
+              <div class="progress-track" id="anime-progress">
+                <div class="prog-seg prog-completed" style="width: 66.4%"></div>
+                <div class="prog-seg prog-watching" style="width: 2.6%"></div>
+                <div class="prog-seg prog-planned" style="width: 27.5%"></div>
+                <div class="prog-seg prog-other" style="width: 3.5%"></div>
+              </div>
+              <div class="mini-stats">
+                <div class="mini-stat"><span class="lbl">Заплан.</span><span class="num" id="st-planned">172</span></div>
+                <div class="mini-stat"><span class="lbl">Смотрю</span><span class="num" id="st-watching">16</span></div>
+                <div class="mini-stat"><span class="lbl">Просм.</span><span class="num" id="st-completed">415</span></div>
+                <div class="mini-stat"><span class="lbl">Отлож.</span><span class="num" id="st-onhold">10</span></div>
+                <div class="mini-stat"><span class="lbl">Брошено</span><span class="num" id="st-dropped">12</span></div>
+              </div>
+            </div>
+
+            <div class="telemetry-footer">
+              <div class="telemetry-manga-compact">
+                <span class="manga-stat-chip">Манга <b id="manga-completed">13</b></span>
+                <span class="manga-stat-chip">Читаю <b id="manga-reading">5</b></span>
+                <span id="manga-done-pill" style="display:none;">13</span>
+              </div>
+              <div class="telemetry-lifetime-compact">
+                <div class="lifetime-head">
+                  <span class="lifetime-label">Время в тайтлах</span>
+                  <span class="lifetime-val" id="lifetime-text">5 месяцев и 3 недели</span>
+                </div>
+                <div class="milestones" id="milestones-row">
+                  <div class="milestone checked"><span class="ms-dot">✓</span><span>1н</span></div>
+                  <div class="milestone checked"><span class="ms-dot">✓</span><span>1м</span></div>
+                  <div class="milestone checked"><span class="ms-dot">✓</span><span>3м</span></div>
+                  <div class="milestone next"><span class="ms-dot">○</span><span>6м</span></div>
+                  <div class="milestone"><span class="ms-dot">○</span><span>1г</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TILE 4: ANIME-DNA // TASTE X-RAY -->
+          <div class="glass-card bento-dna" id="anime-dna-card">
+            <div class="dna-header">
+              <div class="dna-title-wrap">
+                <span class="dna-pulse-icon" aria-hidden="true"></span>
+                <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.4px;">Аниме-ДНК // Рентген вкуса</span>
+                <span class="dna-sub-note" id="dna-sub-note">Автоанализ всех просмотренных тайтлов</span>
+              </div>
+              <span class="panel-badge" id="dna-source-badge">SNAPSHOT</span>
+            </div>
+
+            <div class="dna-grid">
+              <!-- Col 1: Archetype & Core KPIs -->
+              <div class="dna-col">
+                <div class="dna-col-head">
+                  <span class="dna-col-label">Психотип зрителя</span>
+                  <span class="dna-col-pill" id="dna-rated-pill">ОЦЕНЕНО: —</span>
+                </div>
+                <div class="dna-archetype-box">
+                  <div class="dna-archetype-name" id="dna-archetype-name">Архивариус нуара</div>
+                  <div class="dna-archetype-desc" id="dna-archetype-desc">Выбирает мрачную драматургию, сильный саспенс и культовые финалы.</div>
+                </div>
+                <div class="dna-kpis">
+                  <div class="dna-kpi">
+                    <span class="dna-kpi-lbl">Средняя оценка</span>
+                    <span class="dna-kpi-val" id="dna-mean-score">8.12</span>
+                    <span class="dna-kpi-sub" id="dna-mean-sub">по всем оценённым</span>
+                  </div>
+                  <div class="dna-kpi">
+                    <span class="dna-kpi-lbl">Доля 9–10★</span>
+                    <span class="dna-kpi-val" id="dna-elite-share">24%</span>
+                    <span class="dna-kpi-sub" id="dna-elite-sub">избранная база</span>
+                  </div>
+                  <div class="dna-kpi">
+                    <span class="dna-kpi-lbl">Всего серий</span>
+                    <span class="dna-kpi-val" id="dna-total-eps">9 400+</span>
+                    <span class="dna-kpi-sub">пройдено эпизодов</span>
+                  </div>
+                  <div class="dna-kpi">
+                    <span class="dna-kpi-lbl">Против толпы</span>
+                    <span class="dna-kpi-val" id="dna-crowd-delta">+0.18</span>
+                    <span class="dna-kpi-sub" id="dna-crowd-sub">к среднему Шики</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Col 2: Score Distribution 1..10 -->
+              <div class="dna-col">
+                <div class="dna-col-head">
+                  <span class="dna-col-label">Спектр оценок 1–10</span>
+                  <span class="dna-col-pill" id="dna-score-tooltip">Наведи на столбик</span>
+                </div>
+                <div class="dna-scores-chart" id="dna-scores-chart"></div>
+                <div class="dna-score-foot">
+                  <span>Пик: <strong id="dna-peak-score">8★</strong></span>
+                  <span>Десяток: <strong id="dna-tens-count">—</strong></span>
+                </div>
+              </div>
+
+              <!-- Col 3: Genres / Studios / Eras Switcher -->
+              <div class="dna-col">
+                <div class="dna-col-head">
+                  <span class="dna-col-label">Срез коллекции</span>
+                  <div class="dna-tabs" role="tablist">
+                    <button type="button" class="dna-tab-btn active" data-dna-tab="genres">Жанры</button>
+                    <button type="button" class="dna-tab-btn" data-dna-tab="studios">Студии</button>
+                    <button type="button" class="dna-tab-btn" data-dna-tab="eras">Эпохи</button>
+                  </div>
+                </div>
+                <div class="dna-bars-list" id="dna-bars-list"></div>
+                <div class="dna-format-row" id="dna-format-row"></div>
               </div>
             </div>
           </div>
@@ -3340,6 +4006,28 @@
       const COVER_CACHE_KEY = 'undexeror_archive_covers_v4';
       const RATED_POOL_CACHE_KEY = 'undexeror_archive_rated910_v1';
       const WATCHING_CACHE_KEY = 'undexeror_archive_watching_v1';
+      const DNA_CACHE_KEY = 'undexeror_archive_dna_v1';
+      const MY_RATES_CACHE_KEY = 'undexeror_archive_my_rates_v1';
+      const GENRE_RU = {
+        Action: 'Экшен',
+        Adventure: 'Приключения',
+        Comedy: 'Комедия',
+        Drama: 'Драма',
+        Ecchi: 'Этти',
+        Fantasy: 'Фэнтези',
+        Horror: 'Хоррор',
+        'Mahou Shoujo': 'Махо-сёдзё',
+        Mecha: 'Меха',
+        Music: 'Музыка',
+        Mystery: 'Мистика / Детектив',
+        Psychological: 'Психология',
+        Romance: 'Романтика',
+        'Sci-Fi': 'Сай-фай',
+        'Slice of Life': 'Повседневность',
+        Sports: 'Спорт',
+        Supernatural: 'Сверхъестественное',
+        Thriller: 'Триллер'
+      };
       const SHIKI_KIND_LABELS = {
         tv: 'TV Сериал',
         movie: 'Фильм',
@@ -3526,6 +4214,65 @@
         } catch (e) {}
       }
       let randomizerMode = 'all';
+      let currentDnaTab = 'genres';
+      let animeDnaState = loadDnaCache();
+
+      const SNAPSHOT_DNA = {
+        isLive: false,
+        totalAnalyzed: 415,
+        ratedCount: 360,
+        meanScore: 7.94,
+        eliteCount: 84,
+        eliteShare: 23,
+        tensCount: 31,
+        totalEpisodes: 9420,
+        crowdDelta: 0.16,
+        scores: { 1: 2, 2: 3, 3: 6, 4: 11, 5: 22, 6: 44, 7: 88, 8: 100, 9: 53, 10: 31 },
+        eras: [
+          { name: '2020+ · Современность', count: 148, pct: 36 },
+          { name: '2013–2019 · Новая волна', count: 156, pct: 38 },
+          { name: '2005–2012 · Золотая эра', count: 84, pct: 20 },
+          { name: 'до 2005 · Классика', count: 27, pct: 6 }
+        ],
+        formats: [
+          { name: 'TV', count: 312 },
+          { name: 'Фильмы', count: 48 },
+          { name: 'ONA', count: 34 },
+          { name: 'OVA', count: 21 }
+        ],
+        genres: [
+          { name: 'Экшен', count: 68, pct: 100 },
+          { name: 'Драма', count: 56, pct: 82 },
+          { name: 'Психология', count: 44, pct: 65 },
+          { name: 'Фэнтези', count: 41, pct: 60 },
+          { name: 'Сай-фай', count: 33, pct: 49 }
+        ],
+        studios: [
+          { name: 'MAPPA', count: 14, pct: 100 },
+          { name: 'Wit Studio', count: 11, pct: 79 },
+          { name: 'Madhouse', count: 10, pct: 71 },
+          { name: 'Bones', count: 9, pct: 64 },
+          { name: 'White Fox', count: 7, pct: 50 }
+        ],
+        updatedAt: 0
+      };
+
+      function loadDnaCache() {
+        try {
+          const raw = localStorage.getItem(DNA_CACHE_KEY);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          return parsed && typeof parsed === 'object' ? parsed : null;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function saveDnaCache(dna) {
+        try {
+          localStorage.setItem(DNA_CACHE_KEY, JSON.stringify(dna));
+        } catch (e) {}
+      }
 
       function loadRatedPoolCache() {
         try {
@@ -4128,6 +4875,386 @@
         });
 
         selectCol(points.length - 1);
+      }
+
+      /* =========================================
+         STAGE 1 NEW: ANIME-DNA // TASTE X-RAY ENGINE
+         ========================================= */
+      function computeViewerArchetype(dna) {
+        const topGenre = dna.genres?.[0]?.name || 'Драма';
+        const secondGenre = dna.genres?.[1]?.name || 'Экшен';
+        const mean = Number(dna.meanScore) || 7.5;
+        const eliteShare = Number(dna.eliteShare) || 20;
+        const delta = Number(dna.crowdDelta) || 0;
+        const topEra = [...(dna.eras || [])].sort((a, b) => b.count - a.count)[0]?.name || '';
+
+        if (mean <= 7.1 || delta <= -0.35) {
+          return {
+            title: 'Холодный критик · Высокая планка',
+            desc: `Оценивает строже толпы (${delta >= 0 ? '+' : ''}${delta.toFixed(2)} к среднему Шики). Главный фокус: ${topGenre.toLowerCase()} и ${secondGenre.toLowerCase()}.`
+          };
+        }
+        if (eliteShare >= 28 && dna.tensCount >= 20) {
+          return {
+            title: 'Коллекционер Peak Fiction',
+            desc: `${dna.tensCount} тайтлов на 10/10 и сильная тяга к жанрам «${topGenre}» и «${secondGenre}».`
+          };
+        }
+        if (topEra.includes('2005–2012') || topEra.includes('Классика')) {
+          return {
+            title: 'Архивариус золотой эпохи',
+            desc: `Ценит проверенную базу (${topEra.split('·')[0].trim()}). Опора вкуса — ${topGenre.toLowerCase()} и ${secondGenre.toLowerCase()}.`
+          };
+        }
+        return {
+          title: 'Ночной марафонец · Архив 400+',
+          desc: `Собранный вкус вокруг «${topGenre}» и «${secondGenre}» со средней оценкой ${mean.toFixed(2)} и ${dna.eliteCount} тайтлами на 9–10★.`
+        };
+      }
+
+      function renderAnimeDna(dnaInput) {
+        const dna = dnaInput || SNAPSHOT_DNA;
+        const badge = document.getElementById('dna-source-badge');
+        const subNote = document.getElementById('dna-sub-note');
+        const ratedPill = document.getElementById('dna-rated-pill');
+        const archName = document.getElementById('dna-archetype-name');
+        const archDesc = document.getElementById('dna-archetype-desc');
+        const meanEl = document.getElementById('dna-mean-score');
+        const eliteEl = document.getElementById('dna-elite-share');
+        const eliteSub = document.getElementById('dna-elite-sub');
+        const epsEl = document.getElementById('dna-total-eps');
+        const deltaEl = document.getElementById('dna-crowd-delta');
+        const deltaSub = document.getElementById('dna-crowd-sub');
+        const scoresWrap = document.getElementById('dna-scores-chart');
+        const scoreTooltip = document.getElementById('dna-score-tooltip');
+        const peakScoreEl = document.getElementById('dna-peak-score');
+        const tensCountEl = document.getElementById('dna-tens-count');
+        const barsWrap = document.getElementById('dna-bars-list');
+        const formatRow = document.getElementById('dna-format-row');
+
+        if (badge) {
+          badge.textContent = dna.isLive ? `LIVE · ${dna.totalAnalyzed} ТАЙТЛОВ` : 'SNAPSHOT';
+        }
+        if (subNote) {
+          subNote.textContent = dna.isLive
+            ? `Просканировано ${dna.totalAnalyzed} завершённых тайтлов с Shikimori`
+            : 'Синхронизация вкуса с Shikimori...';
+        }
+        if (ratedPill) ratedPill.textContent = `ОЦЕНЕНО: ${dna.ratedCount || 0}`;
+
+        const arch = computeViewerArchetype(dna);
+        if (archName) archName.textContent = arch.title;
+        if (archDesc) archDesc.textContent = arch.desc;
+
+        if (meanEl) meanEl.textContent = Number(dna.meanScore || 0).toFixed(2);
+        if (eliteEl) eliteEl.textContent = `${Math.round(dna.eliteShare || 0)}%`;
+        if (eliteSub) eliteSub.textContent = `${dna.eliteCount || 0} тайтлов на 9–10★`;
+        if (epsEl) epsEl.textContent = Number(dna.totalEpisodes || 0).toLocaleString('ru-RU');
+
+        const dVal = Number(dna.crowdDelta || 0);
+        if (deltaEl) deltaEl.textContent = `${dVal >= 0 ? '+' : ''}${dVal.toFixed(2)}`;
+        if (deltaSub) {
+          deltaSub.textContent = dVal >= 0.15
+            ? 'щедрее среднего Шики'
+            : dVal <= -0.15
+              ? 'строже среднего Шики'
+              : 'в балансе с комьюнити';
+        }
+
+        // Render Score Histogram 1..10
+        if (scoresWrap) {
+          const scoreMap = dna.scores || {};
+          const counts = [];
+          for (let s = 1; s <= 10; s++) counts.push({ score: s, count: Number(scoreMap[s]) || 0 });
+          const maxC = Math.max(1, ...counts.map((x) => x.count));
+          const totalRated = Math.max(1, counts.reduce((acc, x) => acc + x.count, 0));
+          const peakObj = [...counts].sort((a, b) => b.count - a.count || b.score - a.score)[0];
+
+          if (peakScoreEl && peakObj) peakScoreEl.textContent = `${peakObj.score}★ (${peakObj.count})`;
+          if (tensCountEl) tensCountEl.textContent = `${scoreMap[10] || 0} шт.`;
+
+          scoresWrap.innerHTML = counts.map((item) => {
+            const pctH = item.count > 0 ? Math.max(8, Math.round((item.count / maxC) * 100)) : 4;
+            const share = Math.round((item.count / totalRated) * 100);
+            const cls = ['dna-score-col'];
+            if (item.score >= 9) cls.push('is-elite');
+            if (peakObj && item.score === peakObj.score) cls.push('is-active');
+            return `
+              <div class="${cls.join(' ')}" data-score="${item.score}" data-count="${item.count}" data-share="${share}" tabindex="0">
+                <span class="dna-score-val">${item.count || ''}</span>
+                <div class="dna-score-track">
+                  <div class="dna-score-bar" style="height:${pctH}%"></div>
+                </div>
+                <span class="dna-score-num">${item.score}</span>
+              </div>
+            `;
+          }).join('');
+
+          const cols = Array.from(scoresWrap.querySelectorAll('.dna-score-col'));
+          function selectScoreCol(col) {
+            cols.forEach((c) => c.classList.toggle('is-active', c === col));
+            if (scoreTooltip && col) {
+              scoreTooltip.textContent = `${col.dataset.score}★ · ${col.dataset.count} шт. (${col.dataset.share}%)`;
+            }
+          }
+          cols.forEach((col) => {
+            col.addEventListener('mouseenter', () => selectScoreCol(col));
+            col.addEventListener('click', () => selectScoreCol(col));
+            col.addEventListener('focus', () => selectScoreCol(col));
+          });
+          const initialActive = scoresWrap.querySelector('.dna-score-col.is-active') || cols[9];
+          if (initialActive) selectScoreCol(initialActive);
+        }
+
+        // Render Switchable X-Ray Bars (Genres / Studios / Eras)
+        if (barsWrap) {
+          let rows = [];
+          if (currentDnaTab === 'studios') {
+            rows = dna.studios || [];
+          } else if (currentDnaTab === 'eras') {
+            rows = dna.eras || [];
+          } else {
+            rows = dna.genres || [];
+          }
+
+          if (!rows.length) {
+            barsWrap.innerHTML = `<div style="font-family:var(--font-mono);font-size:10.5px;color:rgba(var(--light),0.55);text-align:center;padding:18px 0;">Подгружаю срез из AniList...</div>`;
+          } else {
+            const maxVal = Math.max(1, ...rows.map((r) => Number(r.pct) || Number(r.count) || 1));
+            barsWrap.innerHTML = rows.slice(0, 5).map((r) => {
+              const barPct = currentDnaTab === 'eras'
+                ? Math.max(6, Math.min(100, Math.round((Number(r.count) / Math.max(1, ...rows.map((x) => x.count))) * 100)))
+                : Math.max(8, Math.min(100, Math.round((Number(r.pct || r.count) / maxVal) * 100)));
+              const statText = currentDnaTab === 'eras'
+                ? `${r.count} · ${r.pct}%`
+                : `${r.count} тайтл.`;
+              return `
+                <div class="dna-bar-row">
+                  <div class="dna-bar-meta">
+                    <span class="dna-bar-name">${escapeHtml(r.name)}</span>
+                    <span class="dna-bar-stat">${escapeHtml(statText)}</span>
+                  </div>
+                  <div class="dna-bar-track">
+                    <div class="dna-bar-fill" style="width:${barPct}%"></div>
+                  </div>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+
+        if (formatRow) {
+          formatRow.innerHTML = (dna.formats || []).slice(0, 4).map((f) =>
+            `<span class="dna-format-chip">${escapeHtml(f.name)}<b>${f.count}</b></span>`
+          ).join('');
+        }
+      }
+
+      function initDnaControls() {
+        const tabs = Array.from(document.querySelectorAll('.dna-tab-btn'));
+        tabs.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            currentDnaTab = btn.dataset.dnaTab || 'genres';
+            tabs.forEach((b) => b.classList.toggle('active', b === btn));
+            renderAnimeDna(animeDnaState || SNAPSHOT_DNA);
+          });
+        });
+      }
+
+      async function hydrateDnaFromShikiRates(rates, userStats) {
+        if (!Array.isArray(rates) || !rates.length) return;
+
+        // Cache compact rates map for Stage 2 ("Проверка на базу")
+        try {
+          const compactRates = rates
+            .filter((r) => r.anime && r.anime.id)
+            .map((r) => ({
+              id: r.anime.id,
+              s: Number(r.score) || 0,
+              g: Number(r.anime.score) || 0,
+              t: r.anime.russian || r.anime.name || ''
+            }));
+          localStorage.setItem(MY_RATES_CACHE_KEY, JSON.stringify({ ts: Date.now(), rates: compactRates }));
+        } catch (e) {}
+
+        const scoreCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 };
+        let ratedCount = 0;
+        let scoreSum = 0;
+        let eliteCount = 0;
+        let totalEpisodes = 0;
+        let deltaSum = 0;
+        let deltaCount = 0;
+
+        const eraBuckets = {
+          modern:  { name: '2020+ · Современность', count: 0 },
+          wave:    { name: '2013–2019 · Новая волна', count: 0 },
+          golden:  { name: '2005–2012 · Золотая эра', count: 0 },
+          classic: { name: 'до 2005 · Классика', count: 0 }
+        };
+        const formatCounts = { TV: 0, 'Фильмы': 0, ONA: 0, OVA: 0, 'Спешлы': 0 };
+
+        rates.forEach((r) => {
+          const a = r.anime;
+          if (!a) return;
+          const uScore = Number(r.score) || 0;
+          const gScore = Number(a.score) || 0;
+          const eps = Number(r.episodes) || Number(a.episodes) || 0;
+          totalEpisodes += eps;
+
+          if (uScore >= 1 && uScore <= 10) {
+            scoreCounts[uScore]++;
+            ratedCount++;
+            scoreSum += uScore;
+            if (uScore >= 9) eliteCount++;
+            if (gScore > 0) {
+              deltaSum += (uScore - gScore);
+              deltaCount++;
+            }
+          }
+
+          const year = a.aired_on ? Number(String(a.aired_on).slice(0, 4)) : 0;
+          if (year >= 2020) eraBuckets.modern.count++;
+          else if (year >= 2013) eraBuckets.wave.count++;
+          else if (year >= 2005) eraBuckets.golden.count++;
+          else if (year > 1950) eraBuckets.classic.count++;
+
+          const k = String(a.kind || 'tv').toLowerCase();
+          if (k === 'tv') formatCounts.TV++;
+          else if (k === 'movie') formatCounts['Фильмы']++;
+          else if (k === 'ona') formatCounts.ONA++;
+          else if (k === 'ova') formatCounts.OVA++;
+          else formatCounts['Спешлы']++;
+        });
+
+        const totalWithEra = Math.max(1, Object.values(eraBuckets).reduce((s, b) => s + b.count, 0));
+        const eras = Object.values(eraBuckets).map((b) => ({
+          name: b.name,
+          count: b.count,
+          pct: Math.round((b.count / totalWithEra) * 100)
+        }));
+
+        const formats = Object.entries(formatCounts)
+          .filter(([, c]) => c > 0)
+          .sort((a, b) => b[1] - a[1])
+          .map(([name, count]) => ({ name, count }));
+
+        const prev = animeDnaState || SNAPSHOT_DNA;
+        const baseDna = {
+          isLive: true,
+          totalAnalyzed: rates.length,
+          ratedCount,
+          meanScore: ratedCount ? scoreSum / ratedCount : prev.meanScore,
+          eliteCount,
+          eliteShare: ratedCount ? (eliteCount / ratedCount) * 100 : prev.eliteShare,
+          tensCount: scoreCounts[10] || 0,
+          totalEpisodes,
+          crowdDelta: deltaCount ? deltaSum / deltaCount : 0,
+          scores: scoreCounts,
+          eras,
+          formats,
+          genres: prev.genres || SNAPSHOT_DNA.genres,
+          studios: prev.studios || SNAPSHOT_DNA.studios,
+          updatedAt: Date.now()
+        };
+
+        animeDnaState = baseDna;
+        renderAnimeDna(animeDnaState);
+        saveDnaCache(animeDnaState);
+
+        // Hydrate real Top Genres & Top Studios from AniList (top 100 highest-rated completed titles)
+        // Skip re-fetching AniList if cached live genres/studios are fresh (< 12h)
+        const hasFreshMeta = prev && prev.isLive && prev.metaUpdatedAt && (Date.now() - prev.metaUpdatedAt < 12 * 3600 * 1000) && prev.genres?.length && prev.studios?.length;
+        if (hasFreshMeta) {
+          animeDnaState.metaUpdatedAt = prev.metaUpdatedAt;
+          saveDnaCache(animeDnaState);
+          return;
+        }
+
+        const rankedForMeta = [...rates]
+          .filter((r) => r.anime && r.anime.id)
+          .sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0) || (Number(b.anime.score) || 0) - (Number(a.anime.score) || 0))
+          .slice(0, 100);
+
+        const weightById = new Map();
+        rankedForMeta.forEach((r) => {
+          const s = Number(r.score) || 7;
+          weightById.set(r.anime.id, s >= 9 ? 1.5 : (s >= 7 ? 1.0 : 0.6));
+        });
+
+        const idsAll = rankedForMeta.map((r) => r.anime.id);
+        const chunks = [idsAll.slice(0, 50), idsAll.slice(50, 100)].filter((c) => c.length);
+
+        const genreRawCount = {};
+        const genreWeighted = {};
+        const studioCount = {};
+
+        try {
+          const metaQuery = `
+            query ($ids: [Int]) {
+              Page(perPage: 50) {
+                media(idMal_in: $ids, type: ANIME) {
+                  idMal
+                  genres
+                  studios(isMain: true) {
+                    nodes { name }
+                  }
+                }
+              }
+            }
+          `;
+
+          const results = await Promise.all(
+            chunks.map((ids) => anilistQuery(metaQuery, { ids }).catch(() => null))
+          );
+
+          results.forEach((data) => {
+            const mediaList = data?.Page?.media || [];
+            mediaList.forEach((m) => {
+              const w = weightById.get(m.idMal) || 1;
+              (m.genres || []).forEach((g) => {
+                const ru = GENRE_RU[g] || g;
+                genreRawCount[ru] = (genreRawCount[ru] || 0) + 1;
+                genreWeighted[ru] = (genreWeighted[ru] || 0) + w;
+              });
+              const seenStudio = new Set();
+              (m.studios?.nodes || []).forEach((st) => {
+                if (!st || !st.name || seenStudio.has(st.name)) return;
+                seenStudio.add(st.name);
+                studioCount[st.name] = (studioCount[st.name] || 0) + 1;
+              });
+            });
+          });
+
+          const topGenres = Object.entries(genreWeighted)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+          if (topGenres.length) {
+            const maxG = topGenres[0][1];
+            animeDnaState.genres = topGenres.map(([name, wVal]) => ({
+              name,
+              count: genreRawCount[name] || Math.round(wVal),
+              pct: Math.round((wVal / maxG) * 100)
+            }));
+          }
+
+          const topStudios = Object.entries(studioCount)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+          if (topStudios.length) {
+            const maxS = topStudios[0][1];
+            animeDnaState.studios = topStudios.map(([name, count]) => ({
+              name,
+              count,
+              pct: Math.round((count / maxS) * 100)
+            }));
+          }
+
+          animeDnaState.metaUpdatedAt = Date.now();
+          saveDnaCache(animeDnaState);
+          renderAnimeDna(animeDnaState);
+        } catch (e) {
+          console.warn('AniList DNA meta sync failed:', e);
+        }
       }
 
       /* =========================================
@@ -5030,6 +6157,7 @@
           if (rRes.ok) {
             const rates = await rRes.json();
             if (Array.isArray(rates)) {
+              hydrateDnaFromShikiRates(rates, user.stats);
               const allowedKinds = new Set(['tv', 'movie', 'ona', 'ova']);
               const peakById = new Map(PEAK_FICTION.map((p) => [p.malId, p]));
               const extracted = [];
@@ -5622,6 +6750,8 @@
       initCollectionControls();
 
       renderStats(SNAPSHOT.anime, SNAPSHOT.manga, SNAPSHOT.lifetimeText);
+      initDnaControls();
+      renderAnimeDna(animeDnaState || SNAPSHOT_DNA);
       renderHistory(SNAPSHOT.history, false);
       renderActivityGraph(SNAPSHOT.activity);
       renderWatchingShelf(watchingList.length ? watchingList : SNAPSHOT.watching);
