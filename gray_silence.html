@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru" class="dark scroll-smooth">
 <head>
+  <meta name="referrer" content="no-referrer" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>undereror nyashka — *Gray Silence*</title>
@@ -101,11 +102,14 @@
       height: 108%;
       object-fit: cover;
       object-position: center;
-      opacity: 0.34;
-      filter: grayscale(0.25) contrast(1.08);
+      opacity: 0.60;
+      filter: grayscale(0.18) contrast(1.08);
       transform-origin: center;
       animation: bg-breathe 40s ease-in-out infinite alternate;
       transition: opacity 0.8s ease;
+      background-image: url('./bg.jpg');
+      background-size: cover;
+      background-position: center;
     }
 
     #bg-vignette {
@@ -114,8 +118,57 @@
       z-index: -2;
       pointer-events: none;
       background:
-        radial-gradient(ellipse at center, transparent 36%, rgba(4, 6, 10, 0.82) 100%),
-        linear-gradient(180deg, rgba(6, 8, 12, 0.55) 0%, rgba(6, 8, 12, 0.25) 40%, rgba(6, 8, 12, 0.88) 100%);
+        radial-gradient(ellipse at center, transparent 40%, rgba(4, 6, 10, 0.65) 100%),
+        linear-gradient(180deg, rgba(10, 10, 15, 0.58) 0%, rgba(10, 10, 15, 0.40) 40%, rgba(10, 10, 15, 0.72) 100%);
+    }
+
+    /* Intro Screen Overlay */
+    .intro-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(6, 8, 12, 0.84);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .intro-overlay.intro-hidden {
+      opacity: 0;
+      transform: scale(1.03);
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    .intro-title {
+      text-shadow: 0 0 20px rgba(173, 191, 222, 0.45), 0 0 45px rgba(173, 191, 222, 0.22);
+    }
+
+    .intro-enter-btn {
+      background: rgba(173, 191, 222, 0.08);
+      border: 1px solid rgba(173, 191, 222, 0.35);
+      box-shadow: 0 0 18px rgba(173, 191, 222, 0.16), inset 0 0 12px rgba(173, 191, 222, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      animation: intro-pulse 2.8s ease-in-out infinite;
+    }
+
+    .intro-enter-btn:hover {
+      background: rgba(173, 191, 222, 0.18);
+      border-color: rgba(173, 191, 222, 0.75);
+      box-shadow: 0 0 28px rgba(173, 191, 222, 0.35), inset 0 0 16px rgba(173, 191, 222, 0.14);
+      transform: scale(1.02);
+    }
+
+    @keyframes intro-pulse {
+      0%, 100% {
+        box-shadow: 0 0 15px rgba(173, 191, 222, 0.15), inset 0 0 10px rgba(173, 191, 222, 0.05);
+        border-color: rgba(173, 191, 222, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 28px rgba(173, 191, 222, 0.35), inset 0 0 16px rgba(173, 191, 222, 0.15);
+        border-color: rgba(173, 191, 222, 0.65);
+      }
     }
 
     #bg-canvas {
@@ -436,9 +489,15 @@
       filter: saturate(1.12) brightness(1.06);
       transform: scale(1.05);
     }
+    .poster-img, .history-poster {
+      transition: transform 0.35s ease, filter 0.35s ease, opacity 0.5s ease-in-out !important;
+    }
     .history-poster {
       filter: saturate(0.72) contrast(1.04);
-      transition: transform 0.3s ease, filter 0.3s ease, opacity 0.4s ease;
+      transition: transform 0.3s ease, filter 0.3s ease, opacity 0.5s ease-in-out;
+    }
+    .poster-img {
+      transition: transform 0.35s ease, filter 0.35s ease, opacity 0.5s ease-in-out;
     }
 
     /* Footer Gradient Line */
@@ -451,11 +510,41 @@
 
 <body class="bg-void text-mist font-sans antialiased overflow-x-hidden min-h-screen relative selection:bg-silver/30 selection:text-white">
 
+  <!-- ===================================================================
+       0. INTRO SCREEN OVERLAY ([ CLICK TO ENTER ])
+       =================================================================== -->
+  <div id="intro-overlay" class="intro-overlay fixed inset-0 flex flex-col items-center justify-between py-10 sm:py-14 px-6 select-none cursor-pointer">
+    <div class="h-6"></div>
+
+    <!-- Central Branding -->
+    <div class="flex flex-col items-center text-center max-w-md mx-auto space-y-5 sm:space-y-6">
+      <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-extralight tracking-[0.25em] text-white intro-title">
+        *Gray Silence*
+      </h1>
+      <p class="font-mono text-xs tracking-[0.3em] text-silver/70 uppercase">
+        undereror · 53.9° N
+      </p>
+      <div class="pt-3 sm:pt-4">
+        <button id="intro-enter-btn" class="intro-enter-btn px-6 sm:px-8 py-3 rounded-xl font-mono text-xs uppercase tracking-[0.22em] text-white transition-all">
+          [ CLICK TO ENTER ]
+        </button>
+      </div>
+    </div>
+
+    <!-- Enter Muted -->
+    <div class="z-10">
+      <button id="intro-mute-btn" class="font-mono text-[11px] tracking-wider text-slatehud/60 hover:text-silver transition-colors underline-offset-4 hover:underline py-2 px-3">
+        войти без звука
+      </button>
+    </div>
+  </div>
+
+
   <!-- Background Wallpaper & Vignette -->
   <div id="bg-wallpaper-wrap" aria-hidden="true">
     <img
       id="bg-wallpaper"
-      src="https://i.ibb.co/VWwn4cn0/Gemini-Generated-Image-tus56atus56atus5.jpg"
+      src="./bg.jpg"
       alt=""
       onerror="this.style.opacity='0'"
     />
@@ -1094,13 +1183,13 @@
       fallbackDomain: 'https://shikimori.io',
       corsProxy: '',
       tiktokUrl: 'https://www.tiktok.com/@undexeror',
-      wallpaperUrl: 'https://i.ibb.co/VWwn4cn0/Gemini-Generated-Image-tus56atus56atus5.jpg',
+      wallpaperUrl: './bg.jpg',
       customAudioUrl: '',
       enableJikanPosters: true,
     };
 
-    const STORAGE_KEY_SETTINGS = 'gray_silence_settings_v1';
-    const STORAGE_KEY_POSTERS = 'gray_silence_posters_v1';
+    const STORAGE_KEY_SETTINGS = 'gray_silence_settings_v2';
+    const STORAGE_KEY_POSTERS = 'gray_silence_posters_v2';
 
     // Preloaded Profile Snapshot (used immediately & if Shikimori API blocks CORS)
     const SNAPSHOT = {
@@ -1188,22 +1277,22 @@
         { rank: 15, name: 'Тока Киришима',    query: 'Touka Kirishima',       source: 'Tokyo Ghoul',            accent: '#686b82', note: 'Сдержанная сила и тихая опора в тёмном мире.' },
       ],
       peakFiction: [
-        { rank: 1,  title: 'Ван-Пис',                                                     query: 'One Piece',                                              type: 'TV Сериал', year: 1999, score: 8.84, accent: '#6b7e96', note: 'Величайшее приключение, мир без границ и абсолютная свобода.' },
-        { rank: 2,  title: 'Врата Штейна',                                                query: 'Steins;Gate',                                            type: 'TV Сериал', year: 2011, score: 8.84, accent: '#757d8a', note: 'Безупречный научно-фантастический триллер о цене выбора и времени.' },
-        { rank: 3,  title: 'Атака титанов',                                               query: 'Shingeki no Kyojin',                                     type: 'TV Сериал', year: 2013, score: 8.59, accent: '#7d736a', note: 'Монументальная драма о свободе, цикличности ненависти и судьбе.' },
-        { rank: 4,  title: 'Невероятное приключение ДжоДжо: Рыцари звёздной пыли 2',      query: 'JoJo no Kimyou na Bouken Stardust Crusaders Egypt',      type: 'TV Сериал', year: 2015, score: 8.75, accent: '#7d6e8c', note: 'Кульминация путешествия в Египет и легендарная битва с ДИО.' },
-        { rank: 5,  title: 'Киберпанк: Бегущие по краю',                                  query: 'Cyberpunk: Edgerunners',                                 type: 'ONA',       year: 2022, score: 8.22, accent: '#7e8a6b', note: 'Стремительный неоновый всплеск, который бьёт прямо в сердце.' },
-        { rank: 6,  title: 'Стальной алхимик: Братство',                                  query: 'Fullmetal Alchemist: Brotherhood',                       type: 'TV Сериал', year: 2009, score: 8.99, accent: '#8a6f68', note: 'Идеально собранная история о равноценном обмене и братстве.' },
-        { rank: 7,  title: 'Человек-бензопила: Резе',                                     query: 'Chainsaw Man Movie: Reze-hen',                           type: 'Фильм',     year: 2025, score: 8.56, accent: '#8c646b', note: 'Самая кинематографичная, взрывная и горькая арка Человека-бензопилы.' },
-        { rank: 8,  title: 'Код Гиас: Восставший Лелуш',                                  query: 'Code Geass: Hangyaku no Lelouch',                        type: 'TV Сериал', year: 2006, score: 8.79, accent: '#726a8f', note: 'Шахматная партия мирового масштаба с одним из лучших финалов в индустрии.' },
-        { rank: 9,  title: 'Магическая битва',                                            query: 'Jujutsu Kaisen',                                         type: 'TV Сериал', year: 2020, score: 8.26, accent: '#687691', note: 'Запредельная хореография боёв, мрачный стиль и харизматичные проклятия.' },
-        { rank: 10, title: 'Гуррен-Лаганн, пронзающий небеса',                            query: 'Tengen Toppa Gurren Lagann',                             type: 'TV Сериал', year: 2007, score: 8.68, accent: '#8c7264', note: 'Чистая спиральная энергия и вера в невозможное.' },
-        { rank: 11, title: 'Охотник х Охотник (2011)',                                    query: 'Hunter x Hunter 2011',                                   type: 'TV Сериал', year: 2011, score: 8.99, accent: '#6d8578', note: 'Гениальная боевая система Нэн и арка Муравьёв-химер.' },
-        { rank: 12, title: 'Паразит: Учение о жизни',                                     query: 'Kiseijuu: Sei no Kakuritsu',                             type: 'TV Сериал', year: 2014, score: 8.48, accent: '#6c7985', note: 'Холодный взгляд на природу человечности под дабстеп и нуар.' },
-        { rank: 13, title: 'Как и ожидалось, моя школьная романтическая жизнь не удалась',query: 'Yahari Ore no Seishun Love Comedy wa Machigatteiru',     type: 'TV Сериал', year: 2013, score: 8.03, accent: '#738294', note: 'Циничная и тонкая психология отношений в поисках «настоящего».' },
-        { rank: 14, title: 'Блич',                                                        query: 'Bleach',                                                 type: 'TV Сериал', year: 2004, score: 8.26, accent: '#647082', note: 'Непревзойдённый стиль Тайто Кубо, саундтрек и эстетика шинигами.' },
-        { rank: 15, title: 'Созданный в Бездне',                                          query: 'Made in Abyss',                                          type: 'TV Сериал', year: 2017, score: 8.66, accent: '#68827e', note: 'Завораживающая сказка, за которой скрывается безжалостная глубина.' },
-        { rank: 16, title: 'Берсерк',                                                     query: 'Kenpuu Denki Berserk',                                   type: 'TV Сериал', year: 1997, score: 8.86, accent: '#7d6161', note: 'Вечный памятник тёмному фэнтези и несгибаемой воле.' },
+        { rank: 1,  malId: 21,    title: 'Ван-Пис',                                                     query: 'One Piece',                                              type: 'TV Сериал', year: 1999, score: 8.84, accent: '#6b7e96', note: 'Величайшее приключение, мир без границ и абсолютная свобода.' },
+        { rank: 2,  malId: 9253,  title: 'Врата Штейна',                                                query: 'Steins;Gate',                                            type: 'TV Сериал', year: 2011, score: 8.84, accent: '#757d8a', note: 'Безупречный научно-фантастический триллер о цене выбора и времени.' },
+        { rank: 3,  malId: 16498, title: 'Атака титанов',                                               query: 'Shingeki no Kyojin',                                     type: 'TV Сериал', year: 2013, score: 8.59, accent: '#7d736a', note: 'Монументальная драма о свободе, цикличности ненависти и судьбе.' },
+        { rank: 4,  malId: 26055, title: 'Невероятное приключение ДжоДжо: Рыцари звёздной пыли 2',      query: 'JoJo no Kimyou na Bouken Stardust Crusaders Egypt',      type: 'TV Сериал', year: 2015, score: 8.75, accent: '#7d6e8c', note: 'Кульминация путешествия в Египет и легендарная битва с ДИО.' },
+        { rank: 5,  malId: 42310, title: 'Киберпанк: Бегущие по краю',                                  query: 'Cyberpunk: Edgerunners',                                 type: 'ONA',       year: 2022, score: 8.22, accent: '#7e8a6b', note: 'Стремительный неоновый всплеск, который бьёт прямо в сердце.' },
+        { rank: 6,  malId: 5114,  title: 'Стальной алхимик: Братство',                                  query: 'Fullmetal Alchemist: Brotherhood',                       type: 'TV Сериал', year: 2009, score: 8.99, accent: '#8a6f68', note: 'Идеально собранная история о равноценном обмене и братстве.' },
+        { rank: 7,  malId: 57555, title: 'Человек-бензопила: Резе',                                     query: 'Chainsaw Man Movie: Reze-hen',                           type: 'Фильм',     year: 2025, score: 8.56, accent: '#8c646b', note: 'Самая кинематографичная, взрывная и горькая арка Человека-бензопилы.' },
+        { rank: 8,  malId: 1575,  title: 'Код Гиас: Восставший Лелуш',                                  query: 'Code Geass: Hangyaku no Lelouch',                        type: 'TV Сериал', year: 2006, score: 8.79, accent: '#726a8f', note: 'Шахматная партия мирового масштаба с одним из лучших финалов в индустрии.' },
+        { rank: 9,  malId: 40748, title: 'Магическая битва',                                            query: 'Jujutsu Kaisen',                                         type: 'TV Сериал', year: 2020, score: 8.26, accent: '#687691', note: 'Запредельная хореография боёв, мрачный стиль и харизматичные проклятия.' },
+        { rank: 10, malId: 2001,  title: 'Гуррен-Лаганн, пронзающий небеса',                            query: 'Tengen Toppa Gurren Lagann',                             type: 'TV Сериал', year: 2007, score: 8.68, accent: '#8c7264', note: 'Чистая спиральная энергия и вера в невозможное.' },
+        { rank: 11, malId: 11061, title: 'Охотник х Охотник (2011)',                                    query: 'Hunter x Hunter 2011',                                   type: 'TV Сериал', year: 2011, score: 8.99, accent: '#6d8578', note: 'Гениальная боевая система Нэн и арка Муравьёв-химер.' },
+        { rank: 12, malId: 22535, title: 'Паразит: Учение о жизни',                                     query: 'Kiseijuu: Sei no Kakuritsu',                             type: 'TV Сериал', year: 2014, score: 8.48, accent: '#6c7985', note: 'Холодный взгляд на природу человечности под дабстеп и нуар.' },
+        { rank: 13, malId: 14813, title: 'Как и ожидалось, моя школьная романтическая жизнь не удалась',query: 'Yahari Ore no Seishun Love Comedy wa Machigatteiru',     type: 'TV Сериал', year: 2013, score: 8.03, accent: '#738294', note: 'Циничная и тонкая психология отношений в поисках «настоящего».' },
+        { rank: 14, malId: 269,   title: 'Блич',                                                        query: 'Bleach',                                                 type: 'TV Сериал', year: 2004, score: 8.26, accent: '#647082', note: 'Непревзойдённый стиль Тайто Кубо, саундтрек и эстетика шинигами.' },
+        { rank: 15, malId: 34599, title: 'Созданный в Бездне',                                          query: 'Made in Abyss',                                          type: 'TV Сериал', year: 2017, score: 8.66, accent: '#68827e', note: 'Завораживающая сказка, за которой скрывается безжалостная глубина.' },
+        { rank: 16, malId: 33,    title: 'Берсерк',                                                     query: 'Kenpuu Denki Berserk',                                   type: 'TV Сериал', year: 1997, score: 8.86, accent: '#7d6161', note: 'Вечный памятник тёмному фэнтези и несгибаемой воле.' },
       ],
       literallyMe: [
         { rank: 1,  name: 'Эрен Йегер',      query: 'Eren Yeager',         source: 'Attack on Titan',   accent: '#6d786f', note: 'Движение вперёд вопреки всему.' },
@@ -1565,7 +1654,36 @@
         btn.classList.toggle('shadow-[0_0_16px_rgba(173,191,222,0.32)]', isPlaying);
       }
 
-      return { toggle, stopAll };
+            function play() {
+        if (isPlaying) return;
+        const customUrl = (state.settings.customAudioUrl || '').trim();
+        if (customUrl) {
+          try {
+            htmlAudio = new Audio(customUrl);
+            htmlAudio.loop = true;
+            htmlAudio.volume = 0.35;
+            htmlAudio.play().then(() => {
+              isPlaying = true;
+              updatePlayerUI();
+            }).catch(() => {
+              htmlAudio = null;
+              if (startSynth()) {
+                isPlaying = true;
+                updatePlayerUI();
+              }
+            });
+            return;
+          } catch (_) {
+            htmlAudio = null;
+          }
+        }
+        if (startSynth()) {
+          isPlaying = true;
+          updatePlayerUI();
+        }
+      }
+
+      return { toggle, play, stopAll };
     })();
 
     /* =====================================================================
@@ -1775,12 +1893,21 @@
       tagEl.classList.toggle('text-silver', state.apiMode === 'LIVE');
       tagEl.classList.toggle('border-silver/50', state.apiMode === 'LIVE');
 
+      const domain = state.settings.domain || 'https://shikimori.one';
+
       listEl.innerHTML = state.profile.history.slice(0, 5).map((item, idx) => {
         const cacheKey = `anime:${item.query || item.title}`;
-        const imgUrl = item.poster || getCachedPoster(cacheKey);
+        let imgUrl = item.poster || getCachedPoster(cacheKey);
+        if (imgUrl && imgUrl.startsWith('/')) {
+          imgUrl = resolveShikiUrl(domain, imgUrl);
+        }
+        let itemUrl = item.url || '';
+        if (itemUrl && itemUrl.startsWith('/')) {
+          itemUrl = resolveShikiUrl(domain, itemUrl);
+        }
         return `
           <a
-            href="${escapeHtml(item.url)}"
+            href="${escapeHtml(itemUrl)}"
             target="_blank"
             rel="noopener noreferrer"
             class="history-card gs-glass rounded-xl p-2.5 sm:p-3 flex items-center gap-3.5 hover:-translate-y-0.5 hover:border-silver/60 hover:bg-[#0c1018]/80 hover:shadow-[0_10px_24px_rgba(0,0,0,0.55),0_0_16px_rgba(173,191,222,0.18)] transition-all animate-card-in"
@@ -1788,12 +1915,12 @@
           >
             <div class="w-12 h-16 rounded-lg overflow-hidden shrink-0 border border-silver/25 relative bg-[#0c1018]">
               ${buildArtbookFallbackHTML(item.title, 'HIST', null, item.accent)}
-              ${imgUrl ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(item.title)}" data-poster-key="${escapeHtml(cacheKey)}" class="history-poster absolute inset-0 w-full h-full object-cover opacity-0" onload="this.classList.remove('opacity-0')" onerror="this.remove()" />` : `<img data-poster-key="${escapeHtml(cacheKey)}" alt="" class="history-poster hidden absolute inset-0 w-full h-full object-cover opacity-0" />`}
+              ${imgUrl ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(item.title)}" data-poster-key="${escapeHtml(cacheKey)}" class="history-poster absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500" onload="this.classList.remove('opacity-0')" onerror="this.classList.add('hidden')" />` : `<img data-poster-key="${escapeHtml(cacheKey)}" alt="" class="history-poster hidden absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500" />`}
             </div>
             <div class="min-w-0 flex-1">
-              <div class="text-sm font-medium text-white/95 leading-snug break-words">${escapeHtml(item.title)}</div>
-              <div class="text-xs text-silver/90 mt-0.5 leading-snug break-words">${escapeHtml(item.action)}</div>
-              <div class="font-mono text-[10px] text-slatehud mt-1">${escapeHtml(item.timeAgo)}</div>
+              <div class="text-sm font-medium text-white/95 leading-snug truncate">${escapeHtml(item.title)}</div>
+              <div class="text-xs text-mist/80 mt-0.5 leading-snug truncate">${escapeHtml(item.action)}</div>
+              <div class="font-mono text-[10px] text-slatehud mt-1 whitespace-nowrap">${escapeHtml(item.timeAgo)}</div>
             </div>
             <span class="text-silver/45 text-xs pr-1 shrink-0">↗</span>
           </a>
@@ -1870,7 +1997,7 @@
             <div class="poster-frame w-full h-full">
               ${buildArtbookFallbackHTML(item.name, item.source, rank, item.accent)}
               ${imgUrl
-                ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(item.name)}" data-poster-key="${escapeHtml(cacheKey)}" class="poster-img absolute inset-0 w-full h-full object-cover object-top opacity-0" onload="this.classList.remove('opacity-0')" onerror="this.remove()" />`
+                ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(item.name)}" data-poster-key="${escapeHtml(cacheKey)}" class="poster-img absolute inset-0 w-full h-full object-cover object-top opacity-0 transition-opacity duration-500" onload="this.classList.remove('opacity-0')" onerror="this.classList.add('hidden')" />`
                 : `<img data-poster-key="${escapeHtml(cacheKey)}" alt="${escapeHtml(item.name)}" class="poster-img hidden absolute inset-0 w-full h-full object-cover object-top opacity-0" />`
               }
               <!-- Rank Badge -->
@@ -1954,7 +2081,7 @@
             <div class="poster-frame relative w-full aspect-[2/3] rounded-lg overflow-hidden bg-[#0c1018] ${top3Glow}">
               ${buildArtbookFallbackHTML(label, sub, rank, item.accent)}
               ${imgUrl
-                ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(label)}" data-poster-key="${escapeHtml(cacheKey)}" class="poster-img absolute inset-0 w-full h-full object-cover object-top opacity-0" onload="this.classList.remove('opacity-0')" onerror="this.remove()" />`
+                ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(label)}" data-poster-key="${escapeHtml(cacheKey)}" class="poster-img absolute inset-0 w-full h-full object-cover object-top opacity-0 transition-opacity duration-500" onload="this.classList.remove('opacity-0')" onerror="this.classList.add('hidden')" />`
                 : `<img data-poster-key="${escapeHtml(cacheKey)}" alt="${escapeHtml(label)}" class="poster-img hidden absolute inset-0 w-full h-full object-cover object-top opacity-0" />`
               }
               <!-- Top-Left Number Badge -->
@@ -2198,8 +2325,13 @@
 
     function resolveShikiUrl(domain, path) {
       if (!path) return '';
+      if (typeof path === 'object') {
+        path = path.original || path.preview || path.x96 || path.x48 || '';
+      }
+      if (typeof path !== 'string' || !path) return '';
       if (path.startsWith('http://') || path.startsWith('https://')) return path;
-      return `${domain}${path.startsWith('/') ? '' : '/'}${path}`;
+      const base = domain || 'https://shikimori.one';
+      return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
     }
 
     async function syncWithShikimori() {
@@ -2333,7 +2465,7 @@
     }
 
     /* =====================================================================
-       11. POLITE BACKGROUND POSTER HYDRATION (JIKAN API v4 — OPEN CORS)
+       11. 100% POSTER HYDRATION: ANILIST GRAPHQL + SHIKIMORI / JIKAN QUEUE
        ===================================================================== */
     let posterQueueRunning = false;
 
@@ -2344,69 +2476,248 @@
       imgs.forEach((img) => {
         if (img.src !== url) {
           img.classList.remove('hidden');
-          img.onload = () => img.classList.remove('opacity-0');
-          img.onerror = () => img.classList.add('hidden');
+          img.onload = () => {
+            img.classList.remove('opacity-0');
+          };
+          img.onerror = () => {
+            img.classList.add('hidden');
+          };
           img.src = url;
         }
       });
     }
 
-    async function hydratePostersViaJikan() {
-      if (!state.settings.enableJikanPosters || posterQueueRunning) return;
-      posterQueueRunning = true;
+    // 1) AniList GraphQL Batch POST for all Anime (Peak Fiction)
+    async function hydrateAniListAnimePosters() {
+      const ids = [];
+      const idToQuery = {};
 
-      // Collect unique poster tasks (Peak Fiction -> History -> Waifu -> Literally Me)
-      const tasks = [];
-      const seen = new Set();
+      state.profile.peakFiction.forEach((a) => {
+        if (a.malId) {
+          ids.push(a.malId);
+          idToQuery[a.malId] = a.query;
+        }
+      });
 
-      const enqueue = (kind, query, alreadyHasPoster) => {
-        if (!query || alreadyHasPoster) return;
-        const key = `${kind}:${query}`;
-        if (seen.has(key) || state.posterCache[key]) return;
-        seen.add(key);
-        tasks.push({ kind, query, key });
-      };
+      if (ids.length === 0) return;
 
-      state.profile.peakFiction.forEach((a) => enqueue('anime', a.query, Boolean(a.poster)));
-      state.profile.history.forEach((h) => enqueue('anime', h.query, Boolean(h.poster)));
-      state.profile.waifu.forEach((w) => enqueue('char', w.query, Boolean(w.poster)));
-      state.profile.literallyMe.forEach((c) => enqueue('char', c.query, Boolean(c.poster)));
+      // Apply cached immediately if available
+      ids.forEach((id) => {
+        const q = idToQuery[id];
+        const cached = state.posterCache[`anime:${q}`];
+        if (cached) applyPosterToDom(`anime:${q}`, cached);
+      });
 
-      for (const task of tasks) {
-        if (!state.settings.enableJikanPosters) break;
-        try {
-          const endpoint = task.kind === 'anime'
-            ? `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(task.query)}&limit=1`
-            : `https://api.jikan.moe/v4/characters?q=${encodeURIComponent(task.query)}&limit=1`;
+      const uncached = ids.filter((id) => !state.posterCache[`anime:${idToQuery[id]}`]);
+      if (uncached.length === 0) return;
 
-          const res = await fetch(endpoint, { headers: { 'Accept': 'application/json' } });
-          if (res.status === 429) {
-            // Back off politely on rate limit
-            await new Promise((r) => setTimeout(r, 1500));
+      const gqlQuery = `
+        query ($ids: [Int]) {
+          Page(perPage: 50) {
+            media(idMal_in: $ids, type: ANIME) {
+              idMal
+              coverImage {
+                extraLarge
+                large
+              }
+            }
+          }
+        }
+      `;
+
+      try {
+        const res = await fetch('https://graphql.anilist.co', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            query: gqlQuery,
+            variables: { ids: ids },
+          }),
+        });
+
+        if (res.ok) {
+          const json = await res.json();
+          const mediaList = json && json.data && json.data.Page && json.data.Page.media;
+          if (Array.isArray(mediaList)) {
+            mediaList.forEach((m) => {
+              const q = idToQuery[m.idMal];
+              const cover = m.coverImage && (m.coverImage.extraLarge || m.coverImage.large);
+              if (q && cover) {
+                applyPosterToDom(`anime:${q}`, cover);
+              }
+            });
+            savePosterCache();
+          }
+        }
+      } catch (e) {
+        console.warn('AniList anime hydration error:', e);
+      }
+    }
+
+    // 2) Characters (Waifu & Literally Me): Shikimori First -> Sequential Jikan with 429 backoff
+    async function hydrateCharacters() {
+      const charEntries = [
+        ...state.profile.waifu.map((w) => ({ kind: 'char', item: w, query: w.query || w.name })),
+        ...state.profile.literallyMe.map((c) => ({ kind: 'char', item: c, query: c.query || c.name })),
+      ];
+
+      const activeDomain = state.settings.domain || 'https://shikimori.one';
+      const jikanQueue = [];
+
+      for (const entry of charEntries) {
+        const key = `char:${entry.query}`;
+
+        // Step a: Check cache
+        if (state.posterCache[key]) {
+          applyPosterToDom(key, state.posterCache[key]);
+          continue;
+        }
+
+        // Step b: Check if poster provided from Shikimori item
+        if (entry.item.poster) {
+          const resolved = resolveShikiUrl(activeDomain, entry.item.poster);
+          if (resolved) {
+            applyPosterToDom(key, resolved);
+            savePosterCache();
             continue;
           }
-          if (res.ok) {
-            const json = await res.json();
-            const first = json && Array.isArray(json.data) && json.data[0];
-            const imgUrl = first && first.images && first.images.jpg && (first.images.jpg.large_image_url || first.images.jpg.image_url);
-            if (imgUrl) {
-              applyPosterToDom(task.key, imgUrl);
-              savePosterCache();
+        }
+
+        // Step c: Attempt Shikimori character search API
+        let shikiCover = '';
+        try {
+          const shikiUrl = `${activeDomain}/api/characters/search?q=${encodeURIComponent(entry.query)}`;
+          const shikiData = await fetchJsonWithTimeout(shikiUrl, 2500);
+          if (Array.isArray(shikiData) && shikiData.length > 0) {
+            const first = shikiData[0];
+            if (first && first.image) {
+              shikiCover = resolveShikiUrl(activeDomain, first.image);
             }
           }
         } catch (_) {
-          // Silently keep monochrome artbook cover on network error
+          // Shikimori CORS / network fail - fallback to Jikan
         }
-        // Polite 430ms throttle to respect Jikan v4 rate limits (~3 req/sec)
-        await new Promise((r) => setTimeout(r, 430));
+
+        if (shikiCover) {
+          applyPosterToDom(key, shikiCover);
+          savePosterCache();
+          continue;
+        }
+
+        // Step d: No cover from Shikimori -> add to sequential Jikan queue
+        jikanQueue.push({ key, query: entry.query });
       }
 
-      posterQueueRunning = false;
+      // Step e: Strictly sequential Jikan queue (500ms throttle, 1.5s 429 retry)
+      if (state.settings.enableJikanPosters && jikanQueue.length > 0) {
+        for (const task of jikanQueue) {
+          if (!state.settings.enableJikanPosters) break;
+          if (state.posterCache[task.key]) continue;
+
+          let success = false;
+          let retries = 2; // up to 2 retries on 429
+
+          while (retries >= 0 && !success) {
+            try {
+              const endpoint = `https://api.jikan.moe/v4/characters?q=${encodeURIComponent(task.query)}&limit=1`;
+              const res = await fetch(endpoint, { headers: { 'Accept': 'application/json' } });
+
+              if (res.status === 429) {
+                // Back off politely on rate limit (1.5 seconds)
+                await new Promise((r) => setTimeout(r, 1500));
+                retries--;
+                continue;
+              }
+
+              if (res.ok) {
+                const json = await res.json();
+                const first = json && Array.isArray(json.data) && json.data[0];
+                const imgUrl = first && first.images && first.images.jpg && (first.images.jpg.large_image_url || first.images.jpg.image_url);
+                if (imgUrl) {
+                  applyPosterToDom(task.key, imgUrl);
+                  savePosterCache();
+                  success = true;
+                }
+              }
+              break;
+            } catch (_) {
+              break;
+            }
+          }
+
+          // Strict 500ms delay between consecutive Jikan requests
+          await new Promise((r) => setTimeout(r, 500));
+        }
+      }
+    }
+
+    async function hydratePosters() {
+      if (posterQueueRunning) return;
+      posterQueueRunning = true;
+      try {
+        await Promise.all([
+          hydrateAniListAnimePosters(),
+          hydrateCharacters(),
+        ]);
+      } finally {
+        posterQueueRunning = false;
+      }
     }
 
     /* =====================================================================
        12. EVENT LISTENERS & INITIALIZATION
        ===================================================================== */
+        function initIntroScreen() {
+      const overlay = document.getElementById('intro-overlay');
+      if (!overlay) return;
+
+      let dismissed = false;
+
+      const dismiss = (playSound) => {
+        if (dismissed) return;
+        dismissed = true;
+
+        overlay.classList.add('intro-hidden');
+
+        if (playSound) {
+          try {
+            ambientPlayer.play();
+          } catch (e) {
+            console.warn('Audio auto-start:', e);
+          }
+        }
+
+        setTimeout(() => {
+          if (overlay && overlay.parentNode) {
+            overlay.parentNode.removeChild(overlay);
+          }
+        }, 650);
+      };
+
+      const enterBtn = document.getElementById('intro-enter-btn');
+      if (enterBtn) {
+        enterBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          dismiss(true);
+        });
+      }
+
+      const muteBtn = document.getElementById('intro-mute-btn');
+      if (muteBtn) {
+        muteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          dismiss(false);
+        });
+      }
+
+      overlay.addEventListener('click', () => {
+        dismiss(true);
+      });
+    }
+
     function bindEvents() {
       // Ambient Player Toggle
       document.getElementById('ambient-toggle-btn').addEventListener('click', () => {
@@ -2447,7 +2758,7 @@
 
         await syncWithShikimori();
         if (state.settings.enableJikanPosters) {
-          hydratePostersViaJikan();
+          hydratePosters();
         }
       });
 
@@ -2523,6 +2834,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       loadSavedSettings();
       loadPosterCache();
+      initIntroScreen();
       initInteractiveCanvas();
       initWaifuCarouselControls();
       bindEvents();
@@ -2536,7 +2848,7 @@
 
       // Async Live Sync & Background Poster Hydration
       syncWithShikimori().finally(() => {
-        hydratePostersViaJikan();
+        hydratePosters();
       });
     });
   </script>
