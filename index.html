@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="no-referrer" />
   <title>undereror nyashka — undexeror // archive</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%278%27%20fill%3D%27%2307090d%27/%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%2716%27%20r%3D%2711%27%20fill%3D%27none%27%20stroke%3D%27%23adbfde%27%20stroke-width%3D%271.6%27%20stroke-dasharray%3D%2748%2016%27/%3E%3Cpath%20d%3D%27M16%209%20L21.5%2016%20L16%2023%20L10.5%2016%20Z%27%20fill%3D%27%23eef4ff%27/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -1610,7 +1611,10 @@
     .dock-slider {
       -webkit-appearance: none;
       appearance: none;
-      flex: 1;
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
+      max-width: 100%;
       height: 4px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.14);
@@ -1629,12 +1633,23 @@
       cursor: pointer;
     }
 
+    .dock-slider::-moz-range-thumb {
+      width: 10px;
+      height: 10px;
+      border: 0;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 8px rgba(var(--bright), 0.85);
+      cursor: pointer;
+    }
+
     .dock-bottom-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
       margin-top: 8px;
+      min-width: 0;
     }
 
     .dock-status-note {
@@ -1644,14 +1659,17 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      min-width: 0;
+      flex: 1;
     }
 
     .dock-vol-wrap {
       display: flex;
       align-items: center;
       gap: 6px;
-      width: 96px;
-      flex-shrink: 0;
+      width: 100px;
+      flex: 0 0 100px;
+      min-width: 0;
     }
 
     .dock-vol-wrap span {
@@ -2549,55 +2567,8 @@
 
 
     /* =========================================
-       STAGE 4: SFX TOGGLE + RANDOMIZER MODE BAR
+       STAGE 4: RANDOMIZER MODE BAR
        ========================================= */
-    .sfx-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 11px;
-      border-radius: 999px;
-      background: rgba(10, 13, 20, 0.70);
-      border: 1px solid rgba(var(--bright), 0.24);
-      color: rgba(var(--light), 0.72);
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      backdrop-filter: blur(8px);
-      cursor: pointer;
-      transition: border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.2s ease, opacity 0.2s ease;
-    }
-
-    .sfx-btn:hover {
-      color: #fff;
-      border-color: rgba(var(--bright), 0.72);
-      box-shadow: 0 0 14px rgba(var(--bright), 0.24);
-      transform: translateY(-1px);
-    }
-
-    .sfx-btn.is-on {
-      color: #fff;
-      border-color: rgba(var(--bright), 0.62);
-    }
-
-    .sfx-btn:not(.is-on) {
-      opacity: 0.58;
-    }
-
-    .sfx-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: rgba(var(--muted), 0.6);
-      transition: background 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .sfx-btn.is-on .sfx-dot {
-      background: rgb(var(--bright));
-      box-shadow: 0 0 8px rgba(var(--bright), 0.9);
-    }
-
     .modal-mode-bar {
       display: none;
       align-items: center;
@@ -2644,99 +2615,322 @@
       margin-left: 2px;
     }
 
+
+
     /* =========================================
-       STAGE 4: CUSTOM NOIR CURSOR + SILVER TRAIL
+       STAGE 5: LIVE "WATCHING NOW" SHELF
        ========================================= */
-    body.has-noir-cursor,
-    body.has-noir-cursor a,
-    body.has-noir-cursor button,
-    body.has-noir-cursor input[type="range"],
-    body.has-noir-cursor .catalog-card,
-    body.has-noir-cursor .waifu-card,
-    body.has-noir-cursor .graph-col,
-    body.has-noir-cursor .intro-overlay {
-      cursor: none !important;
+    .watching-head-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 14px;
     }
 
-    body.has-noir-cursor input[type="text"] {
-      cursor: text !important;
+    .watching-head-bar .section-title {
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
     }
 
-    .noir-cursor-dot,
-    .noir-cursor-ring,
-    .noir-trail-dot {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
+    .watching-live-dot {
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      will-change: transform, opacity;
-      opacity: 0;
-      transition: opacity 0.22s ease;
+      background: #6ee7b7;
+      box-shadow: 0 0 10px rgba(110, 231, 183, 0.85);
+      flex-shrink: 0;
+      animation: live-blink 2.4s ease-in-out infinite;
     }
 
-    .noir-cursor-dot {
-      z-index: 10052;
-      width: 6px;
+    @keyframes live-blink {
+      0%, 100% { opacity: 0.55; transform: scale(0.92); }
+      50%      { opacity: 1; transform: scale(1.12); }
+    }
+
+    .watching-nav-controls {
+      position: absolute;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .watching-shelf {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 14px;
+      padding: 10px 6px 18px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(var(--bright), 0.72) rgba(255, 255, 255, 0.08);
+      user-select: none;
+    }
+
+    .watching-shelf::-webkit-scrollbar {
       height: 6px;
-      margin-left: -3px;
-      margin-top: -3px;
+    }
+
+    .watching-shelf::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 999px;
+      border: 1px solid rgba(var(--bright), 0.12);
+    }
+
+    .watching-shelf::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, rgba(var(--bright), 0.55), rgba(235, 240, 248, 0.85));
+      border-radius: 999px;
+      box-shadow: 0 0 10px rgba(var(--bright), 0.42);
+    }
+
+    .watching-shelf::-webkit-scrollbar-thumb:hover {
       background: #ffffff;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.95), 0 0 18px rgba(var(--bright), 0.85);
     }
 
-    .noir-cursor-ring {
-      z-index: 10051;
-      width: 30px;
-      height: 30px;
-      margin-left: -15px;
-      margin-top: -15px;
-      border: 1.25px solid rgba(var(--bright), 0.65);
-      background: radial-gradient(circle, rgba(var(--bright), 0.06) 0%, transparent 70%);
-      box-shadow: 0 0 14px rgba(var(--bright), 0.18);
-      transition: opacity 0.22s ease, width 0.22s cubic-bezier(0.22, 1, 0.36, 1), height 0.22s cubic-bezier(0.22, 1, 0.36, 1), margin 0.22s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    .watching-shelf.is-dragging {
+      scroll-behavior: auto;
     }
 
-    .noir-cursor-ring.is-hover {
-      width: 46px;
-      height: 46px;
-      margin-left: -23px;
-      margin-top: -23px;
-      border-color: rgba(255, 255, 255, 0.90);
-      background: radial-gradient(circle, rgba(var(--bright), 0.16) 0%, transparent 72%);
-      box-shadow: 0 0 22px rgba(var(--bright), 0.42);
+    .watching-card {
+      position: relative;
+      flex: 0 0 278px;
+      width: 278px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.46);
+      overflow: hidden;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
     }
 
-    .noir-cursor-ring.is-down {
-      width: 24px;
-      height: 24px;
-      margin-left: -12px;
-      margin-top: -12px;
-      border-color: #ffffff;
-      box-shadow: 0 0 24px rgba(255, 255, 255, 0.65);
+    .watching-card:hover {
+      transform: translateY(-4px);
+      background: rgba(12, 16, 25, 0.78);
+      border-color: rgba(var(--bright), 0.55);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.58), 0 0 18px rgba(var(--bright), 0.16);
     }
 
-    .noir-trail-dot {
-      z-index: 10050;
-      width: 4px;
-      height: 4px;
-      margin-left: -2px;
-      margin-top: -2px;
-      background: rgba(var(--bright), 0.72);
-      box-shadow: 0 0 8px rgba(var(--bright), 0.55);
+    .watching-poster {
+      position: relative;
+      width: 54px;
+      height: 76px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: linear-gradient(155deg, rgba(20, 25, 36, 0.94), rgba(9, 11, 16, 0.98));
+      border: 1px solid rgba(var(--bright), 0.22);
     }
 
-    .noir-cursor-visible .noir-cursor-dot,
-    .noir-cursor-visible .noir-cursor-ring {
+    .watching-poster img {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.80) contrast(1.04);
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.32s ease, filter 0.32s ease;
+    }
+
+    .watching-poster img.loaded {
       opacity: 1;
     }
 
-    .noir-cursor-suppressed .noir-cursor-dot,
-    .noir-cursor-suppressed .noir-cursor-ring,
-    .noir-cursor-suppressed .noir-trail-dot {
-      opacity: 0 !important;
+    .watching-card:hover .watching-poster img {
+      filter: saturate(1.12) brightness(1.06);
+      transform: scale(1.06);
     }
 
+    .watching-info {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .watching-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.28;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .watching-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(var(--light), 0.64);
+    }
+
+    .watching-ep-badge {
+      color: rgb(235, 242, 255);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .watching-kind-tag {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .watching-progress-track {
+      height: 4.5px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      overflow: hidden;
+      border: 1px solid rgba(var(--bright), 0.14);
+    }
+
+    .watching-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(var(--bright), 0.72), #ffffff);
+      box-shadow: 0 0 10px rgba(var(--bright), 0.55);
+      transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .watching-progress-fill.is-ongoing {
+      background: linear-gradient(90deg, rgba(var(--bright), 0.45), #ffffff, rgba(var(--bright), 0.55));
+      background-size: 200% 100%;
+      animation: shimmer-text 3.5s linear infinite;
+    }
+
+    /* =========================================
+       STAGE 5: GLASS SPOTLIGHT (EDGE + SURFACE REVEAL)
+       ========================================= */
+    .glass-card,
+    .discord-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .music-dock {
+      overflow: hidden;
+    }
+
+    .modal-close {
+      z-index: 12;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .glass-card::before,
+      .discord-card::before,
+      .watching-card::before,
+      .music-dock::before,
+      .modal-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        z-index: 1;
+        background: radial-gradient(
+          360px circle at var(--spot-x, -999px) var(--spot-y, -999px),
+          rgba(var(--bright), 0.11),
+          rgba(255, 255, 255, 0.03) 38%,
+          transparent 68%
+        );
+        opacity: var(--spot-o, 0);
+        transition: opacity 0.28s ease;
+      }
+
+      .glass-card::after,
+      .discord-card::after,
+      .watching-card::after,
+      .music-dock::after,
+      .modal-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1.2px;
+        pointer-events: none;
+        z-index: 4;
+        background: radial-gradient(
+          250px circle at var(--spot-x, -999px) var(--spot-y, -999px),
+          rgba(255, 255, 255, 0.78),
+          rgba(var(--bright), 0.40) 42%,
+          transparent 72%
+        );
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        opacity: var(--spot-o, 0);
+        transition: opacity 0.28s ease;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .watching-head-bar {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .watching-nav-controls {
+        position: static;
+      }
+    }
+
+    /* =========================================
+       NATIVE SVG ARROW CURSOR (MONOCHROME THEME)
+       ========================================= */
+    @media (hover: hover) and (pointer: fine) {
+      html, body, .carousel-arrow:disabled {
+        cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23090c13%27%20stroke%3D%27%23adbfde%27%20stroke-width%3D%271.4%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M5.6%205.2%20L14.6%2010.5%20L10.3%2011.4%20L8.6%2015.8%20Z%27%20fill%3D%27%23dce6f7%27%20fill-opacity%3D%270.18%27/%3E%3C/svg%3E") 3 2, default !important;
+      }
+
+      a,
+      a *,
+      button:not(:disabled),
+      button:not(:disabled) *,
+      [role="button"],
+      .catalog-card,
+      .catalog-card *,
+      .watching-card,
+      .watching-card *,
+      .waifu-card,
+      .waifu-card *,
+      .graph-col,
+      .graph-col *,
+      .history-item,
+      .history-item *,
+      .track-row,
+      .track-row *,
+      .dock-slider,
+      .intro-overlay,
+      .social-pill,
+      .spotify-tab,
+      .mode-chip {
+        cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23edf3ff%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%271.35%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M16.5%2015.2%20L19.8%2018.5%20L16.5%2021.8%20L13.2%2018.5%20Z%27%20fill%3D%27%23adbfde%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%270.9%27/%3E%3C/svg%3E") 3 2, pointer !important;
+      }
+
+      input[type="text"],
+      textarea {
+        cursor: text !important;
+      }
+    }
     /* =========================================
        RESPONSIVE
        ========================================= */
@@ -2824,6 +3018,7 @@
         <nav class="nav-links" aria-label="Навигация">
           <a href="#profile">Профиль</a>
           <a href="#activity">Активность</a>
+          <a href="#watching">Смотрю</a>
           <a href="#waifu">Waifu</a>
           <a href="#collection">Коллекция</a>
         </nav>
@@ -2832,10 +3027,6 @@
             <span class="status-dot"></span>
             <span id="api-status-text">SYNC...</span>
           </div>
-          <button type="button" class="sfx-btn is-on" id="sfx-toggle-btn" title="Включить / выключить микрозвуки интерфейса">
-            <span class="sfx-dot"></span>
-            <span id="sfx-btn-label">SFX</span>
-          </button>
           <button type="button" class="audio-btn" id="audio-toggle-btn" title="Play / Pause плейлист">
             <span id="audio-icon">▶</span>
             <span class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
@@ -2863,7 +3054,7 @@
           <a class="social-pill" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">♪ TikTok @undexeror</a>
           <a class="social-pill" id="shiki-profile-link" href="https://shikimori.one/undereror+nyashka" target="_blank" rel="noopener noreferrer">◈ Shikimori</a>
           <a class="social-pill" href="https://github.com/undexerorrr" target="_blank" rel="noopener noreferrer">⌘ GitHub</a>
-          <button type="button" class="social-pill" id="hero-spotify-btn" style="cursor:pointer;font-family:inherit;">♫ Spotify</button>
+          <button type="button" class="social-pill" id="hero-spotify-btn" style="font-family:inherit;">♫ Spotify</button>
         </div>
         <div class="hero-badges">
           <span class="rank-badge" id="rank-badge">★ 400+ ТАЙТЛОВ · АНИМЕ ПСИХ</span>
@@ -2978,6 +3169,22 @@
             <div class="graph-bars" id="activity-graph"></div>
           </div>
         </div>
+      </section>
+
+      <!-- WATCHING NOW (SHIKIMORI LIVE SHELF) -->
+      <section id="watching">
+        <div class="watching-head-bar">
+          <h2 class="section-title">
+            <span class="watching-live-dot" aria-hidden="true"></span>
+            <a href="https://shikimori.one/undereror+nyashka/list/anime/mylist/watching" target="_blank" rel="noopener noreferrer">Сейчас смотрю →</a>
+          </h2>
+          <div class="watching-nav-controls">
+            <span class="waifu-counter" id="watching-counter">01–01 / 01</span>
+            <button type="button" class="carousel-arrow" id="watching-prev" aria-label="Прокрутить влево">‹</button>
+            <button type="button" class="carousel-arrow" id="watching-next" aria-label="Прокрутить вправо">›</button>
+          </div>
+        </div>
+        <div class="watching-shelf" id="watching-shelf"></div>
       </section>
 
       <!-- WAIFU CAROUSEL -->
@@ -3120,16 +3327,6 @@
     </div>
   </div>
 
-
-  <!-- Custom Noir Cursor + Trail -->
-  <div class="noir-cursor-ring" id="noir-cursor-ring" aria-hidden="true"></div>
-  <div class="noir-cursor-dot" id="noir-cursor-dot" aria-hidden="true"></div>
-  <div class="noir-trail-dot" data-trail="0" aria-hidden="true"></div>
-  <div class="noir-trail-dot" data-trail="1" aria-hidden="true"></div>
-  <div class="noir-trail-dot" data-trail="2" aria-hidden="true"></div>
-  <div class="noir-trail-dot" data-trail="3" aria-hidden="true"></div>
-  <div class="noir-trail-dot" data-trail="4" aria-hidden="true"></div>
-
   <script>
     (function () {
       'use strict';
@@ -3142,7 +3339,7 @@
       const ANILIST_ENDPOINT = 'https://graphql.anilist.co';
       const COVER_CACHE_KEY = 'undexeror_archive_covers_v4';
       const RATED_POOL_CACHE_KEY = 'undexeror_archive_rated910_v1';
-      const SFX_STORAGE_KEY = 'undexeror_archive_sfx_v1';
+      const WATCHING_CACHE_KEY = 'undexeror_archive_watching_v1';
       const SHIKI_KIND_LABELS = {
         tv: 'TV Сериал',
         movie: 'Фильм',
@@ -3208,6 +3405,22 @@
           { id: 10800, title: 'Яркая Тихая', action: 'Оценено на 8', dateText: '8 дней назад', url: 'https://shikimori.one/animes/10800', image: '' },
           { id: 52215, title: 'Во всеоружии: Сила артефактов', action: 'Добавлено в список', dateText: '11 дней назад', url: 'https://shikimori.one/animes/52215', image: '' },
           { id: 10800, title: 'Яркая Тихая', action: 'Просмотрены 4 эпизода, Смотрю', dateText: '11 дней назад', url: 'https://shikimori.one/animes/10800', image: '' }
+        ],
+        watching: [
+          {
+            malId: 10800,
+            title: 'Яркая Тихая',
+            kind: 'TV Сериал',
+            year: 2011,
+            episodes: 4,
+            totalEpisodes: 25,
+            score: 8.19,
+            userScore: 8,
+            status: 'watching',
+            url: 'https://shikimori.one/animes/10800',
+            shikiImg: '',
+            comment: ''
+          }
         ],
         activity: [
           { label: '2023', full: 'Май 2023', value: 68 },
@@ -3294,6 +3507,24 @@
       let searchQuery = '';
       let coverCache = loadCoverCache();
       let ratedAnimePool = loadRatedPoolCache();
+      let watchingList = loadWatchingCache();
+
+      function loadWatchingCache() {
+        try {
+          const raw = localStorage.getItem(WATCHING_CACHE_KEY);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function saveWatchingCache() {
+        try {
+          localStorage.setItem(WATCHING_CACHE_KEY, JSON.stringify(watchingList));
+        } catch (e) {}
+      }
       let randomizerMode = 'all';
 
       function loadRatedPoolCache() {
@@ -3897,6 +4128,227 @@
         });
 
         selectCol(points.length - 1);
+      }
+
+      /* =========================================
+         STAGE 5: WATCHING NOW SHELF RENDER & CONTROLS
+         ========================================= */
+      let updateWatchingNavRef = null;
+
+      function renderWatchingShelf(items) {
+        const shelf = document.getElementById('watching-shelf');
+        const section = document.getElementById('watching');
+        if (!shelf) return;
+
+        const list = (items && items.length) ? items : SNAPSHOT.watching;
+        if (!list || !list.length) {
+          if (section) section.style.display = 'none';
+          return;
+        }
+        if (section) section.style.display = '';
+
+        shelf.innerHTML = list.map((item) => {
+          const coverKey = 'anime_' + item.malId;
+          const imgSrc = coverCache[coverKey] || item.shikiImg || '';
+          const ep = Number(item.episodes) || 0;
+          const total = Number(item.totalEpisodes) || 0;
+          const hasTotal = total > 0 && !item.ongoing;
+          const pct = hasTotal
+            ? Math.max(4, Math.min(100, Math.round((ep / total) * 100)))
+            : (ep > 0 ? Math.min(88, 22 + Math.round(Math.log2(ep + 1) * 10)) : 12);
+          const epText = total > 0 ? `${ep} / ${total} эп.` : `${ep} / ? эп.`;
+          const statusTag = item.status === 'rewatching'
+            ? 'Пересматриваю'
+            : (item.ongoing ? 'Онгоинг' : (item.kind || 'Аниме'));
+
+          return `
+            <article class="watching-card" data-watch-id="${item.malId}">
+              <div class="watching-poster">
+                <img
+                  data-cover-key="${coverKey}"
+                  data-fallback-src="${escapeHtml(item.shikiImg || '')}"
+                  src="${escapeHtml(imgSrc)}"
+                  alt="${escapeHtml(item.title)}"
+                  loading="lazy"
+                />
+              </div>
+              <div class="watching-info">
+                <div class="watching-title">${escapeHtml(item.title)}</div>
+                <div class="watching-meta-row">
+                  <span class="watching-kind-tag">${escapeHtml(statusTag)}${item.year ? ' · ' + item.year : ''}</span>
+                  <span class="watching-ep-badge">${escapeHtml(epText)}</span>
+                </div>
+                <div class="watching-progress-track">
+                  <div class="watching-progress-fill ${!hasTotal ? 'is-ongoing' : ''}" style="width:${pct}%"></div>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+
+        attachImageHandlers(shelf);
+
+        shelf.querySelectorAll('.watching-card').forEach((card) => {
+          card.addEventListener('click', () => {
+            if (shelf.dataset.wasDragged === '1') return;
+            const item = list.find((x) => String(x.malId) === card.dataset.watchId);
+            if (!item) return;
+            const img = card.querySelector('img');
+            const epText = item.totalEpisodes > 0
+              ? `Просмотрено ${item.episodes} из ${item.totalEpisodes} эп.`
+              : `Просмотрено ${item.episodes} эп.`;
+            const pills = [
+              epText,
+              item.userScore ? `Моя оценка ${item.userScore}/10` : null,
+              item.score ? `★ ${Number(item.score).toFixed(2)}` : null,
+              item.year ? String(item.year) : null
+            ].filter(Boolean);
+
+            openModal({
+              tag: item.status === 'rewatching' ? 'ПЕРЕСМАТРИВАЮ СЕЙЧАС' : 'СЕЙЧАС СМОТРЮ · SHIKIMORI LIVE',
+              title: item.title,
+              sub: [item.kind, item.ongoing ? 'Онгоинг' : null, item.year].filter(Boolean).join(' · '),
+              pills,
+              vibes: [
+                item.status === 'rewatching' ? '#пересмотр' : '#в процессе',
+                item.ongoing ? '#онгоинг' : '#список смотрю'
+              ],
+              note: item.comment || 'Тайтл прямо сейчас находится в списке «Смотрю» профиля undereror nyashka на Shikimori.',
+              img: img ? img.src : (coverCache['anime_' + item.malId] || item.shikiImg || ''),
+              url: item.url || `${activeShikiOrigin}/animes/${item.malId}`
+            });
+          });
+        });
+
+        if (typeof updateWatchingNavRef === 'function') {
+          requestAnimationFrame(updateWatchingNavRef);
+        }
+      }
+
+      function initWatchingControls() {
+        const slider = document.getElementById('watching-shelf');
+        const prevBtn = document.getElementById('watching-prev');
+        const nextBtn = document.getElementById('watching-next');
+        const counter = document.getElementById('watching-counter');
+        if (!slider) return;
+
+        const cardUnit = 292;
+        const stepPx = cardUnit * 2;
+
+        function updateNavState() {
+          const totalCards = slider.querySelectorAll('.watching-card').length;
+          const maxScroll = Math.max(0, slider.scrollWidth - slider.clientWidth);
+          if (prevBtn) prevBtn.disabled = slider.scrollLeft <= 4;
+          if (nextBtn) nextBtn.disabled = slider.scrollLeft >= maxScroll - 4;
+
+          if (counter && totalCards > 0) {
+            const firstIdx = Math.min(totalCards, Math.max(1, Math.round(slider.scrollLeft / cardUnit) + 1));
+            const visibleCount = Math.max(1, Math.floor((slider.clientWidth + 14) / cardUnit));
+            const lastIdx = Math.min(totalCards, firstIdx + visibleCount - 1);
+            counter.textContent = `${formatRank(firstIdx)}–${formatRank(lastIdx)} / ${formatRank(totalCards)}`;
+          }
+        }
+
+        updateWatchingNavRef = updateNavState;
+
+        prevBtn?.addEventListener('click', () => {
+          slider.scrollBy({ left: -stepPx, behavior: 'smooth' });
+        });
+
+        nextBtn?.addEventListener('click', () => {
+          slider.scrollBy({ left: stepPx, behavior: 'smooth' });
+        });
+
+        slider.addEventListener('scroll', updateNavState, { passive: true });
+        window.addEventListener('resize', updateNavState);
+
+        let isDown = false;
+        let startX = 0;
+        let scrollLeft = 0;
+        let moved = 0;
+
+        slider.addEventListener('mousedown', (e) => {
+          isDown = true;
+          moved = 0;
+          slider.dataset.wasDragged = '0';
+          slider.classList.add('is-dragging');
+          startX = e.pageX - slider.offsetLeft;
+          scrollLeft = slider.scrollLeft;
+        });
+
+        window.addEventListener('mouseup', () => {
+          if (!isDown) return;
+          isDown = false;
+          slider.classList.remove('is-dragging');
+          if (moved > 8) {
+            slider.dataset.wasDragged = '1';
+            setTimeout(() => { slider.dataset.wasDragged = '0'; }, 80);
+          }
+        });
+
+        slider.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - slider.offsetLeft;
+          const walk = (x - startX) * 1.35;
+          moved = Math.abs(x - startX);
+          slider.scrollLeft = scrollLeft - walk;
+        });
+
+        requestAnimationFrame(updateNavState);
+      }
+
+      /* =========================================
+         STAGE 5: GLASS SPOTLIGHT (EDGE + SURFACE REVEAL)
+         ========================================= */
+      function initGlassSpotlight() {
+        const isFine = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (!isFine) return;
+
+        const SELECTOR = '.glass-card, .discord-card, .watching-card, .music-dock, .modal-card';
+        const PROXIMITY = 220;
+        let rafPending = false;
+        let lastX = -9999;
+        let lastY = -9999;
+
+        function updateSurfaces() {
+          rafPending = false;
+          const surfaces = document.querySelectorAll(SELECTOR);
+          for (let i = 0; i < surfaces.length; i++) {
+            const el = surfaces[i];
+            const rect = el.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) continue;
+
+            const withinX = lastX >= rect.left - PROXIMITY && lastX <= rect.right + PROXIMITY;
+            const withinY = lastY >= rect.top - PROXIMITY && lastY <= rect.bottom + PROXIMITY;
+
+            if (withinX && withinY) {
+              el.style.setProperty('--spot-x', (lastX - rect.left).toFixed(1) + 'px');
+              el.style.setProperty('--spot-y', (lastY - rect.top).toFixed(1) + 'px');
+              el.style.setProperty('--spot-o', '1');
+            } else if (el.style.getPropertyValue('--spot-o') !== '0') {
+              el.style.setProperty('--spot-o', '0');
+            }
+          }
+        }
+
+        window.addEventListener('pointermove', (e) => {
+          if (e.pointerType && e.pointerType !== 'mouse') return;
+          lastX = e.clientX;
+          lastY = e.clientY;
+          if (!rafPending) {
+            rafPending = true;
+            requestAnimationFrame(updateSurfaces);
+          }
+        }, { passive: true });
+
+        document.addEventListener('mouseleave', () => {
+          lastX = -9999;
+          lastY = -9999;
+          document.querySelectorAll(SELECTOR).forEach((el) => {
+            el.style.setProperty('--spot-o', '0');
+          });
+        });
       }
 
       /* =========================================
@@ -4521,6 +4973,55 @@
           }
         } catch (e) {}
 
+        // Pull live "Watching Now" shelf (watching + rewatching)
+        try {
+          const [wRes, rwRes] = await Promise.all([
+            fetch(`${activeShikiOrigin}/api/users/${user.id}/anime_rates?limit=50&status=watching`, { headers: { 'Accept': 'application/json' } }),
+            fetch(`${activeShikiOrigin}/api/users/${user.id}/anime_rates?limit=20&status=rewatching`, { headers: { 'Accept': 'application/json' } })
+          ]);
+          const wItems = wRes.ok ? await wRes.json() : [];
+          const rwItems = rwRes.ok ? await rwRes.json() : [];
+          const mergedRaw = [
+            ...(Array.isArray(wItems) ? wItems : []),
+            ...(Array.isArray(rwItems) ? rwItems : [])
+          ];
+          if (mergedRaw.length) {
+            mergedRaw.sort((a, b) => new Date(b.updated_at || 0).getTime() - new Date(a.updated_at || 0).getTime());
+            const seenW = new Set();
+            const parsedWatching = [];
+            mergedRaw.forEach((r) => {
+              const a = r.anime;
+              if (!a || !a.id || seenW.has(a.id)) return;
+              seenW.add(a.id);
+              const kindKey = String(a.kind || 'tv').toLowerCase();
+              const rawImg = a.image?.original || a.image?.preview || '';
+              const totalEp = Number(a.episodes) || Number(a.episodes_aired) || 0;
+              parsedWatching.push({
+                malId: a.id,
+                title: a.russian || a.name,
+                kind: SHIKI_KIND_LABELS[kindKey] || 'Аниме',
+                year: a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || null : null,
+                episodes: Number(r.episodes) || 0,
+                totalEpisodes: totalEp,
+                ongoing: a.status === 'ongoing',
+                score: Number(a.score) || 0,
+                userScore: Number(r.score) || 0,
+                status: r.status || 'watching',
+                url: a.url ? normalizeShikiUrl(a.url, activeShikiOrigin) : `${activeShikiOrigin}/animes/${a.id}`,
+                shikiImg: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : '',
+                comment: stripHtml(r.text || '').trim()
+              });
+            });
+
+            if (parsedWatching.length) {
+              watchingList = parsedWatching;
+              saveWatchingCache();
+              renderWatchingShelf(watchingList);
+              loadAnimeCoversBatch(parsedWatching.map((x) => x.malId));
+            }
+          }
+        } catch (e) {}
+
         // Pull user's completed anime rated 9-10 for the expanded Randomizer
         try {
           const rRes = await fetch(`${activeShikiOrigin}/api/users/${user.id}/anime_rates?limit=1000&status=completed`, {
@@ -4997,203 +5498,9 @@
       }
 
       /* =========================================
-         STAGE 4: SUBTLE UI MICRO-SFX (WEB AUDIO API)
-         ========================================= */
-      function initUiSfx() {
-        const btn = document.getElementById('sfx-toggle-btn');
-        const label = document.getElementById('sfx-btn-label');
-
-        let enabled = true;
-        try {
-          const saved = localStorage.getItem(SFX_STORAGE_KEY);
-          if (saved === 'off') enabled = false;
-        } catch (e) {}
-
-        let ctx = null;
-        let lastHoverAt = 0;
-
-        function ensureCtx() {
-          if (!ctx) {
-            const AudioCtx = window.AudioContext || window.webkitAudioContext;
-            if (!AudioCtx) return null;
-            ctx = new AudioCtx();
-          }
-          if (ctx.state === 'suspended') {
-            ctx.resume().catch(() => {});
-          }
-          return ctx;
-        }
-
-        function updateUI() {
-          if (btn) btn.classList.toggle('is-on', enabled);
-          if (label) label.textContent = enabled ? 'SFX' : 'SFX OFF';
-        }
-
-        function playTone(freqStart, freqEnd, durationSec, gainPeak, type) {
-          if (!enabled) return;
-          const ac = ensureCtx();
-          if (!ac) return;
-          try {
-            const now = ac.currentTime;
-            const osc = ac.createOscillator();
-            const gain = ac.createGain();
-            osc.type = type || 'sine';
-            osc.frequency.setValueAtTime(freqStart, now);
-            if (freqEnd && freqEnd !== freqStart) {
-              osc.frequency.exponentialRampToValueAtTime(freqEnd, now + durationSec);
-            }
-            gain.gain.setValueAtTime(0.0001, now);
-            gain.gain.linearRampToValueAtTime(gainPeak, now + 0.006);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + durationSec);
-
-            osc.connect(gain);
-            gain.connect(ac.destination);
-            osc.start(now);
-            osc.stop(now + durationSec + 0.015);
-          } catch (e) {}
-        }
-
-        function click() {
-          playTone(540, 260, 0.048, 0.036, 'triangle');
-        }
-
-        function hover() {
-          const now = performance.now();
-          if (now - lastHoverAt < 95) return;
-          lastHoverAt = now;
-          playTone(860, 940, 0.024, 0.013, 'sine');
-        }
-
-        function tick() {
-          playTone(720, 440, 0.030, 0.032, 'triangle');
-        }
-
-        function win() {
-          if (!enabled) return;
-          playTone(523.25, 523.25, 0.26, 0.032, 'sine');
-          setTimeout(() => playTone(783.99, 783.99, 0.30, 0.026, 'sine'), 55);
-        }
-
-        btn?.addEventListener('click', () => {
-          enabled = !enabled;
-          try { localStorage.setItem(SFX_STORAGE_KEY, enabled ? 'on' : 'off'); } catch (e) {}
-          updateUI();
-          if (enabled) click();
-        });
-
-        // Delegate subtle clicks & hovers across interactive controls
-        document.addEventListener('click', (e) => {
-          const t = e.target.closest('button, .social-pill, .nav-links a, .graph-col');
-          if (!t || t === btn || t.id === 'randomizer-btn' || t.id === 'modal-reroll-btn') return;
-          click();
-        }, { passive: true });
-
-        document.addEventListener('pointerenter', (e) => {
-          if (e.pointerType && e.pointerType !== 'mouse') return;
-          const t = e.target.closest?.('.tab-btn, .sort-btn, .randomizer-btn, .carousel-arrow, .mode-chip, .spotify-tab');
-          if (t) hover();
-        }, true);
-
-        updateUI();
-        return { click, hover, tick, win };
-      }
-
-      /* =========================================
-         STAGE 4: CUSTOM NOIR CURSOR + SILVER TRAIL
-         ========================================= */
-      function initNoirCursor() {
-        const isFinePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-        if (!isFinePointer) return;
-
-        const ring = document.getElementById('noir-cursor-ring');
-        const dot = document.getElementById('noir-cursor-dot');
-        const trails = Array.from(document.querySelectorAll('.noir-trail-dot'));
-        if (!ring || !dot) return;
-
-        document.body.classList.add('has-noir-cursor');
-
-        let mouseX = -100, mouseY = -100;
-        let ringX = -100, ringY = -100;
-        let visible = false;
-        const trailPos = trails.map(() => ({ x: -100, y: -100 }));
-
-        const HOVER_SELECTOR = 'a, button, .catalog-card, .waifu-card, .graph-col, .history-item, .track-row, .dock-slider';
-
-        function setVisible(v) {
-          if (visible === v) return;
-          visible = v;
-          document.body.classList.toggle('noir-cursor-visible', v);
-        }
-
-        window.addEventListener('mousemove', (e) => {
-          mouseX = e.clientX;
-          mouseY = e.clientY;
-          if (!visible) {
-            ringX = mouseX;
-            ringY = mouseY;
-            trailPos.forEach((p) => { p.x = mouseX; p.y = mouseY; });
-            setVisible(true);
-          }
-
-          const target = e.target;
-          const suppress = target && (target.tagName === 'IFRAME' || (target.tagName === 'INPUT' && target.type === 'text'));
-          document.body.classList.toggle('noir-cursor-suppressed', Boolean(suppress));
-
-          const hovering = Boolean(target && target.closest && target.closest(HOVER_SELECTOR));
-          ring.classList.toggle('is-hover', hovering);
-        }, { passive: true });
-
-        window.addEventListener('mousedown', () => {
-          ring.classList.add('is-down');
-        }, { passive: true });
-
-        window.addEventListener('mouseup', () => {
-          ring.classList.remove('is-down');
-        }, { passive: true });
-
-        document.addEventListener('mouseleave', () => setVisible(false));
-        window.addEventListener('blur', () => setVisible(false));
-        const spWrap = document.querySelector('.spotify-embed-wrap');
-        spWrap?.addEventListener('mouseenter', () => document.body.classList.add('noir-cursor-suppressed'));
-        spWrap?.addEventListener('mouseleave', () => document.body.classList.remove('noir-cursor-suppressed'));
-
-        function animateCursor() {
-          dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-
-          ringX += (mouseX - ringX) * 0.19;
-          ringY += (mouseY - ringY) * 0.19;
-          const beatScale = 1 + liveBeatEnergy * 0.16;
-          ring.style.transform = `translate3d(${ringX.toFixed(1)}px, ${ringY.toFixed(1)}px, 0) scale(${beatScale.toFixed(3)})`;
-
-          let prevX = mouseX;
-          let prevY = mouseY;
-          for (let i = 0; i < trails.length; i++) {
-            const p = trailPos[i];
-            const ease = 0.34 - i * 0.04;
-            p.x += (prevX - p.x) * ease;
-            p.y += (prevY - p.y) * ease;
-            prevX = p.x;
-            prevY = p.y;
-
-            const dx = mouseX - p.x;
-            const dy = mouseY - p.y;
-            const speed = Math.min(1, Math.hypot(dx, dy) / 36);
-            const alpha = visible ? Math.max(0, (0.48 - i * 0.08) * speed) : 0;
-            const scale = 1 - i * 0.13;
-            trails[i].style.transform = `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0) scale(${scale.toFixed(2)})`;
-            trails[i].style.opacity = alpha.toFixed(3);
-          }
-
-          requestAnimationFrame(animateCursor);
-        }
-
-        requestAnimationFrame(animateCursor);
-      }
-
-      /* =========================================
          RANDOMIZER («ЧТО ПОСМОТРЕТЬ ОТ МЕНЯ» — TOP 16 + 9–10★ SHIKIMORI)
          ========================================= */
-      function initRandomizer(sfx) {
+      function initRandomizer() {
         const triggerBtn = document.getElementById('randomizer-btn');
         const rerollBtn = document.getElementById('modal-reroll-btn');
         const modalCard = document.querySelector('#detail-modal .modal-card');
@@ -5280,12 +5587,10 @@
             const temp = pickRandomAnime(pool, prevTemp);
             prevTemp = temp.malId;
             showAnimeInModal(temp, false);
-            sfx?.tick();
             await sleep(d);
           }
 
           showAnimeInModal(winner, true);
-          sfx?.win();
           if (modalCard) {
             modalCard.classList.remove('is-rolling');
             void modalCard.offsetWidth;
@@ -5309,18 +5614,19 @@
       }
 
       const playerControls = initMusicPlayer();
-      const uiSfx = initUiSfx();
-      initNoirCursor();
       initIntroOverlay(playerControls);
       initSpotifyDrawer(playerControls);
       initLanyardPresence();
-      initRandomizer(uiSfx);
+      initRandomizer();
       initAtmosphereCanvas();
       initCollectionControls();
 
       renderStats(SNAPSHOT.anime, SNAPSHOT.manga, SNAPSHOT.lifetimeText);
       renderHistory(SNAPSHOT.history, false);
       renderActivityGraph(SNAPSHOT.activity);
+      renderWatchingShelf(watchingList.length ? watchingList : SNAPSHOT.watching);
+      initWatchingControls();
+      initGlassSpotlight();
       renderWaifu();
       initWaifuControls();
       renderCollection();
@@ -5328,7 +5634,8 @@
       syncShikimoriLive();
       loadAnimeCoversBatch([
         ...PEAK_FICTION.map((a) => a.malId),
-        ...SNAPSHOT.history.map((h) => h.id)
+        ...SNAPSHOT.history.map((h) => h.id),
+        ...(watchingList.length ? watchingList : SNAPSHOT.watching).map((w) => w.malId)
       ]);
       loadCharacterCoversBatch([...WAIFU_LIST, ...LITERALLY_ME]);
     })();
