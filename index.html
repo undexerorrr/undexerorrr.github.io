@@ -2547,6 +2547,196 @@
       }
     }
 
+
+    /* =========================================
+       STAGE 4: SFX TOGGLE + RANDOMIZER MODE BAR
+       ========================================= */
+    .sfx-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: rgba(10, 13, 20, 0.70);
+      border: 1px solid rgba(var(--bright), 0.24);
+      color: rgba(var(--light), 0.72);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .sfx-btn:hover {
+      color: #fff;
+      border-color: rgba(var(--bright), 0.72);
+      box-shadow: 0 0 14px rgba(var(--bright), 0.24);
+      transform: translateY(-1px);
+    }
+
+    .sfx-btn.is-on {
+      color: #fff;
+      border-color: rgba(var(--bright), 0.62);
+    }
+
+    .sfx-btn:not(.is-on) {
+      opacity: 0.58;
+    }
+
+    .sfx-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(var(--muted), 0.6);
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .sfx-btn.is-on .sfx-dot {
+      background: rgb(var(--bright));
+      box-shadow: 0 0 8px rgba(var(--bright), 0.9);
+    }
+
+    .modal-mode-bar {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: -2px;
+    }
+
+    .mode-chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(var(--bright), 0.22);
+      background: rgba(12, 16, 26, 0.72);
+      color: rgba(var(--light), 0.70);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mode-chip:hover {
+      color: #fff;
+      border-color: rgba(var(--bright), 0.58);
+    }
+
+    .mode-chip.active {
+      color: #fff;
+      background: rgba(var(--bright), 0.22);
+      border-color: rgba(var(--bright), 0.88);
+      box-shadow: 0 0 12px rgba(var(--bright), 0.26);
+    }
+
+    .randomizer-count-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(var(--bright), 0.35);
+      font-size: 9.5px;
+      color: #fff;
+      margin-left: 2px;
+    }
+
+    /* =========================================
+       STAGE 4: CUSTOM NOIR CURSOR + SILVER TRAIL
+       ========================================= */
+    body.has-noir-cursor,
+    body.has-noir-cursor a,
+    body.has-noir-cursor button,
+    body.has-noir-cursor input[type="range"],
+    body.has-noir-cursor .catalog-card,
+    body.has-noir-cursor .waifu-card,
+    body.has-noir-cursor .graph-col,
+    body.has-noir-cursor .intro-overlay {
+      cursor: none !important;
+    }
+
+    body.has-noir-cursor input[type="text"] {
+      cursor: text !important;
+    }
+
+    .noir-cursor-dot,
+    .noir-cursor-ring,
+    .noir-trail-dot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      border-radius: 50%;
+      will-change: transform, opacity;
+      opacity: 0;
+      transition: opacity 0.22s ease;
+    }
+
+    .noir-cursor-dot {
+      z-index: 10052;
+      width: 6px;
+      height: 6px;
+      margin-left: -3px;
+      margin-top: -3px;
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.95), 0 0 18px rgba(var(--bright), 0.85);
+    }
+
+    .noir-cursor-ring {
+      z-index: 10051;
+      width: 30px;
+      height: 30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      border: 1.25px solid rgba(var(--bright), 0.65);
+      background: radial-gradient(circle, rgba(var(--bright), 0.06) 0%, transparent 70%);
+      box-shadow: 0 0 14px rgba(var(--bright), 0.18);
+      transition: opacity 0.22s ease, width 0.22s cubic-bezier(0.22, 1, 0.36, 1), height 0.22s cubic-bezier(0.22, 1, 0.36, 1), margin 0.22s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .noir-cursor-ring.is-hover {
+      width: 46px;
+      height: 46px;
+      margin-left: -23px;
+      margin-top: -23px;
+      border-color: rgba(255, 255, 255, 0.90);
+      background: radial-gradient(circle, rgba(var(--bright), 0.16) 0%, transparent 72%);
+      box-shadow: 0 0 22px rgba(var(--bright), 0.42);
+    }
+
+    .noir-cursor-ring.is-down {
+      width: 24px;
+      height: 24px;
+      margin-left: -12px;
+      margin-top: -12px;
+      border-color: #ffffff;
+      box-shadow: 0 0 24px rgba(255, 255, 255, 0.65);
+    }
+
+    .noir-trail-dot {
+      z-index: 10050;
+      width: 4px;
+      height: 4px;
+      margin-left: -2px;
+      margin-top: -2px;
+      background: rgba(var(--bright), 0.72);
+      box-shadow: 0 0 8px rgba(var(--bright), 0.55);
+    }
+
+    .noir-cursor-visible .noir-cursor-dot,
+    .noir-cursor-visible .noir-cursor-ring {
+      opacity: 1;
+    }
+
+    .noir-cursor-suppressed .noir-cursor-dot,
+    .noir-cursor-suppressed .noir-cursor-ring,
+    .noir-cursor-suppressed .noir-trail-dot {
+      opacity: 0 !important;
+    }
+
     /* =========================================
        RESPONSIVE
        ========================================= */
@@ -2642,6 +2832,10 @@
             <span class="status-dot"></span>
             <span id="api-status-text">SYNC...</span>
           </div>
+          <button type="button" class="sfx-btn is-on" id="sfx-toggle-btn" title="Включить / выключить микрозвуки интерфейса">
+            <span class="sfx-dot"></span>
+            <span id="sfx-btn-label">SFX</span>
+          </button>
           <button type="button" class="audio-btn" id="audio-toggle-btn" title="Play / Pause плейлист">
             <span id="audio-icon">▶</span>
             <span class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
@@ -2825,7 +3019,7 @@
               <button type="button" class="sort-btn" data-sort="score">По оценке</button>
               <button type="button" class="sort-btn" data-sort="year">По году</button>
             </div>
-            <button type="button" class="randomizer-btn" id="randomizer-btn" title="Случайная рекомендация из моего топа">◈ Что посмотреть от меня</button>
+            <button type="button" class="randomizer-btn" id="randomizer-btn" title="Случайная рекомендация из Top 16 и твоих 9–10★ на Shikimori">◈ Что посмотреть от меня <span class="randomizer-count-badge" id="randomizer-count-badge">16</span></button>
           </div>
         </div>
 
@@ -2909,6 +3103,10 @@
       </div>
       <div class="modal-body">
         <div class="modal-tag" id="modal-tag">PEAK FICTION</div>
+        <div class="modal-mode-bar" id="modal-mode-bar">
+          <button type="button" class="mode-chip active" data-rmode="all" id="rmode-all-btn">Все 9–10★ (<span id="rmode-all-count">16</span>)</button>
+          <button type="button" class="mode-chip" data-rmode="peak" id="rmode-peak-btn">Только Top 16</button>
+        </div>
         <h3 class="modal-title" id="modal-title"></h3>
         <div class="modal-sub" id="modal-sub"></div>
         <div class="modal-pills" id="modal-pills"></div>
@@ -2922,6 +3120,16 @@
     </div>
   </div>
 
+
+  <!-- Custom Noir Cursor + Trail -->
+  <div class="noir-cursor-ring" id="noir-cursor-ring" aria-hidden="true"></div>
+  <div class="noir-cursor-dot" id="noir-cursor-dot" aria-hidden="true"></div>
+  <div class="noir-trail-dot" data-trail="0" aria-hidden="true"></div>
+  <div class="noir-trail-dot" data-trail="1" aria-hidden="true"></div>
+  <div class="noir-trail-dot" data-trail="2" aria-hidden="true"></div>
+  <div class="noir-trail-dot" data-trail="3" aria-hidden="true"></div>
+  <div class="noir-trail-dot" data-trail="4" aria-hidden="true"></div>
+
   <script>
     (function () {
       'use strict';
@@ -2933,6 +3141,16 @@
       const SHIKI_ORIGINS = ['https://shikimori.one', 'https://shikimori.io'];
       const ANILIST_ENDPOINT = 'https://graphql.anilist.co';
       const COVER_CACHE_KEY = 'undexeror_archive_covers_v4';
+      const RATED_POOL_CACHE_KEY = 'undexeror_archive_rated910_v1';
+      const SFX_STORAGE_KEY = 'undexeror_archive_sfx_v1';
+      const SHIKI_KIND_LABELS = {
+        tv: 'TV Сериал',
+        movie: 'Фильм',
+        ova: 'OVA',
+        ona: 'ONA',
+        special: 'Спешл',
+        tv_special: 'TV Спешл'
+      };
       const DISCORD_USER_ID = '372112023087087617';
       const SPOTIFY_PLAYLISTS = [
         { id: '2gmA2vop3KA3QGCGsUkTpC', label: '01 · Playlist', url: 'https://open.spotify.com/playlist/2gmA2vop3KA3QGCGsUkTpC' },
@@ -3075,6 +3293,48 @@
       let currentSort = 'rank';
       let searchQuery = '';
       let coverCache = loadCoverCache();
+      let ratedAnimePool = loadRatedPoolCache();
+      let randomizerMode = 'all';
+
+      function loadRatedPoolCache() {
+        try {
+          const raw = localStorage.getItem(RATED_POOL_CACHE_KEY);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function saveRatedPoolCache() {
+        try {
+          localStorage.setItem(RATED_POOL_CACHE_KEY, JSON.stringify(ratedAnimePool));
+        } catch (e) {}
+      }
+
+      function getCombinedRandomizerPool() {
+        const seen = new Set();
+        const combined = [];
+        PEAK_FICTION.forEach((a) => {
+          seen.add(a.malId);
+          combined.push({ ...a, source: 'peak' });
+        });
+        ratedAnimePool.forEach((r) => {
+          if (!r || !r.malId || seen.has(r.malId)) return;
+          seen.add(r.malId);
+          combined.push(r);
+        });
+        return combined;
+      }
+
+      function updateRandomizerPoolCounts() {
+        const totalAll = getCombinedRandomizerPool().length;
+        const badge = document.getElementById('randomizer-count-badge');
+        if (badge) badge.textContent = String(totalAll);
+        const allCountEl = document.getElementById('rmode-all-count');
+        if (allCountEl) allCountEl.textContent = String(totalAll);
+      }
 
       function loadCoverCache() {
         try {
@@ -3894,7 +4154,13 @@
                 tag: `PEAK FICTION · #${formatRank(a.rank)}`,
                 title: a.title,
                 sub: `${a.kind} · ${a.year}`,
-                pills: [`Топ #${formatRank(a.rank)}`, `★ ${a.score.toFixed(2)}`, String(a.year)],
+                pills: [
+                  `Топ #${formatRank(a.rank)}`,
+                  a.userScore ? `Моя оценка ${a.userScore}/10` : null,
+                  `★ ${a.score.toFixed(2)}`,
+                  String(a.year)
+                ].filter(Boolean),
+                vibes: a.vibes || [],
                 note: a.note,
                 img: img ? img.src : '',
                 url: `${activeShikiOrigin}/animes/${a.malId}`
@@ -3939,6 +4205,10 @@
         const rerollBtn = document.getElementById('modal-reroll-btn');
         if (rerollBtn) {
           rerollBtn.style.display = data.showReroll ? 'inline-flex' : 'none';
+        }
+        const modeBar = document.getElementById('modal-mode-bar');
+        if (modeBar) {
+          modeBar.style.display = data.showModeBar ? 'flex' : 'none';
         }
         const linkEl = document.getElementById('modal-link');
         linkEl.href = data.url || `${activeShikiOrigin}/undereror+nyashka`;
@@ -4247,6 +4517,70 @@
                   }
                 }
               });
+            }
+          }
+        } catch (e) {}
+
+        // Pull user's completed anime rated 9-10 for the expanded Randomizer
+        try {
+          const rRes = await fetch(`${activeShikiOrigin}/api/users/${user.id}/anime_rates?limit=1000&status=completed`, {
+            headers: { 'Accept': 'application/json' }
+          });
+          if (rRes.ok) {
+            const rates = await rRes.json();
+            if (Array.isArray(rates)) {
+              const allowedKinds = new Set(['tv', 'movie', 'ona', 'ova']);
+              const peakById = new Map(PEAK_FICTION.map((p) => [p.malId, p]));
+              const extracted = [];
+
+              rates.forEach((r) => {
+                const userScore = Number(r.score) || 0;
+                const a = r.anime;
+                if (userScore < 9 || !a || !a.id) return;
+
+                if (peakById.has(a.id)) {
+                  peakById.get(a.id).userScore = userScore;
+                  return;
+                }
+
+                const kindKey = String(a.kind || 'tv').toLowerCase();
+                if (!allowedKinds.has(kindKey)) return;
+
+                const rawImg = a.image?.original || a.image?.preview || '';
+                const shikiImg = rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : '';
+                const year = a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || null : null;
+                const shikiScore = Number(a.score) || 0;
+                const comment = stripHtml(r.text || '').trim();
+                const vibes = [
+                  userScore === 10 ? '#10/10' : '#9/10',
+                  kindKey === 'movie' ? '#фильм' : (kindKey === 'ona' ? '#ona' : '#просмотрено'),
+                  shikiScore >= 8.5 ? '#хит' : '#личный выбор'
+                ];
+
+                extracted.push({
+                  malId: a.id,
+                  title: a.russian || a.name,
+                  kind: SHIKI_KIND_LABELS[kindKey] || 'Аниме',
+                  year,
+                  score: shikiScore,
+                  userScore,
+                  shikiImg,
+                  url: a.url ? normalizeShikiUrl(a.url, activeShikiOrigin) : `${activeShikiOrigin}/animes/${a.id}`,
+                  vibes,
+                  note: comment || (
+                    userScore === 10
+                      ? 'Тайтл из моего списка просмотренного с высшей оценкой 10/10 на Shikimori — смело рекомендую.'
+                      : 'Сильный тайтл из моего списка просмотренного на Shikimori с личной оценкой 9/10.'
+                  ),
+                  source: 'shikimori'
+                });
+              });
+
+              if (extracted.length) {
+                ratedAnimePool = extracted;
+                saveRatedPoolCache();
+                updateRandomizerPoolCounts();
+              }
             }
           }
         } catch (e) {}
@@ -4663,41 +4997,276 @@
       }
 
       /* =========================================
-         RANDOMIZER («ЧТО ПОСМОТРЕТЬ ОТ МЕНЯ»)
+         STAGE 4: SUBTLE UI MICRO-SFX (WEB AUDIO API)
          ========================================= */
-      function initRandomizer() {
+      function initUiSfx() {
+        const btn = document.getElementById('sfx-toggle-btn');
+        const label = document.getElementById('sfx-btn-label');
+
+        let enabled = true;
+        try {
+          const saved = localStorage.getItem(SFX_STORAGE_KEY);
+          if (saved === 'off') enabled = false;
+        } catch (e) {}
+
+        let ctx = null;
+        let lastHoverAt = 0;
+
+        function ensureCtx() {
+          if (!ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return null;
+            ctx = new AudioCtx();
+          }
+          if (ctx.state === 'suspended') {
+            ctx.resume().catch(() => {});
+          }
+          return ctx;
+        }
+
+        function updateUI() {
+          if (btn) btn.classList.toggle('is-on', enabled);
+          if (label) label.textContent = enabled ? 'SFX' : 'SFX OFF';
+        }
+
+        function playTone(freqStart, freqEnd, durationSec, gainPeak, type) {
+          if (!enabled) return;
+          const ac = ensureCtx();
+          if (!ac) return;
+          try {
+            const now = ac.currentTime;
+            const osc = ac.createOscillator();
+            const gain = ac.createGain();
+            osc.type = type || 'sine';
+            osc.frequency.setValueAtTime(freqStart, now);
+            if (freqEnd && freqEnd !== freqStart) {
+              osc.frequency.exponentialRampToValueAtTime(freqEnd, now + durationSec);
+            }
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(gainPeak, now + 0.006);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + durationSec);
+
+            osc.connect(gain);
+            gain.connect(ac.destination);
+            osc.start(now);
+            osc.stop(now + durationSec + 0.015);
+          } catch (e) {}
+        }
+
+        function click() {
+          playTone(540, 260, 0.048, 0.036, 'triangle');
+        }
+
+        function hover() {
+          const now = performance.now();
+          if (now - lastHoverAt < 95) return;
+          lastHoverAt = now;
+          playTone(860, 940, 0.024, 0.013, 'sine');
+        }
+
+        function tick() {
+          playTone(720, 440, 0.030, 0.032, 'triangle');
+        }
+
+        function win() {
+          if (!enabled) return;
+          playTone(523.25, 523.25, 0.26, 0.032, 'sine');
+          setTimeout(() => playTone(783.99, 783.99, 0.30, 0.026, 'sine'), 55);
+        }
+
+        btn?.addEventListener('click', () => {
+          enabled = !enabled;
+          try { localStorage.setItem(SFX_STORAGE_KEY, enabled ? 'on' : 'off'); } catch (e) {}
+          updateUI();
+          if (enabled) click();
+        });
+
+        // Delegate subtle clicks & hovers across interactive controls
+        document.addEventListener('click', (e) => {
+          const t = e.target.closest('button, .social-pill, .nav-links a, .graph-col');
+          if (!t || t === btn || t.id === 'randomizer-btn' || t.id === 'modal-reroll-btn') return;
+          click();
+        }, { passive: true });
+
+        document.addEventListener('pointerenter', (e) => {
+          if (e.pointerType && e.pointerType !== 'mouse') return;
+          const t = e.target.closest?.('.tab-btn, .sort-btn, .randomizer-btn, .carousel-arrow, .mode-chip, .spotify-tab');
+          if (t) hover();
+        }, true);
+
+        updateUI();
+        return { click, hover, tick, win };
+      }
+
+      /* =========================================
+         STAGE 4: CUSTOM NOIR CURSOR + SILVER TRAIL
+         ========================================= */
+      function initNoirCursor() {
+        const isFinePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (!isFinePointer) return;
+
+        const ring = document.getElementById('noir-cursor-ring');
+        const dot = document.getElementById('noir-cursor-dot');
+        const trails = Array.from(document.querySelectorAll('.noir-trail-dot'));
+        if (!ring || !dot) return;
+
+        document.body.classList.add('has-noir-cursor');
+
+        let mouseX = -100, mouseY = -100;
+        let ringX = -100, ringY = -100;
+        let visible = false;
+        const trailPos = trails.map(() => ({ x: -100, y: -100 }));
+
+        const HOVER_SELECTOR = 'a, button, .catalog-card, .waifu-card, .graph-col, .history-item, .track-row, .dock-slider';
+
+        function setVisible(v) {
+          if (visible === v) return;
+          visible = v;
+          document.body.classList.toggle('noir-cursor-visible', v);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          if (!visible) {
+            ringX = mouseX;
+            ringY = mouseY;
+            trailPos.forEach((p) => { p.x = mouseX; p.y = mouseY; });
+            setVisible(true);
+          }
+
+          const target = e.target;
+          const suppress = target && (target.tagName === 'IFRAME' || (target.tagName === 'INPUT' && target.type === 'text'));
+          document.body.classList.toggle('noir-cursor-suppressed', Boolean(suppress));
+
+          const hovering = Boolean(target && target.closest && target.closest(HOVER_SELECTOR));
+          ring.classList.toggle('is-hover', hovering);
+        }, { passive: true });
+
+        window.addEventListener('mousedown', () => {
+          ring.classList.add('is-down');
+        }, { passive: true });
+
+        window.addEventListener('mouseup', () => {
+          ring.classList.remove('is-down');
+        }, { passive: true });
+
+        document.addEventListener('mouseleave', () => setVisible(false));
+        window.addEventListener('blur', () => setVisible(false));
+        const spWrap = document.querySelector('.spotify-embed-wrap');
+        spWrap?.addEventListener('mouseenter', () => document.body.classList.add('noir-cursor-suppressed'));
+        spWrap?.addEventListener('mouseleave', () => document.body.classList.remove('noir-cursor-suppressed'));
+
+        function animateCursor() {
+          dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+
+          ringX += (mouseX - ringX) * 0.19;
+          ringY += (mouseY - ringY) * 0.19;
+          const beatScale = 1 + liveBeatEnergy * 0.16;
+          ring.style.transform = `translate3d(${ringX.toFixed(1)}px, ${ringY.toFixed(1)}px, 0) scale(${beatScale.toFixed(3)})`;
+
+          let prevX = mouseX;
+          let prevY = mouseY;
+          for (let i = 0; i < trails.length; i++) {
+            const p = trailPos[i];
+            const ease = 0.34 - i * 0.04;
+            p.x += (prevX - p.x) * ease;
+            p.y += (prevY - p.y) * ease;
+            prevX = p.x;
+            prevY = p.y;
+
+            const dx = mouseX - p.x;
+            const dy = mouseY - p.y;
+            const speed = Math.min(1, Math.hypot(dx, dy) / 36);
+            const alpha = visible ? Math.max(0, (0.48 - i * 0.08) * speed) : 0;
+            const scale = 1 - i * 0.13;
+            trails[i].style.transform = `translate3d(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0) scale(${scale.toFixed(2)})`;
+            trails[i].style.opacity = alpha.toFixed(3);
+          }
+
+          requestAnimationFrame(animateCursor);
+        }
+
+        requestAnimationFrame(animateCursor);
+      }
+
+      /* =========================================
+         RANDOMIZER («ЧТО ПОСМОТРЕТЬ ОТ МЕНЯ» — TOP 16 + 9–10★ SHIKIMORI)
+         ========================================= */
+      function initRandomizer(sfx) {
         const triggerBtn = document.getElementById('randomizer-btn');
         const rerollBtn = document.getElementById('modal-reroll-btn');
         const modalCard = document.querySelector('#detail-modal .modal-card');
+        const modeBtns = Array.from(document.querySelectorAll('.mode-chip'));
         if (!triggerBtn) return;
 
         let lastMalId = null;
         let isRolling = false;
 
-        function pickRandomAnime(excludeId) {
-          const pool = PEAK_FICTION.filter((a) => a.malId !== excludeId);
-          return pool[Math.floor(Math.random() * pool.length)] || PEAK_FICTION[0];
+        function getActivePool() {
+          if (randomizerMode === 'peak') {
+            return PEAK_FICTION.map((a) => ({ ...a, source: 'peak' }));
+          }
+          return getCombinedRandomizerPool();
+        }
+
+        function pickRandomAnime(pool, excludeId) {
+          const filtered = pool.filter((a) => a.malId !== excludeId);
+          const list = filtered.length ? filtered : pool;
+          return list[Math.floor(Math.random() * list.length)] || PEAK_FICTION[0];
+        }
+
+        function updateModeButtons() {
+          modeBtns.forEach((b) => b.classList.toggle('active', b.dataset.rmode === randomizerMode));
         }
 
         function showAnimeInModal(a, isFinal) {
-          const img = coverCache['anime_' + a.malId] || '';
+          const img = coverCache['anime_' + a.malId] || a.shikiImg || '';
+          const isPeak = a.source === 'peak' || typeof a.rank === 'number';
+          const tag = !isFinal
+            ? 'ВЫБИРАЮ ТАЙТЛ...'
+            : isPeak
+              ? `PEAK FICTION · #${formatRank(a.rank)}`
+              : `ИЗ ПРОСМОТРЕННОГО · МОЯ ОЦЕНКА ${a.userScore || 9}/10`;
+
+          const pills = [];
+          if (isPeak && a.rank) pills.push(`Топ #${formatRank(a.rank)}`);
+          if (a.userScore) pills.push(`Моя оценка ${a.userScore}/10`);
+          if (a.score) pills.push(`★ ${Number(a.score).toFixed(2)}`);
+          if (a.year) pills.push(String(a.year));
+
           openModal({
-            tag: isFinal ? `РЕКОМЕНДАЦИЯ ОТ UNDEREROR · #${formatRank(a.rank)}` : 'ВЫБИРАЮ ТАЙТЛ...',
+            tag,
             title: a.title,
-            sub: `${a.kind} · ${a.year}`,
-            pills: [`Топ #${formatRank(a.rank)}`, `★ ${a.score.toFixed(2)}`, String(a.year)],
-            vibes: isFinal ? (a.vibes || []) : ['#рулетка', '#peak-fiction'],
-            note: isFinal ? `«${a.note}»` : 'Прокрутка коллекции peak fiction...',
+            sub: [a.kind, a.year].filter(Boolean).join(' · '),
+            pills,
+            vibes: isFinal ? (a.vibes || []) : ['#рулетка', randomizerMode === 'peak' ? '#top-16' : '#9-10★'],
+            note: isFinal ? `«${a.note}»` : 'Прокрутка коллекции...',
             img,
-            url: `${activeShikiOrigin}/animes/${a.malId}`,
-            showReroll: true
+            url: a.url || `${activeShikiOrigin}/animes/${a.malId}`,
+            showReroll: true,
+            showModeBar: true
           });
+
+          if (isFinal && a.malId && !coverCache['anime_' + a.malId]) {
+            loadAnimeCoversBatch([a.malId]).then(() => {
+              const hd = coverCache['anime_' + a.malId];
+              const modalImg = document.getElementById('modal-img');
+              if (hd && modalImg && document.getElementById('modal-title')?.textContent === a.title) {
+                modalImg.src = hd;
+              }
+            });
+          }
         }
 
         async function rollRecommendation() {
           if (isRolling) return;
           isRolling = true;
-          const winner = pickRandomAnime(lastMalId);
+          updateModeButtons();
+          updateRandomizerPoolCounts();
+
+          const pool = getActivePool();
+          const winner = pickRandomAnime(pool, lastMalId);
           lastMalId = winner.malId;
 
           if (modalCard) {
@@ -4705,16 +5274,18 @@
             modalCard.classList.add('is-rolling');
           }
 
-          const delays = [45, 55, 65, 75, 90, 110, 135, 165];
+          const delays = [45, 55, 65, 78, 95, 115, 140, 170];
           let prevTemp = null;
           for (const d of delays) {
-            const temp = pickRandomAnime(prevTemp);
+            const temp = pickRandomAnime(pool, prevTemp);
             prevTemp = temp.malId;
             showAnimeInModal(temp, false);
+            sfx?.tick();
             await sleep(d);
           }
 
           showAnimeInModal(winner, true);
+          sfx?.win();
           if (modalCard) {
             modalCard.classList.remove('is-rolling');
             void modalCard.offsetWidth;
@@ -4723,15 +5294,27 @@
           isRolling = false;
         }
 
+        modeBtns.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            if (isRolling) return;
+            randomizerMode = btn.dataset.rmode || 'all';
+            updateModeButtons();
+            rollRecommendation();
+          });
+        });
+
         triggerBtn.addEventListener('click', rollRecommendation);
         rerollBtn?.addEventListener('click', rollRecommendation);
+        updateRandomizerPoolCounts();
       }
 
       const playerControls = initMusicPlayer();
+      const uiSfx = initUiSfx();
+      initNoirCursor();
       initIntroOverlay(playerControls);
       initSpotifyDrawer(playerControls);
       initLanyardPresence();
-      initRandomizer();
+      initRandomizer(uiSfx);
       initAtmosphereCanvas();
       initCollectionControls();
 
