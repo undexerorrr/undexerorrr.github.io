@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="referrer" content="no-referrer" />
   <title>undereror nyashka — undexeror // archive</title>
+  <meta name="description" content="undexeror // archive — личный аниме-архив, Аниме-ДНК, живой статус Discord/Spotify, рандомайзер и проверка совместимости вкусов по Shikimori." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://undexerorrr.github.io/" />
+  <meta property="og:title" content="undexeror // archive — undereror nyashka" />
+  <meta property="og:description" content="415+ тайтлов · Аниме-ДНК · Live Discord/Spotify · Проверь свой ник на базу по Shikimori." />
+  <meta property="og:image" content="https://undexerorrr.github.io/bg.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#07090d" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%278%27%20fill%3D%27%2307090d%27/%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%2716%27%20r%3D%2711%27%20fill%3D%27none%27%20stroke%3D%27%23adbfde%27%20stroke-width%3D%271.6%27%20stroke-dasharray%3D%2748%2016%27/%3E%3Cpath%20d%3D%27M16%209%20L21.5%2016%20L16%2023%20L10.5%2016%20Z%27%20fill%3D%27%23eef4ff%27/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -3471,6 +3479,524 @@
       }
     }
 
+
+    /* =========================================
+       STAGE 2 NEW: TASTE MATCH («ПРОВЕРКА НА БАЗУ»)
+       ========================================= */
+    .base-check-card {
+      padding: 24px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .base-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .base-head-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .base-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .base-heading {
+      font-size: clamp(18px, 2.4vw, 22px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.3px;
+    }
+
+    .base-subtitle {
+      font-size: 12.5px;
+      color: rgba(var(--light), 0.68);
+    }
+
+    .base-form {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .base-input-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .base-input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: rgba(var(--bright), 0.72);
+      pointer-events: none;
+    }
+
+    .base-input {
+      width: 100%;
+      padding: 12px 16px 12px 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(var(--bright), 0.28);
+      background: rgba(6, 8, 14, 0.72);
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      outline: none;
+      backdrop-filter: blur(8px);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .base-input::placeholder {
+      color: rgba(var(--light), 0.44);
+    }
+
+    .base-input:focus {
+      background: rgba(11, 15, 24, 0.90);
+      border-color: rgba(var(--bright), 0.85);
+      box-shadow: 0 0 18px rgba(var(--bright), 0.24);
+    }
+
+    .base-submit-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(var(--bright), 0.68);
+      background:
+        linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.34) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
+        linear-gradient(to bottom, rgba(var(--bright), 0.26), rgba(9, 12, 20, 0.88));
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 0 18px rgba(var(--bright), 0.20);
+      animation: badge-sheen 7s ease-in-out infinite;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .base-submit-btn:hover:not(:disabled) {
+      transform: translateY(-1px) scale(1.02);
+      border-color: #fff;
+      box-shadow: 0 0 24px rgba(var(--bright), 0.45);
+    }
+
+    .base-submit-btn:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
+    .base-status-line {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(8, 11, 18, 0.72);
+      border: 1px solid rgba(var(--bright), 0.22);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: rgba(var(--light), 0.86);
+    }
+
+    .base-status-line.is-visible {
+      display: flex;
+    }
+
+    .base-status-line.is-error {
+      border-color: rgba(248, 113, 113, 0.48);
+      color: #fecaca;
+      background: rgba(34, 12, 16, 0.62);
+    }
+
+    .base-spinner {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid rgba(var(--bright), 0.22);
+      border-top-color: #fff;
+      animation: orbit-spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .base-result {
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(var(--bright), 0.16);
+      animation: card-in 0.45s ease backwards;
+    }
+
+    .base-result.is-visible {
+      display: flex;
+    }
+
+    .base-verdict-hero {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 18px 22px;
+      padding: 18px 20px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(var(--bright), 0.12), rgba(7, 10, 16, 0.78));
+      border: 1px solid rgba(var(--bright), 0.30);
+    }
+
+    .base-verdict-hero.tier-high {
+      border-color: rgba(110, 231, 183, 0.46);
+      background: linear-gradient(135deg, rgba(110, 231, 183, 0.10), rgba(7, 10, 16, 0.82));
+    }
+
+    .base-verdict-hero.tier-low {
+      border-color: rgba(248, 113, 113, 0.42);
+      background: linear-gradient(135deg, rgba(248, 113, 113, 0.09), rgba(7, 10, 16, 0.82));
+    }
+
+    .base-score-ring {
+      position: relative;
+      width: 102px;
+      height: 102px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--match-color, #dce8ff) calc(var(--match-pct, 0) * 1%), rgba(255, 255, 255, 0.09) 0);
+      padding: 5px;
+      box-shadow: 0 0 26px rgba(var(--bright), 0.22);
+      flex-shrink: 0;
+    }
+
+    .base-score-ring-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #080b12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(var(--bright), 0.18);
+    }
+
+    .base-pct-num {
+      font-family: var(--font-mono);
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .base-pct-lbl {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      letter-spacing: 1.4px;
+      color: rgba(var(--light), 0.56);
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .base-verdict-center {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .base-matchup-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .base-guest-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(var(--bright), 0.45);
+      background: #0c1018;
+      flex-shrink: 0;
+    }
+
+    .base-matchup-names {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.8px;
+      color: rgba(var(--light), 0.80);
+    }
+
+    .base-matchup-names strong {
+      color: #fff;
+    }
+
+    .base-rank-title {
+      font-size: clamp(18px, 2.5vw, 22px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      text-shadow: 0 0 16px rgba(var(--bright), 0.34);
+    }
+
+    .base-rank-desc {
+      font-size: 12.5px;
+      color: rgba(var(--light), 0.78);
+      line-height: 1.45;
+    }
+
+    .base-mini-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(74px, 1fr));
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .base-metric-box {
+      padding: 10px 10px;
+      border-radius: 10px;
+      background: rgba(6, 8, 14, 0.72);
+      border: 1px solid rgba(var(--bright), 0.16);
+      text-align: center;
+    }
+
+    .base-metric-box .m-val {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .base-metric-box .m-lbl {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: rgba(var(--light), 0.56);
+      margin-top: 3px;
+    }
+
+    .base-details-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 16px;
+    }
+
+    .base-subpanel {
+      padding: 15px 16px;
+      border-radius: 13px;
+      background: rgba(6, 8, 14, 0.56);
+      border: 1px solid rgba(var(--bright), 0.16);
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .base-subpanel.is-conflict-panel {
+      border-color: rgba(248, 113, 113, 0.28);
+      background: linear-gradient(155deg, rgba(32, 12, 18, 0.42), rgba(6, 8, 14, 0.62));
+    }
+
+    .base-subpanel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .base-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .base-anime-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 9px;
+      border-radius: 10px;
+      background: rgba(10, 13, 22, 0.62);
+      border: 1px solid rgba(var(--bright), 0.14);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .base-anime-row:hover {
+      transform: translateY(-2px);
+      background: rgba(15, 20, 32, 0.84);
+      border-color: rgba(var(--bright), 0.50);
+    }
+
+    .base-subpanel.is-conflict-panel .base-anime-row:hover {
+      border-color: rgba(248, 113, 113, 0.60);
+    }
+
+    .base-row-thumb {
+      width: 34px;
+      height: 48px;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: rgba(16, 20, 30, 0.9);
+      border: 1px solid rgba(var(--bright), 0.20);
+    }
+
+    .base-row-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .base-row-thumb img.loaded {
+      opacity: 1;
+    }
+
+    .base-row-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .base-row-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .base-row-scores {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+
+    .score-tag {
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: rgba(var(--bright), 0.14);
+      border: 1px solid rgba(var(--bright), 0.26);
+      color: #eef4ff;
+    }
+
+    .score-tag.is-guest {
+      background: rgba(110, 231, 183, 0.12);
+      border-color: rgba(110, 231, 183, 0.34);
+      color: #d1fae5;
+    }
+
+    .score-tag.is-diff {
+      background: rgba(248, 113, 113, 0.16);
+      border-color: rgba(248, 113, 113, 0.42);
+      color: #fecaca;
+    }
+
+    .base-empty-note {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: rgba(var(--light), 0.56);
+      padding: 14px 6px;
+      text-align: center;
+    }
+
+    .base-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-top: 4px;
+    }
+
+    .base-actions-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .base-action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(var(--bright), 0.36);
+      background: rgba(12, 16, 26, 0.80);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .base-action-btn:hover {
+      transform: translateY(-1px);
+      border-color: #fff;
+      box-shadow: 0 0 16px rgba(var(--bright), 0.34);
+    }
+
+    .base-action-btn.is-primary {
+      border-color: rgba(110, 231, 183, 0.58);
+      background: linear-gradient(to bottom, rgba(110, 231, 183, 0.22), rgba(9, 14, 18, 0.88));
+      color: #ecfdf5;
+    }
+
+    .base-action-btn.is-primary:hover {
+      border-color: #6ee7b7;
+      box-shadow: 0 0 18px rgba(110, 231, 183, 0.38);
+    }
+
+    @media (max-width: 900px) {
+      .base-verdict-hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        justify-items: center;
+      }
+      .base-matchup-row {
+        justify-content: center;
+      }
+      .base-details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     /* =========================================
        NATIVE SVG ARROW CURSOR (MONOCHROME THEME)
        ========================================= */
@@ -3503,6 +4029,8 @@
       .dna-score-col,
       .dna-score-col *,
       .dna-tab-btn,
+      .base-anime-row,
+      .base-anime-row *,
       .mode-chip {
         cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23edf3ff%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%271.35%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M16.5%2015.2%20L19.8%2018.5%20L16.5%2021.8%20L13.2%2018.5%20Z%27%20fill%3D%27%23adbfde%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%270.9%27/%3E%3C/svg%3E") 3 2, pointer !important;
       }
@@ -3598,6 +4126,7 @@
         </a>
         <nav class="nav-links" aria-label="Навигация">
           <a href="#profile">Профиль</a>
+          <a href="#compatibility">База</a>
           <a href="#activity">Активность</a>
           <a href="#watching">Смотрю</a>
           <a href="#waifu">Waifu</a>
@@ -3805,6 +4334,105 @@
                 <div class="dna-bars-list" id="dna-bars-list"></div>
                 <div class="dna-format-row" id="dna-format-row"></div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STAGE 2: TASTE COMPATIBILITY SCANNER («ПРОВЕРКА НА БАЗУ») -->
+      <section id="compatibility">
+        <div class="glass-card base-check-card">
+          <div class="base-head">
+            <div class="base-head-left">
+              <div class="base-title-row">
+                <span class="dna-pulse-icon" aria-hidden="true"></span>
+                <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.4px;">Проверка на базу // Taste Match</span>
+              </div>
+              <h2 class="base-heading">Насколько наши вкусы совпадают?</h2>
+              <p class="base-subtitle">Вбей свой ник или ссылку на профиль Shikimori — сравню твой список со всеми моими тайтлами и выдам вердикт.</p>
+            </div>
+            <span class="panel-badge" id="base-host-ready-badge">SHIKIMORI SCANNER</span>
+          </div>
+
+          <form class="base-form" id="base-check-form" autocomplete="off">
+            <div class="base-input-wrap">
+              <span class="base-input-icon">◈</span>
+              <input
+                type="text"
+                class="base-input"
+                id="base-nick-input"
+                placeholder="Ник на Shikimori (например: nickname или ссылка на профиль)..."
+                aria-label="Ник на Shikimori"
+              />
+            </div>
+            <button type="submit" class="base-submit-btn" id="base-submit-btn">◈ Проверить вкус</button>
+          </form>
+
+          <div class="base-status-line" id="base-status-line" role="status" aria-live="polite">
+            <span class="base-spinner" id="base-spinner"></span>
+            <span id="base-status-text">Сканирую профиль...</span>
+          </div>
+
+          <div class="base-result" id="base-result">
+            <div class="base-verdict-hero" id="base-verdict-hero">
+              <div class="base-score-ring" id="base-score-ring">
+                <div class="base-score-ring-inner">
+                  <span class="base-pct-num" id="base-pct-num">0%</span>
+                  <span class="base-pct-lbl">MATCH</span>
+                </div>
+              </div>
+
+              <div class="base-verdict-center">
+                <div class="base-matchup-row">
+                  <img class="base-guest-avatar" id="base-guest-avatar" src="" alt="" />
+                  <span class="base-matchup-names">
+                    <strong id="base-guest-name">Гость</strong> × <strong>undereror nyashka</strong>
+                  </span>
+                </div>
+                <div class="base-rank-title" id="base-rank-title">СЕРТИФИЦИРОВАННАЯ БАЗА</div>
+                <div class="base-rank-desc" id="base-rank-desc"></div>
+              </div>
+
+              <div class="base-mini-metrics">
+                <div class="base-metric-box">
+                  <span class="m-val" id="base-m-shared">0</span>
+                  <span class="m-lbl">Общих</span>
+                </div>
+                <div class="base-metric-box">
+                  <span class="m-val" id="base-m-peak">0/16</span>
+                  <span class="m-lbl">Peak 16</span>
+                </div>
+                <div class="base-metric-box">
+                  <span class="m-val" id="base-m-mad">0.0</span>
+                  <span class="m-lbl">Δ оценки</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="base-details-grid">
+              <div class="base-subpanel">
+                <div class="base-subpanel-head">
+                  <span class="card-kicker" id="base-shared-kicker">Общие 9–10★ · Точка резонанса</span>
+                  <span class="panel-badge" id="base-shared-badge">0 ШТ.</span>
+                </div>
+                <div class="base-list" id="base-shared-list"></div>
+              </div>
+
+              <div class="base-subpanel is-conflict-panel">
+                <div class="base-subpanel-head">
+                  <span class="card-kicker" style="color: #fca5a5;">Главный конфликт</span>
+                  <span class="panel-badge" id="base-conflict-badge" style="border-color: rgba(248, 113, 113, 0.36); color: #fecaca;">СПОР</span>
+                </div>
+                <div class="base-list" id="base-conflict-list"></div>
+              </div>
+            </div>
+
+            <div class="base-actions">
+              <div class="base-actions-group">
+                <button type="button" class="base-action-btn is-primary" id="base-download-png-btn">↓ Скачать карточку (PNG)</button>
+                <button type="button" class="base-action-btn" id="base-copy-text-btn">⎘ Скопировать вердикт</button>
+              </div>
+              <button type="button" class="base-action-btn" id="base-reset-btn">↻ Проверить другой ник</button>
             </div>
           </div>
         </div>
@@ -4216,6 +4844,22 @@
       let randomizerMode = 'all';
       let currentDnaTab = 'genres';
       let animeDnaState = loadDnaCache();
+      let myRatesIndex = loadMyRatesIndex();
+      let lastMatchVerdict = null;
+
+      function loadMyRatesIndex() {
+        const map = new Map();
+        try {
+          const raw = localStorage.getItem(MY_RATES_CACHE_KEY);
+          if (!raw) return map;
+          const parsed = JSON.parse(raw);
+          const arr = Array.isArray(parsed?.rates) ? parsed.rates : [];
+          arr.forEach((item) => {
+            if (item && item.id) map.set(Number(item.id), item);
+          });
+        } catch (e) {}
+        return map;
+      }
 
       const SNAPSHOT_DNA = {
         isLive: false,
@@ -5068,13 +5712,20 @@
         try {
           const compactRates = rates
             .filter((r) => r.anime && r.anime.id)
-            .map((r) => ({
-              id: r.anime.id,
-              s: Number(r.score) || 0,
-              g: Number(r.anime.score) || 0,
-              t: r.anime.russian || r.anime.name || ''
-            }));
+            .map((r) => {
+              const rawImg = r.anime.image?.original || r.anime.image?.preview || '';
+              return {
+                id: Number(r.anime.id),
+                s: Number(r.score) || 0,
+                g: Number(r.anime.score) || 0,
+                t: r.anime.russian || r.anime.name || '',
+                img: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : ''
+              };
+            });
+          myRatesIndex = new Map(compactRates.map((x) => [x.id, x]));
           localStorage.setItem(MY_RATES_CACHE_KEY, JSON.stringify({ ts: Date.now(), rates: compactRates }));
+          const readyBadge = document.getElementById('base-host-ready-badge');
+          if (readyBadge) readyBadge.textContent = `БАЗА ГОТОВА · ${compactRates.length} ТАЙТЛОВ`;
         } catch (e) {}
 
         const scoreCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 };
@@ -6626,6 +7277,758 @@
       }
 
       /* =========================================
+         STAGE 2 NEW: TASTE MATCH («ПРОВЕРКА НА БАЗУ» + PNG VERDICT CARD)
+         ========================================= */
+      function initTasteMatcher() {
+        const form = document.getElementById('base-check-form');
+        const input = document.getElementById('base-nick-input');
+        const submitBtn = document.getElementById('base-submit-btn');
+        const statusLine = document.getElementById('base-status-line');
+        const spinner = document.getElementById('base-spinner');
+        const statusText = document.getElementById('base-status-text');
+        const resultBox = document.getElementById('base-result');
+        const readyBadge = document.getElementById('base-host-ready-badge');
+
+        const verdictHero = document.getElementById('base-verdict-hero');
+        const scoreRing = document.getElementById('base-score-ring');
+        const pctNumEl = document.getElementById('base-pct-num');
+        const guestAvatarEl = document.getElementById('base-guest-avatar');
+        const guestNameEl = document.getElementById('base-guest-name');
+        const rankTitleEl = document.getElementById('base-rank-title');
+        const rankDescEl = document.getElementById('base-rank-desc');
+        const mSharedEl = document.getElementById('base-m-shared');
+        const mPeakEl = document.getElementById('base-m-peak');
+        const mMadEl = document.getElementById('base-m-mad');
+
+        const sharedKickerEl = document.getElementById('base-shared-kicker');
+        const sharedBadgeEl = document.getElementById('base-shared-badge');
+        const sharedListEl = document.getElementById('base-shared-list');
+        const conflictBadgeEl = document.getElementById('base-conflict-badge');
+        const conflictListEl = document.getElementById('base-conflict-list');
+
+        const dlPngBtn = document.getElementById('base-download-png-btn');
+        const copyTextBtn = document.getElementById('base-copy-text-btn');
+        const resetBtn = document.getElementById('base-reset-btn');
+
+        if (!form || !input) return;
+
+        if (readyBadge && myRatesIndex.size > 0) {
+          readyBadge.textContent = `БАЗА ГОТОВА · ${myRatesIndex.size} ТАЙТЛОВ`;
+        }
+
+        function setStatus(msg, mode) {
+          if (!statusLine || !statusText) return;
+          if (!msg) {
+            statusLine.classList.remove('is-visible', 'is-error');
+            return;
+          }
+          statusLine.classList.add('is-visible');
+          statusLine.classList.toggle('is-error', mode === 'error');
+          if (spinner) spinner.style.display = mode === 'loading' ? 'inline-block' : 'none';
+          statusText.textContent = msg;
+        }
+
+        function sanitizeNickname(raw) {
+          let s = String(raw || '').trim();
+          if (!s) return '';
+          // Handle pasted Shikimori profile URLs
+          s = s.replace(/^https?:\/\/(www\.)?shikimori\.(one|io|me|org)\//i, '');
+          s = s.split(/[/?#]/)[0];
+          s = s.replace(/^@+/, '');
+          try {
+            s = decodeURIComponent(s.replace(/\+/g, ' '));
+          } catch (e) {
+            s = s.replace(/\+/g, ' ');
+          }
+          return s.trim();
+        }
+
+        async function fetchShikiUserAnyOrigin(nickname) {
+          const origins = [activeShikiOrigin, ...SHIKI_ORIGINS.filter((o) => o !== activeShikiOrigin)];
+          let lastStatus = 0;
+          for (const origin of origins) {
+            try {
+              const res = await fetch(`${origin}/api/users/${encodeURIComponent(nickname)}?is_nickname=1`, {
+                headers: { 'Accept': 'application/json' }
+              });
+              lastStatus = res.status;
+              if (res.ok) {
+                const data = await res.json();
+                if (data && data.id) {
+                  activeShikiOrigin = origin;
+                  return { user: data, origin };
+                }
+              }
+              if (res.status === 404) return { user: null, status: 404 };
+            } catch (e) {}
+          }
+          return { user: null, status: lastStatus };
+        }
+
+        async function fetchShikiUserRates(userId, origin) {
+          const base = origin || activeShikiOrigin;
+          const res = await fetch(`${base}/api/users/${userId}/anime_rates?limit=1000`, {
+            headers: { 'Accept': 'application/json' }
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          return Array.isArray(data) ? data : [];
+        }
+
+        async function ensureHostRatesReady() {
+          if (myRatesIndex.size >= 30) return myRatesIndex;
+          setStatus('Подгружаю базу undereror nyashka...', 'loading');
+          const { user, origin } = await fetchShikiUserAnyOrigin(SHIKI_NICKNAME);
+          if (!user || !user.id) return myRatesIndex;
+          const rates = await fetchShikiUserRates(user.id, origin);
+          const completedOrRated = rates.filter((r) => r.anime && r.anime.id && (r.status === 'completed' || Number(r.score) > 0));
+          hydrateDnaFromShikiRates(
+            completedOrRated.filter((r) => r.status === 'completed'),
+            user.stats
+          );
+          completedOrRated.forEach((r) => {
+            const id = Number(r.anime.id);
+            if (!myRatesIndex.has(id)) {
+              const rawImg = r.anime.image?.original || r.anime.image?.preview || '';
+              myRatesIndex.set(id, {
+                id,
+                s: Number(r.score) || 0,
+                g: Number(r.anime.score) || 0,
+                t: r.anime.russian || r.anime.name || '',
+                img: rawImg ? normalizeShikiUrl(rawImg, origin) : ''
+              });
+            }
+          });
+          return myRatesIndex;
+        }
+
+        function computeVerdictTier(pct, isSelf, sharedCount, ratedSharedCount) {
+          if (isSelf) {
+            return {
+              tier: 'high',
+              color: '#6ee7b7',
+              title: '100% · ЗЕРКАЛО // ЭТО ТЫ САМ',
+              desc: 'Сравнивать undereror с undereror — идеальная база без единого спора.'
+            };
+          }
+          if (sharedCount === 0) {
+            return {
+              tier: 'low',
+              color: '#f87171',
+              title: 'ПАРАЛЛЕЛЬНЫЕ ВСЕЛЕННЫЕ',
+              desc: 'У нас вообще ноль общих тайтлов. Крутани рандомайзер «Что посмотреть от меня» — пора это исправлять.'
+            };
+          }
+          if (pct >= 88) {
+            return {
+              tier: 'high',
+              color: '#6ee7b7',
+              title: 'АБСОЛЮТНАЯ БАЗА · ПОЧТИ КЛОН',
+              desc: ratedSharedCount >= 3
+                ? 'Наши списки будто с одной мировой линии — почти полное совпадение по оценкам и топам.'
+                : 'Мощное пересечение по просмотренной классике и моему Peak Fiction.'
+            };
+          }
+          if (pct >= 74) {
+            return {
+              tier: 'high',
+              color: '#a7f3d0',
+              title: 'СЕРТИФИЦИРОВАННАЯ БАЗА',
+              desc: 'Крепкий вкус — по большинству тайтлов мы бы сошлись с полуслова, респект.'
+            };
+          }
+          if (pct >= 58) {
+            return {
+              tier: 'mid',
+              color: '#dce8ff',
+              title: 'БАЗА ЕСТЬ, НО ЕСТЬ ВОПРОСЫ',
+              desc: 'Общий вайб точно имеется, но в паре споров из правого блока мы бы жёстко зарубились.'
+            };
+          }
+          if (pct >= 42) {
+            return {
+              tier: 'mid',
+              color: '#cbd5e1',
+              title: 'ПОГРАНИЧНАЯ ЗОНА',
+              desc: 'Смотрим разное или оцениваем слишком по-своему. Есть что пообсуждать.'
+            };
+          }
+          return {
+            tier: 'low',
+            color: '#f87171',
+            title: 'ВРАГИ ПО ВКУСУ',
+            desc: 'Мы явно с разных мировых линий. Похоже, наши 10/10 и проходные тайтлы поменялись местами.'
+          };
+        }
+
+        function buildAnimeRowHtml(item, isConflict) {
+          const imgSrc = coverCache['anime_' + item.id] || item.img || '';
+          const diffBadge = isConflict
+            ? `<span class="score-tag is-diff">Δ ${item.diff}</span>`
+            : '';
+          return `
+            <a class="base-anime-row" href="${activeShikiOrigin}/animes/${item.id}" target="_blank" rel="noopener noreferrer">
+              <div class="base-row-thumb">
+                <img
+                  data-cover-key="anime_${item.id}"
+                  data-fallback-src="${escapeHtml(item.img || '')}"
+                  src="${escapeHtml(imgSrc)}"
+                  alt="${escapeHtml(item.title)}"
+                  loading="lazy"
+                />
+              </div>
+              <div class="base-row-info">
+                <div class="base-row-title">${escapeHtml(item.title)}</div>
+                <div class="base-row-scores">
+                  <span class="score-tag is-guest">Ты: ${item.guestScore || '✓'}${item.guestScore ? '★' : ''}</span>
+                  <span class="score-tag">Я: ${item.myScore || '✓'}${item.myScore ? '★' : ''}</span>
+                  ${diffBadge}
+                </div>
+              </div>
+            </a>
+          `;
+        }
+
+        function animatePercentCounter(targetPct) {
+          const start = performance.now();
+          const duration = 750;
+          function step(now) {
+            const t = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - t, 3);
+            const cur = Math.round(targetPct * eased);
+            if (pctNumEl) pctNumEl.textContent = `${cur}%`;
+            if (scoreRing) scoreRing.style.setProperty('--match-pct', String(cur));
+            if (t < 1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        }
+
+        function renderVerdictUI(v) {
+          lastMatchVerdict = v;
+          if (!resultBox) return;
+          resultBox.classList.add('is-visible');
+
+          if (verdictHero) {
+            verdictHero.classList.remove('tier-high', 'tier-low');
+            if (v.tier === 'high') verdictHero.classList.add('tier-high');
+            else if (v.tier === 'low') verdictHero.classList.add('tier-low');
+          }
+          if (scoreRing) {
+            scoreRing.style.setProperty('--match-color', v.color);
+          }
+          animatePercentCounter(v.pct);
+
+          if (guestAvatarEl) {
+            guestAvatarEl.src = v.guestAvatar || 'https://shikimori.one/assets/globals/missing_avatar/x160.png';
+            guestAvatarEl.alt = v.guestNick;
+          }
+          if (guestNameEl) guestNameEl.textContent = v.guestNick;
+          if (rankTitleEl) rankTitleEl.textContent = v.title;
+          if (rankDescEl) rankDescEl.textContent = v.desc;
+
+          if (mSharedEl) mSharedEl.textContent = String(v.sharedCount);
+          if (mPeakEl) mPeakEl.textContent = `${v.peakOverlap}/${PEAK_FICTION.length}`;
+          if (mMadEl) mMadEl.textContent = v.mad !== null ? v.mad.toFixed(2) : '—';
+
+          if (sharedKickerEl) {
+            sharedKickerEl.textContent = v.hasEliteMatches
+              ? 'Общие 9–10★ · Точка резонанса'
+              : 'Общие любимые тайтлы';
+          }
+          if (sharedBadgeEl) sharedBadgeEl.textContent = `${v.sharedFavoritesCount} ШТ.`;
+
+          if (sharedListEl) {
+            sharedListEl.innerHTML = v.topShared.length
+              ? v.topShared.map((item) => buildAnimeRowHtml(item, false)).join('')
+              : '<div class="base-empty-note">Общих высоких оценок пока не нашлось</div>';
+            attachImageHandlers(sharedListEl);
+          }
+
+          if (conflictBadgeEl) {
+            conflictBadgeEl.textContent = v.conflicts.length
+              ? `МАКС Δ ${v.conflicts[0].diff}`
+              : 'МИР И СОГЛАСИЕ';
+          }
+          if (conflictListEl) {
+            conflictListEl.innerHTML = v.conflicts.length
+              ? v.conflicts.map((item) => buildAnimeRowHtml(item, true)).join('')
+              : '<div class="base-empty-note">Серьёзных конфликтов по оценкам не обнаружено</div>';
+            attachImageHandlers(conflictListEl);
+          }
+
+          const coverIds = [
+            ...v.topShared.map((x) => x.id),
+            ...v.conflicts.map((x) => x.id)
+          ];
+          if (coverIds.length) loadAnimeCoversBatch(coverIds);
+        }
+
+        function drawRoundRect(ctx, x, y, w, h, r) {
+          ctx.beginPath();
+          ctx.moveTo(x + r, y);
+          ctx.arcTo(x + w, y, x + w, y + h, r);
+          ctx.arcTo(x + w, y + h, x, y + h, r);
+          ctx.arcTo(x, y + h, x, y, r);
+          ctx.arcTo(x, y, x + w, y, r);
+          ctx.closePath();
+        }
+
+        function fitText(ctx, text, maxW) {
+          const str = String(text || '');
+          if (ctx.measureText(str).width <= maxW) return str;
+          let out = str;
+          while (out.length > 1 && ctx.measureText(out + '…').width > maxW) {
+            out = out.slice(0, -1);
+          }
+          return out + '…';
+        }
+
+        function wrapLines(ctx, text, maxW, maxLines) {
+          const words = String(text || '').split(/\s+/);
+          const lines = [];
+          let cur = '';
+          for (const w of words) {
+            const test = cur ? cur + ' ' + w : w;
+            if (ctx.measureText(test).width <= maxW) {
+              cur = test;
+            } else {
+              if (cur) lines.push(cur);
+              cur = w;
+              if (lines.length === maxLines - 1) break;
+            }
+          }
+          if (cur && lines.length < maxLines) lines.push(fitText(ctx, cur, maxW));
+          return lines;
+        }
+
+        function downloadVerdictPng() {
+          if (!lastMatchVerdict) return;
+          const v = lastMatchVerdict;
+          const W = 1200;
+          const H = 675;
+          const c = document.createElement('canvas');
+          c.width = W;
+          c.height = H;
+          const ctx = c.getContext('2d');
+
+          // 1. Dark noir backdrop + subtle glow + grid
+          const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+          bgGrad.addColorStop(0, '#07090f');
+          bgGrad.addColorStop(0.55, '#0b101b');
+          bgGrad.addColorStop(1, '#06080d');
+          ctx.fillStyle = bgGrad;
+          ctx.fillRect(0, 0, W, H);
+
+          const orb1 = ctx.createRadialGradient(200, 140, 10, 200, 140, 420);
+          orb1.addColorStop(0, v.tier === 'high' ? 'rgba(110, 231, 183, 0.16)' : v.tier === 'low' ? 'rgba(248, 113, 113, 0.15)' : 'rgba(173, 191, 222, 0.18)');
+          orb1.addColorStop(1, 'transparent');
+          ctx.fillStyle = orb1;
+          ctx.fillRect(0, 0, W, H);
+
+          const orb2 = ctx.createRadialGradient(1020, 560, 10, 1020, 560, 380);
+          orb2.addColorStop(0, 'rgba(173, 191, 222, 0.12)');
+          orb2.addColorStop(1, 'transparent');
+          ctx.fillStyle = orb2;
+          ctx.fillRect(0, 0, W, H);
+
+          // Subtle grid lines
+          ctx.strokeStyle = 'rgba(173, 191, 222, 0.045)';
+          ctx.lineWidth = 1;
+          for (let x = 40; x < W; x += 48) {
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+          }
+          for (let y = 40; y < H; y += 48) {
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+          }
+
+          // Outer frame
+          drawRoundRect(ctx, 26, 26, W - 52, H - 52, 22);
+          ctx.strokeStyle = 'rgba(173, 191, 222, 0.24)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          // 2. Top HUD header
+          ctx.fillStyle = '#adbfde';
+          ctx.font = '600 15px "JetBrains Mono", monospace';
+          ctx.fillText('◈  UNDEXEROR // ARCHIVE   ·   ПРОВЕРКА НА БАЗУ', 62, 74);
+
+          const dateStr = new Date().toLocaleDateString('ru-RU');
+          ctx.fillStyle = 'rgba(205, 212, 224, 0.55)';
+          ctx.textAlign = 'right';
+          ctx.fillText(`SHIKIMORI TASTE MATCH  ·  ${dateStr}`, W - 62, 74);
+          ctx.textAlign = 'left';
+
+          ctx.strokeStyle = 'rgba(173, 191, 222, 0.16)';
+          ctx.beginPath(); ctx.moveTo(62, 94); ctx.lineTo(W - 62, 94); ctx.stroke();
+
+          // 3. Verdict Hero Box
+          drawRoundRect(ctx, 62, 118, W - 124, 200, 18);
+          ctx.fillStyle = 'rgba(10, 14, 24, 0.78)';
+          ctx.fill();
+          ctx.strokeStyle = v.tier === 'high' ? 'rgba(110, 231, 183, 0.42)' : v.tier === 'low' ? 'rgba(248, 113, 113, 0.42)' : 'rgba(173, 191, 222, 0.30)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          // Circular Match Gauge
+          const cx = 166;
+          const cy = 218;
+          const rad = 64;
+          ctx.beginPath();
+          ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.10)';
+          ctx.lineWidth = 10;
+          ctx.stroke();
+
+          const startAng = -Math.PI / 2;
+          const endAng = startAng + (Math.PI * 2 * Math.max(0, Math.min(100, v.pct))) / 100;
+          ctx.beginPath();
+          ctx.arc(cx, cy, rad, startAng, endAng);
+          ctx.strokeStyle = v.color || '#dce8ff';
+          ctx.lineCap = 'round';
+          ctx.lineWidth = 10;
+          ctx.stroke();
+
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.font = '700 38px "JetBrains Mono", monospace';
+          ctx.fillText(`${v.pct}%`, cx, cy + 8);
+          ctx.fillStyle = 'rgba(205, 212, 224, 0.60)';
+          ctx.font = '600 11px "JetBrains Mono", monospace';
+          ctx.fillText('MATCH', cx, cy + 29);
+          ctx.textAlign = 'left';
+
+          // Verdict Text
+          ctx.fillStyle = 'rgba(205, 212, 224, 0.72)';
+          ctx.font = '500 15px "JetBrains Mono", monospace';
+          ctx.fillText(fitText(ctx, `${v.guestNick}  ×  undereror nyashka`, 540), 266, 162);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '700 30px "Inter", sans-serif';
+          ctx.fillText(fitText(ctx, v.title, 540), 266, 206);
+
+          ctx.fillStyle = 'rgba(205, 212, 224, 0.80)';
+          ctx.font = '400 16px "Inter", sans-serif';
+          const descLines = wrapLines(ctx, v.desc, 520, 2);
+          descLines.forEach((line, i) => {
+            ctx.fillText(line, 266, 240 + i * 24);
+          });
+
+          // Right KPI column inside hero
+          const kpis = [
+            { lbl: 'ОБЩИХ', val: String(v.sharedCount) },
+            { lbl: 'PEAK 16', val: `${v.peakOverlap}/16` },
+            { lbl: 'СРЕД. Δ', val: v.mad !== null ? v.mad.toFixed(2) : '—' }
+          ];
+          kpis.forEach((k, idx) => {
+            const bx = 832 + idx * 98;
+            drawRoundRect(ctx, bx, 168, 88, 98, 12);
+            ctx.fillStyle = 'rgba(6, 9, 16, 0.85)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(173, 191, 222, 0.22)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '700 22px "JetBrains Mono", monospace';
+            ctx.fillText(k.val, bx + 44, 214);
+            ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+            ctx.font = '600 10px "JetBrains Mono", monospace';
+            ctx.fillText(k.lbl, bx + 44, 242);
+          });
+          ctx.textAlign = 'left';
+
+          // 4. Bottom Two Panels (Shared 9-10 & Main Conflicts)
+          const panelY = 340;
+          const panelH = 248;
+          const panelW = (W - 124 - 22) / 2;
+
+          // Left Panel: Shared Favorites
+          drawRoundRect(ctx, 62, panelY, panelW, panelH, 16);
+          ctx.fillStyle = 'rgba(9, 12, 20, 0.78)';
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(173, 191, 222, 0.22)';
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+
+          ctx.fillStyle = '#adbfde';
+          ctx.font = '600 13px "JetBrains Mono", monospace';
+          ctx.fillText(v.hasEliteMatches ? 'ОБЩАЯ БАЗА · 9–10★' : 'ОБЩИЕ ЛЮБИМЫЕ ТАЙТЛЫ', 86, panelY + 34);
+
+          const sharedSlice = v.topShared.slice(0, 3);
+          if (!sharedSlice.length) {
+            ctx.fillStyle = 'rgba(205, 212, 224, 0.52)';
+            ctx.font = '400 14px "JetBrains Mono", monospace';
+            ctx.fillText('Общих высоких оценок пока нет', 86, panelY + 126);
+          } else {
+            sharedSlice.forEach((item, idx) => {
+              const ry = panelY + 54 + idx * 58;
+              drawRoundRect(ctx, 84, ry, panelW - 44, 48, 10);
+              ctx.fillStyle = 'rgba(15, 20, 32, 0.85)';
+              ctx.fill();
+              ctx.strokeStyle = 'rgba(173, 191, 222, 0.16)';
+              ctx.stroke();
+
+              ctx.fillStyle = '#ffffff';
+              ctx.font = '600 15px "Inter", sans-serif';
+              ctx.fillText(fitText(ctx, item.title, panelW - 210), 100, ry + 30);
+
+              ctx.textAlign = 'right';
+              ctx.fillStyle = '#a7f3d0';
+              ctx.font = '600 13px "JetBrains Mono", monospace';
+              ctx.fillText(`Ты ${item.guestScore || '✓'}★ · Я ${item.myScore || '✓'}★`, 84 + panelW - 58, ry + 30);
+              ctx.textAlign = 'left';
+            });
+          }
+
+          // Right Panel: Main Conflict
+          const rx = 62 + panelW + 22;
+          drawRoundRect(ctx, rx, panelY, panelW, panelH, 16);
+          ctx.fillStyle = 'rgba(24, 11, 16, 0.68)';
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(248, 113, 113, 0.34)';
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+
+          ctx.fillStyle = '#fca5a5';
+          ctx.font = '600 13px "JetBrains Mono", monospace';
+          ctx.fillText('ГЛАВНЫЙ КОНФЛИКТ ПО ОЦЕНКАМ', rx + 24, panelY + 34);
+
+          const confSlice = v.conflicts.slice(0, 3);
+          if (!confSlice.length) {
+            ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+            ctx.font = '400 14px "JetBrains Mono", monospace';
+            ctx.fillText('Серьёзных споров не найдено — мир и согласие', rx + 24, panelY + 126);
+          } else {
+            confSlice.forEach((item, idx) => {
+              const ry = panelY + 54 + idx * 58;
+              drawRoundRect(ctx, rx + 22, ry, panelW - 44, 48, 10);
+              ctx.fillStyle = 'rgba(18, 12, 20, 0.85)';
+              ctx.fill();
+              ctx.strokeStyle = 'rgba(248, 113, 113, 0.24)';
+              ctx.stroke();
+
+              ctx.fillStyle = '#ffffff';
+              ctx.font = '600 15px "Inter", sans-serif';
+              ctx.fillText(fitText(ctx, item.title, panelW - 225), rx + 38, ry + 30);
+
+              ctx.textAlign = 'right';
+              ctx.fillStyle = '#fecaca';
+              ctx.font = '600 13px "JetBrains Mono", monospace';
+              ctx.fillText(`Ты ${item.guestScore}★ vs Я ${item.myScore}★ (Δ${item.diff})`, rx + panelW - 36, ry + 30);
+              ctx.textAlign = 'left';
+            });
+          }
+
+          // 5. Footer
+          ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+          ctx.font = '500 13px "JetBrains Mono", monospace';
+          ctx.fillText('ПРОВЕРЬ СВОЙ НИК  →  https://undexerorrr.github.io/', 62, H - 46);
+
+          ctx.textAlign = 'right';
+          ctx.fillStyle = 'rgba(173, 191, 222, 0.65)';
+          ctx.fillText('undexeror // archive', W - 62, H - 46);
+          ctx.textAlign = 'left';
+
+          const safeName = v.guestNick.replace(/[^a-zA-Z0-9а-яА-Я_-]+/g, '_').slice(0, 28) || 'guest';
+          const link = document.createElement('a');
+          link.download = `taste-match-${safeName}-${v.pct}pct.png`;
+          link.href = c.toDataURL('image/png');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+
+        async function runTasteMatch(rawInput) {
+          const nick = sanitizeNickname(rawInput);
+          if (!nick) {
+            setStatus('Введи свой ник на Shikimori (например: nickname)', 'error');
+            input.focus();
+            return;
+          }
+
+          submitBtn.disabled = true;
+          resultBox?.classList.remove('is-visible');
+          setStatus(`Ищу профиль «${nick}» на Shikimori...`, 'loading');
+
+          try {
+            await ensureHostRatesReady();
+            if (myRatesIndex.size === 0) {
+              setStatus('Не удалось загрузить базу undereror с Shikimori API. Попробуй через минуту.', 'error');
+              return;
+            }
+
+            const { user: guest, origin, status } = await fetchShikiUserAnyOrigin(nick);
+            if (!guest || !guest.id) {
+              if (status === 404) {
+                setStatus(`Профиль «${nick}» не найден на Shikimori — проверь написание ника.`, 'error');
+              } else {
+                setStatus('Shikimori API временно не отвечает — попробуй ещё раз через пару секунд.', 'error');
+              }
+              return;
+            }
+
+            const guestNick = guest.nickname || nick;
+            const guestAvatarRaw = guest.image?.x160 || guest.image?.x148 || guest.avatar || '';
+            const guestAvatar = guestAvatarRaw ? normalizeShikiUrl(guestAvatarRaw, origin) : '';
+            const isSelf = guestNick.toLowerCase() === SHIKI_NICKNAME.toLowerCase();
+
+            setStatus(`Загружаю список «${guestNick}» и сверяю с ${myRatesIndex.size} тайтлами...`, 'loading');
+            const guestRatesRaw = await fetchShikiUserRates(guest.id, origin);
+            const guestRates = guestRatesRaw.filter((r) => r.anime && r.anime.id && (r.status === 'completed' || Number(r.score) > 0));
+
+            if (!guestRates.length) {
+              setStatus(`У «${guestNick}» список аниме пуст или закрыт настройками приватности.`, 'error');
+              return;
+            }
+
+            const peakIds = new Set(PEAK_FICTION.map((p) => p.malId));
+            const sharedAll = [];
+            const sharedRated = [];
+            let peakOverlap = 0;
+
+            const seenGuest = new Set();
+            guestRates.forEach((gr) => {
+              const id = Number(gr.anime.id);
+              if (seenGuest.has(id)) return;
+              seenGuest.add(id);
+
+              if (peakIds.has(id)) peakOverlap++;
+
+              const mine = myRatesIndex.get(id);
+              if (!mine) return;
+
+              const guestScore = Number(gr.score) || 0;
+              const myScore = Number(mine.s) || 0;
+              const rawImg = gr.anime.image?.original || gr.anime.image?.preview || '';
+              const entry = {
+                id,
+                title: mine.t || gr.anime.russian || gr.anime.name || `#${id}`,
+                myScore,
+                guestScore,
+                diff: (myScore > 0 && guestScore > 0) ? Math.abs(myScore - guestScore) : 0,
+                img: mine.img || (rawImg ? normalizeShikiUrl(rawImg, origin) : '')
+              };
+              sharedAll.push(entry);
+              if (myScore > 0 && guestScore > 0) sharedRated.push(entry);
+            });
+
+            // Compute compatibility percentage
+            let pct = 0;
+            let mad = null;
+
+            if (isSelf) {
+              pct = 100;
+              mad = 0;
+            } else if (sharedAll.length === 0) {
+              pct = 0;
+              mad = null;
+            } else if (sharedRated.length >= 3) {
+              const madVal = sharedRated.reduce((acc, x) => acc + x.diff, 0) / sharedRated.length;
+              mad = madVal;
+              const closeness = Math.max(0, 1 - madVal / 4.2);
+
+              // Pearson correlation for nuance
+              const meanA = sharedRated.reduce((s, x) => s + x.myScore, 0) / sharedRated.length;
+              const meanB = sharedRated.reduce((s, x) => s + x.guestScore, 0) / sharedRated.length;
+              let num = 0, denA = 0, denB = 0;
+              sharedRated.forEach((x) => {
+                const da = x.myScore - meanA;
+                const db = x.guestScore - meanB;
+                num += da * db;
+                denA += da * da;
+                denB += db * db;
+              });
+              let combined = closeness;
+              if (denA > 0 && denB > 0) {
+                const corr = num / Math.sqrt(denA * denB);
+                const corrNorm = (corr + 1) / 2;
+                combined = closeness * 0.72 + corrNorm * 0.28;
+              }
+              const peakBonus = (peakOverlap / PEAK_FICTION.length) * 0.06;
+              pct = Math.max(5, Math.min(99, Math.round((combined + peakBonus) * 100)));
+            } else {
+              // Fallback if guest rarely puts numeric ratings
+              const overlapRatio = Math.min(1, sharedAll.length / Math.min(80, Math.max(20, guestRates.length)));
+              const peakRatio = peakOverlap / PEAK_FICTION.length;
+              pct = Math.max(10, Math.min(88, Math.round((overlapRatio * 0.6 + peakRatio * 0.4) * 95)));
+            }
+
+            // Shared 9-10 favorites (or best high-rated shared fallback)
+            const eliteMatches = sharedRated
+              .filter((x) => x.myScore >= 9 && x.guestScore >= 9)
+              .sort((a, b) => (b.myScore + b.guestScore) - (a.myScore + a.guestScore) || a.diff - b.diff);
+
+            const hasEliteMatches = eliteMatches.length > 0;
+            const fallbackShared = sharedRated.length
+              ? [...sharedRated]
+                  .filter((x) => x.myScore >= 8 && x.guestScore >= 8)
+                  .sort((a, b) => (b.myScore + b.guestScore) - (a.myScore + a.guestScore) || a.diff - b.diff)
+              : [...sharedAll].sort((a, b) => b.myScore - a.myScore);
+
+            const topShared = (hasEliteMatches ? eliteMatches : fallbackShared).slice(0, 4);
+
+            // Conflicts (largest disagreement >= 2 points)
+            const conflicts = sharedRated
+              .filter((x) => x.diff >= 2)
+              .sort((a, b) => b.diff - a.diff || Math.max(b.myScore, b.guestScore) - Math.max(a.myScore, a.guestScore))
+              .slice(0, 3);
+
+            const tierInfo = computeVerdictTier(pct, isSelf, sharedAll.length, sharedRated.length);
+
+            setStatus('', '');
+            renderVerdictUI({
+              guestNick,
+              guestAvatar,
+              pct,
+              mad,
+              sharedCount: sharedAll.length,
+              ratedSharedCount: sharedRated.length,
+              peakOverlap,
+              hasEliteMatches,
+              sharedFavoritesCount: hasEliteMatches ? eliteMatches.length : fallbackShared.length,
+              topShared,
+              conflicts,
+              ...tierInfo
+            });
+          } catch (err) {
+            console.warn('Taste match failed:', err);
+            setStatus('Ошибка при обращении к Shikimori API — попробуй ещё раз чуть позже.', 'error');
+          } finally {
+            submitBtn.disabled = false;
+          }
+        }
+
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          runTasteMatch(input.value);
+        });
+
+        dlPngBtn?.addEventListener('click', downloadVerdictPng);
+
+        copyTextBtn?.addEventListener('click', async () => {
+          if (!lastMatchVerdict) return;
+          const v = lastMatchVerdict;
+          const topConf = v.conflicts[0]
+            ? ` · Главный конфликт: ${v.conflicts[0].title} (я ${v.conflicts[0].guestScore}★ vs он ${v.conflicts[0].myScore}★)`
+            : '';
+          const txt = `◈ undexeror // archive — Проверка на базу: ${v.pct}% (${v.title}) · Общих тайтлов: ${v.sharedCount}${topConf} → https://undexerorrr.github.io/`;
+          try {
+            await navigator.clipboard.writeText(txt);
+            const orig = copyTextBtn.textContent;
+            copyTextBtn.textContent = '✓ Скопировано!';
+            setTimeout(() => { copyTextBtn.textContent = orig; }, 1800);
+          } catch (e) {}
+        });
+
+        resetBtn?.addEventListener('click', () => {
+          input.value = '';
+          input.focus();
+          setStatus('', '');
+        });
+      }
+
+      /* =========================================
          RANDOMIZER («ЧТО ПОСМОТРЕТЬ ОТ МЕНЯ» — TOP 16 + 9–10★ SHIKIMORI)
          ========================================= */
       function initRandomizer() {
@@ -6745,6 +8148,7 @@
       initIntroOverlay(playerControls);
       initSpotifyDrawer(playerControls);
       initLanyardPresence();
+      initTasteMatcher();
       initRandomizer();
       initAtmosphereCanvas();
       initCollectionControls();
