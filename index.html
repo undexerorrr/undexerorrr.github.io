@@ -21,6 +21,7 @@
       --radius-lg: 16px;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+      --beat-energy: 0;
     }
 
     *, *::before, *::after {
@@ -45,10 +46,6 @@
       background-color: var(--bg-base);
       position: relative;
       line-height: 1.5;
-    }
-
-    body.intro-locked {
-      overflow: hidden;
     }
 
     ::selection {
@@ -101,145 +98,6 @@
       height: 100%;
       z-index: 1;
       pointer-events: none;
-    }
-
-    /* =========================================
-       INTRO OVERLAY ([ CLICK TO ENTER ])
-       ========================================= */
-    #intro-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background:
-        radial-gradient(circle at 50% 45%, rgba(173, 191, 222, 0.08) 0%, transparent 55%),
-        rgba(6, 8, 12, 0.80);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      cursor: pointer;
-      user-select: none;
-      transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    #intro-overlay.is-hidden {
-      opacity: 0;
-      transform: scale(1.03);
-      pointer-events: none;
-    }
-
-    .intro-core {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 24px;
-      gap: 14px;
-    }
-
-    .intro-orb {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      position: relative;
-      margin-bottom: 6px;
-      box-shadow: 0 0 28px rgba(var(--bright), 0.25);
-      background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.25), rgba(10, 12, 18, 0.9) 68%);
-      border: 1px solid rgba(var(--bright), 0.35);
-    }
-
-    .intro-orb::before {
-      content: "";
-      position: absolute;
-      inset: -7px;
-      border-radius: 50%;
-      padding: 1.5px;
-      background: conic-gradient(
-        from 0deg,
-        transparent 0deg,
-        rgba(var(--bright), 0.85) 65deg,
-        #fff 90deg,
-        transparent 150deg,
-        transparent 220deg,
-        rgba(var(--bright), 0.45) 275deg,
-        transparent 335deg
-      );
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      mask-composite: exclude;
-      animation: orbit-spin 10s linear infinite;
-    }
-
-    .intro-title {
-      font-size: clamp(28px, 5vw, 44px);
-      font-weight: 600;
-      letter-spacing: 5px;
-      background: linear-gradient(180deg, #ffffff 0%, rgb(var(--bright)) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 22px rgba(var(--bright), 0.32));
-    }
-
-    .intro-meta {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      letter-spacing: 2.5px;
-      color: rgba(var(--light), 0.68);
-      text-transform: lowercase;
-    }
-
-    .intro-enter-btn {
-      margin-top: 16px;
-      padding: 12px 28px;
-      border-radius: 999px;
-      border: 1px solid rgba(var(--bright), 0.48);
-      background:
-        linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.28) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
-        rgba(10, 13, 20, 0.72);
-      color: #fff;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 3px;
-      cursor: pointer;
-      box-shadow: 0 0 24px rgba(var(--bright), 0.22);
-      animation: intro-pulse 2.6s ease-in-out infinite, badge-sheen 6s ease-in-out infinite;
-      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .intro-enter-btn:hover {
-      transform: translateY(-2px) scale(1.03);
-      border-color: rgba(255, 255, 255, 0.85);
-      box-shadow: 0 0 32px rgba(var(--bright), 0.45);
-    }
-
-    @keyframes intro-pulse {
-      0%, 100% { box-shadow: 0 0 18px rgba(var(--bright), 0.18); }
-      50%      { box-shadow: 0 0 30px rgba(var(--bright), 0.42); }
-    }
-
-    .intro-silent-btn {
-      position: absolute;
-      bottom: 30px;
-      background: transparent;
-      border: none;
-      color: rgba(var(--light), 0.50);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 1.5px;
-      cursor: pointer;
-      padding: 8px 14px;
-      border-radius: 999px;
-      transition: color 0.25s ease, background 0.25s ease;
-    }
-
-    .intro-silent-btn:hover {
-      color: rgba(255, 255, 255, 0.90);
-      background: rgba(255, 255, 255, 0.06);
     }
 
     /* =========================================
@@ -334,7 +192,7 @@
       color: rgba(var(--light), 0.88);
       font-family: var(--font-mono);
       font-size: 10px;
-      letter-spacing: 1.4px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
       backdrop-filter: blur(8px);
     }
@@ -354,7 +212,15 @@
 
     .audio-btn {
       cursor: pointer;
+      max-width: 210px;
       transition: border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.2s ease;
+    }
+
+    .audio-btn-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 135px;
     }
 
     .audio-btn:hover {
@@ -367,7 +233,7 @@
     .audio-btn.is-playing {
       color: #fff;
       border-color: rgba(var(--bright), 0.85);
-      box-shadow: 0 0 16px rgba(var(--bright), 0.30);
+      box-shadow: 0 0 16px rgba(var(--bright), 0.32);
     }
 
     .eq-bars {
@@ -375,6 +241,7 @@
       align-items: flex-end;
       gap: 2px;
       height: 10px;
+      flex-shrink: 0;
     }
 
     .eq-bars span {
@@ -382,16 +249,16 @@
       height: 3px;
       background: rgb(var(--bright));
       border-radius: 2px;
-      transition: height 0.2s ease;
+      transition: height 0.12s ease;
     }
 
     .audio-btn.is-playing .eq-bars span {
-      animation: eq-bounce 0.9s ease-in-out infinite;
+      animation: eq-bounce 0.85s ease-in-out infinite;
     }
 
-    .audio-btn.is-playing .eq-bars span:nth-child(2) { animation-delay: -0.3s; }
-    .audio-btn.is-playing .eq-bars span:nth-child(3) { animation-delay: -0.6s; }
-    .audio-btn.is-playing .eq-bars span:nth-child(4) { animation-delay: -0.15s; }
+    .audio-btn.is-playing .eq-bars span:nth-child(2) { animation-delay: -0.28s; }
+    .audio-btn.is-playing .eq-bars span:nth-child(3) { animation-delay: -0.56s; }
+    .audio-btn.is-playing .eq-bars span:nth-child(4) { animation-delay: -0.14s; }
 
     @keyframes eq-bounce {
       0%, 100% { height: 3px; }
@@ -405,7 +272,7 @@
       width: 100%;
       max-width: 1160px;
       margin: 0 auto;
-      padding: 36px 22px 72px;
+      padding: 36px 22px 110px;
       display: flex;
       flex-direction: column;
       gap: 54px;
@@ -418,6 +285,7 @@
       gap: 14px;
       margin-bottom: 22px;
       text-align: center;
+      position: relative;
     }
 
     .section-title {
@@ -446,7 +314,7 @@
     }
 
     /* =========================================
-       HERO SECTION (AVATAR + NICK + STATS)
+       HERO SECTION (AVATAR + BEAT RING + STATS)
        ========================================= */
     .hero {
       display: flex;
@@ -467,6 +335,20 @@
     @keyframes float-y {
       0%, 100% { transform: translateY(0); }
       50%      { transform: translateY(-8px); }
+    }
+
+    /* Beat-reactive outer pulse halo */
+    .avatar-beat-ring {
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      pointer-events: none;
+      border: 1.5px solid rgba(var(--bright), calc(0.18 + var(--beat-energy) * 0.75));
+      box-shadow:
+        0 0 calc(16px + var(--beat-energy) * 34px) rgba(var(--bright), calc(0.14 + var(--beat-energy) * 0.55)),
+        inset 0 0 calc(8px + var(--beat-energy) * 16px) rgba(var(--bright), calc(0.08 + var(--beat-energy) * 0.30));
+      transform: scale(calc(1 + var(--beat-energy) * 0.14));
+      transition: transform 0.06s linear, box-shadow 0.06s linear, border-color 0.06s linear;
     }
 
     .avatar-wrap::before {
@@ -490,14 +372,15 @@
       mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       mask-composite: exclude;
       animation: orbit-spin 12s linear infinite;
-      opacity: 0.82;
+      opacity: calc(0.78 + var(--beat-energy) * 0.22);
       pointer-events: none;
-      transition: opacity 0.35s ease, filter 0.35s ease;
+      filter: drop-shadow(0 0 calc(4px + var(--beat-energy) * 14px) rgba(var(--bright), 0.85));
+      transition: opacity 0.25s ease;
     }
 
     .avatar-wrap:hover::before {
       opacity: 1;
-      filter: drop-shadow(0 0 10px rgba(var(--bright), 0.80));
+      filter: drop-shadow(0 0 12px rgba(var(--bright), 0.85));
     }
 
     @keyframes orbit-spin {
@@ -512,14 +395,14 @@
       object-fit: cover;
       display: block;
       background: rgba(14, 18, 26, 0.9);
-      border: 1.5px solid rgba(var(--bright), 0.45);
-      box-shadow: 0 0 28px rgba(0, 0, 0, 0.82), 0 0 22px rgba(var(--bright), 0.24);
-      transition: border-color 0.35s ease, box-shadow 0.35s ease, filter 0.35s ease;
+      border: 1.5px solid rgba(var(--bright), calc(0.45 + var(--beat-energy) * 0.5));
+      box-shadow: 0 0 28px rgba(0, 0, 0, 0.82), 0 0 calc(22px + var(--beat-energy) * 26px) rgba(var(--bright), calc(0.24 + var(--beat-energy) * 0.4));
+      transform: scale(calc(1 + var(--beat-energy) * 0.035));
+      transition: border-color 0.15s ease, filter 0.35s ease;
     }
 
     .avatar-wrap:hover .avatar-img {
       border-color: rgba(255, 255, 255, 0.90);
-      box-shadow: 0 0 36px rgba(var(--bright), 0.52);
       filter: contrast(1.06);
     }
 
@@ -1049,22 +932,101 @@
     }
 
     /* =========================================
-       WAIFU CAROUSEL
+       WAIFU CAROUSEL (CLEAR ARROWS + VISIBLE SCROLL)
        ========================================= */
+    .waifu-head-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .waifu-head-bar .section-title {
+      margin: 0;
+    }
+
+    .waifu-nav-controls {
+      position: absolute;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .waifu-counter {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: rgba(var(--light), 0.62);
+      margin-right: 4px;
+    }
+
+    .carousel-arrow {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(var(--bright), 0.34);
+      background: rgba(10, 13, 20, 0.78);
+      color: #fff;
+      font-size: 16px;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.2s ease, opacity 0.22s ease, background 0.22s ease;
+    }
+
+    .carousel-arrow:hover:not(:disabled) {
+      border-color: rgba(var(--bright), 0.92);
+      background: rgba(18, 24, 36, 0.92);
+      box-shadow: 0 0 16px rgba(var(--bright), 0.38);
+      transform: scale(1.06);
+    }
+
+    .carousel-arrow:disabled {
+      opacity: 0.28;
+      cursor: default;
+    }
+
+    .waifu-stage {
+      position: relative;
+    }
+
     .waifu-carousel {
       display: flex;
       flex-wrap: nowrap;
       gap: 16px;
-      padding: 16px 26px 24px;
+      padding: 16px 8px 20px;
       overflow-x: auto;
       overflow-y: hidden;
       scroll-behavior: smooth;
       scrollbar-width: thin;
-      scrollbar-color: rgba(var(--bright), 0.65) rgba(var(--accent-dark), 0.25);
-      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 3.5%, #000 96.5%, transparent 100%);
-      mask-image: linear-gradient(90deg, transparent 0%, #000 3.5%, #000 96.5%, transparent 100%);
+      scrollbar-color: rgba(var(--bright), 0.75) rgba(255, 255, 255, 0.08);
       cursor: grab;
       user-select: none;
+    }
+
+    /* Crisp custom WebKit scrollbar so scrolling is ALWAYS clearly visible */
+    .waifu-carousel::-webkit-scrollbar {
+      height: 7px;
+    }
+
+    .waifu-carousel::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 999px;
+      border: 1px solid rgba(var(--bright), 0.12);
+    }
+
+    .waifu-carousel::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, rgba(var(--bright), 0.55), rgba(235, 240, 248, 0.85));
+      border-radius: 999px;
+      box-shadow: 0 0 10px rgba(var(--bright), 0.45);
+    }
+
+    .waifu-carousel::-webkit-scrollbar-thumb:hover {
+      background: #ffffff;
     }
 
     .waifu-carousel.is-dragging {
@@ -1074,9 +1036,9 @@
 
     .waifu-card {
       position: relative;
-      flex: 0 0 128px;
-      width: 128px;
-      height: 192px;
+      flex: 0 0 132px;
+      width: 132px;
+      height: 196px;
       border-radius: 12px;
       overflow: hidden;
       background: linear-gradient(155deg, rgba(18, 22, 32, 0.92), rgba(9, 11, 16, 0.96));
@@ -1377,7 +1339,6 @@
       filter: brightness(1.07) contrast(1.04);
     }
 
-    /* Fallback placeholder strictly BEHIND img and hidden once loaded */
     .poster-fallback {
       position: absolute;
       inset: 0;
@@ -1408,7 +1369,6 @@
       display: none !important;
     }
 
-    /* Diagonal Glare Sheen on posters & waifu cards */
     .poster-box::after,
     .waifu-card::after {
       content: "";
@@ -1502,6 +1462,272 @@
       font-size: 10px;
       color: rgba(var(--light), 0.72);
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
+    }
+
+    /* =========================================
+       FLOATING MUSIC PLAYER DOCK (REAL MP3 + VISUALIZER)
+       ========================================= */
+    .music-dock {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 320;
+      width: 332px;
+      max-width: calc(100vw - 28px);
+      border-radius: 16px;
+      background: rgba(9, 12, 18, 0.84);
+      border: 1px solid rgba(var(--bright), calc(0.26 + var(--beat-energy) * 0.45));
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow:
+        0 14px 36px rgba(0, 0, 0, 0.68),
+        0 0 calc(16px + var(--beat-energy) * 26px) rgba(var(--bright), calc(0.10 + var(--beat-energy) * 0.26));
+      padding: 12px 14px;
+      transition: width 0.28s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .music-dock.is-minimized {
+      width: auto;
+      padding: 8px 12px;
+      border-radius: 999px;
+    }
+
+    .music-dock.is-minimized .dock-expandable,
+    .music-dock.is-minimized .dock-playlist {
+      display: none;
+    }
+
+    .dock-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dock-play-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 1px solid rgba(var(--bright), 0.55);
+      background: linear-gradient(145deg, rgba(var(--bright), 0.24), rgba(10, 13, 20, 0.9));
+      color: #fff;
+      font-size: 12px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 14px rgba(var(--bright), 0.20);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .dock-play-btn:hover {
+      transform: scale(1.07);
+      border-color: #fff;
+      box-shadow: 0 0 18px rgba(var(--bright), 0.48);
+    }
+
+    .dock-meta {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .dock-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.25;
+    }
+
+    .dock-artist {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(var(--light), 0.62);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .dock-mini-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .dock-icon-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(var(--light), 0.80);
+      font-size: 11px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .dock-icon-btn:hover,
+    .dock-icon-btn.active {
+      color: #fff;
+      background: rgba(var(--bright), 0.16);
+      border-color: rgba(var(--bright), 0.45);
+    }
+
+    .dock-expandable {
+      margin-top: 10px;
+    }
+
+    #visualizer-canvas {
+      width: 100%;
+      height: 26px;
+      display: block;
+      margin-bottom: 6px;
+      opacity: 0.9;
+    }
+
+    .dock-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dock-time {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: rgba(var(--light), 0.56);
+      min-width: 30px;
+    }
+
+    .dock-time.end {
+      text-align: right;
+    }
+
+    .dock-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      flex: 1;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .dock-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 8px rgba(var(--bright), 0.85);
+      cursor: pointer;
+    }
+
+    .dock-bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .dock-status-note {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: rgba(var(--light), 0.52);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dock-vol-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 96px;
+      flex-shrink: 0;
+    }
+
+    .dock-vol-wrap span {
+      font-size: 11px;
+      color: rgba(var(--light), 0.65);
+    }
+
+    .dock-playlist {
+      display: none;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(var(--bright), 0.14);
+      flex-direction: column;
+      gap: 4px;
+      max-height: 170px;
+      overflow-y: auto;
+    }
+
+    .dock-playlist.is-open {
+      display: flex;
+    }
+
+    .track-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: rgba(var(--light), 0.78);
+      text-align: left;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .track-row:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    .track-row.is-current {
+      background: rgba(var(--bright), 0.14);
+      border-color: rgba(var(--bright), 0.42);
+      color: #fff;
+    }
+
+    .track-num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(var(--bright), 0.85);
+      width: 18px;
+      flex-shrink: 0;
+    }
+
+    .track-row-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .track-row-title {
+      font-size: 11.5px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-row-artist {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: rgba(var(--light), 0.56);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     /* =========================================
@@ -1700,6 +1926,21 @@
       }
     }
 
+    @media (max-width: 640px) {
+      .waifu-head-bar {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .waifu-nav-controls {
+        position: static;
+      }
+      .music-dock {
+        right: 14px;
+        bottom: 14px;
+        width: calc(100vw - 28px);
+      }
+    }
+
     @media (max-width: 560px) {
       .cards-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1716,7 +1957,7 @@
     }
   </style>
 </head>
-<body class="intro-locked">
+<body>
 
   <!-- Background Art & Interactive Canvas -->
   <div class="bg-layer" aria-hidden="true">
@@ -1729,17 +1970,6 @@
     <div class="bg-vignette"></div>
   </div>
   <canvas id="atmosphere-canvas" aria-hidden="true"></canvas>
-
-  <!-- Intro Overlay -->
-  <div id="intro-overlay" role="dialog" aria-modal="true" aria-label="Вход на сайт Gray Silence">
-    <div class="intro-core">
-      <div class="intro-orb" aria-hidden="true"></div>
-      <div class="intro-title">*Gray Silence*</div>
-      <div class="intro-meta">undereror · 53.9° N · 430+ worldlines</div>
-      <button type="button" class="intro-enter-btn" id="intro-enter-btn">[ CLICK TO ENTER ]</button>
-    </div>
-    <button type="button" class="intro-silent-btn" id="intro-silent-btn">войти без звука</button>
-  </div>
 
   <div class="app-shell">
     <!-- Top Sticky Bar -->
@@ -1760,10 +1990,10 @@
             <span class="status-dot"></span>
             <span id="api-status-text">SYNC...</span>
           </div>
-          <button type="button" class="audio-btn" id="audio-toggle-btn" title="Включить / выключить Dark Ambient">
+          <button type="button" class="audio-btn" id="audio-toggle-btn" title="Play / Pause плейлист">
             <span id="audio-icon">▶</span>
             <span class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
-            <span>AMBIENT</span>
+            <span class="audio-btn-label" id="topbar-track-label">PLAYLIST</span>
           </button>
         </div>
       </div>
@@ -1773,6 +2003,7 @@
       <!-- HERO & STATS -->
       <section class="hero" id="profile">
         <div class="avatar-wrap">
+          <div class="avatar-beat-ring" aria-hidden="true"></div>
           <img
             id="profile-avatar"
             class="avatar-img"
@@ -1880,12 +2111,19 @@
 
       <!-- WAIFU CAROUSEL -->
       <section id="waifu">
-        <div class="section-head">
+        <div class="waifu-head-bar">
           <h2 class="section-title">
             <a href="https://shikimori.one/undereror+nyashka/favorites" target="_blank" rel="noopener noreferrer">WAIFU →</a>
           </h2>
+          <div class="waifu-nav-controls">
+            <span class="waifu-counter" id="waifu-counter">01–08 / 15</span>
+            <button type="button" class="carousel-arrow" id="waifu-prev" aria-label="Прокрутить влево">‹</button>
+            <button type="button" class="carousel-arrow" id="waifu-next" aria-label="Прокрутить вправо">›</button>
+          </div>
         </div>
-        <div class="waifu-carousel" id="waifu-carousel"></div>
+        <div class="waifu-stage">
+          <div class="waifu-carousel" id="waifu-carousel"></div>
+        </div>
       </section>
 
       <!-- COLLECTION (PEAK FICTION / LITERALLY ME) -->
@@ -1920,6 +2158,41 @@
     </footer>
   </div>
 
+  <!-- Floating Music Player Dock -->
+  <aside class="music-dock" id="music-dock" aria-label="Аудиоплеер">
+    <div class="dock-top">
+      <button type="button" class="dock-play-btn" id="dock-play-btn" title="Play / Pause">▶</button>
+      <div class="dock-meta">
+        <div class="dock-title" id="dock-title">Тени</div>
+        <div class="dock-artist" id="dock-artist">Валентин Стрыкало</div>
+      </div>
+      <div class="dock-mini-actions">
+        <button type="button" class="dock-icon-btn" id="dock-prev-btn" title="Предыдущий трек">⏮</button>
+        <button type="button" class="dock-icon-btn" id="dock-next-btn" title="Следующий трек">⏭</button>
+        <button type="button" class="dock-icon-btn" id="dock-list-btn" title="Список треков">☰</button>
+        <button type="button" class="dock-icon-btn" id="dock-min-btn" title="Свернуть / развернуть">–</button>
+      </div>
+    </div>
+
+    <div class="dock-expandable">
+      <canvas id="visualizer-canvas" width="300" height="26"></canvas>
+      <div class="dock-progress-row">
+        <span class="dock-time" id="dock-cur-time">0:00</span>
+        <input type="range" class="dock-slider" id="dock-seek" min="0" max="100" value="0" step="0.2" aria-label="Позиция трека" />
+        <span class="dock-time end" id="dock-dur-time">0:00</span>
+      </div>
+      <div class="dock-bottom-row">
+        <span class="dock-status-note" id="dock-status-note">BEAT-SYNC · 4 TRACKS</span>
+        <div class="dock-vol-wrap">
+          <span>♪</span>
+          <input type="range" class="dock-slider" id="dock-volume" min="0" max="1" step="0.02" value="0.65" aria-label="Громкость" />
+        </div>
+      </div>
+    </div>
+
+    <div class="dock-playlist" id="dock-playlist"></div>
+  </aside>
+
   <!-- Detail Modal -->
   <div class="modal-backdrop" id="detail-modal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true">
@@ -1943,14 +2216,52 @@
       'use strict';
 
       /* =========================================
-         CONFIGURATION & SNAPSHOT DATA
+         CONFIGURATION, TRACKS & SNAPSHOT DATA
          ========================================= */
       const SHIKI_NICKNAME = 'undereror nyashka';
       const SHIKI_ORIGINS = ['https://shikimori.one', 'https://shikimori.io'];
       const ANILIST_ENDPOINT = 'https://graphql.anilist.co';
       const COVER_CACHE_KEY = 'gray_silence_covers_v4';
 
+      // Твои 4 трека: плеер сам найдёт их и в корне папки, и в папке ./music/
+      const PLAYLIST = [
+        {
+          title: 'Тени',
+          artist: 'Валентин Стрыкало',
+          files: [
+            'Валентин Стрыкало - Тени (musify.club).mp3',
+            'track1.mp3'
+          ]
+        },
+        {
+          title: 'скорая помощь',
+          artist: 'вышел покурить',
+          files: [
+            'вышел покурить — скорая помощь (audset.ru).m4a',
+            'track2.m4a',
+            'track2.mp3'
+          ]
+        },
+        {
+          title: 'I Really Want to Stay at Your House',
+          artist: 'Cyberpunk: Edgerunners (Rock Edit)',
+          files: [
+            'CYBERPUNK 2077 SOUNDTRACK - I REALLY WANT TO STAY AT YOUR HOUSE by Rosa Walton & Hallie Coggins.mp3',
+            'track3.mp3'
+          ]
+        },
+        {
+          title: 'In Love With Myself',
+          artist: 'Petite Meller',
+          files: [
+            'Kalman Chodakiewitz, Eli Shiffman & Petite Meller - In Love With Myself.mp3',
+            'track4.mp3'
+          ]
+        }
+      ];
+
       let activeShikiOrigin = SHIKI_ORIGINS[0];
+      let liveBeatEnergy = 0;
 
       const SNAPSHOT = {
         nickname: 'undereror nyashka',
@@ -2076,6 +2387,13 @@
         return String(n).padStart(2, '0');
       }
 
+      function formatClock(sec) {
+        if (!isFinite(sec) || sec < 0) return '0:00';
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60);
+        return `${m}:${String(s).padStart(2, '0')}`;
+      }
+
       function escapeHtml(str) {
         return String(str || '')
           .replace(/&/g, '&amp;')
@@ -2089,169 +2407,288 @@
       }
 
       /* =========================================
-         WEB AUDIO DARK AMBIENT PLAYER
+         BEAT-REACTIVE PLAYLIST PLAYER (REAL TRACKS + ANALYSER)
          ========================================= */
-      const ambientPlayer = (function () {
-        let ctx = null;
-        let masterGain = null;
+      function initMusicPlayer() {
+        const audio = new Audio();
+        audio.preload = 'metadata';
+        audio.volume = 0.65;
+
+        const isHttp = location.protocol === 'http:' || location.protocol === 'https:';
+        if (isHttp) audio.crossOrigin = 'anonymous';
+
+        const dock = document.getElementById('music-dock');
+        const dockPlayBtn = document.getElementById('dock-play-btn');
+        const dockPrevBtn = document.getElementById('dock-prev-btn');
+        const dockNextBtn = document.getElementById('dock-next-btn');
+        const dockListBtn = document.getElementById('dock-list-btn');
+        const dockMinBtn = document.getElementById('dock-min-btn');
+        const dockTitle = document.getElementById('dock-title');
+        const dockArtist = document.getElementById('dock-artist');
+        const dockCurTime = document.getElementById('dock-cur-time');
+        const dockDurTime = document.getElementById('dock-dur-time');
+        const dockSeek = document.getElementById('dock-seek');
+        const dockVolume = document.getElementById('dock-volume');
+        const dockStatusNote = document.getElementById('dock-status-note');
+        const dockPlaylist = document.getElementById('dock-playlist');
+
+        const topBtn = document.getElementById('audio-toggle-btn');
+        const topIcon = document.getElementById('audio-icon');
+        const topLabel = document.getElementById('topbar-track-label');
+
+        const visCanvas = document.getElementById('visualizer-canvas');
+        const visCtx = visCanvas ? visCanvas.getContext('2d') : null;
+
+        let trackIdx = 0;
         let isPlaying = false;
+        let isSeeking = false;
+        let candidateUrls = [];
+        let candidateCursor = 0;
 
-        const btn = document.getElementById('audio-toggle-btn');
-        const icon = document.getElementById('audio-icon');
+        let audioCtx = null;
+        let analyser = null;
+        let freqData = null;
+        let analyserConnected = false;
 
-        function updateUI() {
-          if (!btn || !icon) return;
-          btn.classList.toggle('is-playing', isPlaying);
-          icon.textContent = isPlaying ? '❚❚' : '▶';
-        }
-
-        function createDrone() {
-          const AudioCtx = window.AudioContext || window.webkitAudioContext;
-          if (!AudioCtx) return false;
-          ctx = new AudioCtx();
-          masterGain = ctx.createGain();
-          masterGain.gain.setValueAtTime(0.0001, ctx.currentTime);
-
-          const filter = ctx.createBiquadFilter();
-          filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(340, ctx.currentTime);
-          filter.Q.setValueAtTime(1.8, ctx.currentTime);
-
-          const lfo = ctx.createOscillator();
-          const lfoGain = ctx.createGain();
-          lfo.frequency.value = 0.08;
-          lfoGain.gain.value = 130;
-          lfo.connect(lfoGain);
-          lfoGain.connect(filter.frequency);
-          lfo.start();
-
-          const freqs = [55.0, 82.41, 110.0, 130.81, 164.81];
-          freqs.forEach((f, i) => {
-            const osc = ctx.createOscillator();
-            const g = ctx.createGain();
-            osc.type = i % 2 === 0 ? 'sine' : 'triangle';
-            osc.frequency.setValueAtTime(f, ctx.currentTime);
-            osc.detune.setValueAtTime((i - 2) * 5.5, ctx.currentTime);
-            g.gain.setValueAtTime(i === 0 ? 0.14 : 0.055, ctx.currentTime);
-            osc.connect(g);
-            g.connect(filter);
-            osc.start();
+        function buildCandidates(track) {
+          const urls = [];
+          (track.files || []).forEach((fname) => {
+            const enc = encodeURIComponent(fname);
+            urls.push('./' + enc);
+            urls.push('./music/' + enc);
           });
-
-          const bufSize = ctx.sampleRate * 3;
-          const noiseBuf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-          const data = noiseBuf.getChannelData(0);
-          let b0 = 0, b1 = 0, b2 = 0;
-          for (let i = 0; i < bufSize; i++) {
-            const white = Math.random() * 2 - 1;
-            b0 = 0.997 * b0 + white * 0.029;
-            b1 = 0.985 * b1 + white * 0.032;
-            b2 = 0.950 * b2 + white * 0.048;
-            data[i] = (b0 + b1 + b2) * 0.14;
-          }
-          const noise = ctx.createBufferSource();
-          noise.buffer = noiseBuf;
-          noise.loop = true;
-          const noiseFilter = ctx.createBiquadFilter();
-          noiseFilter.type = 'bandpass';
-          noiseFilter.frequency.value = 420;
-          const noiseGain = ctx.createGain();
-          noiseGain.gain.value = 0.035;
-          noise.connect(noiseFilter);
-          noiseFilter.connect(noiseGain);
-          noiseGain.connect(masterGain);
-          noise.start();
-
-          filter.connect(masterGain);
-          masterGain.connect(ctx.destination);
-
-          const chimeFreqs = [329.63, 392.0, 440.0, 493.88, 523.25];
-          setInterval(() => {
-            if (!ctx || !isPlaying) return;
-            const now = ctx.currentTime;
-            const osc = ctx.createOscillator();
-            const env = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = chimeFreqs[Math.floor(Math.random() * chimeFreqs.length)];
-            env.gain.setValueAtTime(0.0001, now);
-            env.gain.exponentialRampToValueAtTime(0.018, now + 1.8);
-            env.gain.exponentialRampToValueAtTime(0.0001, now + 5.5);
-            osc.connect(env);
-            env.connect(filter);
-            osc.start(now);
-            osc.stop(now + 5.6);
-          }, 6500);
-
-          return true;
+          return urls;
         }
 
-        function start() {
-          if (isPlaying) return;
-          if (!ctx && !createDrone()) return;
-          if (ctx.state === 'suspended') {
-            ctx.resume().catch(() => {});
-          }
-          const now = ctx.currentTime;
-          masterGain.gain.cancelScheduledValues(now);
-          masterGain.gain.setValueAtTime(Math.max(masterGain.gain.value, 0.0001), now);
-          masterGain.gain.exponentialRampToValueAtTime(0.32, now + 1.4);
-          isPlaying = true;
-          updateUI();
+        function renderPlaylistUI() {
+          if (!dockPlaylist) return;
+          dockPlaylist.innerHTML = PLAYLIST.map((t, i) => `
+            <button type="button" class="track-row ${i === trackIdx ? 'is-current' : ''}" data-idx="${i}">
+              <span class="track-num">${formatRank(i + 1)}</span>
+              <div class="track-row-info">
+                <div class="track-row-title">${escapeHtml(t.title)}</div>
+                <div class="track-row-artist">${escapeHtml(t.artist)}</div>
+              </div>
+            </button>
+          `).join('');
+
+          dockPlaylist.querySelectorAll('.track-row').forEach((row) => {
+            row.addEventListener('click', () => {
+              const idx = Number(row.dataset.idx);
+              loadTrack(idx, true);
+            });
+          });
         }
 
-        function stop() {
-          if (!isPlaying || !ctx || !masterGain) return;
-          const now = ctx.currentTime;
-          masterGain.gain.cancelScheduledValues(now);
-          masterGain.gain.setValueAtTime(Math.max(masterGain.gain.value, 0.0001), now);
-          masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+        function updatePlayUI() {
+          const symbol = isPlaying ? '❚❚' : '▶';
+          if (dockPlayBtn) dockPlayBtn.textContent = symbol;
+          if (topIcon) topIcon.textContent = symbol;
+          if (topBtn) topBtn.classList.toggle('is-playing', isPlaying);
+        }
+
+        function setupAnalyser() {
+          if (analyserConnected || !isHttp) return;
+          try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            audioCtx = new AudioCtx();
+            const source = audioCtx.createMediaElementSource(audio);
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 128;
+            analyser.smoothingTimeConstant = 0.76;
+            source.connect(analyser);
+            analyser.connect(audioCtx.destination);
+            freqData = new Uint8Array(analyser.frequencyBinCount);
+            analyserConnected = true;
+          } catch (e) {
+            analyser = null;
+          }
+        }
+
+        function loadTrack(idx, autoplay) {
+          trackIdx = (idx + PLAYLIST.length) % PLAYLIST.length;
+          const track = PLAYLIST[trackIdx];
+          if (dockTitle) dockTitle.textContent = track.title;
+          if (dockArtist) dockArtist.textContent = track.artist;
+          if (topLabel) topLabel.textContent = track.title;
+          if (dockStatusNote) dockStatusNote.textContent = `TRACK ${formatRank(trackIdx + 1)} / ${formatRank(PLAYLIST.length)} · BEAT-SYNC`;
+          if (dockCurTime) dockCurTime.textContent = '0:00';
+          if (dockDurTime) dockDurTime.textContent = '0:00';
+          if (dockSeek) dockSeek.value = '0';
+
+          candidateUrls = buildCandidates(track);
+          candidateCursor = 0;
+          audio.src = candidateUrls[0] || '';
+          audio.load();
+          renderPlaylistUI();
+
+          if (autoplay) {
+            playCurrent();
+          }
+        }
+
+        function playCurrent() {
+          setupAnalyser();
+          if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(() => {});
+          }
+          const p = audio.play();
+          if (p && typeof p.then === 'function') {
+            p.then(() => {
+              isPlaying = true;
+              updatePlayUI();
+            }).catch(() => {
+              isPlaying = false;
+              updatePlayUI();
+            });
+          } else {
+            isPlaying = true;
+            updatePlayUI();
+          }
+        }
+
+        function pauseCurrent() {
+          audio.pause();
           isPlaying = false;
-          updateUI();
+          updatePlayUI();
         }
 
-        function toggle() {
-          if (isPlaying) stop();
-          else start();
+        function togglePlay() {
+          if (isPlaying) pauseCurrent();
+          else playCurrent();
         }
 
-        if (btn) btn.addEventListener('click', toggle);
-        return { start, stop, toggle };
-      })();
+        audio.addEventListener('error', () => {
+          candidateCursor++;
+          if (candidateCursor < candidateUrls.length) {
+            audio.src = candidateUrls[candidateCursor];
+            audio.load();
+            if (isPlaying) playCurrent();
+          } else {
+            isPlaying = false;
+            updatePlayUI();
+            if (dockStatusNote) {
+              dockStatusNote.textContent = 'Закинь аудиофайлы в папку сайта';
+            }
+          }
+        });
 
-      /* =========================================
-         INTRO OVERLAY LOGIC
-         ========================================= */
-      function initIntro() {
-        const overlay = document.getElementById('intro-overlay');
-        const enterBtn = document.getElementById('intro-enter-btn');
-        const silentBtn = document.getElementById('intro-silent-btn');
-        if (!overlay) return;
+        audio.addEventListener('loadedmetadata', () => {
+          if (dockDurTime) dockDurTime.textContent = formatClock(audio.duration);
+        });
 
-        let closed = false;
-        function dismiss(withSound) {
-          if (closed) return;
-          closed = true;
-          if (withSound) ambientPlayer.start();
-          document.body.classList.remove('intro-locked');
-          overlay.classList.add('is-hidden');
-          setTimeout(() => {
-            overlay.remove();
-          }, 650);
+        audio.addEventListener('timeupdate', () => {
+          if (dockCurTime) dockCurTime.textContent = formatClock(audio.currentTime);
+          if (!isSeeking && dockSeek && audio.duration) {
+            dockSeek.value = String((audio.currentTime / audio.duration) * 100);
+          }
+        });
+
+        audio.addEventListener('ended', () => {
+          loadTrack(trackIdx + 1, true);
+        });
+
+        dockPlayBtn?.addEventListener('click', togglePlay);
+        topBtn?.addEventListener('click', togglePlay);
+        dockPrevBtn?.addEventListener('click', () => loadTrack(trackIdx - 1, true));
+        dockNextBtn?.addEventListener('click', () => loadTrack(trackIdx + 1, true));
+
+        dockListBtn?.addEventListener('click', () => {
+          const open = dockPlaylist.classList.toggle('is-open');
+          dockListBtn.classList.toggle('active', open);
+        });
+
+        dockMinBtn?.addEventListener('click', () => {
+          const min = dock.classList.toggle('is-minimized');
+          dockMinBtn.textContent = min ? '+' : '–';
+        });
+
+        dockSeek?.addEventListener('input', () => {
+          isSeeking = true;
+          if (audio.duration && dockCurTime) {
+            dockCurTime.textContent = formatClock((Number(dockSeek.value) / 100) * audio.duration);
+          }
+        });
+
+        dockSeek?.addEventListener('change', () => {
+          if (audio.duration) {
+            audio.currentTime = (Number(dockSeek.value) / 100) * audio.duration;
+          }
+          isSeeking = false;
+        });
+
+        dockVolume?.addEventListener('input', () => {
+          audio.volume = Number(dockVolume.value);
+        });
+
+        // Visualizer + Beat-Reactive Avatar Ring Loop
+        let smoothBeat = 0;
+        let fallbackPhase = 0;
+
+        function visualizerFrame() {
+          let targetEnergy = 0;
+          const barCount = 24;
+
+          if (visCtx && visCanvas) {
+            const vw = visCanvas.width;
+            const vh = visCanvas.height;
+            visCtx.clearRect(0, 0, vw, vh);
+
+            if (isPlaying && analyser && freqData) {
+              analyser.getByteFrequencyData(freqData);
+              // Bass range (first 6 bins ~ 0-220Hz)
+              let bassSum = 0;
+              for (let b = 0; b < 6; b++) bassSum += freqData[b];
+              const bassNorm = bassSum / (6 * 255);
+              targetEnergy = Math.pow(Math.max(0, (bassNorm - 0.12) / 0.88), 1.35);
+
+              const gap = 3;
+              const barW = (vw - gap * (barCount - 1)) / barCount;
+              for (let i = 0; i < barCount; i++) {
+                const bin = Math.min(freqData.length - 1, Math.floor(i * 1.4));
+                const v = freqData[bin] / 255;
+                const bh = Math.max(2, v * (vh - 2));
+                const x = i * (barW + gap);
+                const y = vh - bh;
+                const grad = visCtx.createLinearGradient(0, vh, 0, y);
+                grad.addColorStop(0, 'rgba(173, 191, 222, 0.45)');
+                grad.addColorStop(1, 'rgba(245, 248, 255, 0.95)');
+                visCtx.fillStyle = grad;
+                visCtx.fillRect(x, y, barW, bh);
+              }
+            } else if (isPlaying) {
+              // Smooth synthetic fallback if opened via local file://
+              fallbackPhase += 0.14;
+              targetEnergy = 0.25 + 0.35 * Math.pow((Math.sin(fallbackPhase * 1.7) + 1) * 0.5, 2);
+              const gap = 3;
+              const barW = (vw - gap * (barCount - 1)) / barCount;
+              for (let i = 0; i < barCount; i++) {
+                const v = 0.18 + 0.65 * Math.abs(Math.sin(fallbackPhase + i * 0.45));
+                const bh = Math.max(2, v * (vh - 4));
+                visCtx.fillStyle = 'rgba(195, 210, 235, 0.72)';
+                visCtx.fillRect(i * (barW + gap), vh - bh, barW, bh);
+              }
+            } else {
+              // Subtle idle baseline
+              const gap = 3;
+              const barW = (vw - gap * (barCount - 1)) / barCount;
+              visCtx.fillStyle = 'rgba(173, 191, 222, 0.22)';
+              for (let i = 0; i < barCount; i++) {
+                visCtx.fillRect(i * (barW + gap), vh - 2, barW, 2);
+              }
+            }
+          }
+
+          smoothBeat += (targetEnergy - smoothBeat) * (targetEnergy > smoothBeat ? 0.38 : 0.14);
+          liveBeatEnergy = smoothBeat;
+          document.documentElement.style.setProperty('--beat-energy', smoothBeat.toFixed(3));
+
+          requestAnimationFrame(visualizerFrame);
         }
 
-        overlay.addEventListener('click', () => dismiss(true));
-        if (enterBtn) {
-          enterBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dismiss(true);
-          });
-        }
-        if (silentBtn) {
-          silentBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dismiss(false);
-          });
-        }
+        loadTrack(0, false);
+        requestAnimationFrame(visualizerFrame);
       }
 
       /* =========================================
@@ -2312,11 +2749,12 @@
 
         function frame() {
           ctx.clearRect(0, 0, w, h);
+          const beatBoost = 1 + liveBeatEnergy * 1.15;
 
           for (let i = 0; i < stars.length; i++) {
             const s = stars[i];
             s.phase += s.speed;
-            const alpha = 0.15 + ((Math.sin(s.phase) + 1) * 0.5) * 0.68;
+            const alpha = Math.min(1, 0.15 + ((Math.sin(s.phase) + 1) * 0.5) * 0.68 + liveBeatEnergy * 0.15);
             const px = mouse.x > -1000 ? (mouse.x / w - 0.5) * 10 * s.depth : 0;
             const py = mouse.y > -1000 ? (mouse.y / h - 0.5) * 10 * s.depth : 0;
             ctx.beginPath();
@@ -2336,8 +2774,8 @@
               p.x += (dx / dist) * force;
               p.y += (dy / dist) * force;
             }
-            p.x += p.vx;
-            p.y += p.vy;
+            p.x += p.vx * beatBoost;
+            p.y += p.vy * beatBoost;
             p.rot += p.vrot;
 
             if (p.x < -12) p.x = w + 12;
@@ -2479,7 +2917,7 @@
       }
 
       /* =========================================
-         RENDERING: WAIFU & COLLECTION
+         RENDERING: WAIFU CAROUSEL + ARROWS + COUNTER
          ========================================= */
       function renderWaifu() {
         const wrap = document.getElementById('waifu-carousel');
@@ -2506,6 +2944,7 @@
           `;
         }).join('');
 
+        wrap.scrollLeft = 0;
         attachImageHandlers(wrap);
 
         wrap.querySelectorAll('.waifu-card').forEach((card) => {
@@ -2527,9 +2966,40 @@
         });
       }
 
-      function initWaifuDrag() {
+      function initWaifuControls() {
         const slider = document.getElementById('waifu-carousel');
+        const prevBtn = document.getElementById('waifu-prev');
+        const nextBtn = document.getElementById('waifu-next');
+        const counter = document.getElementById('waifu-counter');
         if (!slider) return;
+
+        const stepPx = 148 * 3; // 3 cards per arrow click
+
+        function updateNavState() {
+          const maxScroll = Math.max(0, slider.scrollWidth - slider.clientWidth);
+          if (prevBtn) prevBtn.disabled = slider.scrollLeft <= 4;
+          if (nextBtn) nextBtn.disabled = slider.scrollLeft >= maxScroll - 4;
+
+          if (counter) {
+            const firstIdx = Math.min(WAIFU_LIST.length, Math.max(1, Math.round(slider.scrollLeft / 148) + 1));
+            const visibleCount = Math.max(1, Math.floor((slider.clientWidth + 16) / 148));
+            const lastIdx = Math.min(WAIFU_LIST.length, firstIdx + visibleCount - 1);
+            counter.textContent = `${formatRank(firstIdx)}–${formatRank(lastIdx)} / ${formatRank(WAIFU_LIST.length)}`;
+          }
+        }
+
+        prevBtn?.addEventListener('click', () => {
+          slider.scrollBy({ left: -stepPx, behavior: 'smooth' });
+        });
+
+        nextBtn?.addEventListener('click', () => {
+          slider.scrollBy({ left: stepPx, behavior: 'smooth' });
+        });
+
+        slider.addEventListener('scroll', updateNavState, { passive: true });
+        window.addEventListener('resize', updateNavState);
+
+        // Mouse drag support
         let isDown = false;
         let startX = 0;
         let scrollLeft = 0;
@@ -2562,8 +3032,14 @@
           moved = Math.abs(x - startX);
           slider.scrollLeft = scrollLeft - walk;
         });
+
+        // Initial check after layout
+        requestAnimationFrame(updateNavState);
       }
 
+      /* =========================================
+         COLLECTION (PEAK FICTION / LITERALLY ME)
+         ========================================= */
       function renderCollection() {
         const grid = document.getElementById('collection-grid');
         const sortGroup = document.getElementById('sort-controls');
@@ -2844,7 +3320,6 @@
           if (offset + 16 < missing.length) await sleep(250);
         }
 
-        // Strict sequential Jikan fallback ONLY for any unresolved characters
         const unresolved = missing.filter((c) => !coverCache['char_' + c.key]);
         for (const c of unresolved) {
           let attempts = 0;
@@ -3078,15 +3553,15 @@
         }
       }
 
-      initIntro();
+      initMusicPlayer();
       initAtmosphereCanvas();
-      initWaifuDrag();
       initCollectionControls();
 
       renderStats(SNAPSHOT.anime, SNAPSHOT.manga, SNAPSHOT.lifetimeText);
       renderHistory(SNAPSHOT.history, false);
       renderActivityGraph(SNAPSHOT.activity);
       renderWaifu();
+      initWaifuControls();
       renderCollection();
 
       syncShikimoriLive();
