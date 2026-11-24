@@ -26,7 +26,8 @@ import {
   saveRatedPoolCache,
   updateRandomizerPoolCounts,
   saveCoverCache,
-  normalizeShikiUrl
+  normalizeShikiUrl,
+  setActiveShikiOrigin
 } from './data.js';
 import { computeTrophiesFromRates, renderTrophiesShowcase } from './trophies.js';
 import {
@@ -589,7 +590,7 @@ export async function resolveHostUser() {
       { retries: 2, baseDelay: 700 }
     );
     if (res.ok && res.data && res.data.id) {
-      appState.activeShikiOrigin = origin;
+      setActiveShikiOrigin(origin);
       hostUserCache = res.data;
       return hostUserCache;
     }
