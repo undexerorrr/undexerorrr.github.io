@@ -7683,7 +7683,6 @@
           overlay.classList.add('is-open');
           overlay.setAttribute('aria-hidden', 'false');
           document.body.classList.add('galaxy-active');
-          document.body.style.overflow = 'hidden';
           playerControls?.syncVisualizer?.();
 
           if (!renderer && !isBooting) {
@@ -7727,7 +7726,6 @@
           overlay.classList.remove('is-open');
           overlay.setAttribute('aria-hidden', 'true');
           document.body.classList.remove('galaxy-active');
-          document.body.style.overflow = '';
           playerControls?.syncVisualizer?.();
           updateHoverTooltip(-1, 0, 0);
           if (rafId) {
@@ -9697,6 +9695,55 @@
         renderTrophiesShowcase();
       }
 
+      /* =========================================
+         STAGE 3: UNIFIED MODAL SCROLL LOCK (ZERO LAYOUT SHIFT)
+         ========================================= */
+      function initModalScrollLock() {
+        const modalIds = [
+          'detail-modal',
+          'arena-modal',
+          'coop-modal',
+          'trophy-modal',
+          'holo-modal',
+          'pack-modal',
+          'spotify-drawer'
+        ];
+        const modalEls = modalIds.map((id) => document.getElementById(id)).filter(Boolean);
+        let isLocked = false;
+
+        function syncModalScrollLock() {
+          let anyOpen = document.body.classList.contains('galaxy-active');
+          if (!anyOpen) {
+            for (let i = 0; i < modalEls.length; i++) {
+              if (modalEls[i].classList.contains('is-open')) {
+                anyOpen = true;
+                break;
+              }
+            }
+          }
+
+          if (anyOpen === isLocked) return;
+          isLocked = anyOpen;
+
+          if (anyOpen) {
+            const sbWidth = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+            document.documentElement.style.setProperty('--scrollbar-comp', sbWidth + 'px');
+            document.body.classList.add('is-modal-open');
+          } else {
+            document.body.classList.remove('is-modal-open');
+            document.documentElement.style.setProperty('--scrollbar-comp', '0px');
+          }
+        }
+
+        if (typeof MutationObserver !== 'undefined') {
+          const mo = new MutationObserver(syncModalScrollLock);
+          mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+          modalEls.forEach((el) => mo.observe(el, { attributes: true, attributeFilter: ['class'] }));
+        }
+        syncModalScrollLock();
+      }
+
+      initModalScrollLock();
       const playerControls = initMusicPlayer();
       initIntroOverlay(playerControls);
       initSpotifyDrawer(playerControls);
