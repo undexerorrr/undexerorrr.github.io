@@ -16,7 +16,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%278%27%20fill%3D%27%2307090d%27/%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%2716%27%20r%3D%2711%27%20fill%3D%27none%27%20stroke%3D%27%23adbfde%27%20stroke-width%3D%271.6%27%20stroke-dasharray%3D%2748%2016%27/%3E%3Cpath%20d%3D%27M16%209%20L21.5%2016%20L16%2023%20L10.5%2016%20Z%27%20fill%3D%27%23eef4ff%27/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg-base: #07090d;
@@ -30,6 +30,7 @@
       --radius-lg: 16px;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+      --font-display: 'Unbounded', var(--font-sans);
       --beat-energy: 0;
     }
 
@@ -165,7 +166,7 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 22px;
+      gap: 18px;
     }
 
     .nav-links a {
@@ -4649,6 +4650,501 @@
       }
     }
 
+
+    /* =========================================
+       V13 STAGE 1: FILM GRAIN + DISPLAY FONTS + NOIR POSTER FILTER + HOT TAKES
+       ========================================= */
+    .film-grain {
+      position: fixed;
+      inset: -12%;
+      width: 124%;
+      height: 124%;
+      z-index: 50;
+      pointer-events: none;
+      opacity: 0.04;
+      mix-blend-mode: overlay;
+      background-repeat: repeat;
+      background-size: 220px 220px;
+      background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%27220%27%20height%3D%27220%27%3E%3Cfilter%20id%3D%27n%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.82%27%20numOctaves%3D%273%27%20stitchTiles%3D%27stitch%27/%3E%3C/filter%3E%3Crect%20width%3D%27220%27%20height%3D%27220%27%20filter%3D%27url(%23n)%27%20opacity%3D%271%27/%3E%3C/svg%3E");
+      animation: film-grain-shift 0.45s steps(2, end) infinite;
+      will-change: transform;
+    }
+
+    @keyframes film-grain-shift {
+      0%   { transform: translate3d(0, 0, 0); }
+      25%  { transform: translate3d(-1.5%, 1.2%, 0); }
+      50%  { transform: translate3d(1.2%, -1.4%, 0); }
+      75%  { transform: translate3d(-0.9%, -0.8%, 0); }
+      100% { transform: translate3d(0.8%, 1.5%, 0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .film-grain {
+        animation: none;
+      }
+    }
+
+    /* Editorial Display Typography (Unbounded) */
+    .intro-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      letter-spacing: 1.5px;
+    }
+
+    .hero-nick {
+      font-family: var(--font-display);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .bento-pilot .hero-nick {
+      font-size: clamp(20px, 2.25vw, 27px);
+    }
+
+    .stat-hero-val {
+      font-family: var(--font-display);
+      font-size: 36px;
+      letter-spacing: -0.03em;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 2.6px;
+    }
+
+    .dna-archetype-name {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .base-heading,
+    .ht-heading {
+      font-family: var(--font-display);
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #fff;
+      line-height: 1.25;
+    }
+
+    .base-pct-num {
+      font-family: var(--font-display);
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+
+    .base-rank-title {
+      font-family: var(--font-display);
+      font-size: clamp(15px, 2vw, 19px);
+      letter-spacing: -0.01em;
+    }
+
+    .arena-champ-name {
+      font-family: var(--font-display);
+      font-size: clamp(19px, 2.5vw, 25px);
+      letter-spacing: -0.01em;
+    }
+
+    /* Unified Noir Poster Filter (desaturated monochrome at rest -> vivid full color on hover) */
+    .poster-box img,
+    .waifu-card img,
+    .watching-poster img,
+    .history-thumb img,
+    .base-row-thumb img,
+    .ht-thumb img {
+      filter: grayscale(0.58) saturate(0.45) contrast(1.09) brightness(0.92);
+      transition:
+        opacity 0.45s ease,
+        transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .catalog-card:hover .poster-box img,
+    .catalog-card:focus-visible .poster-box img,
+    .waifu-card:hover img,
+    .waifu-card:focus-visible img,
+    .watching-card:hover .watching-poster img,
+    .history-item:hover .history-thumb img,
+    .base-anime-row:hover .base-row-thumb img,
+    .ht-card:hover .ht-thumb img,
+    .ht-card:focus-visible .ht-thumb img {
+      filter: grayscale(0) saturate(1.14) contrast(1.04) brightness(1.06);
+    }
+
+    .base-anime-row:hover .base-row-thumb img,
+    .ht-card:hover .ht-thumb img {
+      transform: scale(1.06);
+    }
+
+    .cards-grid:has(.catalog-card:hover) .catalog-card:not(:hover) {
+      opacity: 0.44;
+      filter: grayscale(0.35);
+    }
+
+    /* =========================================
+       HOT TAKES SECTION (MAIN DISAGREEMENTS WITH SHIKIMORI)
+       ========================================= */
+    .hottakes-card {
+      padding: 24px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .ht-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .ht-head-left {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      max-width: 700px;
+    }
+
+    .ht-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ht-subtitle {
+      font-size: 12.5px;
+      color: rgba(var(--light), 0.68);
+    }
+
+    .ht-head-badges {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ht-columns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .ht-panel {
+      padding: 16px 17px;
+      border-radius: 14px;
+      background: rgba(6, 8, 14, 0.56);
+      border: 1px solid rgba(var(--bright), 0.16);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .ht-panel.is-gems {
+      border-color: rgba(110, 231, 183, 0.24);
+      background: linear-gradient(155deg, rgba(12, 30, 26, 0.34), rgba(6, 8, 14, 0.62));
+    }
+
+    .ht-panel.is-overrated {
+      border-color: rgba(248, 113, 113, 0.26);
+      background: linear-gradient(155deg, rgba(34, 12, 18, 0.38), rgba(6, 8, 14, 0.62));
+    }
+
+    .ht-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(var(--bright), 0.12);
+    }
+
+    .ht-panel-title {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .ht-panel.is-gems .ht-panel-title {
+      color: #a7f3d0;
+    }
+
+    .ht-panel.is-overrated .ht-panel-title {
+      color: #fca5a5;
+    }
+
+    .ht-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ht-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(9, 12, 20, 0.68);
+      border: 1px solid rgba(var(--bright), 0.15);
+      color: inherit;
+      text-align: left;
+      width: 100%;
+      font-family: inherit;
+      transition: transform 0.24s ease, border-color 0.24s ease, background 0.24s ease, box-shadow 0.24s ease;
+    }
+
+    .ht-card:hover {
+      transform: translateY(-2px);
+      background: rgba(14, 19, 30, 0.88);
+    }
+
+    .ht-panel.is-gems .ht-card:hover {
+      border-color: rgba(110, 231, 183, 0.56);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.52), 0 0 16px rgba(110, 231, 183, 0.14);
+    }
+
+    .ht-panel.is-overrated .ht-card:hover {
+      border-color: rgba(248, 113, 113, 0.56);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.52), 0 0 16px rgba(248, 113, 113, 0.14);
+    }
+
+    .ht-thumb {
+      position: relative;
+      width: 48px;
+      height: 68px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: linear-gradient(155deg, rgba(20, 25, 36, 0.94), rgba(9, 11, 16, 0.98));
+      border: 1px solid rgba(var(--bright), 0.22);
+    }
+
+    .ht-thumb img {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0;
+    }
+
+    .ht-thumb img.loaded {
+      opacity: 1;
+    }
+
+    .ht-body {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .ht-anime-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ht-scores-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+
+    .ht-chip-me {
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: rgba(var(--bright), 0.16);
+      border: 1px solid rgba(var(--bright), 0.34);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .ht-chip-shiki {
+      padding: 2px 7px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(var(--bright), 0.16);
+      color: rgba(var(--light), 0.78);
+    }
+
+    .ht-chip-meta {
+      color: rgba(var(--light), 0.50);
+      font-size: 9.5px;
+    }
+
+    .ht-meter {
+      position: relative;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: visible;
+      margin-top: 1px;
+    }
+
+    .ht-meter-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .ht-panel.is-gems .ht-meter-fill {
+      background: linear-gradient(90deg, rgba(110, 231, 183, 0.45), #a7f3d0);
+      box-shadow: 0 0 8px rgba(110, 231, 183, 0.45);
+    }
+
+    .ht-panel.is-overrated .ht-meter-fill {
+      background: linear-gradient(90deg, rgba(248, 113, 113, 0.45), #fca5a5);
+      box-shadow: 0 0 8px rgba(248, 113, 113, 0.40);
+    }
+
+    .ht-meter-marker {
+      position: absolute;
+      top: -2.5px;
+      width: 2px;
+      height: 9px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.65);
+      transform: translateX(-1px);
+    }
+
+    .ht-take-line {
+      font-size: 11px;
+      color: rgba(var(--light), 0.66);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ht-delta-badge {
+      flex-shrink: 0;
+      min-width: 66px;
+      padding: 7px 9px;
+      border-radius: 10px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .ht-panel.is-gems .ht-delta-badge {
+      background: rgba(110, 231, 183, 0.11);
+      border: 1px solid rgba(110, 231, 183, 0.38);
+      color: #a7f3d0;
+    }
+
+    .ht-panel.is-overrated .ht-delta-badge {
+      background: rgba(248, 113, 113, 0.12);
+      border: 1px solid rgba(248, 113, 113, 0.40);
+      color: #fecaca;
+    }
+
+    .ht-delta-val {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .ht-delta-lbl {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      letter-spacing: 0.9px;
+      text-transform: uppercase;
+      opacity: 0.72;
+    }
+
+    .ht-skeleton {
+      padding: 24px 12px;
+      border-radius: 11px;
+      background: rgba(10, 14, 22, 0.48);
+      border: 1px dashed rgba(var(--bright), 0.18);
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: rgba(var(--light), 0.58);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ht-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 12px;
+      border-top: 1px solid rgba(var(--bright), 0.12);
+    }
+
+    .ht-summary-note {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: rgba(var(--light), 0.65);
+    }
+
+    .ht-summary-note strong {
+      color: #fff;
+    }
+
+    .ht-footer-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .ht-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hottakes-card {
+        padding: 18px 16px;
+      }
+      .ht-card {
+        padding: 9px 10px;
+        gap: 10px;
+      }
+      .ht-delta-badge {
+        min-width: 56px;
+        padding: 6px 6px;
+      }
+      .ht-delta-val {
+        font-size: 11.5px;
+      }
+    }
+
     /* =========================================
        NATIVE SVG ARROW CURSOR (MONOCHROME THEME)
        ========================================= */
@@ -4691,7 +5187,9 @@
       .weather-hud-pill *,
       .weather-chip,
       .pilot-weather-chip,
-      .mode-chip {
+      .mode-chip,
+      .ht-card,
+      .ht-card * {
         cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23edf3ff%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%271.35%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M16.5%2015.2%20L19.8%2018.5%20L16.5%2021.8%20L13.2%2018.5%20Z%27%20fill%3D%27%23adbfde%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%270.9%27/%3E%3C/svg%3E") 3 2, pointer !important;
       }
 
@@ -4775,6 +5273,7 @@
     <div class="bg-vignette"></div>
   </div>
   <canvas id="atmosphere-canvas" aria-hidden="true"></canvas>
+  <div class="film-grain" aria-hidden="true"></div>
 
   <div class="app-shell">
     <!-- Top Sticky Bar -->
@@ -4787,6 +5286,7 @@
         <nav class="nav-links" aria-label="Навигация">
           <a href="#profile">Профиль</a>
           <a href="#compatibility">База</a>
+          <a href="#hottakes">Hot Takes</a>
           <a href="#activity">Активность</a>
           <a href="#watching">Смотрю</a>
           <a href="#waifu">Waifu</a>
@@ -5093,6 +5593,54 @@
                 <button type="button" class="base-action-btn" id="base-copy-text-btn">⎘ Скопировать вердикт</button>
               </div>
               <button type="button" class="base-action-btn" id="base-reset-btn">↻ Проверить другой ник</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- V13 STAGE 1: MY HOT TAKES (MAIN DISAGREEMENTS WITH SHIKIMORI) -->
+      <section id="hottakes">
+        <div class="glass-card hottakes-card">
+          <div class="ht-head">
+            <div class="ht-head-left">
+              <div class="ht-title-row">
+                <span class="dna-pulse-icon" aria-hidden="true"></span>
+                <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.4px;">Hot Takes // Против толпы</span>
+              </div>
+              <h2 class="ht-heading">Главные несогласия с рейтингом Шикимори</h2>
+              <p class="ht-subtitle">Автоматическая выборка по всем моим оценкам: где я пошёл против комьюнити сильнее всего — недооценённые гемы и переоценённые хиты.</p>
+            </div>
+            <div class="ht-head-badges">
+              <span class="panel-badge" id="ht-delta-index-badge">Δ —</span>
+              <span class="panel-badge" id="ht-source-badge">SYNC...</span>
+            </div>
+          </div>
+
+          <div class="ht-columns">
+            <!-- Left: Underrated Gems -->
+            <div class="ht-panel is-gems">
+              <div class="ht-panel-head">
+                <span class="ht-panel-title">▲ Недооценённые гемы</span>
+                <span class="panel-badge" id="ht-gems-badge" style="border-color: rgba(110, 231, 183, 0.34); color: #a7f3d0;">ВЫШЕ ТОЛПЫ</span>
+              </div>
+              <div class="ht-list" id="ht-gems-list"></div>
+            </div>
+
+            <!-- Right: Overrated Hits -->
+            <div class="ht-panel is-overrated">
+              <div class="ht-panel-head">
+                <span class="ht-panel-title">▼ Переоценённые хиты</span>
+                <span class="panel-badge" id="ht-over-badge" style="border-color: rgba(248, 113, 113, 0.36); color: #fecaca;">НИЖЕ ТОЛПЫ</span>
+              </div>
+              <div class="ht-list" id="ht-over-list"></div>
+            </div>
+          </div>
+
+          <div class="ht-footer">
+            <span class="ht-summary-note" id="ht-summary-note">Синхронизация с Shikimori API...</span>
+            <div class="ht-footer-actions">
+              <button type="button" class="base-action-btn" id="ht-toggle-count-btn" style="display:none;">Показать топ-5</button>
+              <button type="button" class="base-action-btn is-primary" id="ht-download-png-btn" disabled>↓ Карточка споров (PNG)</button>
             </div>
           </div>
         </div>
@@ -5420,6 +5968,7 @@
       const MY_RATES_CACHE_KEY = 'undexeror_archive_my_rates_v1';
       const VOLUME_STORAGE_KEY = 'undexeror_archive_volume_v1';
       const DEFAULT_VOLUME = 0.18;
+      const HOT_TAKES_CACHE_KEY = 'undexeror_archive_hottakes_v1';
       const GENRE_RU = {
         Action: 'Экшен',
         Adventure: 'Приключения',
@@ -5630,6 +6179,26 @@
       let animeDnaState = loadDnaCache();
       let myRatesIndex = loadMyRatesIndex();
       let lastMatchVerdict = null;
+      let hotTakesShowFive = false;
+      let hotTakesState = loadHotTakesCache();
+
+      function loadHotTakesCache() {
+        try {
+          const raw = localStorage.getItem(HOT_TAKES_CACHE_KEY);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.gems) && Array.isArray(parsed.overrated)) {
+            return parsed;
+          }
+        } catch (e) {}
+        return null;
+      }
+
+      function saveHotTakesCache(state) {
+        try {
+          localStorage.setItem(HOT_TAKES_CACHE_KEY, JSON.stringify(state));
+        } catch (e) {}
+      }
 
       function loadMyRatesIndex() {
         const map = new Map();
@@ -6878,6 +7447,431 @@
         });
       }
 
+      /* =========================================
+         V13 STAGE 1: HOT TAKES ENGINE (CONTROVERSIAL RATINGS + PNG CARD)
+         ========================================= */
+      function computeHotTakesFromRates(allRates) {
+        if (!Array.isArray(allRates) || !allRates.length) return null;
+
+        const allowedKinds = new Set(['tv', 'movie', 'ona', 'ova']);
+        const seen = new Set();
+        const candidates = [];
+
+        allRates.forEach((r) => {
+          const a = r && r.anime;
+          if (!a || !a.id) return;
+          if (r.status !== 'completed' && r.status !== 'rewatching') return;
+          const userScore = Number(r.score) || 0;
+          const shikiScore = Number(a.score) || 0;
+          if (userScore < 1 || userScore > 10 || shikiScore < 5.0) return;
+
+          const kindKey = String(a.kind || 'tv').toLowerCase();
+          if (!allowedKinds.has(kindKey)) return;
+          if (seen.has(a.id)) return;
+          seen.add(a.id);
+
+          const rawImg = a.image?.original || a.image?.preview || '';
+          const delta = Number((userScore - shikiScore).toFixed(2));
+
+          candidates.push({
+            malId: Number(a.id),
+            title: a.russian || a.name,
+            kind: SHIKI_KIND_LABELS[kindKey] || 'Аниме',
+            year: a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || null : null,
+            userScore,
+            shikiScore: Number(shikiScore.toFixed(2)),
+            delta,
+            shikiImg: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : '',
+            url: a.url ? normalizeShikiUrl(a.url, activeShikiOrigin) : `${activeShikiOrigin}/animes/${a.id}`,
+            comment: stripHtml(r.text || '').trim()
+          });
+        });
+
+        if (!candidates.length) return null;
+
+        // Underrated gems: rated >= 8 and clearly above Shikimori crowd score
+        let gems = candidates
+          .filter((c) => c.userScore >= 8 && c.delta > 0.35)
+          .sort((a, b) => b.delta - a.delta || b.userScore - a.userScore || b.shikiScore - a.shikiScore)
+          .slice(0, 5);
+
+        if (gems.length < 3) {
+          gems = candidates
+            .filter((c) => c.delta > 0)
+            .sort((a, b) => b.delta - a.delta || b.userScore - a.userScore)
+            .slice(0, 5);
+        }
+
+        // Overrated hits: prioritize well-rated popular titles (Shiki >= 7.4) that user rated lower
+        const pickOverrated = (minShiki) => candidates
+          .filter((c) => c.shikiScore >= minShiki && c.delta < -0.5)
+          .sort((a, b) => a.delta - b.delta || b.shikiScore - a.shikiScore);
+
+        let overrated = pickOverrated(7.4).slice(0, 5);
+        if (overrated.length < 5) {
+          const usedIds = new Set(overrated.map((x) => x.malId));
+          const extra = pickOverrated(6.8).filter((x) => !usedIds.has(x.malId));
+          overrated = overrated.concat(extra).slice(0, 5);
+        }
+        if (overrated.length < 3) {
+          const usedIds = new Set(overrated.map((x) => x.malId));
+          const extra = candidates
+            .filter((c) => c.delta < 0 && !usedIds.has(c.malId))
+            .sort((a, b) => a.delta - b.delta);
+          overrated = overrated.concat(extra).slice(0, 5);
+        }
+
+        const avgDelta = Number(
+          (candidates.reduce((acc, c) => acc + c.delta, 0) / candidates.length).toFixed(2)
+        );
+
+        return {
+          isLive: true,
+          scannedCount: candidates.length,
+          avgDelta,
+          gems,
+          overrated,
+          updatedAt: Date.now()
+        };
+      }
+
+      function renderHotTakes(stateInput, loadFailed) {
+        const gemsWrap = document.getElementById('ht-gems-list');
+        const overWrap = document.getElementById('ht-over-list');
+        const srcBadge = document.getElementById('ht-source-badge');
+        const idxBadge = document.getElementById('ht-delta-index-badge');
+        const gemsBadge = document.getElementById('ht-gems-badge');
+        const overBadge = document.getElementById('ht-over-badge');
+        const summaryEl = document.getElementById('ht-summary-note');
+        const toggleBtn = document.getElementById('ht-toggle-count-btn');
+        const dlBtn = document.getElementById('ht-download-png-btn');
+
+        if (!gemsWrap || !overWrap) return;
+
+        const st = stateInput || hotTakesState;
+
+        if (!st || (!st.gems?.length && !st.overrated?.length)) {
+          const msg = loadFailed
+            ? 'Не удалось получить оценки с Shikimori API.'
+            : 'Сканирую все оценки с Shikimori API...';
+          const retryHtml = loadFailed
+            ? '<button type="button" class="base-action-btn ht-retry-btn">↻ Повторить загрузку</button>'
+            : '<span class="base-spinner"></span>';
+
+          const emptyMarkup = `<div class="ht-skeleton">${retryHtml}<span>${msg}</span></div>`;
+          gemsWrap.innerHTML = emptyMarkup;
+          overWrap.innerHTML = emptyMarkup;
+          if (srcBadge) srcBadge.textContent = loadFailed ? 'OFFLINE' : 'SYNC...';
+          if (idxBadge) idxBadge.textContent = 'Δ —';
+          if (summaryEl) summaryEl.textContent = msg;
+          if (toggleBtn) toggleBtn.style.display = 'none';
+          if (dlBtn) dlBtn.disabled = true;
+
+          document.querySelectorAll('.ht-retry-btn').forEach((btn) => {
+            btn.addEventListener('click', async () => {
+              renderHotTakes(null, false);
+              const ok = await loadHostAnimeRates();
+              if (!ok && !hotTakesState) renderHotTakes(null, true);
+            });
+          });
+          return;
+        }
+
+        const limit = hotTakesShowFive ? 5 : 3;
+        const gemsSlice = (st.gems || []).slice(0, limit);
+        const overSlice = (st.overrated || []).slice(0, limit);
+
+        const avg = Number(st.avgDelta || 0);
+        if (idxBadge) {
+          idxBadge.textContent = `ИНДЕКС ${avg >= 0 ? '+' : ''}${avg.toFixed(2)}`;
+        }
+        if (srcBadge) {
+          srcBadge.textContent = `LIVE · ${st.scannedCount || 0} ОЦЕНОК`;
+        }
+        if (gemsBadge && gemsSlice.length) {
+          gemsBadge.textContent = `МАКС +${gemsSlice[0].delta.toFixed(2)}`;
+        }
+        if (overBadge && overSlice.length) {
+          overBadge.textContent = `МАКС ${overSlice[0].delta.toFixed(2)}`;
+        }
+
+        function renderHotTakeRow(item, isGem) {
+          const coverKey = 'anime_' + item.malId;
+          const imgSrc = coverCache[coverKey] || item.shikiImg || '';
+          const deltaStr = `${item.delta > 0 ? '+' : ''}${item.delta.toFixed(2)}`;
+          const userPct = Math.max(8, Math.min(100, Math.round((item.userScore / 10) * 100)));
+          const shikiPct = Math.max(8, Math.min(98, Math.round((item.shikiScore / 10) * 100)));
+          const caption = item.comment
+            ? `«${item.comment}»`
+            : (isGem
+              ? `Оценил на ${item.userScore}★ при рейтинге Шики ${item.shikiScore.toFixed(2)}`
+              : `Хит на ${item.shikiScore.toFixed(2)}★, но моя оценка — ${item.userScore}/10`);
+
+          return `
+            <button type="button" class="ht-card" data-ht-id="${item.malId}" data-ht-type="${isGem ? 'gem' : 'over'}">
+              <div class="ht-thumb">
+                <img
+                  data-cover-key="${coverKey}"
+                  data-fallback-src="${escapeHtml(item.shikiImg || '')}"
+                  src="${escapeHtml(imgSrc)}"
+                  alt="${escapeHtml(item.title)}"
+                  loading="lazy"
+                />
+              </div>
+              <div class="ht-body">
+                <div class="ht-anime-title">${escapeHtml(item.title)}</div>
+                <div class="ht-scores-row">
+                  <span class="ht-chip-me">Я: ${item.userScore}★</span>
+                  <span class="ht-chip-shiki">Шики: ${item.shikiScore.toFixed(2)}★</span>
+                  <span class="ht-chip-meta">${escapeHtml(item.kind)}${item.year ? ' · ' + item.year : ''}</span>
+                </div>
+                <div class="ht-meter" title="Полоска: моя оценка (${item.userScore}) · белая риска: рейтинг Шикимори (${item.shikiScore.toFixed(2)})">
+                  <div class="ht-meter-fill" style="width:${userPct}%"></div>
+                  <span class="ht-meter-marker" style="left:${shikiPct}%"></span>
+                </div>
+                <div class="ht-take-line">${escapeHtml(caption)}</div>
+              </div>
+              <div class="ht-delta-badge">
+                <span class="ht-delta-val">${deltaStr}</span>
+                <span class="ht-delta-lbl">${isGem ? 'ГЕМ' : 'СПОР'}</span>
+              </div>
+            </button>
+          `;
+        }
+
+        gemsWrap.innerHTML = gemsSlice.length
+          ? gemsSlice.map((item) => renderHotTakeRow(item, true)).join('')
+          : '<div class="base-empty-note">Нет оценок заметно выше рейтинга Шикимори</div>';
+
+        overWrap.innerHTML = overSlice.length
+          ? overSlice.map((item) => renderHotTakeRow(item, false)).join('')
+          : '<div class="base-empty-note">Нет жёстко заниженных популярных хитов</div>';
+
+        attachImageHandlers(gemsWrap);
+        attachImageHandlers(overWrap);
+
+        // Bind modal open on click
+        [gemsWrap, overWrap].forEach((wrap) => {
+          wrap.querySelectorAll('.ht-card').forEach((btn) => {
+            btn.addEventListener('click', () => {
+              const id = Number(btn.dataset.htId);
+              const isGem = btn.dataset.htType === 'gem';
+              const list = isGem ? (st.gems || []) : (st.overrated || []);
+              const item = list.find((x) => x.malId === id);
+              if (!item) return;
+              const img = btn.querySelector('img');
+              const deltaStr = `${item.delta > 0 ? '+' : ''}${item.delta.toFixed(2)}`;
+
+              openModal({
+                tag: isGem ? 'HOT TAKE · НЕДООЦЕНЁННЫЙ ГЕМ' : 'HOT TAKE · ПЕРЕОЦЕНЁННЫЙ ХИТ',
+                title: item.title,
+                sub: [item.kind, item.year].filter(Boolean).join(' · '),
+                pills: [
+                  `Моя оценка ${item.userScore}/10`,
+                  `Шикимори ★ ${item.shikiScore.toFixed(2)}`,
+                  `Разрыв ${deltaStr}`
+                ],
+                vibes: isGem
+                  ? ['#недооценено', '#выше толпы', `#${item.userScore}/10`]
+                  : ['#против хайпа', '#жёсткий вердикт', `#${item.userScore}/10`],
+                note: item.comment
+                  ? `«${item.comment}»`
+                  : (isGem
+                    ? `Один из главных гемов моего списка: поставил ${item.userScore}/10, хотя средний рейтинг на Shikimori — всего ${item.shikiScore.toFixed(2)} (разрыв ${deltaStr}).`
+                    : `Один из главных моих споров с комьюнити: при рейтинге Shikimori ${item.shikiScore.toFixed(2)} этот тайтл получил от меня только ${item.userScore}/10 (${deltaStr}).`),
+                img: img ? img.src : (coverCache['anime_' + item.malId] || item.shikiImg || ''),
+                url: item.url || `${activeShikiOrigin}/animes/${item.malId}`
+              });
+            });
+          });
+        });
+
+        const maxGem = gemsSlice[0] ? `+${gemsSlice[0].delta.toFixed(2)}` : '—';
+        const maxOver = overSlice[0] ? `${overSlice[0].delta.toFixed(2)}` : '—';
+        if (summaryEl) {
+          summaryEl.innerHTML = `Проверено <strong>${st.scannedCount || 0}</strong> оценённых тайтлов · Средний сдвиг <strong>${avg >= 0 ? '+' : ''}${avg.toFixed(2)}</strong> · Пики <strong>${maxGem}</strong> / <strong>${maxOver}</strong>`;
+        }
+
+        const canExpand = (st.gems?.length || 0) > 3 || (st.overrated?.length || 0) > 3;
+        if (toggleBtn) {
+          toggleBtn.style.display = canExpand ? 'inline-flex' : 'none';
+          toggleBtn.textContent = hotTakesShowFive ? 'Свернуть до топ-3' : 'Показать топ-5';
+        }
+        if (dlBtn) dlBtn.disabled = false;
+
+        const coverIds = [...gemsSlice, ...overSlice].map((x) => x.malId);
+        if (coverIds.length) loadAnimeCoversBatch(coverIds);
+      }
+
+      function initHotTakesControls() {
+        const toggleBtn = document.getElementById('ht-toggle-count-btn');
+        const dlBtn = document.getElementById('ht-download-png-btn');
+
+        toggleBtn?.addEventListener('click', () => {
+          hotTakesShowFive = !hotTakesShowFive;
+          renderHotTakes(hotTakesState, false);
+        });
+
+        dlBtn?.addEventListener('click', () => {
+          if (!hotTakesState) return;
+          const st = hotTakesState;
+          const W = 1200;
+          const H = 675;
+          const c = document.createElement('canvas');
+          c.width = W;
+          c.height = H;
+          const ctx = c.getContext('2d');
+
+          function rRect(x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+          }
+          function clipText(txt, maxW) {
+            let s = String(txt || '');
+            if (ctx.measureText(s).width <= maxW) return s;
+            while (s.length > 1 && ctx.measureText(s + '…').width > maxW) s = s.slice(0, -1);
+            return s + '…';
+          }
+
+          // Noir cinema background
+          const bg = ctx.createLinearGradient(0, 0, W, H);
+          bg.addColorStop(0, '#07090f');
+          bg.addColorStop(0.5, '#0b101b');
+          bg.addColorStop(1, '#06080d');
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, W, H);
+
+          const gLeft = ctx.createRadialGradient(250, 220, 20, 250, 220, 420);
+          gLeft.addColorStop(0, 'rgba(110, 231, 183, 0.13)');
+          gLeft.addColorStop(1, 'transparent');
+          ctx.fillStyle = gLeft;
+          ctx.fillRect(0, 0, W, H);
+
+          const gRight = ctx.createRadialGradient(950, 450, 20, 950, 450, 420);
+          gRight.addColorStop(0, 'rgba(248, 113, 113, 0.13)');
+          gRight.addColorStop(1, 'transparent');
+          ctx.fillStyle = gRight;
+          ctx.fillRect(0, 0, W, H);
+
+          ctx.strokeStyle = 'rgba(173, 191, 222, 0.045)';
+          for (let x = 40; x < W; x += 48) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+          for (let y = 40; y < H; y += 48) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+          rRect(26, 26, W - 52, H - 52, 22);
+          ctx.strokeStyle = 'rgba(173, 191, 222, 0.24)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          // Header
+          ctx.fillStyle = '#adbfde';
+          ctx.font = '600 14px "JetBrains Mono", monospace';
+          ctx.fillText('◈  UNDEXEROR // ARCHIVE   ·   HOT TAKES ПРОТИВ ШИКИМОРИ', 62, 72);
+
+          const avg = Number(st.avgDelta || 0);
+          ctx.textAlign = 'right';
+          ctx.fillStyle = 'rgba(205, 212, 224, 0.62)';
+          ctx.fillText(`ИНДЕКС ${avg >= 0 ? '+' : ''}${avg.toFixed(2)}  ·  ${st.scannedCount || 0} ОЦЕНОК`, W - 62, 72);
+          ctx.textAlign = 'left';
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '600 28px "Unbounded", "Inter", sans-serif';
+          ctx.fillText('Главные несогласия с толпой', 62, 122);
+
+          ctx.strokeStyle = 'rgba(173, 191, 222, 0.16)';
+          ctx.beginPath(); ctx.moveTo(62, 144); ctx.lineTo(W - 62, 144); ctx.stroke();
+
+          // Two Columns
+          const colY = 166;
+          const colH = 420;
+          const colW = (W - 124 - 24) / 2;
+
+          function drawCol(x, title, accent, borderCol, fillTop, items, isGem) {
+            rRect(x, colY, colW, colH, 16);
+            ctx.fillStyle = fillTop;
+            ctx.fill();
+            ctx.strokeStyle = borderCol;
+            ctx.lineWidth = 1.3;
+            ctx.stroke();
+
+            ctx.fillStyle = accent;
+            ctx.font = '600 13px "JetBrains Mono", monospace';
+            ctx.fillText(title, x + 24, colY + 36);
+
+            const slice = (items || []).slice(0, 3);
+            slice.forEach((item, idx) => {
+              const ry = colY + 60 + idx * 112;
+              rRect(x + 20, ry, colW - 40, 96, 12);
+              ctx.fillStyle = 'rgba(9, 12, 20, 0.86)';
+              ctx.fill();
+              ctx.strokeStyle = 'rgba(173, 191, 222, 0.16)';
+              ctx.stroke();
+
+              ctx.fillStyle = '#ffffff';
+              ctx.font = '600 17px "Inter", sans-serif';
+              ctx.fillText(clipText(item.title, colW - 175), x + 38, ry + 36);
+
+              ctx.fillStyle = 'rgba(205, 212, 224, 0.72)';
+              ctx.font = '500 13px "JetBrains Mono", monospace';
+              ctx.fillText(`Я: ${item.userScore}★   ·   Шики: ${item.shikiScore.toFixed(2)}★`, x + 38, ry + 66);
+
+              // Delta pill
+              const dx = x + colW - 118;
+              rRect(dx, ry + 20, 82, 56, 10);
+              ctx.fillStyle = isGem ? 'rgba(110, 231, 183, 0.14)' : 'rgba(248, 113, 113, 0.15)';
+              ctx.fill();
+              ctx.strokeStyle = borderCol;
+              ctx.stroke();
+
+              ctx.textAlign = 'center';
+              ctx.fillStyle = accent;
+              ctx.font = '600 17px "Unbounded", "JetBrains Mono", monospace';
+              ctx.fillText(`${item.delta > 0 ? '+' : ''}${item.delta.toFixed(2)}`, dx + 41, ry + 54);
+              ctx.textAlign = 'left';
+            });
+          }
+
+          drawCol(
+            62,
+            '▲  НЕДООЦЕНЁННЫЕ ГЕМЫ  ·  ВЫШЕ ТОЛПЫ',
+            '#a7f3d0',
+            'rgba(110, 231, 183, 0.38)',
+            'rgba(10, 24, 22, 0.65)',
+            st.gems,
+            true
+          );
+
+          drawCol(
+            62 + colW + 24,
+            '▼  ПЕРЕОЦЕНЁННЫЕ ХИТЫ  ·  НИЖЕ ТОЛПЫ',
+            '#fecaca',
+            'rgba(248, 113, 113, 0.38)',
+            'rgba(28, 11, 17, 0.65)',
+            st.overrated,
+            false
+          );
+
+          // Footer
+          ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+          ctx.font = '500 13px "JetBrains Mono", monospace';
+          ctx.fillText('ПРОВЕРЬ СВОЮ БАЗУ  →  https://undexerorrr.github.io/', 62, H - 46);
+          ctx.textAlign = 'right';
+          ctx.fillStyle = 'rgba(173, 191, 222, 0.65)';
+          ctx.fillText('undereror nyashka · undexeror // archive', W - 62, H - 46);
+
+          const link = document.createElement('a');
+          link.download = 'undexeror-hot-takes.png';
+          link.href = c.toDataURL('image/png');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+      }
+
       async function hydrateDnaFromShikiRates(rates, userStats) {
         if (!Array.isArray(rates) || !rates.length) return;
 
@@ -7976,6 +8970,14 @@
           saveRatedPoolCache();
           updateRandomizerPoolCounts();
         }
+
+        // 4. Live Hot Takes (Underrated Gems & Overrated Hits vs Shikimori crowd)
+        const computedTakes = computeHotTakesFromRates(allRates);
+        if (computedTakes) {
+          hotTakesState = computedTakes;
+          saveHotTakesCache(hotTakesState);
+          renderHotTakes(hotTakesState, false);
+        }
         return true;
       }
 
@@ -8023,6 +9025,7 @@
         const user = await resolveHostUser();
         if (!user || !user.id) {
           if (pillText) pillText.textContent = 'SNAPSHOT';
+          if (!hotTakesState) renderHotTakes(null, true);
           return;
         }
 
@@ -8073,9 +9076,12 @@
           renderActivityGraph(liveGraph);
         }
 
-        // Priority 1: ONE merged anime_rates request (Watching + DNA + Taste Match + 9-10★ Randomizer)
+        // Priority 1: ONE merged anime_rates request (Watching + DNA + Taste Match + 9-10★ Randomizer + Hot Takes)
         await sleep(160);
-        await loadHostAnimeRates(user);
+        const ratesLoaded = await loadHostAnimeRates(user);
+        if (!ratesLoaded && !hotTakesState) {
+          renderHotTakes(null, true);
+        }
 
         // Priority 2: History (limit=30 so after deduplicating same anime we get 5 unique titles)
         await sleep(240);
@@ -9925,6 +10931,8 @@
       renderStats(SNAPSHOT.anime, SNAPSHOT.manga, SNAPSHOT.lifetimeText);
       initDnaControls();
       renderAnimeDna(animeDnaState || SNAPSHOT_DNA);
+      initHotTakesControls();
+      renderHotTakes(hotTakesState, false);
       renderHistory(SNAPSHOT.history, false);
       renderActivityGraph(SNAPSHOT.activity);
       renderWatchingShelf(watchingList.length ? watchingList : SNAPSHOT.watching);
