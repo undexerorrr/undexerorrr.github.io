@@ -3026,34 +3026,34 @@
       }
 
       function attachCardInteractions(grid) {
-        const isFine = !prefersReducedMotion && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        const canHoverTilt = !window.matchMedia || window.matchMedia('(any-hover: hover)').matches;
 
         grid.querySelectorAll('.catalog-card').forEach((card) => {
-          if (isFine) {
+          if (canHoverTilt) {
             let raf = null;
             let lx = 0, ly = 0;
-            let cachedRect = null;
 
-            card.addEventListener('pointerenter', () => {
-              cachedRect = card.getBoundingClientRect();
+            card.addEventListener('pointerenter', (e) => {
+              if (e.pointerType === 'touch') return;
               card.classList.add('is-tilting');
             });
 
             card.addEventListener('pointermove', (e) => {
-              if (e.pointerType && e.pointerType !== 'mouse') return;
+              if (e.pointerType === 'touch') return;
+              if (!card.classList.contains('is-tilting')) card.classList.add('is-tilting');
               lx = e.clientX;
               ly = e.clientY;
               if (raf !== null) return;
               raf = requestAnimationFrame(() => {
                 raf = null;
-                const rect = cachedRect || card.getBoundingClientRect();
+                const rect = card.getBoundingClientRect();
                 if (!rect.width || !rect.height) return;
                 const nx = Math.max(0, Math.min(1, (lx - rect.left) / rect.width));
                 const ny = Math.max(0, Math.min(1, (ly - rect.top) / rect.height));
                 const dx = nx - 0.5;
                 const dy = ny - 0.5;
-                const maxTilt = currentView === 'showcase' ? 6 : 11;
-                card.style.setProperty('--lift', '-6px');
+                const maxTilt = currentView === 'showcase' ? 6 : 12;
+                card.style.setProperty('--lift', '-7px');
                 card.style.setProperty('--rx', `${(-dy * maxTilt).toFixed(2)}deg`);
                 card.style.setProperty('--ry', `${(dx * maxTilt).toFixed(2)}deg`);
                 card.style.setProperty('--cx', (dx * 2).toFixed(3));
@@ -3065,7 +3065,6 @@
 
             card.addEventListener('pointerleave', () => {
               if (raf !== null) { cancelAnimationFrame(raf); raf = null; }
-              cachedRect = null;
               card.classList.remove('is-tilting');
               card.style.setProperty('--lift', '0px');
               card.style.setProperty('--rx', '0deg');
@@ -3392,6 +3391,7 @@
         }
 
         tiltWrap.addEventListener('pointerdown', (e) => {
+          if (e.target && e.target.closest('a, button')) return;
           downX = e.clientX;
           downY = e.clientY;
           pointerDragged = false;
@@ -3420,6 +3420,8 @@
           toggleFlip();
         });
 
+        linkEl?.addEventListener('pointerdown', (e) => e.stopPropagation());
+        linkEl?.addEventListener('pointerup', (e) => e.stopPropagation());
         linkEl?.addEventListener('click', (e) => e.stopPropagation());
         flipBtn?.addEventListener('click', toggleFlip);
         prevBtn?.addEventListener('click', () => stepCard(-1));
@@ -6346,6 +6348,7 @@
         let cardDragged = false;
 
         holoTilt.addEventListener('pointerdown', (e) => {
+          if (e.target && e.target.closest('a, button')) return;
           cardDownX = e.clientX;
           cardDownY = e.clientY;
           cardDragged = false;
@@ -6375,6 +6378,8 @@
           togglePackCardFlip();
         });
 
+        cardLink?.addEventListener('pointerdown', (e) => e.stopPropagation());
+        cardLink?.addEventListener('pointerup', (e) => e.stopPropagation());
         cardLink?.addEventListener('click', (e) => e.stopPropagation());
 
         // Pool mode switcher
