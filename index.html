@@ -5152,7 +5152,7 @@
     .holo-backdrop {
       position: fixed;
       inset: 0;
-      z-index: 540;
+      z-index: 650;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -5178,7 +5178,7 @@
       position: fixed;
       top: 18px;
       right: 18px;
-      z-index: 560;
+      z-index: 660;
       width: 38px;
       height: 38px;
       border-radius: 50%;
@@ -5703,7 +5703,10 @@
           0 0 22px rgba(var(--bright), 0.14);
       }
 
-      .mdock-btn {
+      .mdock-btn,
+      .galaxy-nav-btn,
+      .galaxy-hud-btn,
+      .galaxy-seg-btn {
         position: relative;
         display: flex;
         flex-direction: column;
@@ -5826,6 +5829,660 @@
         max-width: 82px;
       }
       .holo-kbd-hint {
+        display: none;
+      }
+    }
+
+
+    /* =========================================
+       V15 STAGE 3: 3D ARCHIVE GALAXY (WEBGL / THREE.JS)
+       ========================================= */
+    .galaxy-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 13px;
+      border-radius: 999px;
+      background:
+        linear-gradient(110deg, transparent 32%, rgba(var(--bright), 0.34) 50%, transparent 68%) -150% 0 / 250% 100% no-repeat,
+        rgba(12, 17, 28, 0.84);
+      border: 1px solid rgba(var(--bright), 0.56);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 16px rgba(var(--bright), 0.22);
+      animation: badge-sheen 6.5s ease-in-out infinite;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .galaxy-nav-btn:hover {
+      transform: translateY(-1px) scale(1.03);
+      border-color: #fff;
+      box-shadow: 0 0 22px rgba(var(--bright), 0.48);
+    }
+
+    .galaxy-nav-btn .g-star {
+      color: #6ee7b7;
+      text-shadow: 0 0 10px rgba(110, 231, 183, 0.9);
+    }
+
+    .dna-head-right {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .galaxy-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 580;
+      background:
+        radial-gradient(ellipse at 50% 45%, rgba(16, 23, 38, 0.96) 0%, rgba(5, 7, 13, 0.99) 62%, #020307 100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .galaxy-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #galaxy-canvas-wrap {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    #galaxy-canvas-wrap canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Subtle radial vignette + astrolabe frame over WebGL */
+    .galaxy-vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(ellipse at center, transparent 48%, rgba(2, 4, 9, 0.72) 100%);
+    }
+
+    /* Floating 3D Cluster Labels Layer */
+    .galaxy-labels-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 4;
+      overflow: hidden;
+    }
+
+    .galaxy-cluster-label {
+      position: absolute;
+      left: 0;
+      top: 0;
+      transform: translate(-50%, -50%);
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(6, 9, 16, 0.72);
+      border: 1px solid rgba(var(--bright), 0.32);
+      color: rgba(235, 242, 255, 0.88);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      backdrop-filter: blur(6px);
+      text-shadow: 0 0 12px rgba(var(--bright), 0.55);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .galaxy-cluster-label.is-visible {
+      opacity: 1;
+    }
+
+    /* Target Reticle Locked on Hovered / Selected Star */
+    .galaxy-reticle {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 34px;
+      height: 34px;
+      margin: -17px 0 0 -17px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 0 18px rgba(var(--bright), 0.75), inset 0 0 10px rgba(var(--bright), 0.35);
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0;
+      transform: translate3d(-999px, -999px, 0) scale(0.7);
+      transition: opacity 0.16s ease;
+    }
+
+    .galaxy-reticle::before,
+    .galaxy-reticle::after {
+      content: "";
+      position: absolute;
+      background: rgba(255, 255, 255, 0.75);
+    }
+
+    .galaxy-reticle::before {
+      left: 50%;
+      top: -6px;
+      bottom: -6px;
+      width: 1px;
+      transform: translateX(-0.5px);
+      opacity: 0.45;
+    }
+
+    .galaxy-reticle::after {
+      top: 50%;
+      left: -6px;
+      right: -6px;
+      height: 1px;
+      transform: translateY(-0.5px);
+      opacity: 0.45;
+    }
+
+    .galaxy-reticle.is-visible {
+      opacity: 1;
+    }
+
+    /* Galaxy Top HUD */
+    .galaxy-hud-top {
+      position: absolute;
+      top: 16px;
+      left: 18px;
+      right: 18px;
+      z-index: 12;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      pointer-events: none;
+    }
+
+    .galaxy-hud-top > * {
+      pointer-events: auto;
+    }
+
+    .galaxy-brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 15px;
+      border-radius: 999px;
+      background: rgba(8, 11, 19, 0.80);
+      border: 1px solid rgba(var(--bright), 0.28);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+    }
+
+    .galaxy-brand-title {
+      font-family: var(--font-display);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .galaxy-count-pill {
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(var(--bright), 0.16);
+      border: 1px solid rgba(var(--bright), 0.34);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: #eef4ff;
+      white-space: nowrap;
+    }
+
+    .galaxy-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .galaxy-search-wrap {
+      position: relative;
+      width: 235px;
+      max-width: 55vw;
+    }
+
+    .galaxy-search-wrap .search-icon {
+      left: 12px;
+      font-size: 12px;
+    }
+
+    .galaxy-search-input {
+      width: 100%;
+      padding: 8px 14px 8px 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(var(--bright), 0.28);
+      background: rgba(8, 11, 19, 0.82);
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      outline: none;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .galaxy-search-input::placeholder {
+      color: rgba(var(--light), 0.48);
+    }
+
+    .galaxy-search-input:focus {
+      border-color: rgba(var(--bright), 0.88);
+      box-shadow: 0 0 16px rgba(var(--bright), 0.28);
+    }
+
+    .galaxy-hud-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(var(--bright), 0.28);
+      background: rgba(8, 11, 19, 0.82);
+      color: rgba(var(--light), 0.88);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.18s ease, background 0.2s ease;
+    }
+
+    .galaxy-hud-btn:hover {
+      color: #fff;
+      border-color: #fff;
+      box-shadow: 0 0 16px rgba(var(--bright), 0.34);
+      transform: translateY(-1px);
+    }
+
+    .galaxy-hud-btn.active {
+      color: #fff;
+      background: rgba(var(--bright), 0.22);
+      border-color: rgba(var(--bright), 0.86);
+      box-shadow: 0 0 14px rgba(var(--bright), 0.26);
+    }
+
+    .galaxy-hud-btn.is-close {
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      font-size: 18px;
+      border-color: rgba(var(--bright), 0.40);
+    }
+
+    .galaxy-hud-btn.is-close:hover {
+      transform: rotate(90deg);
+    }
+
+    /* Galaxy Hover Tooltip */
+    .galaxy-hover-tip {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 14;
+      width: 260px;
+      padding: 9px 11px;
+      border-radius: 13px;
+      background: rgba(8, 11, 19, 0.90);
+      border: 1px solid rgba(var(--bright), 0.42);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.72), 0 0 20px rgba(var(--bright), 0.16);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate3d(-999px, -999px, 0);
+      transition: opacity 0.15s ease;
+    }
+
+    .galaxy-hover-tip.is-visible {
+      opacity: 1;
+    }
+
+    .galaxy-tip-thumb {
+      width: 38px;
+      height: 54px;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #0d121d;
+      border: 1px solid rgba(var(--bright), 0.24);
+    }
+
+    .galaxy-tip-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .galaxy-tip-body {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .galaxy-tip-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.25;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .galaxy-tip-meta {
+      margin-top: 4px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: rgba(var(--light), 0.75);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .galaxy-tip-meta b {
+      color: #fff;
+    }
+
+    /* Galaxy Selected Star Dossier Panel */
+    .galaxy-inspector {
+      position: absolute;
+      right: 18px;
+      top: 76px;
+      z-index: 15;
+      width: 320px;
+      max-width: calc(100vw - 36px);
+      border-radius: 16px;
+      background: rgba(9, 12, 21, 0.90);
+      border: 1px solid rgba(var(--bright), 0.38);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 20px 52px rgba(0, 0, 0, 0.78), 0 0 26px rgba(var(--bright), 0.16);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      opacity: 0;
+      transform: translateX(24px);
+      pointer-events: none;
+      transition: opacity 0.28s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .galaxy-inspector.is-open {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .galaxy-insp-top {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .galaxy-insp-poster {
+      width: 72px;
+      height: 102px;
+      border-radius: 9px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #0b0f18;
+      border: 1px solid rgba(var(--bright), 0.30);
+    }
+
+    .galaxy-insp-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .galaxy-insp-info {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-right: 18px;
+    }
+
+    .galaxy-insp-tag {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: #6ee7b7;
+      font-weight: 600;
+    }
+
+    .galaxy-insp-title {
+      font-family: var(--font-display);
+      font-size: 13.5px;
+      font-weight: 600;
+      line-height: 1.25;
+      color: #fff;
+    }
+
+    .galaxy-insp-sub {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(var(--light), 0.62);
+    }
+
+    .galaxy-insp-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 2px;
+    }
+
+    .galaxy-insp-note {
+      font-size: 11.5px;
+      line-height: 1.45;
+      color: rgba(var(--light), 0.82);
+      padding: 9px 10px;
+      border-radius: 10px;
+      background: rgba(5, 8, 14, 0.72);
+      border: 1px solid rgba(var(--bright), 0.16);
+      max-height: 92px;
+      overflow-y: auto;
+    }
+
+    .galaxy-insp-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .galaxy-insp-actions .base-action-btn,
+    .galaxy-insp-actions .modal-link {
+      flex: 1;
+      margin-top: 0;
+      padding: 8px 10px;
+      font-size: 9.5px;
+      white-space: nowrap;
+    }
+
+    /* Galaxy Bottom HUD (Formations + Filters + Legend) */
+    .galaxy-hud-bottom {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+      z-index: 12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+      pointer-events: none;
+    }
+
+    .galaxy-dock-bar {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 8px 12px;
+      border-radius: 18px;
+      background: rgba(8, 11, 19, 0.82);
+      border: 1px solid rgba(var(--bright), 0.28);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.72);
+      max-width: 100%;
+    }
+
+    .galaxy-seg-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(5, 8, 14, 0.78);
+      border: 1px solid rgba(var(--bright), 0.16);
+      border-radius: 999px;
+      padding: 3px;
+      flex-wrap: wrap;
+    }
+
+    .galaxy-seg-btn {
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 0;
+      background: transparent;
+      color: rgba(var(--light), 0.68);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .galaxy-seg-btn:hover {
+      color: #fff;
+    }
+
+    .galaxy-seg-btn.active {
+      color: #fff;
+      background: rgba(var(--bright), 0.24);
+      box-shadow: 0 0 12px rgba(var(--bright), 0.24);
+    }
+
+    .galaxy-legend-hint {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 1px;
+      color: rgba(var(--light), 0.56);
+      text-align: center;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .galaxy-legend-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+
+    /* Loading Overlay inside Galaxy */
+    .galaxy-loader {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: rgba(4, 6, 11, 0.86);
+      backdrop-filter: blur(10px);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: rgba(var(--light), 0.84);
+      transition: opacity 0.35s ease;
+    }
+
+    .galaxy-loader.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (max-width: 720px) {
+      .galaxy-hud-top {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+      }
+      .galaxy-brand-box {
+        padding: 6px 11px;
+      }
+      .galaxy-brand-title {
+        font-size: 10px;
+      }
+      .galaxy-search-wrap {
+        width: 155px;
+      }
+      .galaxy-hide-sm {
+        display: none;
+      }
+      .galaxy-inspector {
+        top: auto;
+        left: 10px;
+        right: 10px;
+        bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+        width: auto;
+        max-width: none;
+        transform: translateY(20px);
+      }
+      .galaxy-inspector.is-open {
+        transform: translateY(0);
+      }
+      .galaxy-legend-hint {
+        display: none;
+      }
+      .galaxy-nav-btn .g-text-full {
         display: none;
       }
     }
@@ -5981,6 +6638,10 @@
             <span class="status-dot"></span>
             <span id="api-status-text">SYNC...</span>
           </div>
+          <button type="button" class="galaxy-nav-btn" id="open-galaxy-topbar-btn" title="Открыть 3D-Галактику всех 415+ тайтлов (WebGL / Three.js)">
+            <span class="g-star" aria-hidden="true">✦</span>
+            <span>3D<span class="g-text-full"> Космос</span></span>
+          </button>
           <button type="button" class="audio-btn" id="audio-toggle-btn" title="Play / Pause плейлист">
             <span id="audio-icon">▶</span>
             <span class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
@@ -6114,7 +6775,13 @@
                 <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.4px;">Аниме-ДНК // Рентген вкуса</span>
                 <span class="dna-sub-note" id="dna-sub-note">Автоанализ всех просмотренных тайтлов</span>
               </div>
-              <span class="panel-badge" id="dna-source-badge">SNAPSHOT</span>
+              <div class="dna-head-right">
+                <button type="button" class="galaxy-nav-btn" id="open-galaxy-dna-btn" title="Исследовать весь архив в 3D WebGL-космосе">
+                  <span class="g-star" aria-hidden="true">✦</span>
+                  <span>3D-Галактика архива</span>
+                </button>
+                <span class="panel-badge" id="dna-source-badge">SNAPSHOT</span>
+              </div>
             </div>
 
             <div class="dna-grid">
@@ -6636,6 +7303,96 @@
     </button>
   </nav>
 
+  <!-- V15 Stage 3: 3D Archive Galaxy Observatory (WebGL / Three.js) -->
+  <div class="galaxy-overlay" id="galaxy-overlay" role="dialog" aria-modal="true" aria-label="3D-Галактика архива" aria-hidden="true">
+    <div id="galaxy-canvas-wrap"></div>
+    <div class="galaxy-vignette" aria-hidden="true"></div>
+    <div class="galaxy-labels-layer" id="galaxy-labels-layer" aria-hidden="true"></div>
+    <div class="galaxy-reticle" id="galaxy-reticle" aria-hidden="true"></div>
+
+    <!-- Hover Preview Tooltip -->
+    <div class="galaxy-hover-tip" id="galaxy-hover-tip" aria-hidden="true">
+      <div class="galaxy-tip-thumb"><img id="galaxy-tip-img" src="" alt="" /></div>
+      <div class="galaxy-tip-body">
+        <div class="galaxy-tip-title" id="galaxy-tip-title"></div>
+        <div class="galaxy-tip-meta" id="galaxy-tip-meta"></div>
+      </div>
+    </div>
+
+    <!-- Top HUD -->
+    <div class="galaxy-hud-top">
+      <div class="galaxy-brand-box">
+        <span class="galaxy-brand-title"><span style="color:#6ee7b7;">✦</span> 3D-Галактика</span>
+        <span class="galaxy-count-pill" id="galaxy-count-pill">SYNC...</span>
+      </div>
+
+      <div class="galaxy-top-actions">
+        <div class="galaxy-search-wrap">
+          <span class="search-icon">⌕</span>
+          <input type="text" class="galaxy-search-input" id="galaxy-search-input" placeholder="Найти звезду (тайтл)..." autocomplete="off" />
+        </div>
+        <button type="button" class="galaxy-hud-btn" id="galaxy-warp-btn" title="Перелететь к случайной звезде">✦ Случайная</button>
+        <button type="button" class="galaxy-hud-btn active galaxy-hide-sm" id="galaxy-lines-btn" title="Показать / скрыть линии созвездий">Связи</button>
+        <button type="button" class="galaxy-hud-btn active galaxy-hide-sm" id="galaxy-orbit-btn" title="Автовращение камеры">Орбита</button>
+        <button type="button" class="galaxy-hud-btn galaxy-hide-sm" id="galaxy-reset-btn" title="Сбросить камеру">↺</button>
+        <button type="button" class="galaxy-hud-btn galaxy-hide-sm" id="galaxy-music-btn" title="Play / Pause музыка">♫</button>
+        <button type="button" class="galaxy-hud-btn is-close" id="galaxy-close-btn" aria-label="Закрыть 3D-Галактику">×</button>
+      </div>
+    </div>
+
+    <!-- Selected Star Dossier Panel -->
+    <aside class="galaxy-inspector" id="galaxy-inspector" aria-label="Досье выбранной звезды">
+      <button type="button" class="modal-close" id="galaxy-insp-close" aria-label="Закрыть досье" style="top:10px;right:10px;width:26px;height:26px;font-size:14px;">×</button>
+      <div class="galaxy-insp-top">
+        <div class="galaxy-insp-poster"><img id="galaxy-insp-img" src="" alt="" /></div>
+        <div class="galaxy-insp-info">
+          <span class="galaxy-insp-tag" id="galaxy-insp-tag">STAR // PEAK FICTION</span>
+          <h3 class="galaxy-insp-title" id="galaxy-insp-title"></h3>
+          <div class="galaxy-insp-sub" id="galaxy-insp-sub"></div>
+          <div class="galaxy-insp-pills" id="galaxy-insp-pills"></div>
+        </div>
+      </div>
+      <div class="galaxy-insp-note" id="galaxy-insp-note"></div>
+      <div class="galaxy-insp-actions">
+        <button type="button" class="base-action-btn is-primary" id="galaxy-insp-holo-btn">◈ 3D-карта</button>
+        <a class="modal-link" id="galaxy-insp-link" href="#" target="_blank" rel="noopener noreferrer">Shikimori →</a>
+      </div>
+    </aside>
+
+    <!-- Bottom HUD: Formations & Filters -->
+    <div class="galaxy-hud-bottom">
+      <div class="galaxy-dock-bar">
+        <div class="galaxy-seg-group" role="tablist" aria-label="Формация галактики">
+          <button type="button" class="galaxy-seg-btn active" data-glayout="spiral">Спираль</button>
+          <button type="button" class="galaxy-seg-btn" data-glayout="eras">Эпохи</button>
+          <button type="button" class="galaxy-seg-btn" data-glayout="spectrum">Спектр</button>
+        </div>
+
+        <div class="galaxy-seg-group" role="tablist" aria-label="Фильтр звёзд">
+          <button type="button" class="galaxy-seg-btn active" data-gfilter="all">Все</button>
+          <button type="button" class="galaxy-seg-btn" data-gfilter="peak">Peak 16</button>
+          <button type="button" class="galaxy-seg-btn" data-gfilter="elite">9–10★</button>
+          <button type="button" class="galaxy-seg-btn" data-gfilter="watching">Смотрю</button>
+          <button type="button" class="galaxy-seg-btn" data-gfilter="hottakes">Hot Takes</button>
+        </div>
+      </div>
+
+      <div class="galaxy-legend-hint">
+        <span><i class="galaxy-legend-dot" style="background:#ffffff;box-shadow:0 0 8px #fff;"></i>Peak 16</span>
+        <span><i class="galaxy-legend-dot" style="background:#b7d4ff;"></i>9–10★</span>
+        <span><i class="galaxy-legend-dot" style="background:#6ee7b7;"></i>Смотрю</span>
+        <span><i class="galaxy-legend-dot" style="background:#f87171;"></i>Спор с Шики</span>
+        <span>· ЛКМ — вращение · Колесо — зум · Клик по звезде — перелёт</span>
+      </div>
+    </div>
+
+    <!-- WebGL Loader -->
+    <div class="galaxy-loader" id="galaxy-loader">
+      <span class="base-spinner" style="width:22px;height:22px;border-width:2.5px;"></span>
+      <span id="galaxy-loader-text">Инициализация 3D-Галактики...</span>
+    </div>
+  </div>
+
   <!-- V14 Stage 2: 3D Holographic Collectible Card Viewer -->
   <div class="holo-backdrop" id="holo-modal" aria-hidden="true">
     <button type="button" class="holo-close-btn" id="holo-close" aria-label="Закрыть">×</button>
@@ -6755,6 +7512,7 @@
       const VOLUME_STORAGE_KEY = 'undexeror_archive_volume_v1';
       const DEFAULT_VOLUME = 0.18;
       const HOT_TAKES_CACHE_KEY = 'undexeror_archive_hottakes_v1';
+      const GALAXY_CACHE_KEY = 'undexeror_archive_galaxy_v1';
       const GENRE_RU = {
         Action: 'Экшен',
         Adventure: 'Приключения',
@@ -6967,6 +7725,70 @@
       let lastMatchVerdict = null;
       let hotTakesShowFive = false;
       let hotTakesState = loadHotTakesCache();
+      let galaxyNodes = loadGalaxyCache();
+      let galaxyRefreshHook = null;
+
+      function loadGalaxyCache() {
+        try {
+          const raw = localStorage.getItem(GALAXY_CACHE_KEY);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function saveGalaxyCache(nodes) {
+        try {
+          localStorage.setItem(GALAXY_CACHE_KEY, JSON.stringify(nodes));
+        } catch (e) {}
+      }
+
+      function buildFallbackGalaxyNodes() {
+        const seen = new Set();
+        const list = [];
+        PEAK_FICTION.forEach((a) => {
+          seen.add(a.malId);
+          list.push({
+            id: a.malId,
+            title: a.title,
+            kind: a.kind,
+            year: a.year,
+            score: a.userScore || 10,
+            shikiScore: a.score,
+            episodes: 0,
+            status: 'completed',
+            isPeak: true,
+            peakRank: a.rank,
+            img: coverCache['anime_' + a.malId] || '',
+            url: `${activeShikiOrigin}/animes/${a.malId}`,
+            comment: a.note || '',
+            vibes: a.vibes || ['#peak-fiction']
+          });
+        });
+        ratedAnimePool.forEach((r) => {
+          if (!r || !r.malId || seen.has(r.malId)) return;
+          seen.add(r.malId);
+          list.push({
+            id: r.malId,
+            title: r.title,
+            kind: r.kind || 'Аниме',
+            year: r.year || 2018,
+            score: r.userScore || 9,
+            shikiScore: r.score || 8.0,
+            episodes: 0,
+            status: 'completed',
+            isPeak: false,
+            peakRank: null,
+            img: coverCache['anime_' + r.malId] || r.shikiImg || '',
+            url: r.url || `${activeShikiOrigin}/animes/${r.malId}`,
+            comment: r.note || '',
+            vibes: r.vibes || ['#9-10★']
+          });
+        });
+        return list;
+      }
 
       function loadHotTakesCache() {
         try {
@@ -9394,7 +10216,48 @@
         return { key: 'sr', label: '◇ SR', short: 'SR' };
       }
 
+      let holoGalaxyList = [];
+
       function buildHoloDeckItems(type) {
+        if (type === 'galaxy') {
+          const src = holoGalaxyList.length ? holoGalaxyList : (galaxyNodes.length ? galaxyNodes : buildFallbackGalaxyNodes());
+          return src.map((g, idx) => {
+            const rankNum = g.peakRank ? g.peakRank : (g.score >= 10 ? 2 : (g.score >= 9 ? 6 : 12));
+            const delta = (g.score > 0 && g.shikiScore > 0) ? (g.score - g.shikiScore) : 0;
+            const vibes = (g.vibes && g.vibes.length) ? g.vibes : [
+              g.isPeak ? '#peak-fiction' : (g.status === 'watching' ? '#смотрю' : '#архив'),
+              g.score ? `#${g.score}/10` : '#просмотрено',
+              Math.abs(delta) >= 1.5 ? '#hot-take' : (g.year ? `#${g.year}` : '#cosmos')
+            ];
+            return {
+              cat: g.isPeak ? 'PEAK FICTION · GALAXY' : (g.status === 'watching' ? 'СЕЙЧАС СМОТРЮ · GALAXY' : 'ARCHIVE STAR · GALAXY'),
+              rank: rankNum,
+              displayIdx: idx + 1,
+              total: src.length,
+              malId: g.id,
+              title: g.title,
+              sub: [g.kind, g.year].filter(Boolean).join(' · '),
+              frontScore: g.score ? `Я ${g.score}/10 · ★${(g.shikiScore || 0).toFixed(2)}` : (g.shikiScore ? `★ ${g.shikiScore.toFixed(2)}` : 'ARCHIVE'),
+              pills: [
+                g.peakRank ? `Peak #${formatRank(g.peakRank)}` : null,
+                g.score ? `Моя оценка ${g.score}/10` : 'Без оценки',
+                g.shikiScore ? `Шики ★ ${g.shikiScore.toFixed(2)}` : null,
+                g.episodes ? `${g.episodes} эп.` : null,
+                g.year ? String(g.year) : null
+              ].filter(Boolean),
+              vibes,
+              note: g.comment || (
+                g.isPeak
+                  ? 'Избранный тайтл из Peak Fiction — одна из самых ярких звёзд ядра галактики.'
+                  : g.score >= 9
+                    ? `Высоко оценённый тайтл (${g.score}/10) из архива undereror nyashka на Shikimori.`
+                    : 'Тайтл из полного архива просмотренных аниме undereror nyashka.'
+              ),
+              img: coverCache['anime_' + g.id] || g.img || '',
+              url: g.url || `${activeShikiOrigin}/animes/${g.id}`
+            };
+          });
+        }
         if (type === 'waifu') {
           return WAIFU_LIST.map((w) => ({
             cat: 'WAIFU',
@@ -9451,7 +10314,8 @@
         holoDeckIdx = (holoDeckIdx + items.length) % items.length;
         const item = items[holoDeckIdx];
         const rarity = getHoloRarity(item.rank);
-        const serialStr = `#${formatRank(item.rank)} / ${formatRank(item.total)}`;
+        const serialNum = item.displayIdx || item.rank;
+        const serialStr = `#${formatRank(serialNum)} / ${formatRank(item.total)}`;
 
         const tiltWrap = document.getElementById('holo-tilt-wrap');
         const flipper = document.getElementById('holo-flipper');
@@ -9462,6 +10326,12 @@
         if (imgEl) {
           imgEl.src = item.img || '';
           imgEl.alt = item.title;
+          if (item.malId && !coverCache['anime_' + item.malId]) {
+            loadAnimeCoversBatch([item.malId]).then(() => {
+              const hd = coverCache['anime_' + item.malId];
+              if (hd && imgEl.alt === item.title) imgEl.src = hd;
+            });
+          }
         }
         const rarityEl = document.getElementById('holo-rarity-chip');
         if (rarityEl) rarityEl.textContent = rarity.label;
@@ -10063,6 +10933,71 @@
           hotTakesState = computedTakes;
           saveHotTakesCache(hotTakesState);
           renderHotTakes(hotTakesState, false);
+        }
+
+        // 5. Full 3D Archive Galaxy Dataset (415+ completed + watching + rewatching)
+        const galaxySeen = new Set();
+        const peakMap = new Map(PEAK_FICTION.map((p) => [p.malId, p]));
+        const builtGalaxy = [];
+
+        allRates.forEach((r) => {
+          const a = r && r.anime;
+          if (!a || !a.id) return;
+          if (r.status !== 'completed' && r.status !== 'watching' && r.status !== 'rewatching') return;
+          const id = Number(a.id);
+          if (galaxySeen.has(id)) return;
+          galaxySeen.add(id);
+
+          const peak = peakMap.get(id);
+          const kindKey = String(a.kind || 'tv').toLowerCase();
+          const rawImg = a.image?.original || a.image?.preview || '';
+          const year = a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || null : (peak ? peak.year : null);
+          const uScore = Number(r.score) || 0;
+          const sScore = Number(a.score) || (peak ? peak.score : 0);
+
+          builtGalaxy.push({
+            id,
+            title: (peak && peak.title) || a.russian || a.name,
+            kind: SHIKI_KIND_LABELS[kindKey] || (peak ? peak.kind : 'Аниме'),
+            year,
+            score: uScore,
+            shikiScore: Number(sScore.toFixed(2)),
+            episodes: Number(r.episodes) || Number(a.episodes) || 0,
+            status: r.status || 'completed',
+            isPeak: Boolean(peak),
+            peakRank: peak ? peak.rank : null,
+            img: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : '',
+            url: a.url ? normalizeShikiUrl(a.url, activeShikiOrigin) : `${activeShikiOrigin}/animes/${id}`,
+            comment: stripHtml(r.text || '').trim() || (peak ? peak.note : ''),
+            vibes: peak ? peak.vibes : []
+          });
+        });
+
+        // Ensure all Peak 16 stars exist even if status differed
+        PEAK_FICTION.forEach((p) => {
+          if (galaxySeen.has(p.malId)) return;
+          builtGalaxy.push({
+            id: p.malId,
+            title: p.title,
+            kind: p.kind,
+            year: p.year,
+            score: p.userScore || 10,
+            shikiScore: p.score,
+            episodes: 0,
+            status: 'completed',
+            isPeak: true,
+            peakRank: p.rank,
+            img: coverCache['anime_' + p.malId] || '',
+            url: `${activeShikiOrigin}/animes/${p.malId}`,
+            comment: p.note,
+            vibes: p.vibes
+          });
+        });
+
+        if (builtGalaxy.length) {
+          galaxyNodes = builtGalaxy;
+          saveGalaxyCache(galaxyNodes);
+          if (typeof galaxyRefreshHook === 'function') galaxyRefreshHook();
         }
         return true;
       }
@@ -12003,6 +12938,1138 @@
         updateRandomizerPoolCounts();
       }
 
+
+      /* =========================================
+         V15 STAGE 3: 3D ARCHIVE GALAXY ENGINE (WEBGL / THREE.JS)
+         ========================================= */
+      let threeLoadPromise = null;
+
+      function ensureThreeJsLoaded() {
+        if (window.THREE) return Promise.resolve(window.THREE);
+        if (threeLoadPromise) return threeLoadPromise;
+
+        const cdns = [
+          'https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'
+        ];
+
+        threeLoadPromise = new Promise((resolve, reject) => {
+          let idx = 0;
+          function tryNext() {
+            if (window.THREE) return resolve(window.THREE);
+            if (idx >= cdns.length) {
+              threeLoadPromise = null;
+              return reject(new Error('Three.js CDN load failed'));
+            }
+            const script = document.createElement('script');
+            script.src = cdns[idx++];
+            script.async = true;
+            script.onload = () => {
+              if (window.THREE) resolve(window.THREE);
+              else tryNext();
+            };
+            script.onerror = () => {
+              script.remove();
+              tryNext();
+            };
+            document.head.appendChild(script);
+          }
+          tryNext();
+        });
+        return threeLoadPromise;
+      }
+
+      function initArchiveGalaxy(player) {
+        const overlay = document.getElementById('galaxy-overlay');
+        const canvasWrap = document.getElementById('galaxy-canvas-wrap');
+        const labelsLayer = document.getElementById('galaxy-labels-layer');
+        const reticle = document.getElementById('galaxy-reticle');
+        const hoverTip = document.getElementById('galaxy-hover-tip');
+        const tipImg = document.getElementById('galaxy-tip-img');
+        const tipTitle = document.getElementById('galaxy-tip-title');
+        const tipMeta = document.getElementById('galaxy-tip-meta');
+        const countPill = document.getElementById('galaxy-count-pill');
+        const loader = document.getElementById('galaxy-loader');
+        const loaderText = document.getElementById('galaxy-loader-text');
+
+        const searchInput = document.getElementById('galaxy-search-input');
+        const warpBtn = document.getElementById('galaxy-warp-btn');
+        const linesBtn = document.getElementById('galaxy-lines-btn');
+        const orbitBtn = document.getElementById('galaxy-orbit-btn');
+        const resetBtn = document.getElementById('galaxy-reset-btn');
+        const musicBtn = document.getElementById('galaxy-music-btn');
+        const closeBtn = document.getElementById('galaxy-close-btn');
+
+        const inspector = document.getElementById('galaxy-inspector');
+        const inspClose = document.getElementById('galaxy-insp-close');
+        const inspImg = document.getElementById('galaxy-insp-img');
+        const inspTag = document.getElementById('galaxy-insp-tag');
+        const inspTitle = document.getElementById('galaxy-insp-title');
+        const inspSub = document.getElementById('galaxy-insp-sub');
+        const inspPills = document.getElementById('galaxy-insp-pills');
+        const inspNote = document.getElementById('galaxy-insp-note');
+        const inspHoloBtn = document.getElementById('galaxy-insp-holo-btn');
+        const inspLink = document.getElementById('galaxy-insp-link');
+
+        const layoutBtns = Array.from(document.querySelectorAll('[data-glayout]'));
+        const filterBtns = Array.from(document.querySelectorAll('[data-gfilter]'));
+
+        if (!overlay || !canvasWrap) return;
+
+        let isOpen = false;
+        let isBooting = false;
+        let rafId = null;
+
+        let THREE_LIB = null;
+        let renderer = null;
+        let scene = null;
+        let camera = null;
+        let starPoints = null;
+        let starGeom = null;
+        let starMat = null;
+        let dustPoints = null;
+        let astrolabeGroup = null;
+        let linkLines = null;
+        let linkGeom = null;
+        let highlightLine = null;
+        let highlightGeom = null;
+
+        let activeNodes = [];
+        let activeLayout = 'spiral';
+        let activeFilter = 'all';
+        let activeSearch = '';
+        let showLinks = true;
+        let autoOrbit = true;
+
+        let currentPos = null;
+        let startPos = null;
+        let targetPos = null;
+        let morphStart = 0;
+        let morphDuration = 1050;
+        let isMorphing = false;
+
+        let hoveredIdx = -1;
+        let selectedIdx = -1;
+        let clusterAnchors = [];
+        let clusterLabelEls = [];
+
+        // Smooth Spherical Orbit Camera State
+        const camState = {
+          theta: 0.45,
+          phi: 1.12,
+          radius: 178,
+          targetTheta: 0.45,
+          targetPhi: 1.12,
+          targetRadius: 178,
+          look: { x: 0, y: 0, z: 0 },
+          targetLook: { x: 0, y: 0, z: 0 }
+        };
+
+        // Deterministic hash for stable star placement
+        function hash01(seed) {
+          let x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+          return x - Math.floor(x);
+        }
+
+        function nodeMatchesFilter(node) {
+          const q = activeSearch.trim().toLowerCase();
+          if (q && !String(node.title || '').toLowerCase().includes(q)) return false;
+          if (activeFilter === 'peak') return Boolean(node.isPeak);
+          if (activeFilter === 'elite') return Boolean(node.isPeak || (Number(node.score) || 0) >= 9);
+          if (activeFilter === 'watching') return node.status === 'watching' || node.status === 'rewatching';
+          if (activeFilter === 'hottakes') {
+            return node.score > 0 && node.shikiScore > 0 && Math.abs(node.score - node.shikiScore) >= 1.45;
+          }
+          return true;
+        }
+
+        function computeStarVisuals(node) {
+          const s = Number(node.score) || 0;
+          const sh = Number(node.shikiScore) || 0;
+          const delta = (s > 0 && sh > 0) ? (s - sh) : 0;
+
+          // Returns [r, g, b, size, spike]
+          if (node.isPeak) {
+            return [1.0, 0.99, 1.0, node.peakRank <= 3 ? 21.0 : 16.5, 1.0];
+          }
+          if (node.status === 'watching' || node.status === 'rewatching') {
+            return [0.43, 0.91, 0.72, 13.5, 0.75];
+          }
+          if (s >= 10) {
+            return [0.88, 0.95, 1.0, 14.5, 0.9];
+          }
+          if (s >= 9) {
+            return [0.72, 0.85, 1.0, 11.8, 0.55];
+          }
+          if (delta <= -1.8 && sh >= 7.3) {
+            // Harsh Hot Take outlier: muted crimson dwarf
+            return [0.97, 0.48, 0.50, 10.5, 0.35];
+          }
+          if (s >= 7) {
+            return [0.58, 0.69, 0.86, 8.6, 0.0];
+          }
+          if (s > 0) {
+            return [0.44, 0.50, 0.62, 6.8, 0.0];
+          }
+          return [0.48, 0.54, 0.66, 6.4, 0.0];
+        }
+
+        function computeLayoutPositions(nodes, layoutMode) {
+          const count = nodes.length;
+          const arr = new Float32Array(count * 3);
+          clusterAnchors = [];
+
+          if (layoutMode === 'eras') {
+            // 4 Distinct 3D Floating Era Constellations
+            const centers = {
+              modern:  { x:  58, y:  18, z:  34, label: '2020+ · СОВРЕМЕННОСТЬ' },
+              wave:    { x: -58, y:  12, z:  38, label: '2013–2019 · НОВАЯ ВОЛНА' },
+              golden:  { x: -46, y: -16, z: -50, label: '2005–2012 · ЗОЛОТАЯ ЭРА' },
+              classic: { x:  54, y: -20, z: -46, label: 'ДО 2005 · КЛАССИКА' }
+            };
+            Object.values(centers).forEach((c) => clusterAnchors.push(c));
+
+            const buckets = { modern: [], wave: [], golden: [], classic: [] };
+            nodes.forEach((n, idx) => {
+              const y = Number(n.year) || 2018;
+              if (y >= 2020) buckets.modern.push(idx);
+              else if (y >= 2013) buckets.wave.push(idx);
+              else if (y >= 2005) buckets.golden.push(idx);
+              else buckets.classic.push(idx);
+            });
+
+            Object.entries(buckets).forEach(([key, indices]) => {
+              const c = centers[key];
+              const total = Math.max(1, indices.length);
+              indices.forEach((nodeIdx, k) => {
+                const n = nodes[nodeIdx];
+                const h1 = hash01(n.id * 1.13 + 3);
+                const h2 = hash01(n.id * 2.41 + 7);
+                const h3 = hash01(n.id * 3.77 + 11);
+                // Fibonacci sphere distribution around cluster center
+                const goldenAng = Math.PI * (3 - Math.sqrt(5));
+                const py = 1 - ((k + 0.5) / total) * 2;
+                const radAtY = Math.sqrt(Math.max(0, 1 - py * py));
+                const theta = goldenAng * k + h1 * 0.4;
+                const baseR = n.isPeak ? 9 + h2 * 10 : 14 + Math.pow(h3, 0.72) * 27;
+                arr[nodeIdx * 3]     = c.x + Math.cos(theta) * radAtY * baseR;
+                arr[nodeIdx * 3 + 1] = c.y + py * baseR * 0.78;
+                arr[nodeIdx * 3 + 2] = c.z + Math.sin(theta) * radAtY * baseR;
+              });
+            });
+            return arr;
+          }
+
+          if (layoutMode === 'spectrum') {
+            // 3D Score Stratification Cylinder/Sphere: Y = user score (10 top -> 1 bottom), R = crowd divergence
+            clusterAnchors.push(
+              { x: 0, y:  62, z: 0, label: '★ 10/10 · ЗЕНИТ БАЗЫ' },
+              { x: 0, y:  24, z: 0, label: '8–9★ · ЗОЛОТОЙ СЛОЙ' },
+              { x: 0, y: -26, z: 0, label: '≤ 6★ · НИЖНЯЯ ОРБИТА' }
+            );
+            nodes.forEach((n, idx) => {
+              const s = Number(n.score) || 6.5;
+              const sh = Number(n.shikiScore) || 7.2;
+              const delta = Math.abs(s - sh);
+              const h1 = hash01(n.id * 1.7 + 19);
+              const h2 = hash01(n.id * 2.9 + 5);
+              const yearNorm = Math.max(0, Math.min(1, ((Number(n.year) || 2016) - 1995) / 31));
+              const angle = yearNorm * Math.PI * 2 + (h1 - 0.5) * 1.2;
+              const y = ((s - 5.5) / 4.5) * 52 + (h2 - 0.5) * 6.5;
+              const radius = n.isPeak
+                ? 14 + (n.peakRank || 1) * 1.3
+                : Math.min(86, 22 + delta * 17 + h1 * 24);
+              arr[idx * 3]     = Math.cos(angle) * radius;
+              arr[idx * 3 + 1] = y;
+              arr[idx * 3 + 2] = Math.sin(angle) * radius;
+            });
+            return arr;
+          }
+
+          // Default: Logarithmic 4-Arm Spiral Galaxy (Peak 16 in luminous core -> outer rim)
+          clusterAnchors.push(
+            { x: 0, y: 16, z: 0, label: '◈ ЯДРО · PEAK 16' }
+          );
+          const arms = 4;
+          nodes.forEach((n, idx) => {
+            const h1 = hash01(n.id * 1.37 + 1);
+            const h2 = hash01(n.id * 2.83 + 5);
+            const h3 = hash01(n.id * 4.19 + 9);
+
+            if (n.isPeak) {
+              const rank = n.peakRank || (idx + 1);
+              const a = (rank / PEAK_FICTION.length) * Math.PI * 2;
+              const r = 10 + (rank <= 5 ? rank * 1.9 : 8 + rank * 1.5);
+              arr[idx * 3]     = Math.cos(a) * r;
+              arr[idx * 3 + 1] = (h2 - 0.5) * 9;
+              arr[idx * 3 + 2] = Math.sin(a) * r;
+              return;
+            }
+
+            if (n.status === 'watching' || n.status === 'rewatching') {
+              const a = h1 * Math.PI * 2;
+              const r = 24 + h2 * 14;
+              arr[idx * 3]     = Math.cos(a) * r;
+              arr[idx * 3 + 1] = 10 + (h3 - 0.5) * 10;
+              arr[idx * 3 + 2] = Math.sin(a) * r;
+              return;
+            }
+
+            const s = Number(n.score) || 6;
+            // Higher score -> closer to galactic core
+            const scoreNorm = Math.max(0, Math.min(1, (10 - s) / 8));
+            const r = 24 + scoreNorm * 66 + h1 * 26;
+            const armIdx = idx % arms;
+            const armBaseAngle = (armIdx / arms) * Math.PI * 2;
+            const twist = r * 0.044;
+            const scatter = (h2 - 0.5) * (0.52 + scoreNorm * 0.45);
+            const angle = armBaseAngle + twist + scatter;
+            const verticalSpread = (h3 - 0.5) * (18 + (1 - scoreNorm) * 10);
+
+            arr[idx * 3]     = Math.cos(angle) * r;
+            arr[idx * 3 + 1] = verticalSpread;
+            arr[idx * 3 + 2] = Math.sin(angle) * r;
+          });
+          return arr;
+        }
+
+        function rebuildClusterLabelsDOM() {
+          if (!labelsLayer) return;
+          labelsLayer.innerHTML = clusterAnchors.map((c) =>
+            `<div class="galaxy-cluster-label">${escapeHtml(c.label)}</div>`
+          ).join('');
+          clusterLabelEls = Array.from(labelsLayer.querySelectorAll('.galaxy-cluster-label'));
+        }
+
+        function buildConstellationLineIndices(positionsArr) {
+          const count = activeNodes.length;
+          const lineVerts = [];
+          const lineCols = [];
+
+          // 1. Peak 16 backbone ring in order
+          const peakIndices = [];
+          activeNodes.forEach((n, idx) => {
+            if (n.isPeak) peakIndices.push({ idx, rank: n.peakRank || 99 });
+          });
+          peakIndices.sort((a, b) => a.rank - b.rank);
+          for (let i = 0; i < peakIndices.length - 1; i++) {
+            const a = peakIndices[i].idx;
+            const b = peakIndices[i + 1].idx;
+            lineVerts.push(
+              positionsArr[a * 3], positionsArr[a * 3 + 1], positionsArr[a * 3 + 2],
+              positionsArr[b * 3], positionsArr[b * 3 + 1], positionsArr[b * 3 + 2]
+            );
+            lineCols.push(0.86, 0.92, 1.0, 0.72, 0.82, 0.96);
+          }
+
+          // 2. Nearest neighbor filaments within same score/era tier (max 1 link per star to stay airy & clean)
+          const maxDistSq = activeLayout === 'eras' ? 32 * 32 : 24 * 24;
+          for (let i = 0; i < count; i++) {
+            if (!nodeMatchesFilter(activeNodes[i])) continue;
+            const ix = positionsArr[i * 3];
+            const iy = positionsArr[i * 3 + 1];
+            const iz = positionsArr[i * 3 + 2];
+            let bestJ = -1;
+            let bestD = maxDistSq;
+
+            // Sample stride for fast O(N) performance
+            const step = count > 260 ? 2 : 1;
+            for (let j = i + 1; j < count; j += step) {
+              if (!nodeMatchesFilter(activeNodes[j])) continue;
+              const dx = positionsArr[j * 3] - ix;
+              const dy = positionsArr[j * 3 + 1] - iy;
+              const dz = positionsArr[j * 3 + 2] - iz;
+              const d2 = dx * dx + dy * dy + dz * dz;
+              if (d2 < bestD && d2 > 4) {
+                bestD = d2;
+                bestJ = j;
+              }
+            }
+            if (bestJ !== -1) {
+              lineVerts.push(
+                ix, iy, iz,
+                positionsArr[bestJ * 3], positionsArr[bestJ * 3 + 1], positionsArr[bestJ * 3 + 2]
+              );
+              lineCols.push(0.54, 0.65, 0.82, 0.42, 0.52, 0.68);
+            }
+          }
+
+          if (!linkGeom) return;
+          linkGeom.setAttribute('position', new THREE_LIB.Float32BufferAttribute(lineVerts, 3));
+          linkGeom.setAttribute('color', new THREE_LIB.Float32BufferAttribute(lineCols, 3));
+          linkGeom.computeBoundingSphere();
+        }
+
+        function updateHighlightStarLinks(focusIdx) {
+          if (!highlightGeom || !currentPos || focusIdx < 0 || focusIdx >= activeNodes.length) {
+            if (highlightLine) highlightLine.visible = false;
+            return;
+          }
+          const fx = currentPos[focusIdx * 3];
+          const fy = currentPos[focusIdx * 3 + 1];
+          const fz = currentPos[focusIdx * 3 + 2];
+
+          const neighbors = [];
+          for (let i = 0; i < activeNodes.length; i++) {
+            if (i === focusIdx) continue;
+            const dx = currentPos[i * 3] - fx;
+            const dy = currentPos[i * 3 + 1] - fy;
+            const dz = currentPos[i * 3 + 2] - fz;
+            const d2 = dx * dx + dy * dy + dz * dz;
+            if (d2 < 44 * 44) neighbors.push({ i, d2 });
+          }
+          neighbors.sort((a, b) => a.d2 - b.d2);
+          const verts = [];
+          neighbors.slice(0, 6).forEach((nb) => {
+            verts.push(
+              fx, fy, fz,
+              currentPos[nb.i * 3], currentPos[nb.i * 3 + 1], currentPos[nb.i * 3 + 2]
+            );
+          });
+          highlightGeom.setAttribute('position', new THREE_LIB.Float32BufferAttribute(verts, 3));
+          if (highlightLine) highlightLine.visible = verts.length > 0;
+        }
+
+        function updateFilterAlphas() {
+          if (!starGeom || !activeNodes.length) return;
+          const alphaAttr = starGeom.getAttribute('aAlpha');
+          if (!alphaAttr) return;
+          let matchedCount = 0;
+          for (let i = 0; i < activeNodes.length; i++) {
+            const ok = nodeMatchesFilter(activeNodes[i]);
+            if (ok) matchedCount++;
+            alphaAttr.array[i] = ok ? 1.0 : 0.09;
+          }
+          alphaAttr.needsUpdate = true;
+
+          if (countPill) {
+            const total = activeNodes.length;
+            countPill.textContent = matchedCount === total
+              ? `${total} ЗВЁЗД`
+              : `${matchedCount} / ${total} ЗВЁЗД`;
+          }
+          if (currentPos) buildConstellationLineIndices(currentPos);
+        }
+
+        function populateGalaxyScene() {
+          if (!scene || !THREE_LIB) return;
+          activeNodes = galaxyNodes.length ? galaxyNodes : buildFallbackGalaxyNodes();
+          const count = activeNodes.length;
+
+          if (starPoints) {
+            scene.remove(starPoints);
+            starGeom?.dispose();
+            starMat?.dispose();
+          }
+
+          const positions = computeLayoutPositions(activeNodes, activeLayout);
+          currentPos = new Float32Array(positions);
+          startPos = new Float32Array(positions);
+          targetPos = new Float32Array(positions);
+
+          const colors = new Float32Array(count * 3);
+          const sizes = new Float32Array(count);
+          const alphas = new Float32Array(count);
+          const spikes = new Float32Array(count);
+          const indices = new Float32Array(count);
+
+          for (let i = 0; i < count; i++) {
+            const [r, g, b, sz, sp] = computeStarVisuals(activeNodes[i]);
+            colors[i * 3] = r;
+            colors[i * 3 + 1] = g;
+            colors[i * 3 + 2] = b;
+            sizes[i] = sz;
+            alphas[i] = 1.0;
+            spikes[i] = sp;
+            indices[i] = i;
+          }
+
+          starGeom = new THREE_LIB.BufferGeometry();
+          starGeom.setAttribute('position', new THREE_LIB.BufferAttribute(currentPos, 3));
+          starGeom.setAttribute('aColor', new THREE_LIB.BufferAttribute(colors, 3));
+          starGeom.setAttribute('aSize', new THREE_LIB.BufferAttribute(sizes, 1));
+          starGeom.setAttribute('aAlpha', new THREE_LIB.BufferAttribute(alphas, 1));
+          starGeom.setAttribute('aSpike', new THREE_LIB.BufferAttribute(spikes, 1));
+          starGeom.setAttribute('aIndex', new THREE_LIB.BufferAttribute(indices, 1));
+
+          starMat = new THREE_LIB.ShaderMaterial({
+            transparent: true,
+            depthWrite: false,
+            blending: THREE_LIB.AdditiveBlending,
+            uniforms: {
+              uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 2) },
+              uTime: { value: 0 },
+              uBeat: { value: 0 },
+              uFocusIdx: { value: -1 }
+            },
+            vertexShader: `
+              attribute vec3 aColor;
+              attribute float aSize;
+              attribute float aAlpha;
+              attribute float aSpike;
+              attribute float aIndex;
+              uniform float uPixelRatio;
+              uniform float uTime;
+              uniform float uBeat;
+              uniform float uFocusIdx;
+              varying vec3 vColor;
+              varying float vAlpha;
+              varying float vSpike;
+              varying float vFocus;
+
+              void main() {
+                vColor = aColor;
+                vAlpha = aAlpha;
+                vSpike = aSpike;
+                vFocus = (abs(aIndex - uFocusIdx) < 0.5) ? 1.0 : 0.0;
+
+                vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                float twinkle = 0.90 + 0.14 * sin(uTime * 1.9 + aIndex * 2.13);
+                float beatScale = 1.0 + uBeat * (0.28 + aSpike * 0.40);
+                float focusScale = 1.0 + vFocus * 0.72;
+                float dist = max(18.0, -mvPosition.z);
+                gl_PointSize = clamp((aSize * twinkle * beatScale * focusScale * uPixelRatio * 140.0) / dist, 2.5, 92.0);
+                gl_Position = projectionMatrix * mvPosition;
+              }
+            `,
+            fragmentShader: `
+              varying vec3 vColor;
+              varying float vAlpha;
+              varying float vSpike;
+              varying float vFocus;
+
+              void main() {
+                vec2 uv = gl_PointCoord - vec2(0.5);
+                float d = length(uv);
+                if (d > 0.5) discard;
+
+                float core = exp(-d * 10.5);
+                float halo = pow(max(0.0, 1.0 - d * 2.0), 2.4) * 0.78;
+                float flareH = exp(-abs(uv.y) * 32.0) * exp(-abs(uv.x) * 6.5);
+                float flareV = exp(-abs(uv.x) * 32.0) * exp(-abs(uv.y) * 6.5);
+                float spikes = (flareH + flareV) * (vSpike * 0.72 + vFocus * 0.55);
+
+                float intensity = core * 1.35 + halo + spikes;
+                vec3 col = mix(vColor, vec3(1.0), clamp(core * 0.85 + vFocus * 0.35, 0.0, 1.0));
+                float alpha = clamp(intensity * vAlpha, 0.0, 1.0);
+                gl_FragColor = vec4(col, alpha);
+              }
+            `
+          });
+
+          starPoints = new THREE_LIB.Points(starGeom, starMat);
+          starPoints.frustumCulled = false;
+          scene.add(starPoints);
+
+          rebuildClusterLabelsDOM();
+          updateFilterAlphas();
+          if (selectedIdx >= activeNodes.length) {
+            selectedIdx = -1;
+            inspector?.classList.remove('is-open');
+          }
+        }
+
+        function switchGalaxyLayout(newMode) {
+          if (!activeNodes.length || !currentPos) return;
+          activeLayout = newMode;
+          layoutBtns.forEach((b) => b.classList.toggle('active', b.dataset.glayout === newMode));
+
+          startPos = new Float32Array(currentPos);
+          targetPos = computeLayoutPositions(activeNodes, newMode);
+          morphStart = performance.now();
+          isMorphing = true;
+          rebuildClusterLabelsDOM();
+
+          // Reset look center smoothly
+          camState.targetLook.x = 0;
+          camState.targetLook.y = 0;
+          camState.targetLook.z = 0;
+          camState.targetRadius = newMode === 'eras' ? 215 : 178;
+        }
+
+        function flyToStar(idx, openDossier) {
+          if (idx < 0 || idx >= activeNodes.length || !currentPos) return;
+          selectedIdx = idx;
+          const sx = currentPos[idx * 3];
+          const sy = currentPos[idx * 3 + 1];
+          const sz = currentPos[idx * 3 + 2];
+
+          camState.targetLook.x = sx;
+          camState.targetLook.y = sy;
+          camState.targetLook.z = sz;
+          camState.targetRadius = 56;
+          autoOrbit = false;
+          orbitBtn?.classList.remove('active');
+
+          updateHighlightStarLinks(idx);
+
+          if (openDossier) {
+            openStarInspector(idx);
+          }
+        }
+
+        function openStarInspector(idx) {
+          const node = activeNodes[idx];
+          if (!node || !inspector) return;
+
+          const delta = (node.score > 0 && node.shikiScore > 0) ? (node.score - node.shikiScore) : 0;
+          if (inspTag) {
+            inspTag.textContent = node.isPeak
+              ? `★ PEAK FICTION · #${formatRank(node.peakRank)}`
+              : node.status === 'watching'
+                ? '● СЕЙЧАС СМОТРЮ · LIVE'
+                : node.score >= 9
+                  ? `◈ ИЗБРАННАЯ ЗВЕЗДА · ${node.score}/10`
+                  : '◇ ЗВЕЗДА АРХИВА';
+          }
+          if (inspTitle) inspTitle.textContent = node.title;
+          if (inspSub) inspSub.textContent = [node.kind, node.year, node.episodes ? `${node.episodes} эп.` : null].filter(Boolean).join(' · ');
+
+          const pills = [
+            node.score ? `Я: ${node.score}★` : 'Без оценки',
+            node.shikiScore ? `Шики: ${node.shikiScore.toFixed(2)}★` : null,
+            Math.abs(delta) >= 0.8 ? `Δ ${delta > 0 ? '+' : ''}${delta.toFixed(2)}` : null
+          ].filter(Boolean);
+          if (inspPills) {
+            inspPills.innerHTML = pills.map((p) => `<span class="modal-pill" style="font-size:10px;padding:3px 8px;">${escapeHtml(p)}</span>`).join('');
+          }
+          if (inspNote) {
+            inspNote.textContent = node.comment
+              ? `«${node.comment}»`
+              : (node.isPeak
+                ? 'Одна из главных звёзд ядра архива Peak Fiction.'
+                : 'Нажми «3D-карта», чтобы вытянуть коллекционную голографическую карту этого тайтла прямо из галактики.');
+          }
+          if (inspLink) inspLink.href = node.url || `${activeShikiOrigin}/animes/${node.id}`;
+
+          if (inspImg) {
+            const src = coverCache['anime_' + node.id] || node.img || '';
+            inspImg.src = src;
+            inspImg.alt = node.title;
+            if (!coverCache['anime_' + node.id]) {
+              loadAnimeCoversBatch([node.id]).then(() => {
+                const hd = coverCache['anime_' + node.id];
+                if (hd && selectedIdx === idx && inspImg) inspImg.src = hd;
+              });
+            }
+          }
+
+          inspector.classList.add('is-open');
+        }
+
+        function initThreeScene() {
+          const T = THREE_LIB;
+          renderer = new T.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setClearColor(0x000000, 0);
+          canvasWrap.innerHTML = '';
+          canvasWrap.appendChild(renderer.domElement);
+
+          scene = new T.Scene();
+          scene.fog = new T.FogExp2(0x05070d, 0.0018);
+
+          camera = new T.PerspectiveCamera(56, window.innerWidth / window.innerHeight, 1, 1400);
+
+          // 1. Background cosmic dust cloud (1,700 subtle stars)
+          const dustCount = 1700;
+          const dustPos = new Float32Array(dustCount * 3);
+          const dustCol = new Float32Array(dustCount * 3);
+          for (let i = 0; i < dustCount; i++) {
+            const r = 40 + Math.pow(Math.random(), 0.72) * 380;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = (Math.random() - 0.5) * Math.PI;
+            dustPos[i * 3]     = Math.cos(theta) * Math.cos(phi) * r;
+            dustPos[i * 3 + 1] = Math.sin(phi) * r * (Math.random() < 0.6 ? 0.25 : 0.85);
+            dustPos[i * 3 + 2] = Math.sin(theta) * Math.cos(phi) * r;
+            const shade = 0.45 + Math.random() * 0.45;
+            dustCol[i * 3]     = shade * 0.78;
+            dustCol[i * 3 + 1] = shade * 0.86;
+            dustCol[i * 3 + 2] = shade;
+          }
+          const dustGeom = new T.BufferGeometry();
+          dustGeom.setAttribute('position', new T.BufferAttribute(dustPos, 3));
+          dustGeom.setAttribute('color', new T.BufferAttribute(dustCol, 3));
+          const dustMat = new T.PointsMaterial({
+            size: 1.35,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.42,
+            depthWrite: false,
+            blending: T.AdditiveBlending
+          });
+          dustPoints = new T.Points(dustGeom, dustMat);
+          scene.add(dustPoints);
+
+          // 2. Astrolabe equatorial coordinate rings
+          astrolabeGroup = new T.Group();
+          [38, 76, 118].forEach((rad, idx) => {
+            const segs = 128;
+            const ringVerts = [];
+            for (let s = 0; s <= segs; s++) {
+              const a = (s / segs) * Math.PI * 2;
+              ringVerts.push(Math.cos(a) * rad, 0, Math.sin(a) * rad);
+            }
+            const rg = new T.BufferGeometry();
+            rg.setAttribute('position', new T.Float32BufferAttribute(ringVerts, 3));
+            const rm = new T.LineBasicMaterial({
+              color: 0xadbfde,
+              transparent: true,
+              opacity: idx === 0 ? 0.14 : 0.075,
+              depthWrite: false
+            });
+            astrolabeGroup.add(new T.Line(rg, rm));
+          });
+          scene.add(astrolabeGroup);
+
+          // 3. Constellation filament lines
+          linkGeom = new T.BufferGeometry();
+          const linkMat = new T.LineBasicMaterial({
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.16,
+            depthWrite: false,
+            blending: T.AdditiveBlending
+          });
+          linkLines = new T.LineSegments(linkGeom, linkMat);
+          linkLines.frustumCulled = false;
+          scene.add(linkLines);
+
+          // 4. Focused star bright links
+          highlightGeom = new T.BufferGeometry();
+          const hlMat = new T.LineBasicMaterial({
+            color: 0xdcecff,
+            transparent: true,
+            opacity: 0.62,
+            depthWrite: false,
+            blending: T.AdditiveBlending
+          });
+          highlightLine = new T.LineSegments(highlightGeom, hlMat);
+          highlightLine.frustumCulled = false;
+          highlightLine.visible = false;
+          scene.add(highlightLine);
+
+          populateGalaxyScene();
+        }
+
+        // Hit-test nearest visible star in screen space (super crisp & responsive)
+        function findNearestStarAt(clientX, clientY, maxPx) {
+          if (!camera || !currentPos || !activeNodes.length) return -1;
+          const w = window.innerWidth;
+          const h = window.innerHeight;
+          const v = new THREE_LIB.Vector3();
+          let bestIdx = -1;
+          let bestDistSq = maxPx * maxPx;
+
+          for (let i = 0; i < activeNodes.length; i++) {
+            if (!nodeMatchesFilter(activeNodes[i])) continue;
+            v.set(currentPos[i * 3], currentPos[i * 3 + 1], currentPos[i * 3 + 2]);
+            v.project(camera);
+            if (v.z < -1 || v.z > 1) continue;
+            const sx = (v.x * 0.5 + 0.5) * w;
+            const sy = (-v.y * 0.5 + 0.5) * h;
+            const dx = sx - clientX;
+            const dy = sy - clientY;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < bestDistSq) {
+              bestDistSq = d2;
+              bestIdx = i;
+            }
+          }
+          return bestIdx;
+        }
+
+        function updateHoverTooltip(idx, clientX, clientY) {
+          if (!hoverTip) return;
+          if (idx < 0 || idx >= activeNodes.length) {
+            hoverTip.classList.remove('is-visible');
+            return;
+          }
+          const node = activeNodes[idx];
+          if (tipTitle) tipTitle.textContent = node.title;
+          if (tipMeta) {
+            const parts = [
+              node.isPeak ? `<b>Peak #${formatRank(node.peakRank)}</b>` : null,
+              node.score ? `Я: <b>${node.score}★</b>` : null,
+              node.shikiScore ? `Шики: ${node.shikiScore.toFixed(2)}` : null,
+              node.year ? String(node.year) : null
+            ].filter(Boolean);
+            tipMeta.innerHTML = parts.join(' · ');
+          }
+          if (tipImg) {
+            const imgSrc = coverCache['anime_' + node.id] || node.img || '';
+            if (tipImg.getAttribute('src') !== imgSrc) tipImg.src = imgSrc;
+          }
+
+          const pad = 18;
+          const tw = 264;
+          const th = 78;
+          let tx = clientX + pad;
+          let ty = clientY - th * 0.5;
+          if (tx + tw > window.innerWidth - 14) tx = clientX - tw - pad;
+          if (ty < 72) ty = 72;
+          if (ty + th > window.innerHeight - 90) ty = window.innerHeight - 90 - th;
+
+          hoverTip.style.transform = `translate3d(${tx.toFixed(0)}px, ${ty.toFixed(0)}px, 0)`;
+          hoverTip.classList.add('is-visible');
+        }
+
+        function projectReticleAndLabels() {
+          if (!camera || !THREE_LIB) return;
+          const w = window.innerWidth;
+          const h = window.innerHeight;
+          const proj = new THREE_LIB.Vector3();
+
+          // Cluster labels
+          for (let i = 0; i < clusterAnchors.length; i++) {
+            const el = clusterLabelEls[i];
+            if (!el) continue;
+            const c = clusterAnchors[i];
+            proj.set(c.x, c.y + 12, c.z).project(camera);
+            if (proj.z >= -1 && proj.z <= 1) {
+              const lx = (proj.x * 0.5 + 0.5) * w;
+              const ly = (-proj.y * 0.5 + 0.5) * h;
+              el.style.transform = `translate3d(${lx.toFixed(1)}px, ${ly.toFixed(1)}px, 0) translate(-50%, -50%)`;
+              el.classList.add('is-visible');
+            } else {
+              el.classList.remove('is-visible');
+            }
+          }
+
+          // Reticle on hovered or selected star
+          const focusIdx = hoveredIdx >= 0 ? hoveredIdx : selectedIdx;
+          if (reticle) {
+            if (focusIdx >= 0 && currentPos && focusIdx < activeNodes.length) {
+              proj.set(currentPos[focusIdx * 3], currentPos[focusIdx * 3 + 1], currentPos[focusIdx * 3 + 2]).project(camera);
+              if (proj.z >= -1 && proj.z <= 1) {
+                const rx = (proj.x * 0.5 + 0.5) * w;
+                const ry = (-proj.y * 0.5 + 0.5) * h;
+                reticle.style.transform = `translate3d(${rx.toFixed(1)}px, ${ry.toFixed(1)}px, 0)`;
+                reticle.classList.add('is-visible');
+              } else {
+                reticle.classList.remove('is-visible');
+              }
+            } else {
+              reticle.classList.remove('is-visible');
+            }
+          }
+        }
+
+        function renderLoop(now) {
+          if (!isOpen || !renderer || !scene || !camera) {
+            rafId = null;
+            return;
+          }
+
+          // 1. Morph star positions smoothly when changing formations
+          if (isMorphing && startPos && targetPos && currentPos && starGeom) {
+            const t = Math.min(1, (now - morphStart) / morphDuration);
+            const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            for (let i = 0; i < currentPos.length; i++) {
+              currentPos[i] = startPos[i] + (targetPos[i] - startPos[i]) * eased;
+            }
+            starGeom.getAttribute('position').needsUpdate = true;
+            if (t >= 1) {
+              isMorphing = false;
+              buildConstellationLineIndices(currentPos);
+              if (selectedIdx >= 0) updateHighlightStarLinks(selectedIdx);
+            }
+          }
+
+          // 2. Smooth inertial camera orbit + zoom + fly-to
+          if (autoOrbit) {
+            camState.targetTheta += 0.0014 + liveBeatEnergy * 0.0018;
+          }
+          camState.theta += (camState.targetTheta - camState.theta) * 0.085;
+          camState.phi += (camState.targetPhi - camState.phi) * 0.085;
+          camState.radius += (camState.targetRadius - camState.radius) * 0.085;
+          camState.look.x += (camState.targetLook.x - camState.look.x) * 0.08;
+          camState.look.y += (camState.targetLook.y - camState.look.y) * 0.08;
+          camState.look.z += (camState.targetLook.z - camState.look.z) * 0.08;
+
+          const sinPhi = Math.sin(camState.phi);
+          camera.position.set(
+            camState.look.x + camState.radius * sinPhi * Math.sin(camState.theta),
+            camState.look.y + camState.radius * Math.cos(camState.phi),
+            camState.look.z + camState.radius * sinPhi * Math.cos(camState.theta)
+          );
+          camera.lookAt(camState.look.x, camState.look.y, camState.look.z);
+
+          // 3. Subtle cosmic motion & audio beat-sync
+          if (dustPoints) {
+            dustPoints.rotation.y += 0.00028 + liveBeatEnergy * 0.0005;
+          }
+          if (astrolabeGroup) {
+            astrolabeGroup.rotation.y -= 0.00045;
+            const ringScale = 1 + liveBeatEnergy * 0.025;
+            astrolabeGroup.scale.set(ringScale, 1, ringScale);
+          }
+          if (linkLines) {
+            linkLines.visible = showLinks && !isMorphing;
+          }
+          if (starMat) {
+            starMat.uniforms.uTime.value = now * 0.001;
+            starMat.uniforms.uBeat.value = liveBeatEnergy;
+            starMat.uniforms.uFocusIdx.value = hoveredIdx >= 0 ? hoveredIdx : selectedIdx;
+          }
+
+          renderer.render(scene, camera);
+          projectReticleAndLabels();
+          rafId = requestAnimationFrame(renderLoop);
+        }
+
+        // Pointer Orbit / Pinch Zoom / Click Interaction
+        const pointers = new Map();
+        let dragMoved = 0;
+        let lastX = 0;
+        let lastY = 0;
+        let lastPinchDist = 0;
+
+        canvasWrap.addEventListener('pointerdown', (e) => {
+          pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+          lastX = e.clientX;
+          lastY = e.clientY;
+          dragMoved = 0;
+          if (pointers.size === 2) {
+            const pts = Array.from(pointers.values());
+            lastPinchDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+          }
+        });
+
+        canvasWrap.addEventListener('pointermove', (e) => {
+          if (pointers.has(e.pointerId)) {
+            pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+          }
+
+          if (pointers.size === 2) {
+            const pts = Array.from(pointers.values());
+            const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+            if (lastPinchDist > 0) {
+              const delta = lastPinchDist - dist;
+              camState.targetRadius = Math.max(26, Math.min(420, camState.targetRadius + delta * 0.55));
+            }
+            lastPinchDist = dist;
+            dragMoved += 20;
+            return;
+          }
+
+          if (pointers.size === 1) {
+            const dx = e.clientX - lastX;
+            const dy = e.clientY - lastY;
+            lastX = e.clientX;
+            lastY = e.clientY;
+            dragMoved += Math.hypot(dx, dy);
+            camState.targetTheta -= dx * 0.0056;
+            camState.targetPhi = Math.max(0.18, Math.min(Math.PI - 0.18, camState.targetPhi - dy * 0.0052));
+            if (dragMoved > 6 && autoOrbit) {
+              autoOrbit = false;
+              orbitBtn?.classList.remove('active');
+            }
+            updateHoverTooltip(-1, 0, 0);
+            return;
+          }
+
+          // Desktop hover snap
+          if (e.pointerType !== 'touch') {
+            const hit = findNearestStarAt(e.clientX, e.clientY, 20);
+            if (hit !== hoveredIdx) {
+              hoveredIdx = hit;
+              updateHighlightStarLinks(hit >= 0 ? hit : selectedIdx);
+            }
+            updateHoverTooltip(hit, e.clientX, e.clientY);
+          }
+        });
+
+        function handlePointerUp(e) {
+          const wasSingleTap = pointers.size === 1 && dragMoved < 8;
+          pointers.delete(e.pointerId);
+          if (pointers.size < 2) lastPinchDist = 0;
+
+          if (wasSingleTap) {
+            const hitRadius = e.pointerType === 'touch' ? 32 : 22;
+            const hit = findNearestStarAt(e.clientX, e.clientY, hitRadius);
+            if (hit >= 0) {
+              flyToStar(hit, true);
+              updateHoverTooltip(-1, 0, 0);
+            }
+          }
+        }
+
+        canvasWrap.addEventListener('pointerup', handlePointerUp);
+        canvasWrap.addEventListener('pointercancel', handlePointerUp);
+        canvasWrap.addEventListener('pointerleave', () => {
+          hoveredIdx = -1;
+          updateHoverTooltip(-1, 0, 0);
+        });
+
+        canvasWrap.addEventListener('wheel', (e) => {
+          e.preventDefault();
+          camState.targetRadius = Math.max(26, Math.min(420, camState.targetRadius + e.deltaY * 0.14));
+        }, { passive: false });
+
+        window.addEventListener('resize', () => {
+          if (!renderer || !camera) return;
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          if (starMat) starMat.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 2);
+        });
+
+        async function openGalaxy() {
+          if (isOpen) return;
+          isOpen = true;
+          overlay.classList.add('is-open');
+          overlay.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+
+          if (!renderer && !isBooting) {
+            isBooting = true;
+            loader?.classList.remove('is-hidden');
+            if (loaderText) loaderText.textContent = 'Загрузка WebGL-движка Three.js...';
+            try {
+              THREE_LIB = await ensureThreeJsLoaded();
+              if (loaderText) loaderText.textContent = 'Построение звёздной карты архива...';
+              initThreeScene();
+              loader?.classList.add('is-hidden');
+            } catch (err) {
+              console.warn('3D Galaxy init failed:', err);
+              if (loaderText) loaderText.textContent = 'WebGL / Three.js недоступен в этом браузере';
+              isBooting = false;
+              return;
+            }
+            isBooting = false;
+          } else {
+            loader?.classList.add('is-hidden');
+          }
+
+          if (!rafId) {
+            rafId = requestAnimationFrame(renderLoop);
+          }
+
+          // If visitor opened galaxy before live 415+ list finished downloading, pull it immediately
+          if (galaxyNodes.length < 30) {
+            loadHostAnimeRates().then(() => {
+              if (galaxyNodes.length > activeNodes.length) {
+                populateGalaxyScene();
+              }
+            });
+          }
+        }
+
+        function closeGalaxy() {
+          if (!isOpen) return;
+          isOpen = false;
+          overlay.classList.remove('is-open');
+          overlay.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          updateHoverTooltip(-1, 0, 0);
+          if (rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+          }
+        }
+
+        // Hook live refresh when Shikimori finishes loading in background
+        galaxyRefreshHook = () => {
+          if (scene && THREE_LIB) {
+            populateGalaxyScene();
+          }
+        };
+
+        // HUD Controls Bindings
+        document.getElementById('open-galaxy-topbar-btn')?.addEventListener('click', openGalaxy);
+        document.getElementById('open-galaxy-dna-btn')?.addEventListener('click', openGalaxy);
+        closeBtn?.addEventListener('click', closeGalaxy);
+
+        inspClose?.addEventListener('click', () => {
+          selectedIdx = -1;
+          inspector?.classList.remove('is-open');
+          updateHighlightStarLinks(-1);
+        });
+
+        inspHoloBtn?.addEventListener('click', () => {
+          if (selectedIdx < 0 || selectedIdx >= activeNodes.length) return;
+          holoGalaxyList = activeNodes;
+          openHoloDeck('galaxy', selectedIdx);
+        });
+
+        layoutBtns.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            switchGalaxyLayout(btn.dataset.glayout || 'spiral');
+          });
+        });
+
+        filterBtns.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            activeFilter = btn.dataset.gfilter || 'all';
+            filterBtns.forEach((b) => b.classList.toggle('active', b === btn));
+            updateFilterAlphas();
+          });
+        });
+
+        searchInput?.addEventListener('input', () => {
+          activeSearch = searchInput.value || '';
+          updateFilterAlphas();
+        });
+
+        searchInput?.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const firstMatch = activeNodes.findIndex((n) => nodeMatchesFilter(n));
+            if (firstMatch >= 0) flyToStar(firstMatch, true);
+          }
+        });
+
+        warpBtn?.addEventListener('click', () => {
+          const pool = [];
+          for (let i = 0; i < activeNodes.length; i++) {
+            if (nodeMatchesFilter(activeNodes[i])) pool.push(i);
+          }
+          if (!pool.length) return;
+          const pick = pool[Math.floor(Math.random() * pool.length)];
+          flyToStar(pick, true);
+        });
+
+        linesBtn?.addEventListener('click', () => {
+          showLinks = !showLinks;
+          linesBtn.classList.toggle('active', showLinks);
+        });
+
+        orbitBtn?.addEventListener('click', () => {
+          autoOrbit = !autoOrbit;
+          orbitBtn.classList.toggle('active', autoOrbit);
+        });
+
+        resetBtn?.addEventListener('click', () => {
+          camState.targetLook.x = 0;
+          camState.targetLook.y = 0;
+          camState.targetLook.z = 0;
+          camState.targetRadius = activeLayout === 'eras' ? 215 : 178;
+          camState.targetPhi = 1.12;
+          selectedIdx = -1;
+          inspector?.classList.remove('is-open');
+          updateHighlightStarLinks(-1);
+          autoOrbit = true;
+          orbitBtn?.classList.add('active');
+        });
+
+        musicBtn?.addEventListener('click', () => {
+          if (!player) return;
+          if (player.isPlaying()) player.pause();
+          else player.play();
+        });
+
+        window.addEventListener('keydown', (e) => {
+          if (!isOpen) return;
+          // Do not intercept Escape if 3D Holo Card is currently open on top of Galaxy
+          const holoOpen = document.getElementById('holo-modal')?.classList.contains('is-open');
+          if (holoOpen) return;
+          if (e.key === 'Escape') {
+            closeGalaxy();
+          }
+        });
+      }
+
       const playerControls = initMusicPlayer();
       initIntroOverlay(playerControls);
       initSpotifyDrawer(playerControls);
@@ -12012,6 +14079,7 @@
       initTournamentArena();
       initHoloCardViewer();
       initMobileTikTokDock();
+      initArchiveGalaxy(playerControls);
       initAtmosphereCanvas();
       initLiveWeather();
       initCollectionControls();
