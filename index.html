@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/css/archive.css?v=19" />
+  <link rel="stylesheet" href="./assets/css/archive.css?v=20" />
 </head>
 <body>
 
@@ -58,6 +58,7 @@
           <a href="#profile">Профиль</a>
           <a href="#compatibility">База</a>
           <a href="#hottakes">Hot Takes</a>
+          <a href="#trophies">Трофеи</a>
           <a href="#activity">Активность</a>
           <a href="#watching">Смотрю</a>
           <a href="#waifu">Waifu</a>
@@ -515,6 +516,54 @@
               <button type="button" class="base-action-btn" id="ht-toggle-count-btn" style="display:none;">Показать топ-5</button>
               <button type="button" class="base-action-btn is-primary" id="ht-download-png-btn" disabled>↓ Карточка споров (PNG)</button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- V20: ARCHIVE TROPHIES (3D METALLIC ACHIEVEMENT TOKENS) -->
+      <section id="trophies">
+        <div class="glass-card trophies-card">
+          <div class="trophies-head">
+            <div class="trophies-head-left">
+              <div class="ht-title-row">
+                <span class="dna-pulse-icon" aria-hidden="true"></span>
+                <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.4px;">Трофеи архива // 3D Medallions</span>
+              </div>
+              <h2 class="ht-heading">Коллекционные жетоны достижений</h2>
+              <p class="ht-subtitle">Автоматически чеканятся по реальному списку Shikimori — наведи на любой жетон для 3D-блика или кликни, чтобы открыть досье трофея.</p>
+            </div>
+            <div class="trophies-head-right">
+              <div class="trophies-rank-box">
+                <span class="trophies-rank-kicker">РАНГ КОЛЛЕКЦИИ</span>
+                <strong class="trophies-rank-val" id="trophies-rank-val">ARCHIVIST S</strong>
+              </div>
+              <span class="panel-badge" id="trophies-progress-badge">11 / 12 ОТКРЫТО</span>
+            </div>
+          </div>
+
+          <div class="trophies-toolbar">
+            <div class="trophies-filter-bar" role="tablist" aria-label="Фильтр трофеев">
+              <button type="button" class="trophy-filter-btn active" data-tfilter="all">Все (<span id="tf-cnt-all">12</span>)</button>
+              <button type="button" class="trophy-filter-btn" data-tfilter="unlocked">Открыто (<span id="tf-cnt-unlocked">11</span>)</button>
+              <button type="button" class="trophy-filter-btn" data-tfilter="platinum">Платина (<span id="tf-cnt-plat">3</span>)</button>
+              <button type="button" class="trophy-filter-btn" data-tfilter="locked">В процессе (<span id="tf-cnt-locked">1</span>)</button>
+            </div>
+            <div class="trophies-xp-wrap">
+              <div class="trophies-xp-meta">
+                <span id="trophies-source-note">SHIKIMORI AUTO-CHECK</span>
+                <strong id="trophies-pct-text">92%</strong>
+              </div>
+              <div class="trophies-xp-track">
+                <div class="trophies-xp-fill" id="trophies-xp-fill" style="width:92%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="trophies-grid" id="trophies-grid"></div>
+
+          <div class="trophies-footer">
+            <span class="ht-summary-note" id="trophies-summary-note">Нажми на любой жетон, чтобы рассмотреть его в 3D и увидеть подтверждающие тайтлы из списка.</span>
+            <button type="button" class="base-action-btn is-primary" id="trophies-download-png-btn">↓ Витрина трофеев (PNG)</button>
           </div>
         </div>
       </section>
@@ -1247,6 +1296,59 @@
     <div class="holo-kbd-hint" id="pack-kbd-hint">Проведи по кромке пакета или кликни, чтобы вскрыть · Пробел — действие · Esc — выход</div>
   </div>
 
+  <!-- V20: 3D Metallic Trophy Inspect Modal -->
+  <div class="trophy-backdrop" id="trophy-modal" role="dialog" aria-modal="true" aria-label="Досье трофея" aria-hidden="true">
+    <div class="trophy-modal-card">
+      <button type="button" class="modal-close" id="trophy-modal-close" aria-label="Закрыть">×</button>
+
+      <div class="trophy-inspect-left" id="trophy-inspect-stage">
+        <div class="trophy-coin-lg" id="trophy-modal-coin" data-tier="platinum">
+          <div class="trophy-coin-ring" aria-hidden="true"></div>
+          <div class="trophy-coin-notches" aria-hidden="true"></div>
+          <div class="trophy-coin-core">
+            <span class="trophy-coin-code-top" id="tm-coin-code">TR-01</span>
+            <span class="trophy-coin-glyph" id="tm-coin-glyph">★</span>
+            <span class="trophy-coin-tier-lbl" id="tm-coin-tier">PLATINUM</span>
+          </div>
+          <div class="trophy-coin-sheen" aria-hidden="true"></div>
+          <div class="trophy-coin-glare" aria-hidden="true"></div>
+        </div>
+        <div class="trophy-inspect-hint">Двигай мышкой для 3D-блика металла</div>
+      </div>
+
+      <div class="trophy-inspect-right">
+        <div class="trophy-insp-head">
+          <span class="trophy-tier-pill" id="tm-tier-pill">★ PLATINUM</span>
+          <span class="panel-badge" id="tm-status-badge">ОТКРЫТ</span>
+        </div>
+        <h3 class="trophy-insp-title" id="tm-title">400+ CLUB</h3>
+        <div class="trophy-insp-sub" id="tm-sub">Верифицированный ветеран</div>
+        <p class="trophy-insp-desc" id="tm-desc"></p>
+
+        <div class="trophy-insp-prog-box">
+          <div class="trophy-insp-prog-row">
+            <span id="tm-prog-label">Прогресс достижения</span>
+            <strong id="tm-prog-val">415 / 400</strong>
+          </div>
+          <div class="trophies-xp-track">
+            <div class="trophies-xp-fill" id="tm-prog-fill" style="width:100%"></div>
+          </div>
+        </div>
+
+        <div class="trophy-evidence-block">
+          <div class="card-kicker" id="tm-evidence-kicker">Подтверждено архивом · Shikimori</div>
+          <div class="trophy-evidence-list" id="tm-evidence-list"></div>
+        </div>
+
+        <div class="trophy-insp-nav">
+          <button type="button" class="holo-ctrl-btn is-icon" id="tm-prev-btn" aria-label="Предыдущий трофей">‹</button>
+          <span class="waifu-counter" id="tm-nav-counter" style="margin:0;">01 / 12</span>
+          <button type="button" class="holo-ctrl-btn is-icon" id="tm-next-btn" aria-label="Следующий трофей">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Detail Modal -->
   <div class="modal-backdrop" id="detail-modal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true">
@@ -1273,6 +1375,6 @@
     </div>
   </div>
 
-  <script src="./assets/js/archive.js?v=19"></script>
+  <script src="./assets/js/archive.js?v=20"></script>
 </body>
 </html>
