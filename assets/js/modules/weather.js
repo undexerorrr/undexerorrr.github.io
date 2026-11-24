@@ -35,6 +35,27 @@ function mapWmoToWeather(code) {
   return 'clear';
 }
 
+let weatherCycleHandler = null;
+
+export function getWeatherSnapshot() {
+  const mode = weatherEngineState.override || weatherEngineState.liveMode || 'clear';
+  const preset = WEATHER_PRESETS[mode] || WEATHER_PRESETS.clear;
+  return {
+    mode,
+    icon: preset.icon,
+    short: weatherEngineState.override ? `${preset.short}*` : preset.short,
+    ru: preset.ru,
+    isOverride: Boolean(weatherEngineState.override),
+    temp: weatherEngineState.temp !== null && isFinite(weatherEngineState.temp)
+      ? `${weatherEngineState.temp > 0 ? '+' : ''}${Math.round(weatherEngineState.temp)}°C`
+      : '--°C'
+  };
+}
+
+export function cycleWeatherMode() {
+  if (weatherCycleHandler) weatherCycleHandler();
+}
+
 export function initAtmosphereCanvas() {
   const canvas = document.getElementById('atmosphere-canvas');
   if (!canvas) return;
@@ -408,6 +429,7 @@ export function initLiveWeather() {
 
     const activeKey = weatherEngineState.override || 'live';
     chips.forEach((c) => c.classList.toggle('active', c.dataset.wmode === activeKey));
+    document.dispatchEvent(new CustomEvent('archive:weatherchange'));
   }
 
   async function fetchOpenMeteo() {
@@ -452,11 +474,13 @@ export function initLiveWeather() {
 
   // Clicking pilot top-bar weather chip cycles live -> rain -> snow -> fog -> storm -> live
   const cycleOrder = [null, 'rain', 'snow', 'fog', 'storm', 'clear'];
-  pilotChip?.addEventListener('click', () => {
+  function cycleOverride() {
     const curIdx = cycleOrder.indexOf(weatherEngineState.override);
     weatherEngineState.override = cycleOrder[(curIdx + 1) % cycleOrder.length];
     updateWeatherUI();
-  });
+  }
+  weatherCycleHandler = cycleOverride;
+  pilotChip?.addEventListener('click', cycleOverride);
 
   updateWeatherUI();
   fetchOpenMeteo();

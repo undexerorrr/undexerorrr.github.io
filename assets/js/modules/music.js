@@ -76,12 +76,21 @@ export function initMusicPlayer() {
   let freqData = null;
   let analyserConnected = false;
 
+  // Подписчики внешних модулей (Cinema Mode): переиспользуем один AudioContext/analyser и один RAF-цикл.
+  const stateListeners = [];
+  const frameListeners = [];
+
+  function notifyState() {
+    const snap = { playing: isPlaying, track: PLAYLIST[trackIdx] || null };
+    for (let i = 0; i < stateListeners.length; i++) stateListeners[i](snap);
+  }
+
   function buildCandidates(track) {
     const urls = [];
     (track.files || []).forEach((fname) => {
       const enc = encodeURIComponent(fname);
-      urls.push('./' + enc);
       urls.push('./music/' + enc);
+      urls.push('./' + enc);
     });
     return urls;
   }
@@ -113,6 +122,7 @@ export function initMusicPlayer() {
     if (topBtn) topBtn.classList.toggle('is-playing', isPlaying);
     document.body.classList.toggle('is-audio-playing', isPlaying);
     if (typeof syncVisualizer === 'function') syncVisualizer();
+    notifyState();
   }
 
   function setupAnalyser() {
@@ -150,6 +160,7 @@ export function initMusicPlayer() {
     audio.src = candidateUrls[0] || '';
     audio.load();
     renderPlaylistUI();
+    notifyState();
 
     if (autoplay) {
       playCurrent();
@@ -425,6 +436,10 @@ export function initMusicPlayer() {
     if (!isPlaying && smoothBeat < 0.004) smoothBeat = 0;
     appState.liveBeatEnergy = smoothBeat;
     writeBeatEnergy(smoothBeat);
+    if (frameListeners.length) {
+      const liveFreq = isPlaying && analyser && freqData ? freqData : null;
+      for (let i = 0; i < frameListeners.length; i++) frameListeners[i](liveFreq, smoothBeat, isPlaying);
+    }
 
     if (shouldRunVisualizer()) {
       visRafId = requestAnimationFrame(visualizerFrame);
@@ -441,6 +456,17 @@ export function initMusicPlayer() {
     play: playCurrent,
     pause: pauseCurrent,
     isPlaying: () => isPlaying,
+    toggle: togglePlay,
+    next: () => loadTrack(trackIdx + 1, true),
+    prev: () => loadTrack(trackIdx - 1, true),
+    getTrack: () => PLAYLIST[trackIdx] || null,
+    onState(fn) {
+      stateListeners.push(fn);
+      fn({ playing: isPlaying, track: PLAYLIST[trackIdx] || null });
+    },
+    onFrame(fn) {
+      frameListeners.push(fn);
+    },
     syncVisualizer
   };
 }
