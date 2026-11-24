@@ -1099,7 +1099,14 @@
           }));
         }
 
-        window.addEventListener('resize', resize);
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            resize();
+            if (prefersReducedMotion) drawStaticStarfield();
+          }, 120);
+        }, { passive: true });
         window.addEventListener('mousemove', (e) => {
           mouse.x = e.clientX;
           mouse.y = e.clientY;
@@ -1107,7 +1114,7 @@
         window.addEventListener('mouseleave', () => {
           mouse.x = -9999;
           mouse.y = -9999;
-        });
+        }, { passive: true });
 
         resize();
 
@@ -1124,7 +1131,7 @@
 
         function isAtmospherePaused() {
           if (document.hidden || prefersReducedMotion) return true;
-          if (document.body.classList.contains('galaxy-active')) return true;
+          if (document.body.classList.contains('galaxy-active') || document.body.classList.contains('is-modal-open')) return true;
           for (let i = 0; i < heavyModalEls.length; i++) {
             if (heavyModalEls[i].classList.contains('is-open')) return true;
           }
@@ -1343,9 +1350,7 @@
         }
         document.addEventListener('visibilitychange', syncAtmosphereLoop);
         document.addEventListener('archive:motionchange', syncAtmosphereLoop);
-        window.addEventListener('resize', () => {
-          if (prefersReducedMotion) drawStaticStarfield();
-        });
+
 
         syncAtmosphereLoop();
       }
@@ -2680,33 +2685,49 @@
 
         function updateSurfaces() {
           rafPending = false;
-          if (document.body.classList.contains('galaxy-active') || document.getElementById('holo-modal')?.classList.contains('is-open') || document.getElementById('pack-modal')?.classList.contains('is-open') || document.getElementById('trophy-modal')?.classList.contains('is-open')) {
+          if (document.body.classList.contains('galaxy-active') || document.body.classList.contains('is-modal-open')) {
             return;
           }
           const now = performance.now();
-          if (!cachedSurfaces.length || now - lastCacheAt > 1800) {
+          if (!cachedSurfaces.length || now - lastCacheAt > 2500) {
             cachedSurfaces = Array.from(document.querySelectorAll(SELECTOR));
             lastCacheAt = now;
           }
+
+          // Phase 1: Pure READ pass (zero synchronous reflows between writes)
           const vh = window.innerHeight;
+          const writes = [];
           for (let i = 0; i < cachedSurfaces.length; i++) {
             const el = cachedSurfaces[i];
             const rect = el.getBoundingClientRect();
-            if (rect.width === 0 || rect.height === 0 || rect.bottom < -PROXIMITY || rect.top > vh + PROXIMITY) continue;
-
+            if (rect.width === 0 || rect.height === 0 || rect.bottom < -PROXIMITY || rect.top > vh + PROXIMITY) {
+              if (el.dataset.spotOn === '1') {
+                writes.push({ el, active: false, x: 0, y: 0 });
+              }
+              continue;
+            }
             const withinX = lastX >= rect.left - PROXIMITY && lastX <= rect.right + PROXIMITY;
             const withinY = lastY >= rect.top - PROXIMITY && lastY <= rect.bottom + PROXIMITY;
-
             if (withinX && withinY) {
-              el.style.setProperty('--spot-x', (lastX - rect.left).toFixed(1) + 'px');
-              el.style.setProperty('--spot-y', (lastY - rect.top).toFixed(1) + 'px');
-              if (el.dataset.spotOn !== '1') {
-                el.dataset.spotOn = '1';
-                el.style.setProperty('--spot-o', '1');
-              }
+              writes.push({ el, active: true, x: lastX - rect.left, y: lastY - rect.top });
             } else if (el.dataset.spotOn === '1') {
-              el.dataset.spotOn = '0';
-              el.style.setProperty('--spot-o', '0');
+              writes.push({ el, active: false, x: 0, y: 0 });
+            }
+          }
+
+          // Phase 2: Pure WRITE pass
+          for (let i = 0; i < writes.length; i++) {
+            const w = writes[i];
+            if (w.active) {
+              w.el.style.setProperty('--spot-x', w.x.toFixed(1) + 'px');
+              w.el.style.setProperty('--spot-y', w.y.toFixed(1) + 'px');
+              if (w.el.dataset.spotOn !== '1') {
+                w.el.dataset.spotOn = '1';
+                w.el.style.setProperty('--spot-o', '1');
+              }
+            } else {
+              w.el.dataset.spotOn = '0';
+              w.el.style.setProperty('--spot-o', '0');
             }
           }
         }
@@ -2724,10 +2745,14 @@
         document.addEventListener('mouseleave', () => {
           lastX = -9999;
           lastY = -9999;
-          document.querySelectorAll(SELECTOR).forEach((el) => {
-            el.style.setProperty('--spot-o', '0');
-          });
-        });
+          for (let i = 0; i < cachedSurfaces.length; i++) {
+            const el = cachedSurfaces[i];
+            if (el.dataset.spotOn === '1') {
+              el.dataset.spotOn = '0';
+              el.style.setProperty('--spot-o', '0');
+            }
+          }
+        }, { passive: true });
       }
 
       /* =========================================
@@ -4217,9 +4242,20 @@
         if (!overlay) return;
 
         let entered = false;
+        function onIntroKeydown(e) {
+          if (entered) return;
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            dismiss(true);
+          } else if (e.key === 'Escape') {
+            dismiss(false);
+          }
+        }
+
         function dismiss(withSound) {
           if (entered) return;
           entered = true;
+          window.removeEventListener('keydown', onIntroKeydown);
           overlay.classList.add('is-hidden');
           if (withSound && player && typeof player.play === 'function') {
             player.play({ fadeIn: true });
@@ -4242,15 +4278,7 @@
           dismiss(false);
         });
 
-        window.addEventListener('keydown', (e) => {
-          if (entered) return;
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            dismiss(true);
-          } else if (e.key === 'Escape') {
-            dismiss(false);
-          }
-        });
+        window.addEventListener('keydown', onIntroKeydown);
       }
 
       /* =========================================
@@ -6554,6 +6582,11 @@
         let selectedIdx = -1;
         let clusterAnchors = [];
         let clusterLabelEls = [];
+        let clusterLabelState = [];
+        const reticleState = { x: -9999, y: -9999, visible: false };
+        let galaxyViewW = window.innerWidth;
+        let galaxyViewH = window.innerHeight;
+        let lastClusterProjAt = 0;
 
         // Smooth Spherical Orbit Camera State
         const camState = {
@@ -6741,6 +6774,8 @@
             `<div class="galaxy-cluster-label">${escapeHtml(c.label)}</div>`
           ).join('');
           clusterLabelEls = Array.from(labelsLayer.querySelectorAll('.galaxy-cluster-label'));
+          clusterLabelState = clusterLabelEls.map(() => ({ x: -9999, y: -9999, visible: false }));
+          lastClusterProjAt = 0;
         }
 
         function buildConstellationLineIndices(positionsArr) {
@@ -7406,8 +7441,8 @@
         // Hit-test nearest visible star in screen space (zero GC allocation)
         function findNearestStarAt(clientX, clientY, maxPx) {
           if (!camera || !currentPos || !activeNodes.length) return -1;
-          const w = window.innerWidth;
-          const h = window.innerHeight;
+          const w = galaxyViewW;
+          const h = galaxyViewH;
           if (!reusableProjVec) reusableProjVec = new THREE_LIB.Vector3();
           const v = reusableProjVec;
           let bestIdx = -1;
@@ -7466,50 +7501,77 @@
           hoverTip.classList.add('is-visible');
         }
 
-        function projectReticleAndLabels() {
+        function projectReticleAndLabels(now) {
           if (!camera || !THREE_LIB) return;
-          const w = window.innerWidth;
-          const h = window.innerHeight;
+          const w = galaxyViewW;
+          const h = galaxyViewH;
           if (!reusableProjVec) reusableProjVec = new THREE_LIB.Vector3();
           const proj = reusableProjVec;
 
-          // Cluster labels
-          for (let i = 0; i < clusterAnchors.length; i++) {
-            const el = clusterLabelEls[i];
-            if (!el) continue;
-            const c = clusterAnchors[i];
-            proj.set(c.x, c.y + 12, c.z).project(camera);
-            if (proj.z >= -1 && proj.z <= 1) {
+          // Cluster labels: frustum-culled + dirty-checked (throttled to ~30Hz unless morphing)
+          if (isMorphing || now - lastClusterProjAt >= 32) {
+            lastClusterProjAt = now;
+            const padX = 140;
+            const padY = 60;
+            for (let i = 0; i < clusterAnchors.length; i++) {
+              const el = clusterLabelEls[i];
+              const st = clusterLabelState[i];
+              if (!el || !st) continue;
+              const c = clusterAnchors[i];
+              proj.set(c.x, c.y + 12, c.z).project(camera);
+              const inZ = proj.z >= -1 && proj.z <= 1;
               const lx = (proj.x * 0.5 + 0.5) * w;
               const ly = (-proj.y * 0.5 + 0.5) * h;
-              el.style.transform = `translate3d(${lx.toFixed(1)}px, ${ly.toFixed(1)}px, 0) translate(-50%, -50%)`;
-              el.classList.add('is-visible');
-            } else {
-              el.classList.remove('is-visible');
+              const inView = inZ && lx >= -padX && lx <= w + padX && ly >= -padY && ly <= h + padY;
+
+              if (inView) {
+                if (Math.abs(lx - st.x) >= 0.4 || Math.abs(ly - st.y) >= 0.4) {
+                  st.x = lx;
+                  st.y = ly;
+                  el.style.transform = `translate3d(${lx.toFixed(1)}px, ${ly.toFixed(1)}px, 0) translate(-50%, -50%)`;
+                }
+                if (!st.visible) {
+                  st.visible = true;
+                  el.classList.add('is-visible');
+                }
+              } else if (st.visible) {
+                st.visible = false;
+                el.classList.remove('is-visible');
+              }
             }
           }
 
-          // Reticle on hovered or selected star
+          // Reticle on hovered / selected / hopping star: full frame rate with frustum cull + dirty check
           const focusIdx = hopState.active ? hopState.focusIdx : (hoveredIdx >= 0 ? hoveredIdx : selectedIdx);
           if (reticle) {
             if (focusIdx >= 0 && currentPos && focusIdx < activeNodes.length) {
               proj.set(currentPos[focusIdx * 3], currentPos[focusIdx * 3 + 1], currentPos[focusIdx * 3 + 2]).project(camera);
-              if (proj.z >= -1 && proj.z <= 1) {
-                const rx = (proj.x * 0.5 + 0.5) * w;
-                const ry = (-proj.y * 0.5 + 0.5) * h;
-                reticle.style.transform = `translate3d(${rx.toFixed(1)}px, ${ry.toFixed(1)}px, 0)`;
-                reticle.classList.add('is-visible');
-              } else {
+              const rx = (proj.x * 0.5 + 0.5) * w;
+              const ry = (-proj.y * 0.5 + 0.5) * h;
+              const inView = proj.z >= -1 && proj.z <= 1 && rx >= -48 && rx <= w + 48 && ry >= -48 && ry <= h + 48;
+              if (inView) {
+                if (Math.abs(rx - reticleState.x) >= 0.3 || Math.abs(ry - reticleState.y) >= 0.3) {
+                  reticleState.x = rx;
+                  reticleState.y = ry;
+                  reticle.style.transform = `translate3d(${rx.toFixed(1)}px, ${ry.toFixed(1)}px, 0)`;
+                }
+                if (!reticleState.visible) {
+                  reticleState.visible = true;
+                  reticle.classList.add('is-visible');
+                }
+              } else if (reticleState.visible) {
+                reticleState.visible = false;
                 reticle.classList.remove('is-visible');
               }
-            } else {
+            } else if (reticleState.visible) {
+              reticleState.visible = false;
               reticle.classList.remove('is-visible');
             }
           }
         }
 
         function renderLoop(now) {
-          if (!isOpen || !renderer || !scene || !camera) {
+          if (!isOpen || document.hidden || !renderer || !scene || !camera) {
             rafId = null;
             return;
           }
@@ -7572,7 +7634,7 @@
           }
 
           renderer.render(scene, camera);
-          projectReticleAndLabels();
+          projectReticleAndLabels(now);
           rafId = requestAnimationFrame(renderLoop);
         }
 
@@ -7669,17 +7731,39 @@
           camState.targetRadius = Math.max(26, Math.min(420, camState.targetRadius + e.deltaY * 0.14));
         }, { passive: false });
 
+        let galResizeTimer = null;
         window.addEventListener('resize', () => {
+          galaxyViewW = window.innerWidth;
+          galaxyViewH = window.innerHeight;
           if (!renderer || !camera) return;
-          camera.aspect = window.innerWidth / window.innerHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(window.innerWidth, window.innerHeight);
-          if (starMat) starMat.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 1.5);
+          clearTimeout(galResizeTimer);
+          galResizeTimer = setTimeout(() => {
+            galaxyViewW = window.innerWidth;
+            galaxyViewH = window.innerHeight;
+            camera.aspect = galaxyViewW / galaxyViewH;
+            camera.updateProjectionMatrix();
+            renderer.setSize(galaxyViewW, galaxyViewH);
+            if (starMat) starMat.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 1.5);
+          }, 90);
+        }, { passive: true });
+
+        document.addEventListener('visibilitychange', () => {
+          if (!isOpen) return;
+          if (document.hidden) {
+            if (rafId) {
+              cancelAnimationFrame(rafId);
+              rafId = null;
+            }
+          } else if (renderer && !rafId) {
+            rafId = requestAnimationFrame(renderLoop);
+          }
         });
 
         async function openGalaxy() {
           if (isOpen) return;
           isOpen = true;
+          galaxyViewW = window.innerWidth;
+          galaxyViewH = window.innerHeight;
           overlay.classList.add('is-open');
           overlay.setAttribute('aria-hidden', 'false');
           document.body.classList.add('galaxy-active');
@@ -9337,7 +9421,7 @@
         }).join('');
 
         // Bind stationary-card 3D metallic coin tilt (zero flicker, GPU-only) + inspect click
-        const isFine = !prefersReducedMotion && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        const isFine = !window.matchMedia || window.matchMedia('(any-hover: hover)').matches;
         grid.querySelectorAll('.trophy-card').forEach((card) => {
           const coin = card.querySelector('.trophy-coin');
           if (isFine && coin) {

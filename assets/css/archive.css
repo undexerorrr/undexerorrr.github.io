@@ -130,7 +130,6 @@
       opacity: 0.72;
       transform-origin: center;
       animation: bg-breathe 40s ease-in-out infinite alternate;
-      will-change: transform;
     }
 
     .bg-vignette {
@@ -1363,7 +1362,6 @@
     }
 
     .catalog-card:hover {
-      will-change: transform;
       background: rgba(10, 14, 22, 0.80);
       border-color: rgba(var(--bright), 0.50);
       box-shadow: 0 14px 28px rgba(0, 0, 0, 0.62), 0 0 18px rgba(var(--bright), 0.18);
@@ -5051,10 +5049,14 @@
       -webkit-transform-style: preserve-3d;
       transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
       transition: transform 0.14s ease-out;
-      will-change: transform;
       position: relative;
       user-select: none;
       touch-action: none;
+    }
+
+    .holo-backdrop.is-open .holo-tilt-wrap,
+    .pack-backdrop.is-open .pack-holo-tilt {
+      will-change: transform;
     }
 
     .holo-tilt-wrap.is-resetting {
@@ -5636,6 +5638,9 @@
       white-space: nowrap;
       opacity: 0;
       transition: opacity 0.25s ease;
+    }
+
+    .galaxy-overlay.is-open .galaxy-cluster-label {
       will-change: transform;
     }
 
@@ -5842,7 +5847,6 @@
       background: rgba(7, 10, 18, 0.95);
       border: 1px solid rgba(var(--bright), 0.44);
       box-shadow: 0 14px 32px rgba(0, 0, 0, 0.75);
-      will-change: transform;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -6592,6 +6596,9 @@
       user-select: none;
       touch-action: none;
       transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+    }
+
+    .coop-modal-backdrop.is-open .coop-swipe-card {
       will-change: transform;
     }
 
@@ -6892,7 +6899,8 @@
       contain: layout style;
     }
 
-    body.galaxy-active .bg-photo {
+    body.galaxy-active .bg-photo,
+    body.is-modal-open .bg-photo {
       animation-play-state: paused;
     }
 
@@ -6923,7 +6931,12 @@
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.22s ease, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease;
-      will-change: transform, opacity;
+    }
+
+    .galaxy-overlay.is-open .galaxy-hop-pill,
+    .galaxy-overlay.is-open .galaxy-hover-tip,
+    .galaxy-overlay.is-open .galaxy-reticle {
+      will-change: transform;
     }
 
     .galaxy-hop-pill.is-visible {
@@ -8899,6 +8912,43 @@
 
     .modal-title {
       padding-right: 36px;
+    }
+
+    /* =========================================
+       STAGE 4: 60–120 FPS OFFSCREEN RENDERING (CONTENT-VISIBILITY)
+       ========================================= */
+
+    #hottakes,
+    #trophies,
+    #activity,
+    #watching,
+    #waifu,
+    #collection {
+      content-visibility: auto;
+    }
+
+    #hottakes {
+      contain-intrinsic-size: auto 540px;
+    }
+
+    #trophies {
+      contain-intrinsic-size: auto 880px;
+    }
+
+    #activity {
+      contain-intrinsic-size: auto 420px;
+    }
+
+    #watching {
+      contain-intrinsic-size: auto 190px;
+    }
+
+    #waifu {
+      contain-intrinsic-size: auto 280px;
+    }
+
+    #collection {
+      contain-intrinsic-size: auto 760px;
     }
 
     /* =========================================
