@@ -989,7 +989,7 @@
       }
 
       /* =========================================
-         STAGE 4: LIVE WEATHER ENGINE (53.9° N · OPEN-METEO) + DYNAMIC CANVAS PHYSICS
+         LIVE WEATHER ENGINE (53.9° N · OPEN-METEO) + DYNAMIC CANVAS PHYSICS
          ========================================= */
       const weatherEngineState = {
         liveMode: 'clear',
@@ -1610,7 +1610,7 @@
       }
 
       /* =========================================
-         STAGE 1 NEW: ANIME-DNA // TASTE X-RAY ENGINE
+         ANIME-DNA // TASTE X-RAY ENGINE
          ========================================= */
       function computeViewerArchetype(dna) {
         const topGenre = dna.genres?.[0]?.name || 'Драма';
@@ -1794,7 +1794,7 @@
       }
 
       /* =========================================
-         V13 STAGE 1: HOT TAKES ENGINE (CONTROVERSIAL RATINGS + PNG CARD)
+         HOT TAKES ENGINE (CONTROVERSIAL RATINGS + PNG CARD)
          ========================================= */
       function computeHotTakesFromRates(allRates) {
         if (!Array.isArray(allRates) || !allRates.length) return null;
@@ -2297,7 +2297,7 @@
       async function hydrateDnaFromShikiRates(rates, userStats, allRates) {
         if (!Array.isArray(rates) || !rates.length) return;
 
-        // Cache compact rates map for Stage 2 ("Проверка на базу")
+        // Cache compact rates map for Taste Match ("Проверка на базу")
         try {
           const compactRates = rates
             .filter((r) => r.anime && r.anime.id)
@@ -2496,12 +2496,12 @@
           saveDnaCache(animeDnaState);
           renderAnimeDna(animeDnaState);
         } catch (e) {
-          console.warn('AniList DNA meta sync failed:', e);
+          // Graceful fallback to cached/snapshot DNA metadata
         }
       }
 
       /* =========================================
-         STAGE 5: WATCHING NOW SHELF RENDER & CONTROLS
+         WATCHING NOW SHELF RENDER & CONTROLS
          ========================================= */
       let updateWatchingNavRef = null;
 
@@ -2669,7 +2669,7 @@
       }
 
       /* =========================================
-         STAGE 5: GLASS SPOTLIGHT (EDGE + SURFACE REVEAL)
+         GLASS SPOTLIGHT (EDGE + SURFACE REVEAL)
          ========================================= */
       function initGlassSpotlight() {
         const isFine = !prefersReducedMotion && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -3161,7 +3161,7 @@
       });
 
       /* =========================================
-         V14 STAGE 2: 3D HOLOGRAPHIC COLLECTIBLE CARDS ENGINE
+         3D HOLOGRAPHIC COLLECTIBLE CARDS ENGINE
          ========================================= */
       let holoDeckType = 'peak';
       let holoDeckIdx = 0;
@@ -3474,7 +3474,7 @@
       }
 
       /* =========================================
-         V14 STAGE 2: MOBILE TIKTOK BOTTOM DOCK CONTROLLER
+         MOBILE BOTTOM DOCK CONTROLLER
          ========================================= */
       function initMobileTikTokDock() {
         const dockNav = document.getElementById('mobile-dock');
@@ -3590,7 +3590,7 @@
           });
           saveCoverCache();
         } catch (err) {
-          console.warn('AniList anime batch failed:', err);
+          // Graceful fallback to Shikimori cover endpoint
         }
 
         const stillMissing = missing.filter((id) => !coverCache['anime_' + id]);
@@ -3635,7 +3635,7 @@
             });
             saveCoverCache();
           } catch (err) {
-            console.warn('AniList character batch failed:', err);
+            // Graceful fallback to Jikan sequential lookup
           }
 
           if (offset + 16 < missing.length) await sleep(250);
@@ -3996,7 +3996,7 @@
           }
         } catch (e) {}
 
-        // 7. V20: Live Archive Trophies auto-computation from full Shikimori list
+        // 7. Live Archive Trophies auto-computation from full Shikimori list
         try {
           const computedTrophies = computeTrophiesFromRates(allRates, userStats);
           if (computedTrophies && computedTrophies.items.length) {
@@ -4639,7 +4639,7 @@
       }
 
       /* =========================================
-         STAGE 2 NEW: TASTE MATCH («ПРОВЕРКА НА БАЗУ» + PNG VERDICT CARD)
+         TASTE MATCH («ПРОВЕРКА НА БАЗУ» + PNG VERDICT CARD)
          ========================================= */
       function initTasteMatcher() {
         const form = document.getElementById('base-check-form');
@@ -5334,7 +5334,7 @@
               ...tierInfo
             });
           } catch (err) {
-            console.warn('Taste match failed:', err);
+            // Handled cleanly via status banner below
             setStatus('Ошибка при обращении к Shikimori API — попробуй ещё раз чуть позже.', 'error');
           } finally {
             submitBtn.disabled = false;
@@ -5378,7 +5378,7 @@
       }
 
       /* =========================================
-         STAGE 3 NEW: 1v1 TOURNAMENT ARENA («КТО ЛУЧШИЙ ИЗ МОЕГО ТОПА?»)
+         1v1 TOURNAMENT ARENA («КТО ЛУЧШИЙ ИЗ МОЕГО ТОПА?»)
          ========================================= */
       function initTournamentArena() {
         const backdrop = document.getElementById('arena-modal');
@@ -6448,7 +6448,7 @@
       }
 
       /* =========================================
-         V15 STAGE 3: 3D ARCHIVE GALAXY ENGINE (WEBGL / THREE.JS)
+         3D ARCHIVE GALAXY ENGINE (WEBGL / THREE.JS)
          ========================================= */
       let threeLoadPromise = null;
 
@@ -6472,6 +6472,8 @@
             const script = document.createElement('script');
             script.src = cdns[idx++];
             script.async = true;
+            script.crossOrigin = 'anonymous';
+            script.referrerPolicy = 'no-referrer';
             script.onload = () => {
               if (window.THREE) resolve(window.THREE);
               else tryNext();
@@ -6551,7 +6553,7 @@
         let hopTrailColBuf = null;
         const HOP_MAX_VERTS = 16;
 
-        // V18 Zero-Lag rAF Star-Hopping Roulette State
+        // Zero-Lag rAF Star-Hopping Roulette State
         const hopState = {
           active: false,
           chain: [],
@@ -7413,7 +7415,7 @@
           highlightLine.visible = false;
           scene.add(highlightLine);
 
-          // 5. V18 Pre-allocated GPU Star-Hopping Warp Trail (zero allocation during hops)
+          // 5. Pre-allocated GPU Star-Hopping Warp Trail (zero allocation during hops)
           hopTrailPosBuf = new Float32Array(HOP_MAX_VERTS * 3);
           hopTrailColBuf = new Float32Array(HOP_MAX_VERTS * 3);
           hopTrailGeom = new T.BufferGeometry();
@@ -7591,7 +7593,7 @@
             }
           }
 
-          // 1b. V18 Star-Hopping Roulette frame step (100% rAF synced)
+          // 1b. Star-Hopping Roulette frame step (100% rAF synced)
           updateStarHopFrame(now);
 
           // 2. Smooth inertial camera orbit + zoom + fly-to
@@ -7779,7 +7781,7 @@
               initThreeScene();
               loader?.classList.add('is-hidden');
             } catch (err) {
-              console.warn('3D Galaxy init failed:', err);
+              // Handled cleanly via WebGL loader message below
               if (loaderText) loaderText.textContent = 'WebGL / Three.js недоступен в этом браузере';
               isBooting = false;
               return;
@@ -7917,7 +7919,7 @@
 
 
       /* =========================================
-         V16 STAGE 4: CO-OP EVENING PICKER + SWIPE ARENA + TICKET PNG
+         CO-OP EVENING PICKER + SWIPE ARENA + TICKET PNG
          ========================================= */
       function initCoopPicker() {
         const stationTabs = Array.from(document.querySelectorAll('[data-station-tab]'));
@@ -8945,7 +8947,7 @@
       }
 
       /* =========================================
-         V20: ARCHIVE TROPHIES («ТРОФЕИ АРХИВА» — 3D METALLIC TOKENS)
+         ARCHIVE TROPHIES («ТРОФЕИ АРХИВА» — 3D METALLIC TOKENS)
          ========================================= */
       function buildFallbackTrophiesState() {
         const dna = animeDnaState || SNAPSHOT_DNA;
@@ -9780,7 +9782,7 @@
       }
 
       /* =========================================
-         STAGE 3: UNIFIED MODAL SCROLL LOCK (ZERO LAYOUT SHIFT)
+         UNIFIED MODAL SCROLL LOCK (ZERO LAYOUT SHIFT)
          ========================================= */
       function initModalScrollLock() {
         const modalIds = [

@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/css/archive.css?v=26" />
+  <link rel="stylesheet" href="./assets/css/archive.css?v=27" />
 </head>
 <body>
 
@@ -69,12 +69,12 @@
             <span class="status-dot"></span>
             <span id="api-status-text">SYNC...</span>
           </div>
-          <button type="button" class="galaxy-nav-btn" id="open-galaxy-topbar-btn" title="Открыть 3D-Галактику всех 415+ тайтлов (WebGL / Three.js)">
+          <button type="button" class="galaxy-nav-btn" id="open-galaxy-topbar-btn" aria-label="Открыть 3D-Галактику архива" title="Открыть 3D-Галактику всех 415+ тайтлов (WebGL / Three.js)">
             <span class="g-star" aria-hidden="true">✦</span>
             <span>3D<span class="g-text-full"> Космос</span></span>
           </button>
-          <button type="button" class="audio-btn" id="audio-toggle-btn" title="Play / Pause плейлист">
-            <span id="audio-icon">▶</span>
+          <button type="button" class="audio-btn" id="audio-toggle-btn" aria-label="Воспроизвести или поставить на паузу музыку" title="Play / Pause плейлист">
+            <span id="audio-icon" aria-hidden="true">▶</span>
             <span class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
             <span class="audio-btn-label" id="topbar-track-label">PLAYLIST</span>
           </button>
@@ -90,7 +90,7 @@
           <div class="glass-card bento-pilot">
             <div class="pilot-top-bar">
               <span class="pilot-id-tag">DOSSIER // 1308586</span>
-              <button type="button" class="pilot-weather-chip" id="pilot-weather-chip" title="Погода в точке 53.9° N (нажми для переключения режима)">53.9° N · SYNC...</button>
+              <button type="button" class="pilot-weather-chip" id="pilot-weather-chip" aria-label="Переключить режим погоды 53.9° N" title="Погода в точке 53.9° N (нажми для переключения режима)">53.9° N · SYNC...</button>
             </div>
 
             <div class="avatar-wrap">
@@ -281,7 +281,7 @@
         </div>
       </section>
 
-      <!-- STAGE 2 + V16: TASTE MATCH & CO-OP EVENING PICKER STATION -->
+      <!-- TASTE MATCH & CO-OP EVENING PICKER STATION -->
       <section id="compatibility">
         <div class="glass-card base-check-card">
           <div class="base-head">
@@ -305,7 +305,7 @@
 
           <form class="base-form" id="base-check-form" autocomplete="off">
             <div class="base-input-wrap">
-              <span class="base-input-icon">◈</span>
+              <span class="base-input-icon" aria-hidden="true">◈</span>
               <input
                 type="text"
                 class="base-input"
@@ -387,7 +387,7 @@
           </div>
           </div>
 
-          <!-- PANE 2: V16 CO-OP EVENING PICKER -->
+          <!-- PANE 2: CO-OP EVENING PICKER -->
           <div class="station-pane is-hidden" id="station-pane-coop">
             <div class="base-head-left">
               <div class="base-title-row">
@@ -400,7 +400,7 @@
 
             <form class="coop-form" id="coop-form" autocomplete="off">
               <div class="base-input-wrap" style="min-width:0;">
-                <span class="base-input-icon">01</span>
+                <span class="base-input-icon" aria-hidden="true">01</span>
                 <input
                   type="text"
                   class="base-input"
@@ -410,9 +410,9 @@
                   aria-label="Игрок 1 на Shikimori"
                 />
               </div>
-              <button type="button" class="coop-swap-btn" id="coop-swap-btn" title="Поменять игроков местами">⇄</button>
+              <button type="button" class="coop-swap-btn" id="coop-swap-btn" aria-label="Поменять игроков местами" title="Поменять игроков местами">⇄</button>
               <div class="base-input-wrap" style="min-width:0;">
-                <span class="base-input-icon" style="color:#6ee7b7;">02</span>
+                <span class="base-input-icon" style="color:#6ee7b7;" aria-hidden="true">02</span>
                 <input
                   type="text"
                   class="base-input"
@@ -472,7 +472,7 @@
         </div>
       </section>
 
-      <!-- V13 STAGE 1: MY HOT TAKES (MAIN DISAGREEMENTS WITH SHIKIMORI) -->
+      <!-- HOT TAKES (MAIN DISAGREEMENTS WITH SHIKIMORI) -->
       <section id="hottakes">
         <div class="glass-card hottakes-card">
           <div class="ht-head">
@@ -520,7 +520,7 @@
         </div>
       </section>
 
-      <!-- V20: ARCHIVE TROPHIES (3D METALLIC ACHIEVEMENT TOKENS) -->
+      <!-- ARCHIVE TROPHIES (3D METALLIC ACHIEVEMENT TOKENS) -->
       <section id="trophies">
         <div class="glass-card trophies-card">
           <div class="trophies-head">
@@ -644,8 +644,8 @@
 
         <div class="toolbar">
           <div class="search-box">
-            <span class="search-icon">⌕</span>
-            <input type="text" id="collection-search" placeholder="Поиск по названию или персонажу..." autocomplete="off" />
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input type="text" id="collection-search" placeholder="Поиск по названию или персонажу..." aria-label="Поиск по названию или персонажу" autocomplete="off" />
           </div>
           <div class="toolbar-right">
             <div class="sort-group" id="sort-controls">
@@ -674,17 +674,17 @@
   <!-- Floating Music Player Dock -->
   <aside class="music-dock" id="music-dock" aria-label="Аудиоплеер">
     <div class="dock-top">
-      <button type="button" class="dock-play-btn" id="dock-play-btn" title="Play / Pause">▶</button>
+      <button type="button" class="dock-play-btn" id="dock-play-btn" aria-label="Воспроизвести или поставить на паузу" title="Play / Pause">▶</button>
       <div class="dock-meta">
         <div class="dock-title" id="dock-title">Тени</div>
         <div class="dock-artist" id="dock-artist">Валентин Стрыкало</div>
       </div>
       <div class="dock-mini-actions">
-        <button type="button" class="dock-icon-btn" id="dock-prev-btn" title="Предыдущий трек">⏮</button>
-        <button type="button" class="dock-icon-btn" id="dock-next-btn" title="Следующий трек">⏭</button>
-        <button type="button" class="dock-icon-btn" id="dock-list-btn" title="Список треков">☰</button>
-        <button type="button" class="dock-icon-btn" id="dock-spotify-btn" title="Плейлисты Spotify">♫</button>
-        <button type="button" class="dock-icon-btn" id="dock-min-btn" title="Свернуть / развернуть">–</button>
+        <button type="button" class="dock-icon-btn" id="dock-prev-btn" aria-label="Предыдущий трек" title="Предыдущий трек">⏮</button>
+        <button type="button" class="dock-icon-btn" id="dock-next-btn" aria-label="Следующий трек" title="Следующий трек">⏭</button>
+        <button type="button" class="dock-icon-btn" id="dock-list-btn" aria-label="Список треков" title="Список треков">☰</button>
+        <button type="button" class="dock-icon-btn" id="dock-spotify-btn" aria-label="Плейлисты Spotify" title="Плейлисты Spotify">♫</button>
+        <button type="button" class="dock-icon-btn" id="dock-min-btn" aria-label="Свернуть или развернуть плеер" title="Свернуть / развернуть">–</button>
       </div>
     </div>
 
@@ -753,8 +753,8 @@
         <button type="button" class="weather-chip" data-wmode="storm">⚡ Гроза</button>
       </div>
     </div>
-    <button type="button" class="weather-hud-pill" id="weather-hud-btn" title="Живая погода 53.9° N · нажми для переключения эффектов">
-      <span class="weather-hud-icon" id="weather-hud-icon">✦</span>
+    <button type="button" class="weather-hud-pill" id="weather-hud-btn" aria-label="Панель живой погоды 53.9° N" title="Живая погода 53.9° N · нажми для переключения эффектов">
+      <span class="weather-hud-icon" id="weather-hud-icon" aria-hidden="true">✦</span>
       <span>53.9° N</span>
       <span class="weather-hud-sep">·</span>
       <span id="weather-hud-clock">--:--</span>
@@ -765,7 +765,7 @@
     </button>
   </div>
 
-  <!-- Stage 3: 1v1 Tournament Arena Modal -->
+  <!-- 1v1 Tournament Arena Modal -->
   <div class="arena-backdrop" id="arena-modal" aria-hidden="true">
     <div class="arena-card" role="dialog" aria-modal="true" aria-label="Мини-турнир 1v1">
       <button type="button" class="modal-close" id="arena-close" aria-label="Закрыть">×</button>
@@ -800,7 +800,7 @@
         </div>
 
         <div class="arena-duel-stage" id="arena-duel-stage">
-          <button type="button" class="arena-contender" id="arena-left-btn">
+          <button type="button" class="arena-contender" id="arena-left-btn" aria-label="Выбрать левого претендента">
             <div class="arena-poster">
               <span class="arena-key-hint">← / 1</span>
               <img id="arena-left-img" src="" alt="" />
@@ -811,7 +811,7 @@
 
           <div class="arena-vs-orb" aria-hidden="true">VS</div>
 
-          <button type="button" class="arena-contender" id="arena-right-btn">
+          <button type="button" class="arena-contender" id="arena-right-btn" aria-label="Выбрать правого претендента">
             <div class="arena-poster">
               <span class="arena-key-hint">→ / 2</span>
               <img id="arena-right-img" src="" alt="" />
@@ -851,7 +851,7 @@
     </div>
   </div>
 
-  <!-- V16 Stage 4: Co-op Swipe Arena & Evening Ticket Modal -->
+  <!-- Co-op Swipe Arena & Evening Ticket Modal -->
   <div class="coop-modal-backdrop" id="coop-modal" aria-hidden="true">
     <div class="coop-modal-card" role="dialog" aria-modal="true" aria-label="Кооп-Свайп и Билет на вечер">
       <button type="button" class="modal-close" id="coop-modal-close" aria-label="Закрыть">×</button>
@@ -895,9 +895,9 @@
         </div>
 
         <div class="coop-swipe-actions">
-          <button type="button" class="coop-circle-btn is-pass" id="coop-btn-pass" title="Скип (←)">✕</button>
+          <button type="button" class="coop-circle-btn is-pass" id="coop-btn-pass" aria-label="Пропустить тайтл" title="Скип (←)">✕</button>
           <button type="button" class="coop-instant-btn" id="coop-btn-instant" style="display:none;">⚡ Смотрим это!</button>
-          <button type="button" class="coop-circle-btn is-like" id="coop-btn-like" title="Хочу смотреть (→)">♥</button>
+          <button type="button" class="coop-circle-btn is-like" id="coop-btn-like" aria-label="Добавить тайтл в понравившиеся" title="Хочу смотреть (→)">♥</button>
         </div>
         <div class="arena-hint-row">Свайпай карточку влево/вправо или жми ← / → на клавиатуре</div>
       </div>
@@ -942,7 +942,7 @@
     </div>
   </div>
 
-  <!-- V14 Stage 2: Mobile TikTok Bottom Dock -->
+  <!-- Mobile Bottom Navigation Dock -->
   <nav class="mobile-dock" id="mobile-dock" aria-label="Мобильная навигация">
     <a href="#profile" class="mdock-btn is-active" data-mdock-sec="profile">
       <span class="mdock-icon" aria-hidden="true">◈</span>
@@ -952,15 +952,15 @@
       <span class="mdock-icon" aria-hidden="true">◎</span>
       <span>База</span>
     </a>
-    <button type="button" class="mdock-btn" id="mdock-arena-btn">
+    <button type="button" class="mdock-btn" id="mdock-arena-btn" aria-label="Открыть Турнир 1v1">
       <span class="mdock-icon" aria-hidden="true">⚔</span>
       <span>Турнир</span>
     </button>
-    <button type="button" class="mdock-btn" id="mdock-random-btn">
+    <button type="button" class="mdock-btn" id="mdock-random-btn" aria-label="Открыть бустер-пак ARCHIVE PACK">
       <span class="mdock-icon" aria-hidden="true">✦</span>
       <span>Пак</span>
     </button>
-    <button type="button" class="mdock-btn mdock-music-btn" id="mdock-music-btn" aria-expanded="false">
+    <button type="button" class="mdock-btn mdock-music-btn" id="mdock-music-btn" aria-label="Открыть панель музыки" aria-expanded="false">
       <span class="mdock-icon" aria-hidden="true">
         <span class="mdock-music-glyph">♫</span>
         <span class="mdock-eq"><span></span><span></span><span></span></span>
@@ -969,14 +969,14 @@
     </button>
   </nav>
 
-  <!-- V15 Stage 3: 3D Archive Galaxy Observatory (WebGL / Three.js) -->
+  <!-- 3D Archive Galaxy Observatory (WebGL / Three.js) -->
   <div class="galaxy-overlay" id="galaxy-overlay" role="dialog" aria-modal="true" aria-label="3D-Галактика архива" aria-hidden="true">
     <div id="galaxy-canvas-wrap"></div>
     <div class="galaxy-vignette" aria-hidden="true"></div>
     <div class="galaxy-labels-layer" id="galaxy-labels-layer" aria-hidden="true"></div>
     <div class="galaxy-reticle" id="galaxy-reticle" aria-hidden="true"></div>
 
-    <!-- V18 Star-Hopping Roulette HUD Pill -->
+    <!-- Star-Hopping Roulette HUD Pill -->
     <div class="galaxy-hop-pill" id="galaxy-hop-pill" aria-hidden="true">
       <span class="galaxy-hop-step" id="galaxy-hop-step">✦ ПРЫЖОК 1/8</span>
       <span class="galaxy-hop-title" id="galaxy-hop-title"></span>
@@ -1000,14 +1000,14 @@
 
       <div class="galaxy-top-actions">
         <div class="galaxy-search-wrap">
-          <span class="search-icon">⌕</span>
-          <input type="text" class="galaxy-search-input" id="galaxy-search-input" placeholder="Найти звезду (тайтл)..." autocomplete="off" />
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input type="text" class="galaxy-search-input" id="galaxy-search-input" placeholder="Найти звезду (тайтл)..." aria-label="Поиск тайтла в 3D-Галактике" autocomplete="off" />
         </div>
         <button type="button" class="galaxy-hud-btn" id="galaxy-warp-btn" title="Перелететь к случайной звезде">✦ Случайная</button>
         <button type="button" class="galaxy-hud-btn active galaxy-hide-sm" id="galaxy-lines-btn" title="Показать / скрыть линии созвездий">Связи</button>
         <button type="button" class="galaxy-hud-btn active galaxy-hide-sm" id="galaxy-orbit-btn" title="Автовращение камеры">Орбита</button>
-        <button type="button" class="galaxy-hud-btn galaxy-hide-sm" id="galaxy-reset-btn" title="Сбросить камеру">↺</button>
-        <button type="button" class="galaxy-hud-btn galaxy-hide-sm" id="galaxy-music-btn" title="Play / Pause музыка">♫</button>
+        <button type="button" class="galaxy-hud-btn galaxy-hide-sm" id="galaxy-reset-btn" aria-label="Сбросить камеру 3D-Галактики" title="Сбросить камеру">↺</button>
+        <button type="button" class="galaxy-hud-btn galaxy-hide-sm" id="galaxy-music-btn" aria-label="Воспроизвести или поставить на паузу музыку" title="Play / Pause музыка">♫</button>
         <button type="button" class="galaxy-hud-btn is-close" id="galaxy-close-btn" aria-label="Закрыть 3D-Галактику">×</button>
       </div>
     </div>
@@ -1065,7 +1065,7 @@
     </div>
   </div>
 
-  <!-- V14 Stage 2: 3D Holographic Collectible Card Viewer -->
+  <!-- 3D Holographic Collectible Card Viewer -->
   <div class="holo-backdrop" id="holo-modal" aria-hidden="true">
     <button type="button" class="holo-close-btn" id="holo-close" aria-label="Закрыть">×</button>
 
@@ -1140,7 +1140,7 @@
     <div class="holo-kbd-hint">Двигай мышкой для 3D-голограммы · Клик / Пробел — переворот · ← / → — листать колоду</div>
   </div>
 
-  <!-- V19: Foil Booster Pack Overlay (ARCHIVE PACK -> 3D Holo Reveal) -->
+  <!-- Foil Booster Pack Overlay (ARCHIVE PACK -> 3D Holo Reveal) -->
   <div class="pack-backdrop" id="pack-modal" role="dialog" aria-modal="true" aria-label="Бустер-пак ARCHIVE PACK" aria-hidden="true">
     <button type="button" class="holo-close-btn" id="pack-close" aria-label="Закрыть бустер-пак">×</button>
 
@@ -1300,7 +1300,7 @@
     <div class="holo-kbd-hint" id="pack-kbd-hint">Проведи по кромке пакета или кликни, чтобы вскрыть · Пробел — действие · Esc — выход</div>
   </div>
 
-  <!-- V20: 3D Metallic Trophy Inspect Modal -->
+  <!-- 3D Metallic Trophy Inspect Modal -->
   <div class="trophy-backdrop" id="trophy-modal" role="dialog" aria-modal="true" aria-label="Досье трофея" aria-hidden="true">
     <div class="trophy-modal-card">
       <button type="button" class="modal-close" id="trophy-modal-close" aria-label="Закрыть">×</button>
@@ -1379,6 +1379,6 @@
     </div>
   </div>
 
-  <script src="./assets/js/archive.js?v=26"></script>
+  <script src="./assets/js/archive.js?v=27"></script>
 </body>
 </html>

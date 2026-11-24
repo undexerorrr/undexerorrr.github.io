@@ -64,7 +64,7 @@
       --z-holo-close: 660;
       --z-intro: 9999;
 
-      /* === Unified Modal System Tokens (Stage 3) === */
+      /* === Unified Modal System Tokens === */
       --modal-radius: 20px;
       --modal-border: rgba(173, 191, 222, 0.34);
       --modal-backdrop: rgba(4, 6, 11, 0.88);
@@ -105,6 +105,11 @@
     ::selection {
       background: rgba(var(--bright), 0.32);
       color: #fff;
+    }
+
+    :is(a, button, input, [tabindex]):focus-visible {
+      outline: 2px solid rgba(var(--bright), 0.88);
+      outline-offset: 2px;
     }
 
     /* =========================================
@@ -2641,7 +2646,7 @@
     }
 
     /* =========================================
-       STAGE 4: RANDOMIZER MODE BAR
+       RANDOMIZER MODE BAR
        ========================================= */
 
     .modal-mode-bar {
@@ -2691,7 +2696,7 @@
     }
 
     /* =========================================
-       STAGE 5: LIVE "WATCHING NOW" SHELF
+       LIVE "WATCHING NOW" SHELF
        ========================================= */
 
     .watching-head-bar {
@@ -2890,7 +2895,7 @@
     }
 
     /* =========================================
-       STAGE 5: GLASS SPOTLIGHT (EDGE + SURFACE REVEAL)
+       GLASS SPOTLIGHT (EDGE + SURFACE REVEAL)
        ========================================= */
 
     .glass-card,
@@ -2900,7 +2905,7 @@
     }
 
     /* =========================================
-       STAGE 1 NEW: BENTO COMMAND DECK + ANIME-DNA X-RAY
+       BENTO COMMAND DECK + ANIME-DNA X-RAY
        ========================================= */
 
     .bento-deck {
@@ -3461,7 +3466,7 @@
     }
 
     /* =========================================
-       STAGE 2 NEW: TASTE MATCH («ПРОВЕРКА НА БАЗУ»)
+       TASTE MATCH («ПРОВЕРКА НА БАЗУ»)
        ========================================= */
 
     .base-check-card {
@@ -3966,7 +3971,7 @@
     }
 
     /* =========================================
-       STAGE 3 NEW: 1v1 TOURNAMENT ARENA
+       1v1 TOURNAMENT ARENA
        ========================================= */
 
     .waifu-head-left {
@@ -4397,7 +4402,7 @@
     }
 
     /* =========================================
-       STAGE 4 NEW: LIVE WEATHER HUD (53.9° N)
+       LIVE WEATHER HUD (53.9° N)
        ========================================= */
 
     .pilot-weather-chip {
@@ -4568,7 +4573,7 @@
     }
 
     /* =========================================
-       V13 STAGE 1: FILM GRAIN + DISPLAY FONTS + NOIR POSTER FILTER + HOT TAKES
+       FILM GRAIN + DISPLAY FONTS + NOIR POSTER FILTER + HOT TAKES
        ========================================= */
 
     .film-grain {
@@ -4974,7 +4979,7 @@
     }
 
     /* =========================================
-       V14 STAGE 2: 3D HOLOGRAPHIC COLLECTIBLE CARDS + MOBILE TIKTOK DOCK
+       3D HOLOGRAPHIC COLLECTIBLE CARDS + MOBILE BOTTOM DOCK
        ========================================= */
 
     .holo-backdrop {
@@ -5522,7 +5527,7 @@
     }
 
     /* =========================================
-       V15 STAGE 3: 3D ARCHIVE GALAXY (WEBGL / THREE.JS)
+       3D ARCHIVE GALAXY (WEBGL / THREE.JS)
        ========================================= */
 
     .galaxy-nav-btn {
@@ -6141,7 +6146,7 @@
     }
 
     /* =========================================
-       V16 STAGE 4: CO-OP EVENING PICKER + SWIPE ARENA + CINEMA TICKET
+       CO-OP EVENING PICKER + SWIPE ARENA + CINEMA TICKET
        ========================================= */
 
     .station-switcher {
@@ -6885,7 +6890,7 @@
     }
 
     /* =========================================
-       V18: 60/120 FPS CONTAINMENT + 3D GALAXY STAR-HOPPING ROULETTE HUD
+       60/120 FPS CONTAINMENT + 3D GALAXY STAR-HOPPING ROULETTE HUD
        ========================================= */
 
     .waifu-card,
@@ -6980,7 +6985,7 @@
        ========================================= */
 
     /* =========================================
-       V19: FOIL BOOSTER PACK (ARCHIVE PACK) + FPS HYGIENE
+       FOIL BOOSTER PACK (ARCHIVE PACK) + FPS HYGIENE
        ========================================= */
 
     .pack-backdrop {
@@ -7646,7 +7651,7 @@
     }
 
     /* =========================================
-       V20: ARCHIVE TROPHIES («ТРОФЕИ АРХИВА» — 3D METALLIC TOKENS)
+       ARCHIVE TROPHIES («ТРОФЕИ АРХИВА» — 3D METALLIC TOKENS)
        ========================================= */
 
     .trophies-card {
@@ -8204,7 +8209,7 @@
     }
 
     /* =========================================
-       V20: 3D TROPHY INSPECT MODAL
+       3D TROPHY INSPECT MODAL
        ========================================= */
 
     .trophy-backdrop {
@@ -8395,7 +8400,7 @@
     }
 
     /* =========================================
-       V21: TACTILE CARD POLISH (NO.01 // MYTHIC + GPU 3D DEPTH PARALLAX + «ВИТРИНА»)
+       TACTILE CARD POLISH (NO.01 // MYTHIC + GPU 3D DEPTH PARALLAX + «ВИТРИНА»)
        ========================================= */
 
     .view-toggle-group {
@@ -8677,7 +8682,7 @@
     }
 
     /* =========================================
-       V21: COMPREHENSIVE MOBILE & TOUCH OPTIMIZATION
+       MOBILE & TOUCH OPTIMIZATION
        ========================================= */
 
     /* 1. Disable sticky :has(:hover) dimming and reveal color/names on touch devices */
@@ -8687,7 +8692,7 @@
     /* 3. Prevent iOS Safari 16px input zoom + refine mobile spacing & touch targets (<= 720px) */
 
     /* =========================================
-       STAGE 2: MATTE NOIR VISUAL SYSTEM & TYPOGRAPHY RHYTHM
+       MATTE NOIR VISUAL SYSTEM & TYPOGRAPHY RHYTHM
        ========================================= */
 
     .stat-hero-val,
@@ -8753,7 +8758,7 @@
     }
 
     /* =========================================
-       STAGE 3: UNIFIED MODAL & DRAWER SYSTEM (7 OVERLAYS)
+       UNIFIED MODAL & DRAWER SYSTEM (7 OVERLAYS)
        ========================================= */
 
     body.is-modal-open {
@@ -8915,7 +8920,7 @@
     }
 
     /* =========================================
-       STAGE 4: 60–120 FPS OFFSCREEN RENDERING (CONTENT-VISIBILITY)
+       60–120 FPS OFFSCREEN RENDERING (CONTENT-VISIBILITY)
        ========================================= */
 
     #hottakes,
@@ -8952,7 +8957,7 @@
     }
 
     /* =========================================
-       UNIFIED CAPABILITY & RESPONSIVE SYSTEM (STAGE 1)
+       UNIFIED CAPABILITY & RESPONSIVE SYSTEM
        ========================================= */
 
     @media (hover: hover) and (pointer: fine) {
@@ -9532,7 +9537,7 @@
     }
 
     @media (max-width: 640px) {
-      /* Stage 3: Native Mobile Bottom-Sheet & Fullscreen Safe-Area Modals */
+      /* Native Mobile Bottom-Sheet & Fullscreen Safe-Area Modals */
       .modal-backdrop,
       .arena-backdrop,
       .coop-modal-backdrop,
@@ -9714,7 +9719,7 @@
 
       .pack-backdrop {
         gap: 10px;
-        padding: 14px 12px;
+        padding: calc(14px + env(safe-area-inset-top, 0px)) 12px calc(18px + env(safe-area-inset-bottom, 0px));
       }
 
       .pack-stage {
@@ -9829,6 +9834,123 @@
 
       .holo-kbd-hint {
         display: none;
+      }
+
+      /* 360–430px Touch Targets (44px ergonomic rhythm) & Zero Horizontal Overflow */
+      .carousel-arrow {
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
+      }
+
+      .tab-btn,
+      .base-action-btn,
+      .randomizer-btn,
+      .arena-launch-btn,
+      .holo-ctrl-btn,
+      .coop-pick-btn {
+        min-height: 42px;
+      }
+
+      .holo-ctrl-btn.is-icon {
+        width: 44px;
+        height: 44px;
+      }
+
+      .sort-btn,
+      .view-toggle-btn,
+      .trophy-filter-btn,
+      .coop-chip,
+      .pack-mode-btn,
+      .arena-mode-btn,
+      .dna-tab-btn,
+      .galaxy-seg-btn {
+        min-height: 36px;
+      }
+
+      .dock-play-btn {
+        width: 40px;
+        height: 40px;
+      }
+
+      .dock-icon-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+      }
+
+      .dock-vol-wrap {
+        width: 82px;
+        flex: 0 0 82px;
+      }
+
+      .pilot-top-bar {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .station-switcher {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .station-tab {
+        justify-content: center;
+        padding: 9px 8px;
+        font-size: 9.5px;
+        letter-spacing: 0.6px;
+        min-height: 40px;
+      }
+
+      .trophies-filter-bar,
+      .arena-mode-tabs,
+      .pack-mode-bar {
+        max-width: 100%;
+      }
+
+      .watching-card {
+        flex: 0 0 min(272px, calc(100vw - 40px));
+        width: min(272px, calc(100vw - 40px));
+      }
+
+      .graph-bars {
+        gap: 3px;
+        padding: 14px 0 4px;
+      }
+
+      .graph-lbl {
+        font-size: 7.5px;
+      }
+
+      .dna-scores-chart {
+        gap: 3px;
+      }
+
+      .dna-score-val {
+        font-size: 8px;
+      }
+
+      .dna-score-num {
+        font-size: 9px;
+      }
+
+      .dna-kpis {
+        gap: 6px;
+      }
+
+      .dna-kpi-val {
+        font-size: 14px;
+      }
+
+      .galaxy-search-wrap {
+        width: 132px;
+      }
+
+      .galaxy-dock-bar {
+        padding: 6px 8px;
+        gap: 6px;
       }
     }
 
