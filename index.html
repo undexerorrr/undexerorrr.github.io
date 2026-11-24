@@ -204,7 +204,6 @@
       font-size: 10px;
       letter-spacing: 1.2px;
       text-transform: uppercase;
-      backdrop-filter: blur(8px);
     }
 
     .status-dot {
@@ -454,7 +453,6 @@
       color: rgb(232, 237, 246);
       text-decoration: none;
       font-size: 12px;
-      backdrop-filter: blur(6px);
       transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, color 0.25s ease;
     }
 
@@ -1015,7 +1013,7 @@
       padding: 16px 8px 20px;
       overflow-x: auto;
       overflow-y: hidden;
-      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
       scrollbar-width: thin;
       scrollbar-color: rgba(var(--bright), 0.75) rgba(255, 255, 255, 0.08);
       cursor: grab;
@@ -1062,9 +1060,8 @@
       transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, opacity 0.28s ease, filter 0.28s ease;
     }
 
-    .waifu-carousel:has(.waifu-card:hover) .waifu-card:not(:hover) {
-      opacity: 0.45;
-      filter: grayscale(0.5);
+    .waifu-carousel:not(.is-scrolling):not(.is-dragging):has(.waifu-card:hover) .waifu-card:not(:hover) {
+      opacity: 0.48;
     }
 
     .waifu-card:hover {
@@ -1102,13 +1099,12 @@
       z-index: 6;
       padding: 2px 6px;
       border-radius: 5px;
-      background: rgba(8, 10, 14, 0.82);
-      border: 1px solid rgba(var(--bright), 0.32);
+      background: rgba(8, 10, 15, 0.90);
+      border: 1px solid rgba(var(--bright), 0.34);
       font-family: var(--font-mono);
       font-size: 10px;
       font-weight: 600;
       color: rgb(230, 235, 245);
-      backdrop-filter: blur(6px);
     }
 
     .waifu-card.is-top5 .waifu-rank {
@@ -1255,7 +1251,6 @@
       letter-spacing: 1px;
       text-transform: uppercase;
       cursor: pointer;
-      backdrop-filter: blur(6px);
       transition: all 0.22s ease;
     }
 
@@ -1283,10 +1278,8 @@
       flex-direction: column;
       padding: 6px;
       border-radius: 11px;
-      background: rgba(8, 10, 14, 0.52);
-      border: 1px solid rgba(var(--bright), 0.14);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
+      background: rgba(8, 10, 15, 0.76);
+      border: 1px solid rgba(var(--bright), 0.16);
       cursor: pointer;
       transform-style: preserve-3d;
       will-change: transform;
@@ -1425,7 +1418,6 @@
       font-size: 10px;
       font-weight: 600;
       color: rgb(225, 231, 240);
-      backdrop-filter: blur(6px);
     }
 
     .catalog-card.is-top5 .rank-pill {
@@ -1447,7 +1439,6 @@
       font-family: var(--font-mono);
       font-size: 10px;
       font-weight: 600;
-      backdrop-filter: blur(6px);
       transition: border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
@@ -2679,7 +2670,7 @@
       padding: 10px 6px 18px;
       overflow-x: auto;
       overflow-y: hidden;
-      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
       scrollbar-width: thin;
       scrollbar-color: rgba(var(--bright), 0.72) rgba(255, 255, 255, 0.08);
       user-select: none;
@@ -2718,10 +2709,8 @@
       gap: 12px;
       padding: 10px 12px;
       border-radius: 14px;
-      background: var(--glass-bg);
+      background: rgba(9, 12, 19, 0.80);
       border: 1px solid var(--glass-border);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.46);
       overflow: hidden;
       transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
@@ -4656,18 +4645,15 @@
        ========================================= */
     .film-grain {
       position: fixed;
-      inset: -12%;
-      width: 124%;
-      height: 124%;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       z-index: 50;
       pointer-events: none;
-      opacity: 0.04;
-      mix-blend-mode: overlay;
+      opacity: 0.026;
       background-repeat: repeat;
-      background-size: 220px 220px;
-      background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%27220%27%20height%3D%27220%27%3E%3Cfilter%20id%3D%27n%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.82%27%20numOctaves%3D%273%27%20stitchTiles%3D%27stitch%27/%3E%3C/filter%3E%3Crect%20width%3D%27220%27%20height%3D%27220%27%20filter%3D%27url(%23n)%27%20opacity%3D%271%27/%3E%3C/svg%3E");
-      animation: film-grain-shift 0.45s steps(2, end) infinite;
-      will-change: transform;
+      background-size: 200px 200px;
+      background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%3Cfilter%20id%3D%27n%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.82%27%20numOctaves%3D%272%27%20stitchTiles%3D%27stitch%27/%3E%3C/filter%3E%3Crect%20width%3D%27200%27%20height%3D%27200%27%20filter%3D%27url(%23n)%27%20opacity%3D%271%27/%3E%3C/svg%3E");
     }
 
     @keyframes film-grain-shift {
@@ -5931,18 +5917,17 @@
       transform: translate(-50%, -50%);
       padding: 4px 10px;
       border-radius: 999px;
-      background: rgba(6, 9, 16, 0.72);
-      border: 1px solid rgba(var(--bright), 0.32);
-      color: rgba(235, 242, 255, 0.88);
+      background: rgba(6, 9, 16, 0.86);
+      border: 1px solid rgba(var(--bright), 0.34);
+      color: rgba(235, 242, 255, 0.90);
       font-family: var(--font-mono);
       font-size: 9.5px;
       letter-spacing: 1.5px;
       text-transform: uppercase;
       white-space: nowrap;
-      backdrop-filter: blur(6px);
-      text-shadow: 0 0 12px rgba(var(--bright), 0.55);
       opacity: 0;
       transition: opacity 0.25s ease;
+      will-change: transform;
     }
 
     .galaxy-cluster-label.is-visible {
@@ -6021,11 +6006,9 @@
       gap: 12px;
       padding: 8px 15px;
       border-radius: 999px;
-      background: rgba(8, 11, 19, 0.80);
-      border: 1px solid rgba(var(--bright), 0.28);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+      background: rgba(7, 10, 18, 0.92);
+      border: 1px solid rgba(var(--bright), 0.32);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.62);
     }
 
     .galaxy-brand-title {
@@ -6073,13 +6056,12 @@
       width: 100%;
       padding: 8px 14px 8px 32px;
       border-radius: 999px;
-      border: 1px solid rgba(var(--bright), 0.28);
-      background: rgba(8, 11, 19, 0.82);
+      border: 1px solid rgba(var(--bright), 0.32);
+      background: rgba(7, 10, 18, 0.92);
       color: #fff;
       font-family: var(--font-sans);
       font-size: 12px;
       outline: none;
-      backdrop-filter: blur(12px);
       transition: border-color 0.22s ease, box-shadow 0.22s ease;
     }
 
@@ -6099,15 +6081,14 @@
       gap: 6px;
       padding: 8px 13px;
       border-radius: 999px;
-      border: 1px solid rgba(var(--bright), 0.28);
-      background: rgba(8, 11, 19, 0.82);
+      border: 1px solid rgba(var(--bright), 0.32);
+      background: rgba(7, 10, 18, 0.92);
       color: rgba(var(--light), 0.88);
       font-family: var(--font-mono);
       font-size: 10px;
       font-weight: 600;
       letter-spacing: 1px;
       text-transform: uppercase;
-      backdrop-filter: blur(12px);
       transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.18s ease, background 0.2s ease;
     }
 
@@ -6146,11 +6127,10 @@
       width: 260px;
       padding: 9px 11px;
       border-radius: 13px;
-      background: rgba(8, 11, 19, 0.90);
-      border: 1px solid rgba(var(--bright), 0.42);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.72), 0 0 20px rgba(var(--bright), 0.16);
+      background: rgba(7, 10, 18, 0.95);
+      border: 1px solid rgba(var(--bright), 0.44);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.75);
+      will-change: transform;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -6221,11 +6201,9 @@
       width: 320px;
       max-width: calc(100vw - 36px);
       border-radius: 16px;
-      background: rgba(9, 12, 21, 0.90);
-      border: 1px solid rgba(var(--bright), 0.38);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      box-shadow: 0 20px 52px rgba(0, 0, 0, 0.78), 0 0 26px rgba(var(--bright), 0.16);
+      background: rgba(8, 11, 20, 0.95);
+      border: 1px solid rgba(var(--bright), 0.40);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.82);
       padding: 15px;
       display: flex;
       flex-direction: column;
@@ -6355,11 +6333,9 @@
       flex-wrap: wrap;
       padding: 8px 12px;
       border-radius: 18px;
-      background: rgba(8, 11, 19, 0.82);
-      border: 1px solid rgba(var(--bright), 0.28);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.72);
+      background: rgba(7, 10, 18, 0.93);
+      border: 1px solid rgba(var(--bright), 0.32);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.76);
       max-width: 100%;
     }
 
@@ -7252,6 +7228,280 @@
       }
     }
 
+
+    /* =========================================
+       V17: 60/120 FPS PERFORMANCE CONTAINMENT + PLATFORM MODE (?u=НИК)
+       ========================================= */
+    .waifu-card,
+    .catalog-card,
+    .watching-card,
+    .coop-card,
+    .ht-card {
+      contain: layout style paint;
+    }
+
+    body.galaxy-active .bg-photo,
+    body.overlay-active .bg-photo {
+      animation-play-state: paused;
+    }
+
+    body.galaxy-active .app-shell,
+    body.galaxy-active .music-dock,
+    body.galaxy-active .weather-hud,
+    body.galaxy-active .mobile-dock,
+    body.galaxy-active .film-grain {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Platform Switch Button in Topbar */
+    .platform-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(10, 13, 20, 0.84);
+      border: 1px solid rgba(var(--bright), 0.30);
+      color: rgba(var(--light), 0.90);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+      transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .platform-nav-btn:hover {
+      color: #fff;
+      border-color: rgba(110, 231, 183, 0.82);
+      box-shadow: 0 0 16px rgba(110, 231, 183, 0.24);
+      transform: translateY(-1px);
+    }
+
+    .platform-nav-btn.is-guest-active {
+      background: rgba(110, 231, 183, 0.14);
+      border-color: rgba(110, 231, 183, 0.68);
+      color: #ecfdf5;
+    }
+
+    /* Platform Guest Mode Banner at top of <main> */
+    .platform-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 12px 18px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(110, 231, 183, 0.12), rgba(9, 13, 22, 0.86));
+      border: 1px solid rgba(110, 231, 183, 0.42);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.50);
+    }
+
+    .platform-banner.is-visible {
+      display: flex;
+    }
+
+    .platform-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: rgba(var(--light), 0.86);
+    }
+
+    .platform-banner-left strong {
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .platform-banner-tag {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(110, 231, 183, 0.16);
+      border: 1px solid rgba(110, 231, 183, 0.45);
+      color: #a7f3d0;
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .platform-banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .platform-banner-actions .base-action-btn {
+      padding: 7px 13px;
+      font-size: 9.5px;
+    }
+
+    /* Guest Pass Card (replaces host Discord card in ?u=NICK mode) */
+    .guest-pass-card {
+      display: none;
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(110, 231, 183, 0.08), var(--glass-bg));
+      border: 1px solid rgba(110, 231, 183, 0.34);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    body.is-guest-archive #discord-card {
+      display: none;
+    }
+
+    body.is-guest-archive .guest-pass-card {
+      display: flex;
+    }
+
+    body.is-guest-archive .host-only-social {
+      display: none;
+    }
+
+    .guest-pass-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .guest-pass-kicker {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: #6ee7b7;
+    }
+
+    .guest-pass-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .guest-pass-sub {
+      font-size: 11.5px;
+      color: rgba(var(--light), 0.72);
+    }
+
+    .guest-pass-btns {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .guest-pass-btns .base-action-btn {
+      padding: 7px 12px;
+      font-size: 9.5px;
+    }
+
+    /* Quick Profile Switcher Modal */
+    .pswitch-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 615;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(4, 6, 11, 0.84);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s ease;
+    }
+
+    .pswitch-backdrop.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .pswitch-card {
+      position: relative;
+      width: 100%;
+      max-width: 490px;
+      border-radius: 20px;
+      background: rgba(10, 13, 21, 0.96);
+      border: 1px solid rgba(var(--bright), 0.38);
+      box-shadow: 0 26px 68px rgba(0, 0, 0, 0.84), 0 0 34px rgba(var(--bright), 0.16);
+      padding: 22px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transform: translateY(14px) scale(0.97);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .pswitch-backdrop.is-open .pswitch-card {
+      transform: none;
+    }
+
+    .pswitch-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.25;
+      padding-right: 28px;
+    }
+
+    .pswitch-desc {
+      font-size: 12.5px;
+      color: rgba(var(--light), 0.72);
+      line-height: 1.48;
+    }
+
+    .pswitch-perks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .pswitch-form {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .pswitch-form .base-input-wrap {
+      min-width: 210px;
+    }
+
+    .pswitch-footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 10px;
+      border-top: 1px solid rgba(var(--bright), 0.14);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(var(--light), 0.56);
+    }
+
+    @media (max-width: 640px) {
+      .platform-nav-btn .p-text-full {
+        display: none;
+      }
+    }
+
     /* =========================================
        NATIVE SVG ARROW CURSOR (MONOCHROME THEME)
        ========================================= */
@@ -7310,7 +7560,8 @@
       .coop-pick-btn,
       .coop-circle-btn,
       .coop-instant-btn,
-      .coop-match-alt-btn {
+      .coop-match-alt-btn,
+      .platform-nav-btn {
         cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23edf3ff%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%271.35%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M16.5%2015.2%20L19.8%2018.5%20L16.5%2021.8%20L13.2%2018.5%20Z%27%20fill%3D%27%23adbfde%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%270.9%27/%3E%3C/svg%3E") 3 2, pointer !important;
       }
 
@@ -7370,8 +7621,8 @@
   <div class="intro-overlay" id="intro-overlay" role="dialog" aria-label="Экран входа">
     <div class="intro-core">
       <div class="intro-orb" aria-hidden="true"><span>◈</span></div>
-      <div class="intro-title">undexeror // archive</div>
-      <div class="intro-sub">undereror · 53.9° N · monochrome worldline</div>
+      <div class="intro-title" id="intro-title">undexeror // archive</div>
+      <div class="intro-sub" id="intro-sub">undereror · 53.9° N · monochrome worldline</div>
       <button type="button" class="intro-enter-btn" id="intro-enter-btn">[ CLICK TO ENTER ]</button>
     </div>
     <button type="button" class="intro-mute-btn" id="intro-mute-btn">войти без звука</button>
@@ -7417,6 +7668,10 @@
             <span class="g-star" aria-hidden="true">✦</span>
             <span>3D<span class="g-text-full"> Космос</span></span>
           </button>
+          <button type="button" class="platform-nav-btn" id="open-platform-btn" title="Примерить весь сайт на свой профиль Shikimori (?u=НИК)">
+            <span aria-hidden="true">◎</span>
+            <span id="platform-nav-label">Свой<span class="p-text-full"> профиль</span></span>
+          </button>
           <button type="button" class="audio-btn" id="audio-toggle-btn" title="Play / Pause плейлист">
             <span id="audio-icon">▶</span>
             <span class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
@@ -7427,13 +7682,26 @@
     </header>
 
     <main class="container">
+      <!-- V17 Platform Mode Guest Banner (?u=НИК) -->
+      <div class="platform-banner" id="platform-banner" role="region" aria-label="Режим чужого профиля">
+        <div class="platform-banner-left">
+          <span class="platform-banner-tag">◎ РЕЖИМ ПЛАТФОРМЫ</span>
+          <span>Архив собран для <strong id="platform-banner-nick">—</strong></span>
+        </div>
+        <div class="platform-banner-actions">
+          <button type="button" class="base-action-btn is-primary" id="platform-copy-link-btn">⎘ Скопировать мою ссылку</button>
+          <button type="button" class="base-action-btn" id="platform-change-btn">◎ Другой ник</button>
+          <button type="button" class="base-action-btn" id="platform-back-host-btn">← К undereror</button>
+        </div>
+      </div>
+
       <!-- HERO BENTO COMMAND DECK & ANIME-DNA -->
       <section class="hero" id="profile">
         <div class="bento-deck">
           <!-- TILE 1: PILOT DOSSIER -->
           <div class="glass-card bento-pilot">
             <div class="pilot-top-bar">
-              <span class="pilot-id-tag">DOSSIER // 1308586</span>
+              <span class="pilot-id-tag" id="pilot-id-tag">DOSSIER // 1308586</span>
               <button type="button" class="pilot-weather-chip" id="pilot-weather-chip" title="Погода в точке 53.9° N (нажми для переключения режима)">53.9° N · SYNC...</button>
             </div>
 
@@ -7458,10 +7726,11 @@
             </div>
 
             <div class="pilot-socials">
-              <a class="social-pill" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">♪ TikTok</a>
+              <a class="social-pill host-only-social" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">♪ TikTok</a>
               <a class="social-pill" id="shiki-profile-link" href="https://shikimori.one/undereror+nyashka" target="_blank" rel="noopener noreferrer">◈ Shikimori</a>
-              <a class="social-pill" href="https://github.com/undexerorrr" target="_blank" rel="noopener noreferrer">⌘ GitHub</a>
-              <button type="button" class="social-pill" id="hero-spotify-btn" style="font-family:inherit;">♫ Spotify</button>
+              <a class="social-pill host-only-social" href="https://github.com/undexerorrr" target="_blank" rel="noopener noreferrer">⌘ GitHub</a>
+              <button type="button" class="social-pill host-only-social" id="hero-spotify-btn" style="font-family:inherit;">♫ Spotify</button>
+              <button type="button" class="social-pill" id="hero-try-profile-btn" style="font-family:inherit;">◎ Примерить свой ник</button>
             </div>
           </div>
 
@@ -7487,6 +7756,19 @@
               </div>
               <div class="discord-actions">
                 <button type="button" class="spotify-open-pill" id="discord-spotify-btn">♫ Плейлисты</button>
+              </div>
+            </div>
+            <!-- Guest Archive Quick Actions Card (visible in ?u=NICK mode) -->
+            <div class="guest-pass-card" id="guest-pass-card">
+              <div class="guest-pass-info">
+                <span class="guest-pass-kicker">● SHIKIMORI ARCHIVE // LIVE MIRROR</span>
+                <div class="guest-pass-title" id="guest-pass-title">Архив гостя</div>
+                <div class="guest-pass-sub">Все блоки — ДНК, Hot Takes, 3D-карты и 3D-Галактика — перестроены под этот профиль.</div>
+              </div>
+              <div class="guest-pass-btns">
+                <button type="button" class="base-action-btn is-primary" id="guest-pass-match-btn">◈ База с undereror</button>
+                <button type="button" class="base-action-btn" id="guest-pass-coop-btn">🎬 Кооп</button>
+                <button type="button" class="base-action-btn" id="guest-pass-copy-btn">⎘ Ссылка</button>
               </div>
             </div>
           </div>
@@ -8426,6 +8708,40 @@
     <div class="holo-kbd-hint">Двигай мышкой для 3D-голограммы · Клик / Пробел — переворот · ← / → — листать колоду</div>
   </div>
 
+  <!-- V17 Platform Mode Switcher Modal (?u=НИК) -->
+  <div class="pswitch-backdrop" id="profile-switch-modal" aria-hidden="true">
+    <div class="pswitch-card" role="dialog" aria-modal="true" aria-label="Примерить архив на свой ник Shikimori">
+      <button type="button" class="modal-close" id="pswitch-close" aria-label="Закрыть">×</button>
+      <div class="base-title-row">
+        <span class="dna-pulse-icon" style="background:#6ee7b7;box-shadow:0 0 12px rgba(110,231,183,0.9);" aria-hidden="true"></span>
+        <span class="card-kicker" style="color:#a7f3d0;letter-spacing:2.2px;">Platform Mode // ?u=НИК</span>
+      </div>
+      <h3 class="pswitch-title">Примерить весь сайт на свой профиль Shikimori</h3>
+      <p class="pswitch-desc">Вбей свой ник или вставь ссылку на профиль — за пару секунд весь архив перестроится под тебя: твоё Аниме-ДНК, Hot Takes, избранное, 3D-карты, рулетка и 3D-Галактика.</p>
+      <div class="pswitch-perks">
+        <span class="vibe-tag">#Аниме-ДНК</span>
+        <span class="vibe-tag">#Hot Takes</span>
+        <span class="vibe-tag">#3D-Галактика</span>
+        <span class="vibe-tag">#Твоя ссылка ?u=</span>
+      </div>
+      <form class="pswitch-form" id="pswitch-form" autocomplete="off">
+        <div class="base-input-wrap">
+          <span class="base-input-icon" style="color:#6ee7b7;">◎</span>
+          <input type="text" class="base-input" id="pswitch-input" placeholder="Ник на Shikimori или ссылка на профиль..." aria-label="Ник на Shikimori" />
+        </div>
+        <button type="submit" class="base-submit-btn" id="pswitch-submit" style="border-color:rgba(110,231,183,0.68);">✦ Собрать</button>
+      </form>
+      <div class="base-status-line" id="pswitch-status" role="status" aria-live="polite">
+        <span class="base-spinner" id="pswitch-spinner"></span>
+        <span id="pswitch-status-text">Подгружаю профиль...</span>
+      </div>
+      <div class="pswitch-footer-row">
+        <span>Делись ссылкой: undexerorrr.github.io/?u=НИК</span>
+        <button type="button" class="base-action-btn" id="pswitch-reset-host-btn" style="padding:5px 11px;font-size:9.5px;display:none;">← Вернуть undereror</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Detail Modal -->
   <div class="modal-backdrop" id="detail-modal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true">
@@ -8595,7 +8911,7 @@
         ]
       };
 
-      const PEAK_FICTION = [
+      const HOST_PEAK_FICTION = [
         { rank: 1,  malId: 21,    title: 'Ван-Пис', kind: 'TV Сериал', year: 1999, score: 8.84, note: 'Абсолютная эпопея о свободе и масштабе мира, к которой хочется возвращаться снова и снова.', vibes: ['#эпопея', '#свобода', '#масштаб'] },
         { rank: 2,  malId: 9253,  title: 'Врата Штейна', kind: 'TV Сериал', year: 2011, score: 8.84, note: '10/10. Безупречная драматургия мировых линий, саспенс и эмоциональный пик.', vibes: ['#таймлуп', '#саспенс', '#10/10'] },
         { rank: 3,  malId: 16498, title: 'Атака титанов', kind: 'TV Сериал', year: 2013, score: 8.59, note: 'Жёсткая трагедия о выборе, свободе и цене идеалов без единой проходной арки.', vibes: ['#трагедия', '#выбор', '#эпик'] },
@@ -8614,7 +8930,7 @@
         { rank: 16, malId: 33,    title: 'Берсерк', kind: 'TV Сериал', year: 1997, score: 8.86, note: 'Мрачная классика тёмного фэнтези о воле, амбициях и неизбежном затмении.', vibes: ['#дарк-фэнтези', '#воля', '#затмение'] }
       ];
 
-      const WAIFU_LIST = [
+      const HOST_WAIFU_LIST = [
         { rank: 1,  key: 'w1',  name: 'C.C.', search: 'C.C.', anime: 'Code Geass' },
         { rank: 2,  key: 'w2',  name: 'Крул Цепеш', search: 'Krul Tepes', anime: 'Owari no Seraph' },
         { rank: 3,  key: 'w3',  name: 'Резе', search: 'Reze', anime: 'Chainsaw Man' },
@@ -8632,7 +8948,7 @@
         { rank: 15, key: 'w15', name: 'Тока Киришима', search: 'Touka Kirishima', anime: 'Tokyo Ghoul' }
       ];
 
-      const LITERALLY_ME = [
+      const HOST_LITERALLY_ME = [
         { rank: 1,  key: 'l1',  name: 'Эрен Йегер', search: 'Eren Yeager', anime: 'Attack on Titan' },
         { rank: 2,  key: 'l2',  name: 'Лелуш Ламперуж', search: 'Lelouch Lamperouge', anime: 'Code Geass' },
         { rank: 3,  key: 'l3',  name: 'Кэн Канэки', search: 'Ken Kaneki', anime: 'Tokyo Ghoul' },
@@ -8650,6 +8966,12 @@
         { rank: 15, key: 'l15', name: 'Габимару', search: 'Gabimaru', anime: "Hell's Paradise" },
         { rank: 16, key: 'l16', name: 'Сэйсиро Наги', search: 'Seishirou Nagi', anime: 'Blue Lock' }
       ];
+
+      let PEAK_FICTION = HOST_PEAK_FICTION.map((x) => ({ ...x }));
+      let WAIFU_LIST = HOST_WAIFU_LIST.map((x) => ({ ...x }));
+      let LITERALLY_ME = HOST_LITERALLY_ME.map((x) => ({ ...x }));
+      let activeProfileNickname = SHIKI_NICKNAME;
+      let isGuestArchiveMode = false;
 
       /* =========================================
          STATE & CACHE HELPERS
@@ -9240,7 +9562,9 @@
 
         // Visualizer + Beat-Reactive Avatar Ring Loop
         let smoothBeat = 0;
+        let lastWrittenBeat = -1;
         let fallbackPhase = 0;
+        const avatarBeatHost = document.querySelector('.avatar-wrap');
 
         function visualizerFrame() {
           let targetEnergy = 0;
@@ -9298,7 +9622,12 @@
 
           smoothBeat += (targetEnergy - smoothBeat) * (targetEnergy > smoothBeat ? 0.38 : 0.14);
           liveBeatEnergy = smoothBeat;
-          document.documentElement.style.setProperty('--beat-energy', smoothBeat.toFixed(3));
+          if (Math.abs(smoothBeat - lastWrittenBeat) > 0.004) {
+            lastWrittenBeat = smoothBeat;
+            const bStr = smoothBeat.toFixed(3);
+            if (avatarBeatHost) avatarBeatHost.style.setProperty('--beat-energy', bStr);
+            if (dock) dock.style.setProperty('--beat-energy', bStr);
+          }
 
           requestAnimationFrame(visualizerFrame);
         }
@@ -9363,7 +9692,7 @@
         let nextLightningAt = performance.now() + 4500;
 
         function resize() {
-          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
           w = window.innerWidth;
           h = window.innerHeight;
           canvas.width = w * dpr;
@@ -9436,7 +9765,23 @@
 
         resize();
 
+        function isHeavyOverlayOpen() {
+          return (
+            document.hidden ||
+            document.body.classList.contains('galaxy-active') ||
+            document.getElementById('holo-modal')?.classList.contains('is-open') ||
+            document.getElementById('detail-modal')?.classList.contains('is-open') ||
+            document.getElementById('arena-modal')?.classList.contains('is-open') ||
+            document.getElementById('coop-modal')?.classList.contains('is-open') ||
+            document.getElementById('profile-switch-modal')?.classList.contains('is-open')
+          );
+        }
+
         function frame(now) {
+          if (isHeavyOverlayOpen()) {
+            requestAnimationFrame(frame);
+            return;
+          }
           ctx.clearRect(0, 0, w, h);
           const mode = weatherEngineState.activeMode || 'clear';
           const beatBoost = 1 + liveBeatEnergy * 1.15;
@@ -9762,9 +10107,19 @@
         }
 
         const badge = document.getElementById('rank-badge');
-        if (badge && completed >= 400) {
-          const milestone = Math.floor(completed / 50) * 50;
-          badge.textContent = `★ ${milestone}+ ТАЙТЛОВ · АНИМЕ ПСИХ`;
+        if (badge) {
+          if (completed >= 400) {
+            const milestone = Math.floor(completed / 50) * 50;
+            badge.textContent = `★ ${milestone}+ ТАЙТЛОВ · АНИМЕ ПСИХ`;
+          } else if (completed >= 250) {
+            badge.textContent = `★ ${completed} ТАЙТЛОВ · АРХИВАРИУС`;
+          } else if (completed >= 100) {
+            badge.textContent = `★ ${completed} ТАЙТЛОВ · ВЕТЕРАН`;
+          } else if (completed >= 30) {
+            badge.textContent = `★ ${completed} ТАЙТЛОВ · ОТАКУ`;
+          } else {
+            badge.textContent = `★ ${completed} ТАЙТЛОВ · СТАРТ АРХИВА`;
+          }
         }
       }
 
@@ -10448,7 +10803,7 @@
           ctx.fillText('ПРОВЕРЬ СВОЮ БАЗУ  →  https://undexerorrr.github.io/', 62, H - 46);
           ctx.textAlign = 'right';
           ctx.fillStyle = 'rgba(173, 191, 222, 0.65)';
-          ctx.fillText('undereror nyashka · undexeror // archive', W - 62, H - 46);
+          ctx.fillText(`${activeProfileNickname} · undexeror // archive`, W - 62, H - 46);
 
           const link = document.createElement('a');
           link.download = 'undexeror-hot-takes.png';
@@ -10476,10 +10831,12 @@
                 img: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : ''
               };
             });
-          myRatesIndex = new Map(compactRates.map((x) => [x.id, x]));
-          localStorage.setItem(MY_RATES_CACHE_KEY, JSON.stringify({ ts: Date.now(), rates: compactRates }));
-          const readyBadge = document.getElementById('base-host-ready-badge');
-          if (readyBadge) readyBadge.textContent = `БАЗА ГОТОВА · ${compactRates.length} ТАЙТЛОВ`;
+          if (!isGuestArchiveMode) {
+            myRatesIndex = new Map(compactRates.map((x) => [x.id, x]));
+            localStorage.setItem(MY_RATES_CACHE_KEY, JSON.stringify({ ts: Date.now(), rates: compactRates }));
+            const readyBadge = document.getElementById('base-host-ready-badge');
+            if (readyBadge) readyBadge.textContent = `БАЗА ГОТОВА · ${compactRates.length} ТАЙТЛОВ`;
+          }
         } catch (e) {}
 
         const scoreCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 };
@@ -10564,11 +10921,11 @@
 
         animeDnaState = baseDna;
         renderAnimeDna(animeDnaState);
-        saveDnaCache(animeDnaState);
+        if (!isGuestArchiveMode) saveDnaCache(animeDnaState);
 
         // Hydrate real Top Genres & Top Studios from AniList (top 100 highest-rated completed titles)
         // Skip re-fetching AniList if cached live genres/studios are fresh (< 12h)
-        const hasFreshMeta = prev && prev.isLive && prev.metaUpdatedAt && (Date.now() - prev.metaUpdatedAt < 12 * 3600 * 1000) && prev.genres?.length && prev.studios?.length;
+        const hasFreshMeta = !isGuestArchiveMode && prev && prev.isLive && prev.metaUpdatedAt && (Date.now() - prev.metaUpdatedAt < 12 * 3600 * 1000) && prev.genres?.length && prev.studios?.length;
         if (hasFreshMeta) {
           animeDnaState.metaUpdatedAt = prev.metaUpdatedAt;
           saveDnaCache(animeDnaState);
@@ -10655,7 +11012,7 @@
           }
 
           animeDnaState.metaUpdatedAt = Date.now();
-          saveDnaCache(animeDnaState);
+          if (!isGuestArchiveMode) saveDnaCache(animeDnaState);
           renderAnimeDna(animeDnaState);
         } catch (e) {
           console.warn('AniList DNA meta sync failed:', e);
@@ -10842,14 +11199,24 @@
         let rafPending = false;
         let lastX = -9999;
         let lastY = -9999;
+        let cachedSurfaces = [];
+        let lastCacheAt = 0;
 
         function updateSurfaces() {
           rafPending = false;
-          const surfaces = document.querySelectorAll(SELECTOR);
-          for (let i = 0; i < surfaces.length; i++) {
-            const el = surfaces[i];
+          if (document.body.classList.contains('galaxy-active') || document.getElementById('holo-modal')?.classList.contains('is-open')) {
+            return;
+          }
+          const now = performance.now();
+          if (!cachedSurfaces.length || now - lastCacheAt > 1800) {
+            cachedSurfaces = Array.from(document.querySelectorAll(SELECTOR));
+            lastCacheAt = now;
+          }
+          const vh = window.innerHeight;
+          for (let i = 0; i < cachedSurfaces.length; i++) {
+            const el = cachedSurfaces[i];
             const rect = el.getBoundingClientRect();
-            if (rect.width === 0 || rect.height === 0) continue;
+            if (rect.width === 0 || rect.height === 0 || rect.bottom < -PROXIMITY || rect.top > vh + PROXIMITY) continue;
 
             const withinX = lastX >= rect.left - PROXIMITY && lastX <= rect.right + PROXIMITY;
             const withinY = lastY >= rect.top - PROXIMITY && lastY <= rect.bottom + PROXIMITY;
@@ -10857,8 +11224,12 @@
             if (withinX && withinY) {
               el.style.setProperty('--spot-x', (lastX - rect.left).toFixed(1) + 'px');
               el.style.setProperty('--spot-y', (lastY - rect.top).toFixed(1) + 'px');
-              el.style.setProperty('--spot-o', '1');
-            } else if (el.style.getPropertyValue('--spot-o') !== '0') {
+              if (el.dataset.spotOn !== '1') {
+                el.dataset.spotOn = '1';
+                el.style.setProperty('--spot-o', '1');
+              }
+            } else if (el.dataset.spotOn === '1') {
+              el.dataset.spotOn = '0';
               el.style.setProperty('--spot-o', '0');
             }
           }
@@ -10913,6 +11284,7 @@
 
         wrap.scrollLeft = 0;
         attachImageHandlers(wrap);
+        if (typeof updateWaifuNavRef === 'function') requestAnimationFrame(updateWaifuNavRef);
 
         wrap.querySelectorAll('.waifu-card').forEach((card) => {
           card.addEventListener('click', () => {
@@ -10924,6 +11296,8 @@
         });
       }
 
+      let updateWaifuNavRef = null;
+
       function initWaifuControls() {
         const slider = document.getElementById('waifu-carousel');
         const prevBtn = document.getElementById('waifu-prev');
@@ -10931,20 +11305,34 @@
         const counter = document.getElementById('waifu-counter');
         if (!slider) return;
 
-        const stepPx = 148 * 3; // 3 cards per arrow click
+        const stepPx = 148 * 3;
+        let cachedClientW = slider.clientWidth || 1;
+        let cachedMaxScroll = Math.max(0, slider.scrollWidth - cachedClientW);
+        let navRaf = false;
+        let scrollEndTimer = null;
 
-        function updateNavState() {
-          const maxScroll = Math.max(0, slider.scrollWidth - slider.clientWidth);
-          if (prevBtn) prevBtn.disabled = slider.scrollLeft <= 4;
-          if (nextBtn) nextBtn.disabled = slider.scrollLeft >= maxScroll - 4;
+        function measureMetrics() {
+          cachedClientW = slider.clientWidth || 1;
+          cachedMaxScroll = Math.max(0, slider.scrollWidth - cachedClientW);
+        }
+
+        function updateNavState(remeasure) {
+          navRaf = false;
+          if (remeasure) measureMetrics();
+          const sl = slider.scrollLeft;
+          const total = Math.max(1, WAIFU_LIST.length);
+          if (prevBtn) prevBtn.disabled = sl <= 4;
+          if (nextBtn) nextBtn.disabled = sl >= cachedMaxScroll - 4;
 
           if (counter) {
-            const firstIdx = Math.min(WAIFU_LIST.length, Math.max(1, Math.round(slider.scrollLeft / 148) + 1));
-            const visibleCount = Math.max(1, Math.floor((slider.clientWidth + 16) / 148));
-            const lastIdx = Math.min(WAIFU_LIST.length, firstIdx + visibleCount - 1);
-            counter.textContent = `${formatRank(firstIdx)}–${formatRank(lastIdx)} / ${formatRank(WAIFU_LIST.length)}`;
+            const firstIdx = Math.min(total, Math.max(1, Math.round(sl / 148) + 1));
+            const visibleCount = Math.max(1, Math.floor((cachedClientW + 16) / 148));
+            const lastIdx = Math.min(total, firstIdx + visibleCount - 1);
+            counter.textContent = `${formatRank(firstIdx)}–${formatRank(lastIdx)} / ${formatRank(total)}`;
           }
         }
+
+        updateWaifuNavRef = () => updateNavState(true);
 
         prevBtn?.addEventListener('click', () => {
           slider.scrollBy({ left: -stepPx, behavior: 'smooth' });
@@ -10954,8 +11342,16 @@
           slider.scrollBy({ left: stepPx, behavior: 'smooth' });
         });
 
-        slider.addEventListener('scroll', updateNavState, { passive: true });
-        window.addEventListener('resize', updateNavState);
+        slider.addEventListener('scroll', () => {
+          if (!slider.classList.contains('is-scrolling')) slider.classList.add('is-scrolling');
+          clearTimeout(scrollEndTimer);
+          scrollEndTimer = setTimeout(() => slider.classList.remove('is-scrolling'), 130);
+          if (!navRaf) {
+            navRaf = true;
+            requestAnimationFrame(() => updateNavState(false));
+          }
+        }, { passive: true });
+        window.addEventListener('resize', () => updateNavState(true));
 
         // Mouse drag support
         let isDown = false;
@@ -11815,7 +12211,7 @@
 
           if (parsedWatching.length) {
             watchingList = parsedWatching;
-            saveWatchingCache();
+            if (!isGuestArchiveMode) saveWatchingCache();
             renderWatchingShelf(watchingList);
             loadAnimeCoversBatch(parsedWatching.map((x) => x.malId));
           }
@@ -11901,7 +12297,7 @@
 
         if (extracted.length) {
           ratedAnimePool = extracted;
-          saveRatedPoolCache();
+          if (!isGuestArchiveMode) saveRatedPoolCache();
           updateRandomizerPoolCounts();
         }
 
@@ -11909,7 +12305,7 @@
         const computedTakes = computeHotTakesFromRates(allRates);
         if (computedTakes) {
           hotTakesState = computedTakes;
-          saveHotTakesCache(hotTakesState);
+          if (!isGuestArchiveMode) saveHotTakesCache(hotTakesState);
           renderHotTakes(hotTakesState, false);
         }
 
@@ -11974,7 +12370,7 @@
 
         if (builtGalaxy.length) {
           galaxyNodes = builtGalaxy;
-          saveGalaxyCache(galaxyNodes);
+          if (!isGuestArchiveMode) saveGalaxyCache(galaxyNodes);
           if (typeof galaxyRefreshHook === 'function') galaxyRefreshHook();
         }
 
@@ -12002,7 +12398,7 @@
               url: a.url ? normalizeShikiUrl(a.url, activeShikiOrigin) : `${activeShikiOrigin}/animes/${id}`
             });
           });
-          if (compactAll.length) {
+          if (compactAll.length && !isGuestArchiveMode) {
             hostFullRates = compactAll;
             saveHostFullRatesCache(hostFullRates);
           }
@@ -13916,25 +14312,52 @@
           const winner = pickRandomAnime(pool, lastMalId);
           lastMalId = winner.malId;
 
+          // Open modal cleanly once, then spin using ONLY already-cached posters (zero decode lag!)
+          const cachedPool = pool.filter((a) => Boolean(coverCache['anime_' + a.malId]));
+          const spinPool = cachedPool.length >= 4 ? cachedPool : pool;
+
+          // Warm winner cover in background while roulette spins
+          const winnerCachedUrl = coverCache['anime_' + winner.malId] || winner.shikiImg || '';
+          if (winnerCachedUrl) {
+            const pre = new Image();
+            pre.src = winnerCachedUrl;
+          } else if (winner.malId) {
+            loadAnimeCoversBatch([winner.malId]);
+          }
+
+          const firstFrame = pickRandomAnime(spinPool, winner.malId);
+          showAnimeInModal(firstFrame, false);
+
           if (modalCard) {
             modalCard.classList.remove('is-rolled');
             modalCard.classList.add('is-rolling');
           }
 
-          const delays = [45, 55, 65, 78, 95, 115, 140, 170];
-          let prevTemp = null;
+          const titleEl = document.getElementById('modal-title');
+          const subEl = document.getElementById('modal-sub');
+          const imgEl = document.getElementById('modal-img');
+          const delays = [52, 62, 76, 94, 118, 150];
+          let prevTemp = firstFrame.malId;
+
           for (const d of delays) {
-            const temp = pickRandomAnime(pool, prevTemp);
-            prevTemp = temp.malId;
-            showAnimeInModal(temp, false);
             await sleep(d);
+            if (!modalBackdrop || !modalBackdrop.classList.contains('is-open')) {
+              isRolling = false;
+              return;
+            }
+            const temp = pickRandomAnime(spinPool, prevTemp);
+            prevTemp = temp.malId;
+            if (titleEl) titleEl.textContent = temp.title;
+            if (subEl) subEl.textContent = [temp.kind, temp.year].filter(Boolean).join(' · ');
+            const tImg = coverCache['anime_' + temp.malId] || temp.shikiImg || '';
+            if (imgEl && tImg && imgEl.getAttribute('src') !== tImg) imgEl.src = tImg;
           }
 
+          await sleep(165);
           showAnimeInModal(winner, true);
           if (modalCard) {
             modalCard.classList.remove('is-rolling');
-            void modalCard.offsetWidth;
-            modalCard.classList.add('is-rolled');
+            requestAnimationFrame(() => modalCard.classList.add('is-rolled'));
           }
           isRolling = false;
         }
@@ -14412,7 +14835,7 @@
             depthWrite: false,
             blending: THREE_LIB.AdditiveBlending,
             uniforms: {
-              uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 2) },
+              uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 1.5) },
               uTime: { value: 0 },
               uBeat: { value: 0 },
               uFocusIdx: { value: -1 }
@@ -14443,7 +14866,7 @@
                 float beatScale = 1.0 + uBeat * (0.28 + aSpike * 0.40);
                 float focusScale = 1.0 + vFocus * 0.72;
                 float dist = max(18.0, -mvPosition.z);
-                gl_PointSize = clamp((aSize * twinkle * beatScale * focusScale * uPixelRatio * 140.0) / dist, 2.5, 92.0);
+                gl_PointSize = clamp((aSize * twinkle * beatScale * focusScale * uPixelRatio * 126.0) / dist, 2.4, 52.0);
                 gl_Position = projectionMatrix * mvPosition;
               }
             `,
@@ -14574,10 +14997,11 @@
 
         function initThreeScene() {
           const T = THREE_LIB;
-          renderer = new T.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+          const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+          renderer = new T.WebGLRenderer({ antialias: dpr <= 1.25, alpha: false, powerPreference: 'high-performance' });
+          renderer.setPixelRatio(dpr);
           renderer.setSize(window.innerWidth, window.innerHeight);
-          renderer.setClearColor(0x000000, 0);
+          renderer.setClearColor(0x04060c, 1);
           canvasWrap.innerHTML = '';
           canvasWrap.appendChild(renderer.domElement);
 
@@ -14587,7 +15011,7 @@
           camera = new T.PerspectiveCamera(56, window.innerWidth / window.innerHeight, 1, 1400);
 
           // 1. Background cosmic dust cloud (1,700 subtle stars)
-          const dustCount = 1700;
+          const dustCount = 900;
           const dustPos = new Float32Array(dustCount * 3);
           const dustCol = new Float32Array(dustCount * 3);
           for (let i = 0; i < dustCount; i++) {
@@ -14667,12 +15091,16 @@
           populateGalaxyScene();
         }
 
-        // Hit-test nearest visible star in screen space (super crisp & responsive)
+        let reusableProjVec = null;
+        let lastHoverCheckAt = 0;
+
+        // Hit-test nearest visible star in screen space (zero GC allocation)
         function findNearestStarAt(clientX, clientY, maxPx) {
           if (!camera || !currentPos || !activeNodes.length) return -1;
           const w = window.innerWidth;
           const h = window.innerHeight;
-          const v = new THREE_LIB.Vector3();
+          if (!reusableProjVec) reusableProjVec = new THREE_LIB.Vector3();
+          const v = reusableProjVec;
           let bestIdx = -1;
           let bestDistSq = maxPx * maxPx;
 
@@ -14733,7 +15161,8 @@
           if (!camera || !THREE_LIB) return;
           const w = window.innerWidth;
           const h = window.innerHeight;
-          const proj = new THREE_LIB.Vector3();
+          if (!reusableProjVec) reusableProjVec = new THREE_LIB.Vector3();
+          const proj = reusableProjVec;
 
           // Cluster labels
           for (let i = 0; i < clusterAnchors.length; i++) {
@@ -14884,8 +15313,11 @@
             return;
           }
 
-          // Desktop hover snap
+          // Desktop hover snap (throttled to ~30Hz to keep orbit silky smooth)
           if (e.pointerType !== 'touch') {
+            const nowTs = performance.now();
+            if (nowTs - lastHoverCheckAt < 32) return;
+            lastHoverCheckAt = nowTs;
             const hit = findNearestStarAt(e.clientX, e.clientY, 20);
             if (hit !== hoveredIdx) {
               hoveredIdx = hit;
@@ -14927,7 +15359,7 @@
           camera.aspect = window.innerWidth / window.innerHeight;
           camera.updateProjectionMatrix();
           renderer.setSize(window.innerWidth, window.innerHeight);
-          if (starMat) starMat.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 2);
+          if (starMat) starMat.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 1.5);
         });
 
         async function openGalaxy() {
@@ -14935,6 +15367,7 @@
           isOpen = true;
           overlay.classList.add('is-open');
           overlay.setAttribute('aria-hidden', 'false');
+          document.body.classList.add('galaxy-active');
           document.body.style.overflow = 'hidden';
 
           if (!renderer && !isBooting) {
@@ -14976,6 +15409,7 @@
           isOpen = false;
           overlay.classList.remove('is-open');
           overlay.setAttribute('aria-hidden', 'true');
+          document.body.classList.remove('galaxy-active');
           document.body.style.overflow = '';
           updateHoverTooltip(-1, 0, 0);
           if (rafId) {
@@ -16114,6 +16548,525 @@
         };
       }
 
+
+      /* =========================================
+         V17: PLATFORM MODE (?u=НИК) — TRY ARCHIVE ON ANY SHIKIMORI PROFILE
+         ========================================= */
+      function initPlatformMode() {
+        const topBtn = document.getElementById('open-platform-btn');
+        const topBtnLabel = document.getElementById('platform-nav-label');
+        const heroTryBtn = document.getElementById('hero-try-profile-btn');
+        const banner = document.getElementById('platform-banner');
+        const bannerNick = document.getElementById('platform-banner-nick');
+        const copyLinkBtn = document.getElementById('platform-copy-link-btn');
+        const changeBtn = document.getElementById('platform-change-btn');
+        const backHostBtn = document.getElementById('platform-back-host-btn');
+
+        const guestPassTitle = document.getElementById('guest-pass-title');
+        const guestPassMatchBtn = document.getElementById('guest-pass-match-btn');
+        const guestPassCoopBtn = document.getElementById('guest-pass-coop-btn');
+        const guestPassCopyBtn = document.getElementById('guest-pass-copy-btn');
+
+        const modal = document.getElementById('profile-switch-modal');
+        const modalClose = document.getElementById('pswitch-close');
+        const form = document.getElementById('pswitch-form');
+        const input = document.getElementById('pswitch-input');
+        const submitBtn = document.getElementById('pswitch-submit');
+        const statusLine = document.getElementById('pswitch-status');
+        const spinner = document.getElementById('pswitch-spinner');
+        const statusText = document.getElementById('pswitch-status-text');
+        const resetHostBtn = document.getElementById('pswitch-reset-host-btn');
+
+        function sanitizeNick(raw) {
+          let s = String(raw || '').trim();
+          if (!s) return '';
+          s = s.replace(/^https?:\/\/(www\.)?shikimori\.(one|io|me|org)\//i, '');
+          s = s.split(/[/?#]/)[0];
+          s = s.replace(/^@+/, '');
+          try { s = decodeURIComponent(s.replace(/\+/g, ' ')); }
+          catch (e) { s = s.replace(/\+/g, ' '); }
+          return s.trim();
+        }
+
+        function setSwitchStatus(msg, mode) {
+          if (!statusLine || !statusText) return;
+          if (!msg) {
+            statusLine.classList.remove('is-visible', 'is-error');
+            return;
+          }
+          statusLine.classList.add('is-visible');
+          statusLine.classList.toggle('is-error', mode === 'error');
+          if (spinner) spinner.style.display = mode === 'loading' ? 'inline-block' : 'none';
+          statusText.textContent = msg;
+        }
+
+        function openSwitchModal() {
+          if (!modal) return;
+          if (resetHostBtn) resetHostBtn.style.display = isGuestArchiveMode ? 'inline-flex' : 'none';
+          setSwitchStatus('', '');
+          modal.classList.add('is-open');
+          modal.setAttribute('aria-hidden', 'false');
+          setTimeout(() => input?.focus(), 60);
+        }
+
+        function closeSwitchModal() {
+          modal?.classList.remove('is-open');
+          modal?.setAttribute('aria-hidden', 'true');
+        }
+
+        function buildShareUrl(nick) {
+          const base = `${location.origin}${location.pathname}`;
+          if (!nick || nick.toLowerCase() === SHIKI_NICKNAME.toLowerCase()) return base;
+          return `${base}?u=${encodeURIComponent(nick)}`;
+        }
+
+        function updateUrlParam(nick) {
+          try {
+            const url = buildShareUrl(nick);
+            window.history.replaceState({}, '', url);
+          } catch (e) {}
+        }
+
+        function estimateLifetimeText(totalEps) {
+          const hours = Math.round((Number(totalEps) || 0) * 24 / 60);
+          const days = Math.floor(hours / 24);
+          if (days >= 365) {
+            const yrs = Math.floor(days / 365);
+            const mos = Math.floor((days % 365) / 30);
+            return mos > 0 ? `~${yrs} г. и ${mos} мес.` : `~${yrs} г.`;
+          }
+          if (days >= 30) {
+            const mos = Math.floor(days / 30);
+            const wks = Math.floor((days % 30) / 7);
+            return wks > 0 ? `~${mos} мес. и ${wks} нед.` : `~${mos} мес.`;
+          }
+          if (days >= 1) return `~${days} дн.`;
+          return `~${hours} ч.`;
+        }
+
+        async function copyCurrentShareLink(btnEl) {
+          const url = buildShareUrl(isGuestArchiveMode ? activeProfileNickname : '');
+          try {
+            await navigator.clipboard.writeText(url);
+            if (btnEl) {
+              const orig = btnEl.textContent;
+              btnEl.textContent = '✓ Ссылка скопирована!';
+              setTimeout(() => { btnEl.textContent = orig; }, 1800);
+            }
+          } catch (e) {}
+        }
+
+        function restoreHostArchive() {
+          isGuestArchiveMode = false;
+          activeProfileNickname = SHIKI_NICKNAME;
+          document.body.classList.remove('is-guest-archive');
+          document.title = 'undereror nyashka — undexeror // archive';
+          updateUrlParam('');
+
+          PEAK_FICTION = HOST_PEAK_FICTION.map((x) => ({ ...x }));
+          WAIFU_LIST = HOST_WAIFU_LIST.map((x) => ({ ...x }));
+          LITERALLY_ME = HOST_LITERALLY_ME.map((x) => ({ ...x }));
+
+          banner?.classList.remove('is-visible');
+          if (topBtn) topBtn.classList.remove('is-guest-active');
+          if (topBtnLabel) topBtnLabel.innerHTML = 'Свой<span class="p-text-full"> профиль</span>';
+          if (heroTryBtn) heroTryBtn.textContent = '◎ Примерить свой ник';
+
+          const nickEl = document.getElementById('profile-nick');
+          if (nickEl) nickEl.textContent = SNAPSHOT.nickname;
+          const bioEl = document.getElementById('profile-bio-meta');
+          if (bioEl) bioEl.textContent = 'муж. · 20 лет · на сайте с 2023 г.';
+          const idTagEl = document.getElementById('pilot-id-tag');
+          if (idTagEl) idTagEl.textContent = 'DOSSIER // 1308586';
+          const avatarEl = document.getElementById('profile-avatar');
+          if (avatarEl) avatarEl.src = 'https://shikimori.one/system/users/x160/1308586.png';
+          const shikiLink = document.getElementById('shiki-profile-link');
+          if (shikiLink) shikiLink.href = `${activeShikiOrigin}/undereror+nyashka`;
+
+          const litTab = document.querySelector('.tab-btn[data-tab="literally"]');
+          if (litTab) litTab.style.display = '';
+          const waifuSec = document.getElementById('waifu');
+          if (waifuSec) waifuSec.style.display = '';
+
+          ratedAnimePool = loadRatedPoolCache();
+          watchingList = loadWatchingCache();
+          animeDnaState = loadDnaCache();
+          hotTakesState = loadHotTakesCache();
+          galaxyNodes = loadGalaxyCache();
+
+          renderStats(SNAPSHOT.anime, SNAPSHOT.manga, SNAPSHOT.lifetimeText);
+          renderAnimeDna(animeDnaState || SNAPSHOT_DNA);
+          renderHotTakes(hotTakesState, false);
+          renderHistory(SNAPSHOT.history, false);
+          renderActivityGraph(SNAPSHOT.activity);
+          renderWatchingShelf(watchingList.length ? watchingList : SNAPSHOT.watching);
+          renderWaifu();
+          renderCollection();
+          updateRandomizerPoolCounts();
+          if (typeof galaxyRefreshHook === 'function') galaxyRefreshHook();
+
+          hostRatesPromise = null;
+          syncShikimoriLive();
+          loadAnimeCoversBatch(PEAK_FICTION.map((a) => a.malId));
+          loadCharacterCoversBatch([...WAIFU_LIST, ...LITERALLY_ME]);
+          closeSwitchModal();
+        }
+
+        async function loadGuestArchive(rawNick, silentFromUrl) {
+          const nick = sanitizeNick(rawNick);
+          if (!nick) {
+            setSwitchStatus('Введи ник на Shikimori.', 'error');
+            return false;
+          }
+          if (nick.toLowerCase() === SHIKI_NICKNAME.toLowerCase()) {
+            restoreHostArchive();
+            return true;
+          }
+
+          if (submitBtn) submitBtn.disabled = true;
+          if (!silentFromUrl) setSwitchStatus(`Ищу профиль «${nick}» на Shikimori...`, 'loading');
+
+          const pill = document.getElementById('api-status-pill');
+          const pillText = document.getElementById('api-status-text');
+          if (pillText) pillText.textContent = 'LOADING...';
+
+          try {
+            const origins = [activeShikiOrigin, ...SHIKI_ORIGINS.filter((o) => o !== activeShikiOrigin)];
+            let user = null;
+            for (const origin of origins) {
+              const res = await fetchShikiWithRetry(
+                `${origin}/api/users/${encodeURIComponent(nick)}?is_nickname=1`,
+                { retries: 2, baseDelay: 650 }
+              );
+              if (res.ok && res.data && res.data.id) {
+                activeShikiOrigin = origin;
+                user = res.data;
+                break;
+              }
+              if (res.status === 404) {
+                setSwitchStatus(`Профиль «${nick}» не найден на Shikimori — проверь написание.`, 'error');
+                if (pillText) pillText.textContent = 'NOT FOUND';
+                return false;
+              }
+            }
+
+            if (!user || !user.id) {
+              setSwitchStatus('Shikimori API временно не отвечает — попробуй через пару секунд.', 'error');
+              return false;
+            }
+
+            if (!silentFromUrl) setSwitchStatus(`Собираю архив для «${user.nickname}»...`, 'loading');
+
+            isGuestArchiveMode = true;
+            activeProfileNickname = user.nickname || nick;
+            document.body.classList.add('is-guest-archive');
+            document.title = `${activeProfileNickname} — undexeror // archive`;
+            updateUrlParam(activeProfileNickname);
+
+            const introTitleEl = document.getElementById('intro-title');
+            const introSubEl = document.getElementById('intro-sub');
+            if (introTitleEl) introTitleEl.textContent = `${activeProfileNickname} // archive`;
+            if (introSubEl) introSubEl.textContent = 'shikimori live mirror · powered by undexeror';
+
+            if (pill) pill.classList.add('is-live');
+            if (pillText) pillText.textContent = `LIVE · ${activeProfileNickname.slice(0, 14)}`;
+
+            if (banner) banner.classList.add('is-visible');
+            if (bannerNick) bannerNick.textContent = activeProfileNickname;
+            if (guestPassTitle) guestPassTitle.textContent = `${activeProfileNickname} · Личный нуар-архив`;
+            if (topBtn) topBtn.classList.add('is-guest-active');
+            if (topBtnLabel) topBtnLabel.textContent = `@${activeProfileNickname.slice(0, 12)}`;
+            if (heroTryBtn) heroTryBtn.textContent = '◎ Сменить ник';
+
+            const avatarEl = document.getElementById('profile-avatar');
+            const liveAvatar = user.image?.x160 || user.image?.x148 || user.avatar;
+            if (avatarEl && liveAvatar) avatarEl.src = normalizeShikiUrl(liveAvatar, activeShikiOrigin);
+
+            const nickEl = document.getElementById('profile-nick');
+            if (nickEl) nickEl.textContent = activeProfileNickname;
+
+            const idTagEl = document.getElementById('pilot-id-tag');
+            if (idTagEl) idTagEl.textContent = `DOSSIER // ${user.id}`;
+
+            const bioEl = document.getElementById('profile-bio-meta');
+            if (bioEl) {
+              const bioParts = [];
+              if (user.sex === 'male') bioParts.push('муж.');
+              else if (user.sex === 'female') bioParts.push('жен.');
+              if (user.full_years) bioParts.push(`${user.full_years} лет`);
+              if (user.common_info && Array.isArray(user.common_info) && !bioParts.length) {
+                bioParts.push(stripHtml(user.common_info.slice(0, 2).join(' · ')));
+              }
+              bioEl.textContent = bioParts.join(' · ') || 'Профиль Shikimori · Platform Mode';
+            }
+
+            const shikiLink = document.getElementById('shiki-profile-link');
+            if (shikiLink) {
+              shikiLink.href = user.url ? normalizeShikiUrl(user.url, activeShikiOrigin) : `${activeShikiOrigin}/${encodeURIComponent(activeProfileNickname)}`;
+            }
+
+            const baseInput = document.getElementById('base-nick-input');
+            if (baseInput) baseInput.value = activeProfileNickname;
+            const coopNick2 = document.getElementById('coop-nick-2');
+            if (coopNick2) coopNick2.value = activeProfileNickname;
+
+            const animeStatuses = user.stats?.full_statuses?.anime || user.stats?.statuses?.anime || [];
+            const mangaStatuses = user.stats?.full_statuses?.manga || user.stats?.statuses?.manga || [];
+            const mapStatus = (arr) => {
+              const out = {};
+              arr.forEach((s) => { out[s.name] = Number(s.size) || 0; });
+              return out;
+            };
+            const aMap = mapStatus(animeStatuses);
+            const mMap = mapStatus(mangaStatuses);
+            renderStats(
+              {
+                planned: aMap.planned || 0,
+                watching: (aMap.watching || 0) + (aMap.rewatching || 0),
+                completed: aMap.completed || 0,
+                on_hold: aMap.on_hold || 0,
+                dropped: aMap.dropped || 0
+              },
+              {
+                reading: (mMap.watching || 0) + (mMap.reading || 0) + (mMap.rewatching || 0),
+                completed: mMap.completed || 0
+              },
+              'Считаю время...'
+            );
+
+            const liveGraph = parseShikiActivity(user.stats?.activity);
+            if (liveGraph && liveGraph.length >= 2) {
+              renderActivityGraph(liveGraph);
+            }
+
+            await sleep(160);
+            const rRes = await fetchShikiWithRetry(
+              `${activeShikiOrigin}/api/users/${user.id}/anime_rates?limit=1000`,
+              { retries: 3, baseDelay: 750 }
+            );
+            const guestRates = (rRes.ok && Array.isArray(rRes.data)) ? rRes.data : [];
+
+            watchingList = [];
+            ratedAnimePool = [];
+            hotTakesState = null;
+            animeDnaState = null;
+            galaxyNodes = [];
+
+            await sleep(180);
+            const fRes = await fetchShikiWithRetry(
+              `${activeShikiOrigin}/api/users/${user.id}/favourites`,
+              { retries: 2, baseDelay: 700 }
+            );
+            const favs = (fRes.ok && fRes.data) ? fRes.data : {};
+
+            const guestPeak = [];
+            const seenPeakIds = new Set();
+            const rateById = new Map();
+            let guestTotalEps = 0;
+
+            guestRates.forEach((r) => {
+              if (!r || !r.anime || !r.anime.id) return;
+              const id = Number(r.anime.id);
+              rateById.set(id, r);
+              if (r.status === 'completed' || r.status === 'rewatching' || r.status === 'watching') {
+                guestTotalEps += Number(r.episodes) || Number(r.anime.episodes) || 0;
+              }
+            });
+
+            const lifeEl = document.getElementById('lifetime-text');
+            if (lifeEl) lifeEl.textContent = estimateLifetimeText(guestTotalEps);
+
+            (favs.animes || []).forEach((fa) => {
+              if (!fa || !fa.id || seenPeakIds.has(Number(fa.id))) return;
+              const id = Number(fa.id);
+              seenPeakIds.add(id);
+              const rate = rateById.get(id);
+              const rawImg = fa.image || rate?.anime?.image?.original || '';
+              if (rawImg && !coverCache['anime_' + id]) {
+                coverCache['anime_' + id] = normalizeShikiUrl(rawImg, activeShikiOrigin);
+              }
+              guestPeak.push({
+                rank: guestPeak.length + 1,
+                malId: id,
+                title: fa.russian || fa.name || rate?.anime?.russian || `#${id}`,
+                kind: SHIKI_KIND_LABELS[String(rate?.anime?.kind || 'tv').toLowerCase()] || 'Аниме',
+                year: rate?.anime?.aired_on ? Number(String(rate.anime.aired_on).slice(0, 4)) || 2020 : 2020,
+                score: Number(rate?.anime?.score) || 8.0,
+                userScore: Number(rate?.score) || 10,
+                note: stripHtml(rate?.text || '').trim() || `Избранное аниме из профиля ${activeProfileNickname} на Shikimori.`,
+                vibes: ['#избранное', rate?.score ? `#${rate.score}/10` : '#peak']
+              });
+            });
+
+            const topRatedSorted = guestRates
+              .filter((r) => r && r.anime && r.anime.id && (r.status === 'completed' || r.status === 'rewatching') && !seenPeakIds.has(Number(r.anime.id)))
+              .sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0) || (Number(b.anime.score) || 0) - (Number(a.anime.score) || 0));
+
+            for (const r of topRatedSorted) {
+              if (guestPeak.length >= 16) break;
+              const a = r.anime;
+              const id = Number(a.id);
+              seenPeakIds.add(id);
+              const rawImg = a.image?.original || a.image?.preview || '';
+              if (rawImg && !coverCache['anime_' + id]) {
+                coverCache['anime_' + id] = normalizeShikiUrl(rawImg, activeShikiOrigin);
+              }
+              guestPeak.push({
+                rank: guestPeak.length + 1,
+                malId: id,
+                title: a.russian || a.name,
+                kind: SHIKI_KIND_LABELS[String(a.kind || 'tv').toLowerCase()] || 'Аниме',
+                year: a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || 2020 : 2020,
+                score: Number(a.score) || 7.5,
+                userScore: Number(r.score) || 0,
+                note: stripHtml(r.text || '').trim() || `Один из самых высоко оценённых тайтлов в списке ${activeProfileNickname}.`,
+                vibes: [r.score ? `#${r.score}/10` : '#топ', '#архив']
+              });
+            }
+
+            if (guestPeak.length) {
+              PEAK_FICTION = guestPeak.slice(0, 16);
+              loadAnimeCoversBatch(PEAK_FICTION.map((x) => x.malId));
+            }
+
+            const favChars = Array.isArray(favs.characters) ? favs.characters : [];
+            const waifuSec = document.getElementById('waifu');
+            if (favChars.length) {
+              WAIFU_LIST = favChars.slice(0, 20).map((fc, idx) => {
+                const fullImg = fc.image ? normalizeShikiUrl(fc.image, activeShikiOrigin) : '';
+                const key = `gchar_${user.id}_${fc.id || idx}`;
+                if (fullImg) coverCache['char_' + key] = fullImg;
+                return {
+                  rank: idx + 1,
+                  key,
+                  name: fc.russian || fc.name || 'Персонаж',
+                  search: fc.name || fc.russian || '',
+                  anime: 'Избранное',
+                  shikiImg: fullImg,
+                  url: fc.url ? normalizeShikiUrl(fc.url, activeShikiOrigin) : `${activeShikiOrigin}/characters/${fc.id}`
+                };
+              });
+              if (waifuSec) waifuSec.style.display = '';
+            } else {
+              WAIFU_LIST = [];
+              if (waifuSec) waifuSec.style.display = 'none';
+            }
+
+            const litTab = document.querySelector('.tab-btn[data-tab="literally"]');
+            if (litTab) litTab.style.display = 'none';
+            currentTab = 'peak';
+            document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b.dataset.tab === 'peak'));
+
+            if (guestRates.length) {
+              processHostAnimeRates(guestRates, user.stats);
+              if (!watchingList.length) {
+                const wSec = document.getElementById('watching');
+                if (wSec) wSec.style.display = 'none';
+              }
+            } else {
+              renderHotTakes(null, true);
+              const wSec = document.getElementById('watching');
+              if (wSec) wSec.style.display = 'none';
+            }
+
+            renderWaifu();
+            renderCollection();
+            updateRandomizerPoolCounts();
+
+            await sleep(200);
+            const hRes = await fetchShikiWithRetry(
+              `${activeShikiOrigin}/api/users/${user.id}/history?limit=30`,
+              { retries: 2, baseDelay: 700 }
+            );
+            if (hRes.ok && Array.isArray(hRes.data)) {
+              const seenTargets = new Set();
+              const parsedHistory = [];
+              for (const h of hRes.data) {
+                const t = h && h.target;
+                if (!t || (!t.russian && !t.name)) continue;
+                const key = t.id ? 'id_' + t.id : 't_' + String(t.russian || t.name).toLowerCase();
+                if (seenTargets.has(key)) continue;
+                seenTargets.add(key);
+                const rawImg = t.image?.original || t.image?.preview || t.image?.x96 || '';
+                parsedHistory.push({
+                  id: t.id,
+                  title: t.russian || t.name,
+                  action: stripHtml(h.description) || 'Обновление списка',
+                  dateText: formatRelativeTime(h.created_at),
+                  url: normalizeShikiUrl(t.url, activeShikiOrigin),
+                  image: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : ''
+                });
+                if (parsedHistory.length >= 5) break;
+              }
+              if (parsedHistory.length) {
+                renderHistory(parsedHistory, true);
+                loadAnimeCoversBatch(parsedHistory.map((h) => h.id));
+              }
+            }
+
+            setSwitchStatus('', '');
+            closeSwitchModal();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return true;
+          } catch (err) {
+            console.warn('Platform guest load failed:', err);
+            setSwitchStatus('Ошибка при загрузке профиля с Shikimori API.', 'error');
+            return false;
+          } finally {
+            if (submitBtn) submitBtn.disabled = false;
+          }
+        }
+
+        topBtn?.addEventListener('click', openSwitchModal);
+        heroTryBtn?.addEventListener('click', openSwitchModal);
+        changeBtn?.addEventListener('click', openSwitchModal);
+        modalClose?.addEventListener('click', closeSwitchModal);
+        modal?.addEventListener('click', (e) => {
+          if (e.target === modal) closeSwitchModal();
+        });
+
+        form?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          loadGuestArchive(input?.value || '', false);
+        });
+
+        copyLinkBtn?.addEventListener('click', () => copyCurrentShareLink(copyLinkBtn));
+        guestPassCopyBtn?.addEventListener('click', () => copyCurrentShareLink(guestPassCopyBtn));
+        backHostBtn?.addEventListener('click', restoreHostArchive);
+        resetHostBtn?.addEventListener('click', restoreHostArchive);
+
+        guestPassMatchBtn?.addEventListener('click', () => {
+          document.querySelector('[data-station-tab="base"]')?.click();
+          const bInput = document.getElementById('base-nick-input');
+          if (bInput) bInput.value = activeProfileNickname;
+          document.getElementById('compatibility')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.getElementById('base-check-form')?.requestSubmit?.();
+        });
+
+        guestPassCoopBtn?.addEventListener('click', () => {
+          if (typeof coopOpenWithGuestHook === 'function') {
+            coopOpenWithGuestHook(activeProfileNickname);
+          }
+        });
+
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && modal?.classList.contains('is-open')) {
+            closeSwitchModal();
+          }
+        });
+
+        const params = new URLSearchParams(window.location.search);
+        const urlNick = sanitizeNick(params.get('u') || params.get('user') || '');
+        if (urlNick && urlNick.toLowerCase() !== SHIKI_NICKNAME.toLowerCase()) {
+          const introTitleEl = document.getElementById('intro-title');
+          const introSubEl = document.getElementById('intro-sub');
+          if (introTitleEl) introTitleEl.textContent = `${urlNick} // archive`;
+          if (introSubEl) introSubEl.textContent = 'shikimori live mirror · powered by undexeror';
+          return { initialGuestNick: urlNick, loadGuestArchive };
+        }
+        return { initialGuestNick: '', loadGuestArchive };
+      }
+
       const playerControls = initMusicPlayer();
       initIntroOverlay(playerControls);
       initSpotifyDrawer(playerControls);
@@ -16143,13 +17096,18 @@
       initWaifuControls();
       renderCollection();
 
-      syncShikimoriLive();
-      loadAnimeCoversBatch([
-        ...PEAK_FICTION.map((a) => a.malId),
-        ...SNAPSHOT.history.map((h) => h.id),
-        ...(watchingList.length ? watchingList : SNAPSHOT.watching).map((w) => w.malId)
-      ]);
-      loadCharacterCoversBatch([...WAIFU_LIST, ...LITERALLY_ME]);
+      const platformCtrl = initPlatformMode();
+      if (platformCtrl && platformCtrl.initialGuestNick) {
+        platformCtrl.loadGuestArchive(platformCtrl.initialGuestNick, true);
+      } else {
+        syncShikimoriLive();
+        loadAnimeCoversBatch([
+          ...PEAK_FICTION.map((a) => a.malId),
+          ...SNAPSHOT.history.map((h) => h.id),
+          ...(watchingList.length ? watchingList : SNAPSHOT.watching).map((w) => w.malId)
+        ]);
+        loadCharacterCoversBatch([...WAIFU_LIST, ...LITERALLY_ME]);
+      }
     })();
   </script>
 </body>
