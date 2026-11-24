@@ -1,6 +1,7 @@
 import {
   SHIKI_ORIGINS,
   SHIKI_ORIGIN_STORAGE_KEY,
+  SHIKI_KIND_LABELS,
   COVER_CACHE_KEY,
   RATED_POOL_CACHE_KEY,
   WATCHING_CACHE_KEY,
@@ -296,6 +297,28 @@ export function buildFallbackGalaxyNodes() {
       url: r.url || `${appState.activeShikiOrigin}/animes/${r.malId}`,
       comment: r.note || '',
       vibes: r.vibes || ['#9-10★']
+    });
+  });
+  (Array.isArray(appState.hostFullRates) ? appState.hostFullRates : []).forEach((r) => {
+    if (!r || r.st !== 'planned' || !r.id) return;
+    const id = Number(r.id);
+    if (!id || seen.has(id)) return;
+    seen.add(id);
+    list.push({
+      id,
+      title: r.t || `#${id}`,
+      kind: SHIKI_KIND_LABELS[String(r.k || 'tv').toLowerCase()] || 'Аниме',
+      year: r.y || null,
+      score: 0,
+      shikiScore: Number((Number(r.g) || 0).toFixed(2)),
+      episodes: Number(r.ep) || 0,
+      status: 'planned',
+      isPeak: false,
+      peakRank: null,
+      img: appState.coverCache['anime_' + id] || r.img || '',
+      url: r.url || `${appState.activeShikiOrigin}/animes/${id}`,
+      comment: '',
+      vibes: []
     });
   });
   return list;

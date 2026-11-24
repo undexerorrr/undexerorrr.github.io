@@ -733,7 +733,7 @@ export function processHostAnimeRates(allRates, userStats) {
     renderHotTakes(appState.hotTakesState, false);
   }
 
-  // 5. Full 3D Archive Galaxy Dataset (415+ completed + watching + rewatching)
+  // 5. Full 3D Archive Galaxy Dataset (415+ completed + watching + rewatching + planned)
   const galaxySeen = new Set();
   const peakMap = new Map(PEAK_FICTION.map((p) => [p.malId, p]));
   const builtGalaxy = [];
@@ -741,17 +741,21 @@ export function processHostAnimeRates(allRates, userStats) {
   allRates.forEach((r) => {
     const a = r && r.anime;
     if (!a || !a.id) return;
-    if (r.status !== 'completed' && r.status !== 'watching' && r.status !== 'rewatching') return;
+    if (r.status !== 'completed' && r.status !== 'watching' && r.status !== 'rewatching' && r.status !== 'planned') return;
     const id = Number(a.id);
     if (galaxySeen.has(id)) return;
     galaxySeen.add(id);
 
-    const peak = peakMap.get(id);
+    const isPlanned = r.status === 'planned';
+    const peak = isPlanned ? null : peakMap.get(id);
     const kindKey = String(a.kind || 'tv').toLowerCase();
     const rawImg = a.image?.original || a.image?.preview || '';
     const year = a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || null : (peak ? peak.year : null);
-    const uScore = Number(r.score) || 0;
+    const uScore = isPlanned ? 0 : (Number(r.score) || 0);
     const sScore = Number(a.score) || (peak ? peak.score : 0);
+    const epsCount = isPlanned
+      ? (Number(a.episodes) || Number(a.episodes_aired) || 0)
+      : (Number(r.episodes) || Number(a.episodes) || 0);
 
     builtGalaxy.push({
       id,
@@ -760,7 +764,7 @@ export function processHostAnimeRates(allRates, userStats) {
       year,
       score: uScore,
       shikiScore: Number(sScore.toFixed(2)),
-      episodes: Number(r.episodes) || Number(a.episodes) || 0,
+      episodes: epsCount,
       status: r.status || 'completed',
       isPeak: Boolean(peak),
       peakRank: peak ? peak.rank : null,

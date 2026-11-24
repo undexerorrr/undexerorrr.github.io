@@ -1364,36 +1364,62 @@ export function buildHoloDeckItems(type) {
   if (type === 'galaxy') {
     const src = appState.holoGalaxyList.length ? appState.holoGalaxyList : (appState.galaxyNodes.length ? appState.galaxyNodes : buildFallbackGalaxyNodes());
     return src.map((g, idx) => {
-      const rankNum = g.peakRank ? g.peakRank : (g.score >= 10 ? 2 : (g.score >= 9 ? 6 : 12));
-      const delta = (g.score > 0 && g.shikiScore > 0) ? (g.score - g.shikiScore) : 0;
-      const vibes = (g.vibes && g.vibes.length) ? g.vibes : [
-        g.isPeak ? '#peak-fiction' : (g.status === 'watching' ? '#смотрю' : '#архив'),
-        g.score ? `#${g.score}/10` : '#просмотрено',
-        Math.abs(delta) >= 1.5 ? '#hot-take' : (g.year ? `#${g.year}` : '#cosmos')
-      ];
+      const isPlanned = g.status === 'planned';
+      const rankNum = g.peakRank
+        ? g.peakRank
+        : isPlanned
+          ? (g.shikiScore >= 8.5 ? 2 : (g.shikiScore >= 8.0 ? 6 : 12))
+          : (g.score >= 10 ? 2 : (g.score >= 9 ? 6 : 12));
+      const delta = (!isPlanned && g.score > 0 && g.shikiScore > 0) ? (g.score - g.shikiScore) : 0;
+      const vibes = (g.vibes && g.vibes.length)
+        ? g.vibes
+        : isPlanned
+          ? ['#в-планах', '#backlog', g.year ? `#${g.year}` : '#shikimori']
+          : [
+              g.isPeak ? '#peak-fiction' : (g.status === 'watching' ? '#смотрю' : '#архив'),
+              g.score ? `#${g.score}/10` : '#просмотрено',
+              Math.abs(delta) >= 1.5 ? '#hot-take' : (g.year ? `#${g.year}` : '#cosmos')
+            ];
       return {
-        cat: g.isPeak ? 'PEAK FICTION · GALAXY' : (g.status === 'watching' ? 'СЕЙЧАС СМОТРЮ · GALAXY' : 'ARCHIVE STAR · GALAXY'),
+        cat: g.isPeak
+          ? 'PEAK FICTION · GALAXY'
+          : isPlanned
+            ? '◈ В ПЛАНАХ · BACKLOG'
+            : (g.status === 'watching' ? 'СЕЙЧАС СМОТРЮ · GALAXY' : 'ARCHIVE STAR · GALAXY'),
         rank: rankNum,
         displayIdx: idx + 1,
         total: src.length,
         malId: g.id,
         title: g.title,
-        sub: [g.kind, g.year].filter(Boolean).join(' · '),
-        frontScore: g.score ? `Я ${g.score}/10 · ★${(g.shikiScore || 0).toFixed(2)}` : (g.shikiScore ? `★ ${g.shikiScore.toFixed(2)}` : 'ARCHIVE'),
-        pills: [
-          g.peakRank ? `Peak #${formatRank(g.peakRank)}` : null,
-          g.score ? `Моя оценка ${g.score}/10` : 'Без оценки',
-          g.shikiScore ? `Шики ★ ${g.shikiScore.toFixed(2)}` : null,
-          g.episodes ? `${g.episodes} эп.` : null,
-          g.year ? String(g.year) : null
-        ].filter(Boolean),
+        sub: isPlanned
+          ? [g.kind, g.year, g.episodes ? `${g.episodes} эп.` : null].filter(Boolean).join(' · ')
+          : [g.kind, g.year].filter(Boolean).join(' · '),
+        frontScore: isPlanned
+          ? (g.shikiScore ? `★ ${g.shikiScore.toFixed(2)}` : 'BACKLOG')
+          : (g.score ? `Я ${g.score}/10 · ★${(g.shikiScore || 0).toFixed(2)}` : (g.shikiScore ? `★ ${g.shikiScore.toFixed(2)}` : 'ARCHIVE')),
+        pills: isPlanned
+          ? [
+              'В планах',
+              g.shikiScore ? `Шики ★ ${g.shikiScore.toFixed(2)}` : null,
+              g.episodes ? `${g.episodes} эп.` : null,
+              g.year ? String(g.year) : null
+            ].filter(Boolean)
+          : [
+              g.peakRank ? `Peak #${formatRank(g.peakRank)}` : null,
+              g.score ? `Моя оценка ${g.score}/10` : 'Без оценки',
+              g.shikiScore ? `Шики ★ ${g.shikiScore.toFixed(2)}` : null,
+              g.episodes ? `${g.episodes} эп.` : null,
+              g.year ? String(g.year) : null
+            ].filter(Boolean),
         vibes,
         note: g.comment || (
-          g.isPeak
-            ? 'Избранный тайтл из Peak Fiction — одна из самых ярких звёзд ядра галактики.'
-            : g.score >= 9
-              ? `Высоко оценённый тайтл (${g.score}/10) из архива undereror nyashka на Shikimori.`
-              : 'Тайтл из полного архива просмотренных аниме undereror nyashka.'
+          isPlanned
+            ? 'Кандидат на просмотр из твоего списка «Запланировано» на Shikimori.'
+            : g.isPeak
+              ? 'Избранный тайтл из Peak Fiction — одна из самых ярких звёзд ядра галактики.'
+              : g.score >= 9
+                ? `Высоко оценённый тайтл (${g.score}/10) из архива undereror nyashka на Shikimori.`
+                : 'Тайтл из полного архива просмотренных аниме undereror nyashka.'
         ),
         img: appState.coverCache['anime_' + g.id] || g.img || '',
         url: g.url || `${appState.activeShikiOrigin}/animes/${g.id}`
