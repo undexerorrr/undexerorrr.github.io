@@ -287,6 +287,10 @@
       gap: 54px;
     }
 
+    section[id] {
+      scroll-margin-top: 84px;
+    }
+
     .section-head {
       display: flex;
       align-items: center;
@@ -5221,7 +5225,7 @@
         <span class="dock-status-note" id="dock-status-note">BEAT-SYNC · 4 TRACKS</span>
         <div class="dock-vol-wrap">
           <span>♪</span>
-          <input type="range" class="dock-slider" id="dock-volume" min="0" max="1" step="0.02" value="0.65" aria-label="Громкость" />
+          <input type="range" class="dock-slider" id="dock-volume" min="0" max="1" step="0.01" value="0.18" aria-label="Громкость" />
         </div>
       </div>
     </div>
@@ -5414,6 +5418,8 @@
       const WATCHING_CACHE_KEY = 'undexeror_archive_watching_v1';
       const DNA_CACHE_KEY = 'undexeror_archive_dna_v1';
       const MY_RATES_CACHE_KEY = 'undexeror_archive_my_rates_v1';
+      const VOLUME_STORAGE_KEY = 'undexeror_archive_volume_v1';
+      const DEFAULT_VOLUME = 0.18;
       const GENRE_RU = {
         Action: 'Экшен',
         Adventure: 'Приключения',
@@ -5789,7 +5795,28 @@
       function initMusicPlayer() {
         const audio = new Audio();
         audio.preload = 'metadata';
-        audio.volume = 0.65;
+
+        function loadSavedVolume() {
+          try {
+            const raw = localStorage.getItem(VOLUME_STORAGE_KEY);
+            if (raw !== null && raw !== '') {
+              const num = Number(raw);
+              if (isFinite(num) && num >= 0 && num <= 1) return num;
+            }
+          } catch (e) {}
+          return DEFAULT_VOLUME;
+        }
+
+        function saveVolume(val) {
+          try {
+            localStorage.setItem(VOLUME_STORAGE_KEY, String(Math.round(val * 100) / 100));
+          } catch (e) {}
+        }
+
+        let targetVolume = loadSavedVolume();
+        let fadeRafId = null;
+        let hasStartedOnce = false;
+        audio.volume = targetVolume;
 
         const isHttp = location.protocol === 'http:' || location.protocol === 'https:';
         if (isHttp) audio.crossOrigin = 'anonymous';
@@ -5905,27 +5932,79 @@
           }
         }
 
-        function playCurrent() {
+        if (dockVolume) {
+          dockVolume.value = String(targetVolume);
+        }
+
+        function cancelVolumeFade(restoreTarget) {
+          if (fadeRafId !== null) {
+            cancelAnimationFrame(fadeRafId);
+            fadeRafId = null;
+          }
+          if (restoreTarget) {
+            audio.volume = targetVolume;
+          }
+        }
+
+        function startVolumeFadeIn(durationMs) {
+          cancelVolumeFade(false);
+          const goal = targetVolume;
+          if (goal <= 0.001) {
+            audio.volume = 0;
+            return;
+          }
+          audio.volume = 0;
+          const startAt = performance.now();
+          function stepFade(now) {
+            const progress = Math.min(1, (now - startAt) / durationMs);
+            // Smooth ease-out curve for gentle onset
+            const eased = 1 - Math.pow(1 - progress, 2);
+            audio.volume = Math.max(0, Math.min(1, goal * eased));
+            if (progress < 1 && !audio.paused) {
+              fadeRafId = requestAnimationFrame(stepFade);
+            } else {
+              fadeRafId = null;
+              audio.volume = targetVolume;
+            }
+          }
+          fadeRafId = requestAnimationFrame(stepFade);
+        }
+
+        function playCurrent(opts) {
           setupAnalyser();
           if (audioCtx && audioCtx.state === 'suspended') {
             audioCtx.resume().catch(() => {});
           }
+          const shouldFade = Boolean((opts && opts.fadeIn) || !hasStartedOnce);
+          if (shouldFade) {
+            cancelVolumeFade(false);
+            audio.volume = 0;
+          } else {
+            cancelVolumeFade(true);
+          }
+
           const p = audio.play();
           if (p && typeof p.then === 'function') {
             p.then(() => {
               isPlaying = true;
+              hasStartedOnce = true;
               updatePlayUI();
+              if (shouldFade) startVolumeFadeIn(1200);
             }).catch(() => {
               isPlaying = false;
+              cancelVolumeFade(true);
               updatePlayUI();
             });
           } else {
             isPlaying = true;
+            hasStartedOnce = true;
             updatePlayUI();
+            if (shouldFade) startVolumeFadeIn(1200);
           }
         }
 
         function pauseCurrent() {
+          cancelVolumeFade(true);
           audio.pause();
           isPlaying = false;
           updatePlayUI();
@@ -5996,7 +6075,11 @@
         });
 
         dockVolume?.addEventListener('input', () => {
-          audio.volume = Number(dockVolume.value);
+          const v = Math.max(0, Math.min(1, Number(dockVolume.value)));
+          targetVolume = isFinite(v) ? v : DEFAULT_VOLUME;
+          cancelVolumeFade(false);
+          audio.volume = targetVolume;
+          saveVolume(targetVolume);
         });
 
         // Visualizer + Beat-Reactive Avatar Ring Loop
@@ -6535,7 +6618,19 @@
         if (!list) return;
         if (badge) badge.textContent = isLive ? 'SHIKIMORI LIVE' : 'SNAPSHOT';
 
-        list.innerHTML = items.slice(0, 5).map((item) => {
+        const seenHistoryKeys = new Set();
+        const uniqueItems = [];
+        (items || []).forEach((item) => {
+          if (!item) return;
+          const dedupKey = item.id
+            ? 'id_' + String(item.id)
+            : 't_' + String(item.title || '').trim().toLowerCase();
+          if (seenHistoryKeys.has(dedupKey)) return;
+          seenHistoryKeys.add(dedupKey);
+          uniqueItems.push(item);
+        });
+
+        list.innerHTML = uniqueItems.slice(0, 5).map((item) => {
           const cacheKey = item.id ? 'anime_' + item.id : '';
           const cachedImg = cacheKey && coverCache[cacheKey] ? coverCache[cacheKey] : '';
           const imgSrc = item.image || cachedImg;
@@ -7702,24 +7797,230 @@
         });
       }
 
+      let hostUserCache = null;
+      let hostRatesPromise = null;
+
+      async function fetchShikiWithRetry(url, opts) {
+        const retries = opts && typeof opts.retries === 'number' ? opts.retries : 3;
+        const baseDelay = opts && typeof opts.baseDelay === 'number' ? opts.baseDelay : 750;
+        let lastStatus = 0;
+
+        for (let attempt = 0; attempt <= retries; attempt++) {
+          try {
+            const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+            lastStatus = res.status;
+            if (res.ok) {
+              const data = await res.json();
+              return { ok: true, status: res.status, data };
+            }
+            if ((res.status === 429 || res.status >= 500) && attempt < retries) {
+              const retryAfter = Number(res.headers.get('Retry-After'));
+              const waitMs = (isFinite(retryAfter) && retryAfter > 0)
+                ? Math.min(6000, Math.max(450, retryAfter * 1000))
+                : baseDelay * (attempt + 1) + Math.floor(Math.random() * 250);
+              await sleep(waitMs);
+              continue;
+            }
+            return { ok: false, status: res.status, data: null };
+          } catch (e) {
+            if (attempt < retries) {
+              await sleep(baseDelay * (attempt + 1));
+              continue;
+            }
+            return { ok: false, status: lastStatus, data: null };
+          }
+        }
+        return { ok: false, status: lastStatus, data: null };
+      }
+
+      async function resolveHostUser() {
+        if (hostUserCache && hostUserCache.id) return hostUserCache;
+        const origins = [activeShikiOrigin, ...SHIKI_ORIGINS.filter((o) => o !== activeShikiOrigin)];
+        for (const origin of origins) {
+          const res = await fetchShikiWithRetry(
+            `${origin}/api/users/${encodeURIComponent(SHIKI_NICKNAME)}?is_nickname=1`,
+            { retries: 2, baseDelay: 700 }
+          );
+          if (res.ok && res.data && res.data.id) {
+            activeShikiOrigin = origin;
+            hostUserCache = res.data;
+            return hostUserCache;
+          }
+        }
+        return null;
+      }
+
+      function processHostAnimeRates(allRates, userStats) {
+        if (!Array.isArray(allRates) || !allRates.length) return false;
+
+        // 1. Live "Watching Now" shelf (watching + rewatching)
+        const watchingRaw = allRates.filter(
+          (r) => r && r.anime && r.anime.id && (r.status === 'watching' || r.status === 'rewatching')
+        );
+        if (watchingRaw.length) {
+          watchingRaw.sort((a, b) => new Date(b.updated_at || 0).getTime() - new Date(a.updated_at || 0).getTime());
+          const seenW = new Set();
+          const parsedWatching = [];
+          watchingRaw.forEach((r) => {
+            const a = r.anime;
+            if (!a || !a.id || seenW.has(a.id)) return;
+            seenW.add(a.id);
+            const kindKey = String(a.kind || 'tv').toLowerCase();
+            const rawImg = a.image?.original || a.image?.preview || '';
+            const totalEp = Number(a.episodes) || Number(a.episodes_aired) || 0;
+            parsedWatching.push({
+              malId: a.id,
+              title: a.russian || a.name,
+              kind: SHIKI_KIND_LABELS[kindKey] || 'Аниме',
+              year: a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || null : null,
+              episodes: Number(r.episodes) || 0,
+              totalEpisodes: totalEp,
+              ongoing: a.status === 'ongoing',
+              score: Number(a.score) || 0,
+              userScore: Number(r.score) || 0,
+              status: r.status || 'watching',
+              url: a.url ? normalizeShikiUrl(a.url, activeShikiOrigin) : `${activeShikiOrigin}/animes/${a.id}`,
+              shikiImg: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : '',
+              comment: stripHtml(r.text || '').trim()
+            });
+          });
+
+          if (parsedWatching.length) {
+            watchingList = parsedWatching;
+            saveWatchingCache();
+            renderWatchingShelf(watchingList);
+            loadAnimeCoversBatch(parsedWatching.map((x) => x.malId));
+          }
+        }
+
+        // 2. Completed list -> Anime-DNA & Taste Match base
+        const completedRates = allRates.filter(
+          (r) => r && r.anime && r.anime.id && r.status === 'completed'
+        );
+        if (completedRates.length) {
+          hydrateDnaFromShikiRates(completedRates, userStats);
+        }
+
+        // Also index any non-completed rated entries into myRatesIndex for Taste Match
+        allRates.forEach((r) => {
+          const a = r && r.anime;
+          if (!a || !a.id) return;
+          const id = Number(a.id);
+          if (!myRatesIndex.has(id) && Number(r.score) > 0) {
+            const rawImg = a.image?.original || a.image?.preview || '';
+            myRatesIndex.set(id, {
+              id,
+              s: Number(r.score) || 0,
+              g: Number(a.score) || 0,
+              t: a.russian || a.name || '',
+              img: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : ''
+            });
+          }
+        });
+
+        // 3. Expanded Randomizer pool (all 9-10★ completed/rewatching titles)
+        const allowedKinds = new Set(['tv', 'movie', 'ona', 'ova']);
+        const peakById = new Map(PEAK_FICTION.map((p) => [p.malId, p]));
+        const seenPoolIds = new Set();
+        const extracted = [];
+
+        allRates.forEach((r) => {
+          const a = r && r.anime;
+          if (!a || !a.id) return;
+          if (r.status !== 'completed' && r.status !== 'rewatching') return;
+          const userScore = Number(r.score) || 0;
+          if (userScore < 9) return;
+
+          if (peakById.has(a.id)) {
+            peakById.get(a.id).userScore = userScore;
+            return;
+          }
+
+          if (seenPoolIds.has(a.id)) return;
+          const kindKey = String(a.kind || 'tv').toLowerCase();
+          if (!allowedKinds.has(kindKey)) return;
+          seenPoolIds.add(a.id);
+
+          const rawImg = a.image?.original || a.image?.preview || '';
+          const shikiImg = rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : '';
+          const year = a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || null : null;
+          const shikiScore = Number(a.score) || 0;
+          const comment = stripHtml(r.text || '').trim();
+          const vibes = [
+            userScore === 10 ? '#10/10' : '#9/10',
+            kindKey === 'movie' ? '#фильм' : (kindKey === 'ona' ? '#ona' : '#просмотрено'),
+            shikiScore >= 8.5 ? '#хит' : '#личный выбор'
+          ];
+
+          extracted.push({
+            malId: a.id,
+            title: a.russian || a.name,
+            kind: SHIKI_KIND_LABELS[kindKey] || 'Аниме',
+            year,
+            score: shikiScore,
+            userScore,
+            shikiImg,
+            url: a.url ? normalizeShikiUrl(a.url, activeShikiOrigin) : `${activeShikiOrigin}/animes/${a.id}`,
+            vibes,
+            note: comment || (
+              userScore === 10
+                ? 'Тайтл из моего списка просмотренного с высшей оценкой 10/10 на Shikimori — смело рекомендую.'
+                : 'Сильный тайтл из моего списка просмотренного на Shikimori с личной оценкой 9/10.'
+            ),
+            source: 'shikimori'
+          });
+        });
+
+        if (extracted.length) {
+          ratedAnimePool = extracted;
+          saveRatedPoolCache();
+          updateRandomizerPoolCounts();
+        }
+        return true;
+      }
+
+      async function loadHostAnimeRates(userObj) {
+        if (hostRatesPromise) return hostRatesPromise;
+        hostRatesPromise = (async () => {
+          let ok = false;
+          try {
+            const u = userObj || await resolveHostUser();
+            if (!u || !u.id) return false;
+            const first = await fetchShikiWithRetry(
+              `${activeShikiOrigin}/api/users/${u.id}/anime_rates?limit=1000`,
+              { retries: 3, baseDelay: 800 }
+            );
+            if (!first.ok || !Array.isArray(first.data)) return false;
+
+            let allRates = first.data;
+            if (allRates.length >= 1000) {
+              await sleep(320);
+              const page2 = await fetchShikiWithRetry(
+                `${activeShikiOrigin}/api/users/${u.id}/anime_rates?limit=1000&page=2`,
+                { retries: 2, baseDelay: 800 }
+              );
+              if (page2.ok && Array.isArray(page2.data) && page2.data.length) {
+                allRates = allRates.concat(page2.data);
+              }
+            }
+            ok = processHostAnimeRates(allRates, u.stats);
+            return ok;
+          } catch (e) {
+            return false;
+          } finally {
+            if (!ok || !ratedAnimePool.length) {
+              hostRatesPromise = null;
+            }
+          }
+        })();
+        return hostRatesPromise;
+      }
+
       async function syncShikimoriLive() {
         const pill = document.getElementById('api-status-pill');
         const pillText = document.getElementById('api-status-text');
 
-        let user = null;
-        for (const origin of SHIKI_ORIGINS) {
-          try {
-            const res = await fetch(`${origin}/api/users/${encodeURIComponent(SHIKI_NICKNAME)}?is_nickname=1`, {
-              headers: { 'Accept': 'application/json' }
-            });
-            if (res.ok) {
-              user = await res.json();
-              activeShikiOrigin = origin;
-              break;
-            }
-          } catch (e) {}
-        }
-
+        const user = await resolveHostUser();
         if (!user || !user.id) {
           if (pillText) pillText.textContent = 'SNAPSHOT';
           return;
@@ -7772,27 +8073,39 @@
           renderActivityGraph(liveGraph);
         }
 
+        // Priority 1: ONE merged anime_rates request (Watching + DNA + Taste Match + 9-10★ Randomizer)
+        await sleep(160);
+        await loadHostAnimeRates(user);
+
+        // Priority 2: History (limit=30 so after deduplicating same anime we get 5 unique titles)
+        await sleep(240);
         try {
-          const hRes = await fetch(`${activeShikiOrigin}/api/users/${user.id}/history?limit=10`, {
-            headers: { 'Accept': 'application/json' }
-          });
-          if (hRes.ok) {
-            const rawHistory = await hRes.json();
-            const parsedHistory = rawHistory
-              .filter((h) => h.target && (h.target.russian || h.target.name))
-              .slice(0, 5)
-              .map((h) => {
-                const t = h.target;
-                const rawImg = t.image?.original || t.image?.preview || t.image?.x96 || '';
-                return {
-                  id: t.id,
-                  title: t.russian || t.name,
-                  action: stripHtml(h.description) || 'Обновление списка',
-                  dateText: formatRelativeTime(h.created_at),
-                  url: normalizeShikiUrl(t.url, activeShikiOrigin),
-                  image: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : ''
-                };
+          const hRes = await fetchShikiWithRetry(
+            `${activeShikiOrigin}/api/users/${user.id}/history?limit=30`,
+            { retries: 2, baseDelay: 700 }
+          );
+          if (hRes.ok && Array.isArray(hRes.data)) {
+            const seenTargets = new Set();
+            const parsedHistory = [];
+            for (const h of hRes.data) {
+              const t = h && h.target;
+              if (!t || (!t.russian && !t.name)) continue;
+              const targetKey = t.id
+                ? 'id_' + String(t.id)
+                : 't_' + String(t.russian || t.name).trim().toLowerCase();
+              if (seenTargets.has(targetKey)) continue;
+              seenTargets.add(targetKey);
+              const rawImg = t.image?.original || t.image?.preview || t.image?.x96 || '';
+              parsedHistory.push({
+                id: t.id,
+                title: t.russian || t.name,
+                action: stripHtml(h.description) || 'Обновление списка',
+                dateText: formatRelativeTime(h.created_at),
+                url: normalizeShikiUrl(t.url, activeShikiOrigin),
+                image: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : ''
               });
+              if (parsedHistory.length >= 5) break;
+            }
 
             if (parsedHistory.length) {
               renderHistory(parsedHistory, true);
@@ -7801,12 +8114,15 @@
           }
         } catch (e) {}
 
+        // Priority 3: Favourites (WAIFU links & fallback images)
+        await sleep(240);
         try {
-          const fRes = await fetch(`${activeShikiOrigin}/api/users/${user.id}/favourites`, {
-            headers: { 'Accept': 'application/json' }
-          });
-          if (fRes.ok) {
-            const favs = await fRes.json();
+          const fRes = await fetchShikiWithRetry(
+            `${activeShikiOrigin}/api/users/${user.id}/favourites`,
+            { retries: 2, baseDelay: 700 }
+          );
+          if (fRes.ok && fRes.data) {
+            const favs = fRes.data;
             if (Array.isArray(favs.characters) && favs.characters.length) {
               favs.characters.forEach((fc) => {
                 const ru = (fc.russian || '').toLowerCase();
@@ -7825,120 +8141,6 @@
                   }
                 }
               });
-            }
-          }
-        } catch (e) {}
-
-        // Pull live "Watching Now" shelf (watching + rewatching)
-        try {
-          const [wRes, rwRes] = await Promise.all([
-            fetch(`${activeShikiOrigin}/api/users/${user.id}/anime_rates?limit=50&status=watching`, { headers: { 'Accept': 'application/json' } }),
-            fetch(`${activeShikiOrigin}/api/users/${user.id}/anime_rates?limit=20&status=rewatching`, { headers: { 'Accept': 'application/json' } })
-          ]);
-          const wItems = wRes.ok ? await wRes.json() : [];
-          const rwItems = rwRes.ok ? await rwRes.json() : [];
-          const mergedRaw = [
-            ...(Array.isArray(wItems) ? wItems : []),
-            ...(Array.isArray(rwItems) ? rwItems : [])
-          ];
-          if (mergedRaw.length) {
-            mergedRaw.sort((a, b) => new Date(b.updated_at || 0).getTime() - new Date(a.updated_at || 0).getTime());
-            const seenW = new Set();
-            const parsedWatching = [];
-            mergedRaw.forEach((r) => {
-              const a = r.anime;
-              if (!a || !a.id || seenW.has(a.id)) return;
-              seenW.add(a.id);
-              const kindKey = String(a.kind || 'tv').toLowerCase();
-              const rawImg = a.image?.original || a.image?.preview || '';
-              const totalEp = Number(a.episodes) || Number(a.episodes_aired) || 0;
-              parsedWatching.push({
-                malId: a.id,
-                title: a.russian || a.name,
-                kind: SHIKI_KIND_LABELS[kindKey] || 'Аниме',
-                year: a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || null : null,
-                episodes: Number(r.episodes) || 0,
-                totalEpisodes: totalEp,
-                ongoing: a.status === 'ongoing',
-                score: Number(a.score) || 0,
-                userScore: Number(r.score) || 0,
-                status: r.status || 'watching',
-                url: a.url ? normalizeShikiUrl(a.url, activeShikiOrigin) : `${activeShikiOrigin}/animes/${a.id}`,
-                shikiImg: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : '',
-                comment: stripHtml(r.text || '').trim()
-              });
-            });
-
-            if (parsedWatching.length) {
-              watchingList = parsedWatching;
-              saveWatchingCache();
-              renderWatchingShelf(watchingList);
-              loadAnimeCoversBatch(parsedWatching.map((x) => x.malId));
-            }
-          }
-        } catch (e) {}
-
-        // Pull user's completed anime rated 9-10 for the expanded Randomizer
-        try {
-          const rRes = await fetch(`${activeShikiOrigin}/api/users/${user.id}/anime_rates?limit=1000&status=completed`, {
-            headers: { 'Accept': 'application/json' }
-          });
-          if (rRes.ok) {
-            const rates = await rRes.json();
-            if (Array.isArray(rates)) {
-              hydrateDnaFromShikiRates(rates, user.stats);
-              const allowedKinds = new Set(['tv', 'movie', 'ona', 'ova']);
-              const peakById = new Map(PEAK_FICTION.map((p) => [p.malId, p]));
-              const extracted = [];
-
-              rates.forEach((r) => {
-                const userScore = Number(r.score) || 0;
-                const a = r.anime;
-                if (userScore < 9 || !a || !a.id) return;
-
-                if (peakById.has(a.id)) {
-                  peakById.get(a.id).userScore = userScore;
-                  return;
-                }
-
-                const kindKey = String(a.kind || 'tv').toLowerCase();
-                if (!allowedKinds.has(kindKey)) return;
-
-                const rawImg = a.image?.original || a.image?.preview || '';
-                const shikiImg = rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : '';
-                const year = a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || null : null;
-                const shikiScore = Number(a.score) || 0;
-                const comment = stripHtml(r.text || '').trim();
-                const vibes = [
-                  userScore === 10 ? '#10/10' : '#9/10',
-                  kindKey === 'movie' ? '#фильм' : (kindKey === 'ona' ? '#ona' : '#просмотрено'),
-                  shikiScore >= 8.5 ? '#хит' : '#личный выбор'
-                ];
-
-                extracted.push({
-                  malId: a.id,
-                  title: a.russian || a.name,
-                  kind: SHIKI_KIND_LABELS[kindKey] || 'Аниме',
-                  year,
-                  score: shikiScore,
-                  userScore,
-                  shikiImg,
-                  url: a.url ? normalizeShikiUrl(a.url, activeShikiOrigin) : `${activeShikiOrigin}/animes/${a.id}`,
-                  vibes,
-                  note: comment || (
-                    userScore === 10
-                      ? 'Тайтл из моего списка просмотренного с высшей оценкой 10/10 на Shikimori — смело рекомендую.'
-                      : 'Сильный тайтл из моего списка просмотренного на Shikimori с личной оценкой 9/10.'
-                  ),
-                  source: 'shikimori'
-                });
-              });
-
-              if (extracted.length) {
-                ratedAnimePool = extracted;
-                saveRatedPoolCache();
-                updateRandomizerPoolCounts();
-              }
             }
           }
         } catch (e) {}
@@ -7992,7 +8194,7 @@
           entered = true;
           overlay.classList.add('is-hidden');
           if (withSound && player && typeof player.play === 'function') {
-            player.play();
+            player.play({ fadeIn: true });
           }
           setTimeout(() => {
             overlay.style.display = 'none';
@@ -8445,38 +8647,18 @@
 
         async function fetchShikiUserRates(userId, origin) {
           const base = origin || activeShikiOrigin;
-          const res = await fetch(`${base}/api/users/${userId}/anime_rates?limit=1000`, {
-            headers: { 'Accept': 'application/json' }
+          const res = await fetchShikiWithRetry(`${base}/api/users/${userId}/anime_rates?limit=1000`, {
+            retries: 3,
+            baseDelay: 750
           });
           if (!res.ok) throw new Error('HTTP ' + res.status);
-          const data = await res.json();
-          return Array.isArray(data) ? data : [];
+          return Array.isArray(res.data) ? res.data : [];
         }
 
         async function ensureHostRatesReady() {
           if (myRatesIndex.size >= 30) return myRatesIndex;
           setStatus('Подгружаю базу undereror nyashka...', 'loading');
-          const { user, origin } = await fetchShikiUserAnyOrigin(SHIKI_NICKNAME);
-          if (!user || !user.id) return myRatesIndex;
-          const rates = await fetchShikiUserRates(user.id, origin);
-          const completedOrRated = rates.filter((r) => r.anime && r.anime.id && (r.status === 'completed' || Number(r.score) > 0));
-          hydrateDnaFromShikiRates(
-            completedOrRated.filter((r) => r.status === 'completed'),
-            user.stats
-          );
-          completedOrRated.forEach((r) => {
-            const id = Number(r.anime.id);
-            if (!myRatesIndex.has(id)) {
-              const rawImg = r.anime.image?.original || r.anime.image?.preview || '';
-              myRatesIndex.set(id, {
-                id,
-                s: Number(r.score) || 0,
-                g: Number(r.anime.score) || 0,
-                t: r.anime.russian || r.anime.name || '',
-                img: rawImg ? normalizeShikiUrl(rawImg, origin) : ''
-              });
-            }
-          });
+          await loadHostAnimeRates();
           return myRatesIndex;
         }
 
@@ -9666,6 +9848,27 @@
           isRolling = true;
           updateModeButtons();
           updateRandomizerPoolCounts();
+
+          if (randomizerMode === 'all' && ratedAnimePool.length === 0) {
+            openModal({
+              tag: 'SHIKIMORI SYNC · 9–10★',
+              title: 'Подгружаю список 9–10★...',
+              sub: 'Синхронизация с Shikimori API',
+              pills: ['Top 16 + 9–10★'],
+              vibes: ['#загрузка', '#shikimori'],
+              note: 'Секунду — забираю все просмотренные тайтлы с оценками 9–10★, чтобы крутить полный пул.',
+              img: coverCache['anime_' + PEAK_FICTION[0].malId] || '',
+              url: `${activeShikiOrigin}/undereror+nyashka/list/anime`,
+              showReroll: false,
+              showModeBar: true
+            });
+            await Promise.race([loadHostAnimeRates(), sleep(6500)]);
+            updateRandomizerPoolCounts();
+            if (!modalBackdrop || !modalBackdrop.classList.contains('is-open')) {
+              isRolling = false;
+              return;
+            }
+          }
 
           const pool = getActivePool();
           const winner = pickRandomAnime(pool, lastMalId);
