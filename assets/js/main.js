@@ -11,6 +11,7 @@ import { initAtmosphereCanvas, initLiveWeather } from './modules/weather.js';
 import { syncShikimoriLive, loadAnimeCoversBatch, loadCharacterCoversBatch } from './modules/shikimori.js';
 import { initArchiveGalaxy } from './modules/galaxy.js';
 import { initCoopPicker } from './modules/coop.js';
+import { initCinemaMode } from './modules/cinema.js';
 import { initTrophiesShowcase } from './modules/trophies.js';
 import {
   initModalScrollLock,
@@ -50,6 +51,7 @@ initMobileTikTokDock();
 initArchiveGalaxy(playerControls);
 initAtmosphereCanvas();
 initLiveWeather();
+initCinemaMode(playerControls);
 initCollectionControls();
 
 renderStats(SNAPSHOT.anime, SNAPSHOT.manga, SNAPSHOT.lifetimeText);

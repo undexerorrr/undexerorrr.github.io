@@ -73,6 +73,10 @@
             <span class="g-star" aria-hidden="true">✦</span>
             <span>3D<span class="g-text-full"> Космос</span></span>
           </button>
+          <button type="button" class="cinema-nav-btn" id="cinema-toggle-btn" aria-label="Включить Cinema Mode (клавиша C)" aria-pressed="false" title="Cinema Mode · клавиша C">
+            <svg class="cinema-nav-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" rx="1.6"></rect><path d="M5.5 14h5M8 11.5V14"></path></svg>
+            <span class="cinema-btn-label">Cinema</span>
+          </button>
           <button type="button" class="audio-btn" id="audio-toggle-btn" aria-label="Воспроизвести или поставить на паузу музыку" title="Play / Pause плейлист">
             <span id="audio-icon" aria-hidden="true">▶</span>
             <span class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
@@ -763,6 +767,25 @@
       <span class="weather-hud-sep">·</span>
       <span id="weather-hud-cond">SYNC</span>
     </button>
+  </div>
+
+  <!-- Cinema Mode HUD (second monitor / clean vibe) -->
+  <div class="cinema-hud" id="cinema-hud" role="region" aria-label="Cinema Mode" aria-hidden="true" inert>
+    <button type="button" class="cinema-weather" id="cinema-weather-btn" aria-label="Сменить режим погоды" title="Погода 53.9° N · нажми, чтобы сменить эффект">
+      <span class="cinema-weather-icon" id="cinema-weather-icon" aria-hidden="true">✦</span>
+      <span class="cinema-weather-text"><span>53.9° N</span><span class="cinema-sep">·</span><span id="cinema-weather-clock">--:--</span><span class="cinema-sep">·</span><span id="cinema-weather-temp">--°C</span></span>
+    </button>
+    <div class="cinema-track" aria-live="off">
+      <div class="cinema-track-title" id="cinema-track-title">—</div>
+      <div class="cinema-track-artist" id="cinema-track-artist">—</div>
+    </div>
+    <canvas class="cinema-vis" id="cinema-vis" aria-hidden="true"></canvas>
+    <div class="cinema-controls">
+      <button type="button" class="cinema-ctl" id="cinema-prev-btn" aria-label="Предыдущий трек"><svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M3 3h1.6v10H3zM13 3v10L5.6 8z"></path></svg></button>
+      <button type="button" class="cinema-ctl cinema-ctl-play" id="cinema-play-btn" aria-label="Воспроизвести">▶</button>
+      <button type="button" class="cinema-ctl" id="cinema-next-btn" aria-label="Следующий трек"><svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M11.4 3H13v10h-1.6zM3 3l7.4 5L3 13z"></path></svg></button>
+    </div>
+    <button type="button" class="cinema-exit" id="cinema-exit-btn" aria-label="Выйти из Cinema Mode (Esc)" title="Выйти · Esc / C">Выйти</button>
   </div>
 
   <!-- 1v1 Tournament Arena Modal -->

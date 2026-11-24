@@ -75,6 +75,10 @@
       /* === Dynamic Runtime State === */
       --beat-energy: 0;
       --scrollbar-comp: 0px;
+
+      /* === Cinema Mode Tokens === */
+      --cinema-idle-opacity: 0.28;
+      --cinema-fade: 0.55s;
     }
 
     *, *::before, *::after {
@@ -9963,5 +9967,337 @@
       .pack-stage[data-state="sealed"] .pack-pouch-wrap,
       .pack-stage[data-state="revealed"] .pack-card-wrap {
         animation: none !important;
+      }
+    }
+
+
+    /* =========================================
+       CINEMA MODE (SECOND MONITOR / CLEAN VIBE)
+       ========================================= */
+
+    .cinema-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: var(--radius-pill);
+      background: rgba(10, 13, 20, 0.70);
+      border: 1px solid var(--border-default);
+      color: rgba(var(--light), 0.88);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.2s ease;
+    }
+
+    .cinema-nav-icon {
+      flex-shrink: 0;
+    }
+
+    .cinema-nav-btn:hover {
+      color: #fff;
+      border-color: var(--border-strong);
+      box-shadow: 0 0 14px rgba(var(--bright), 0.22);
+    }
+
+    .app-shell {
+      transition: opacity var(--cinema-fade) ease, visibility 0s linear 0s;
+    }
+
+    body.is-cinema-mode {
+      overflow: hidden;
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    body.is-cinema-mode .app-shell,
+    body.is-cinema-mode .topbar,
+    body.is-cinema-mode .container,
+    body.is-cinema-mode .footer,
+    body.is-cinema-mode .mobile-dock,
+    body.is-cinema-mode .music-dock,
+    body.is-cinema-mode .weather-hud {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity var(--cinema-fade) ease, visibility 0s linear var(--cinema-fade);
+    }
+
+    body.is-cinema-mode .bg-layer {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    .cinema-hud {
+      position: fixed;
+      left: 50%;
+      bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+      z-index: var(--z-hud);
+      width: min(880px, calc(100vw - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+      grid-template-areas: "weather track vis ctrl exit";
+      align-items: center;
+      column-gap: 14px;
+      row-gap: 8px;
+      padding: 8px 10px 8px 12px;
+      border-radius: var(--radius-xl);
+      background: var(--surface-3);
+      border: 1px solid var(--border-default);
+      box-shadow: var(--shadow-floating);
+      color: rgb(var(--light));
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translate(-50%, 14px);
+      transition: opacity 0.12s ease, transform 0.5s var(--modal-ease), visibility 0s linear 0.5s;
+    }
+
+    .cinema-hud::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      pointer-events: none;
+      box-shadow: 0 0 22px rgba(var(--bright), 0.34), inset 0 0 0 1px rgba(var(--bright), 0.30);
+      opacity: calc(var(--beat-energy) * 0.9);
+    }
+
+    body.is-cinema-mode .cinema-hud {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translate(-50%, 0);
+      transition: opacity 0.12s ease, transform 0.55s var(--modal-ease) 0.15s, visibility 0s linear 0s;
+    }
+
+    body.is-cinema-mode .cinema-hud.is-idle {
+      opacity: var(--cinema-idle-opacity);
+      transition: opacity 1.1s ease, transform 0.55s var(--modal-ease), visibility 0s linear 0s;
+    }
+
+    .cinema-weather {
+      grid-area: weather;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      padding: 6px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(var(--bright), 0.07);
+      border: 1px solid var(--border-subtle);
+      color: rgba(var(--light), 0.9);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.8px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .cinema-weather:hover {
+      color: #fff;
+      border-color: var(--border-strong);
+      background: rgba(var(--bright), 0.12);
+    }
+
+    .cinema-weather-icon {
+      font-size: 13px;
+      line-height: 1;
+      color: #fff;
+    }
+
+    .cinema-weather-text {
+      display: inline-flex;
+      gap: 5px;
+    }
+
+    .cinema-sep {
+      opacity: 0.45;
+    }
+
+    .cinema-track {
+      grid-area: track;
+      min-width: 0;
+      line-height: 1.25;
+    }
+
+    .cinema-track-title {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cinema-track-artist {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.8px;
+      color: rgba(var(--light), 0.62);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cinema-vis {
+      grid-area: vis;
+      display: block;
+      width: 84px;
+      height: 24px;
+    }
+
+    .cinema-controls {
+      grid-area: ctrl;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .cinema-ctl {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid transparent;
+      color: rgba(var(--light), 0.86);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .cinema-ctl:hover {
+      color: #fff;
+      background: rgba(var(--bright), 0.12);
+      border-color: var(--border-default);
+    }
+
+    .cinema-ctl-play {
+      width: 36px;
+      height: 36px;
+      color: #fff;
+      border-color: var(--border-strong);
+      background: rgba(var(--bright), 0.10);
+    }
+
+    .cinema-exit {
+      grid-area: exit;
+      padding: 6px 11px;
+      border-radius: var(--radius-pill);
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: rgba(var(--light), 0.6);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .cinema-exit:hover {
+      color: #fff;
+      border-color: var(--border-strong);
+    }
+
+    .cinema-hud :is(button):focus-visible {
+      outline: 2px solid rgba(var(--bright), 0.88);
+      outline-offset: 2px;
+    }
+
+    @media (min-width: 1920px) {
+      .cinema-hud {
+        width: min(1000px, 50vw);
+        padding: 10px 12px 10px 16px;
+        column-gap: 18px;
+      }
+
+      .cinema-track-title {
+        font-size: 14px;
+      }
+
+      .cinema-vis {
+        width: 110px;
+        height: 28px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .cinema-btn-label {
+        display: none;
+      }
+
+      .cinema-nav-btn {
+        padding: 6px 9px;
+      }
+
+      .cinema-hud {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+          "track ctrl"
+          "vis ctrl"
+          "weather exit";
+        padding: 8px 10px;
+      }
+
+      .cinema-vis {
+        width: 100%;
+        height: 22px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cinema-nav-btn {
+        min-width: 32px;
+        min-height: 32px;
+        justify-content: center;
+      }
+
+      .cinema-ctl {
+        width: 40px;
+        height: 40px;
+      }
+
+      .cinema-ctl-play {
+        width: 44px;
+        height: 44px;
+      }
+
+      .cinema-weather,
+      .cinema-exit {
+        min-height: 40px;
+      }
+
+      .cinema-weather {
+        padding: 6px 9px;
+        font-size: 10px;
+      }
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      .cinema-nav-btn:hover,
+      .cinema-weather:hover,
+      .cinema-ctl:hover,
+      .cinema-exit:hover {
+        box-shadow: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .app-shell,
+      body.is-cinema-mode .app-shell,
+      .cinema-hud,
+      body.is-cinema-mode .cinema-hud {
+        transition-duration: 0.01s;
+        transition-delay: 0s;
       }
     }
