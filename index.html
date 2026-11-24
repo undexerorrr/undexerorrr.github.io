@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="referrer" content="no-referrer" />
   <title>undereror nyashka — undexeror // archive</title>
   <meta name="description" content="undexeror // archive — личный аниме-архив, Аниме-ДНК, живой статус Discord/Spotify, рандомайзер и проверка совместимости вкусов по Shikimori." />
@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/css/archive.css?v=20" />
+  <link rel="stylesheet" href="./assets/css/archive.css?v=21" />
 </head>
 <body>
 
@@ -652,6 +652,10 @@
               <button type="button" class="sort-btn active" data-sort="rank">По топу</button>
               <button type="button" class="sort-btn" data-sort="score">По оценке</button>
               <button type="button" class="sort-btn" data-sort="year">По году</button>
+            </div>
+            <div class="view-toggle-group" id="view-toggle-controls" role="tablist" aria-label="Вид коллекции">
+              <button type="button" class="view-toggle-btn active" data-cview="grid" role="tab" aria-selected="true" title="Компактная сетка карточек">⊞ Сетка</button>
+              <button type="button" class="view-toggle-btn" data-cview="showcase" role="tab" aria-selected="false" title="Журнальный режим «Витрина»">▤ Витрина</button>
             </div>
             <button type="button" class="randomizer-btn" id="randomizer-btn" title="Открыть фольгированный бустер-пак ARCHIVE PACK (Top 16 и все твои 9–10★ на Shikimori)">◈ Бустер-пак · Что посмотреть <span class="randomizer-count-badge" id="randomizer-count-badge">16</span></button>
             <button type="button" class="arena-launch-btn" id="collection-arena-btn" title="Мини-турнир 1v1: выбери лучшего из моего топа за 15 секунд">⚔ Турнир 1v1</button>
@@ -1375,6 +1379,6 @@
     </div>
   </div>
 
-  <script src="./assets/js/archive.js?v=20"></script>
+  <script src="./assets/js/archive.js?v=21"></script>
 </body>
 </html>

@@ -200,8 +200,13 @@
       /* =========================================
          STATE & CACHE HELPERS
          ========================================= */
+      const VIEW_STORAGE_KEY = 'undexeror_archive_view_v1';
       let currentTab = 'peak';
       let currentSort = 'rank';
+      let currentView = (() => {
+        try { return localStorage.getItem(VIEW_STORAGE_KEY) === 'showcase' ? 'showcase' : 'grid'; }
+        catch (e) { return 'grid'; }
+      })();
       let searchQuery = '';
       let coverCache = loadCoverCache();
       let ratedAnimePool = loadRatedPoolCache();
@@ -1001,7 +1006,7 @@
         let nextLightningAt = performance.now() + 4500;
 
         function resize() {
-          const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+          const dpr = window.innerWidth <= 720 ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
           w = window.innerWidth;
           h = window.innerHeight;
           canvas.width = w * dpr;
@@ -2574,12 +2579,13 @@
         wrap.innerHTML = WAIFU_LIST.map((ch) => {
           const coverKey = 'char_' + ch.key;
           const imgSrc = coverCache[coverKey] || ch.shikiImg || '';
+          const rarity = getHoloRarity(ch.rank);
           const classes = ['waifu-card'];
           if (ch.rank <= 5) classes.push('is-top5');
           if (ch.rank === 1) classes.push('is-top1');
           return `
-            <article class="${classes.join(' ')}" data-waifu-key="${ch.key}">
-              <span class="waifu-rank">${formatRank(ch.rank)}</span>
+            <article class="${classes.join(' ')}" data-waifu-key="${ch.key}" data-rarity="${rarity.key}">
+              <span class="waifu-rank">${formatRank(ch.rank)}<em>${rarity.short}</em></span>
               <img
                 data-cover-key="${coverKey}"
                 src="${escapeHtml(imgSrc)}"
@@ -2705,6 +2711,7 @@
         if (!grid) return;
 
         const q = searchQuery.trim().toLowerCase();
+        grid.classList.toggle('is-showcase', currentView === 'showcase');
 
         if (sortGroup) {
           sortGroup.style.display = currentTab === 'peak' ? 'flex' : 'none';
@@ -2723,21 +2730,46 @@
           grid.innerHTML = items.map((a, idx) => {
             const coverKey = 'anime_' + a.malId;
             const imgSrc = coverCache[coverKey] || '';
+            const rarity = getHoloRarity(a.rank);
             const classes = ['catalog-card'];
             if (a.rank <= 5) classes.push('is-top5');
             if (a.rank <= 3) classes.push('rank-' + a.rank);
+            const vibesHtml = (a.vibes || []).slice(0, 3).map((v) =>
+              `<span class="sc-vibe-chip">${escapeHtml(v)}</span>`
+            ).join('');
+            const userScoreNote = a.userScore ? `Моя оценка ${a.userScore}/10 · ` : '';
+
             return `
-              <article class="${classes.join(' ')}" data-type="peak" data-id="${a.malId}" style="animation-delay:${(idx * 0.035).toFixed(3)}s">
+              <article class="${classes.join(' ')}" data-type="peak" data-id="${a.malId}" data-rarity="${rarity.key}" style="animation-delay:${(idx * 0.03).toFixed(3)}s">
+                <div class="card-serial-bar">
+                  <span class="card-serial-num">NO.${formatRank(a.rank)}</span>
+                  <span class="card-rarity-tag">// ${rarity.short}</span>
+                </div>
                 <div class="poster-box">
-                  <span class="rank-pill">${formatRank(a.rank)}</span>
                   <span class="score-pill">★ ${a.score.toFixed(2)}</span>
                   <img data-cover-key="${coverKey}" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(a.title)}" loading="lazy" />
+                  <div class="poster-glare" aria-hidden="true"></div>
                   <div class="poster-fallback"><span>◈</span>${escapeHtml(a.title)}</div>
                 </div>
-                <div class="card-title">${escapeHtml(a.title)}</div>
-                <div class="card-meta">
-                  <span>${escapeHtml(a.kind)}</span>
-                  <span>${a.year}</span>
+                <div class="card-grid-footer">
+                  <div class="card-title">${escapeHtml(a.title)}</div>
+                  <div class="card-meta">
+                    <span>${escapeHtml(a.kind)}</span>
+                    <span>${a.year}</span>
+                  </div>
+                </div>
+                <div class="card-showcase-body">
+                  <div class="sc-head-row">
+                    <span class="sc-serial">NO.${formatRank(a.rank)} <span class="card-rarity-tag">// ${rarity.short}</span></span>
+                    <span>${escapeHtml(a.kind)} · ${a.year}</span>
+                  </div>
+                  <h3 class="sc-title">${escapeHtml(a.title)}</h3>
+                  <p class="sc-note">«${escapeHtml(a.note)}»</p>
+                  <div class="sc-vibes">${vibesHtml}</div>
+                  <div class="sc-foot-row">
+                    <span>${escapeHtml(userScoreNote)}Шики ★ ${a.score.toFixed(2)}</span>
+                    <span class="sc-cta">◈ 3D-карта →</span>
+                  </div>
                 </div>
               </article>
             `;
@@ -2747,19 +2779,43 @@
           grid.innerHTML = items.map((c, idx) => {
             const coverKey = 'char_' + c.key;
             const imgSrc = coverCache[coverKey] || '';
+            const rarity = getHoloRarity(c.rank);
             const classes = ['catalog-card'];
             if (c.rank <= 5) classes.push('is-top5');
             if (c.rank <= 3) classes.push('rank-' + c.rank);
+
             return `
-              <article class="${classes.join(' ')}" data-type="literally" data-id="${c.key}" style="animation-delay:${(idx * 0.035).toFixed(3)}s">
+              <article class="${classes.join(' ')}" data-type="literally" data-id="${c.key}" data-rarity="${rarity.key}" style="animation-delay:${(idx * 0.03).toFixed(3)}s">
+                <div class="card-serial-bar">
+                  <span class="card-serial-num">NO.${formatRank(c.rank)}</span>
+                  <span class="card-rarity-tag">// ${rarity.short}</span>
+                </div>
                 <div class="poster-box">
-                  <span class="rank-pill">${formatRank(c.rank)}</span>
                   <img data-cover-key="${coverKey}" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(c.name)}" loading="lazy" />
+                  <div class="poster-glare" aria-hidden="true"></div>
                   <div class="poster-fallback"><span>✦</span>${escapeHtml(c.name)}</div>
                 </div>
-                <div class="card-title">${escapeHtml(c.name)}</div>
-                <div class="card-meta">
-                  <span>${escapeHtml(c.anime)}</span>
+                <div class="card-grid-footer">
+                  <div class="card-title">${escapeHtml(c.name)}</div>
+                  <div class="card-meta">
+                    <span>${escapeHtml(c.anime)}</span>
+                  </div>
+                </div>
+                <div class="card-showcase-body">
+                  <div class="sc-head-row">
+                    <span class="sc-serial">NO.${formatRank(c.rank)} <span class="card-rarity-tag">// ${rarity.short}</span></span>
+                    <span>LITERALLY ME</span>
+                  </div>
+                  <h3 class="sc-title">${escapeHtml(c.name)}</h3>
+                  <p class="sc-note">Персонаж из личного списка «literally me» — точное попадание в характер, мотивацию и внутренний вайб тайтла ${escapeHtml(c.anime)}.</p>
+                  <div class="sc-vibes">
+                    <span class="sc-vibe-chip">#literally-me</span>
+                    <span class="sc-vibe-chip">#${rarity.key}</span>
+                  </div>
+                  <div class="sc-foot-row">
+                    <span>${escapeHtml(c.anime)}</span>
+                    <span class="sc-cta">◈ 3D-карта →</span>
+                  </div>
                 </div>
               </article>
             `;
@@ -2809,17 +2865,54 @@
       }
 
       function attachCardInteractions(grid) {
-        grid.querySelectorAll('.catalog-card').forEach((card) => {
-          card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const px = (e.clientX - rect.left) / rect.width - 0.5;
-            const py = (e.clientY - rect.top) / rect.height - 0.5;
-            card.style.transform = `perspective(700px) translateY(-6px) rotateX(${(-py * 9).toFixed(2)}deg) rotateY(${(px * 9).toFixed(2)}deg)`;
-          });
+        const isFine = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-          card.addEventListener('mouseleave', () => {
-            card.style.transform = '';
-          });
+        grid.querySelectorAll('.catalog-card').forEach((card) => {
+          if (isFine) {
+            let raf = null;
+            let lx = 0, ly = 0;
+            let cachedRect = null;
+
+            card.addEventListener('pointerenter', () => {
+              cachedRect = card.getBoundingClientRect();
+              card.classList.add('is-tilting');
+            });
+
+            card.addEventListener('pointermove', (e) => {
+              if (e.pointerType && e.pointerType !== 'mouse') return;
+              lx = e.clientX;
+              ly = e.clientY;
+              if (raf !== null) return;
+              raf = requestAnimationFrame(() => {
+                raf = null;
+                const rect = cachedRect || card.getBoundingClientRect();
+                if (!rect.width || !rect.height) return;
+                const nx = Math.max(0, Math.min(1, (lx - rect.left) / rect.width));
+                const ny = Math.max(0, Math.min(1, (ly - rect.top) / rect.height));
+                const dx = nx - 0.5;
+                const dy = ny - 0.5;
+                const maxTilt = currentView === 'showcase' ? 6 : 11;
+                card.style.setProperty('--lift', '-6px');
+                card.style.setProperty('--rx', `${(-dy * maxTilt).toFixed(2)}deg`);
+                card.style.setProperty('--ry', `${(dx * maxTilt).toFixed(2)}deg`);
+                card.style.setProperty('--cx', (dx * 2).toFixed(3));
+                card.style.setProperty('--cy', (dy * 2).toFixed(3));
+                card.style.setProperty('--gx', `${(nx * 100).toFixed(1)}%`);
+                card.style.setProperty('--gy', `${(ny * 100).toFixed(1)}%`);
+              });
+            });
+
+            card.addEventListener('pointerleave', () => {
+              if (raf !== null) { cancelAnimationFrame(raf); raf = null; }
+              cachedRect = null;
+              card.classList.remove('is-tilting');
+              card.style.setProperty('--lift', '0px');
+              card.style.setProperty('--rx', '0deg');
+              card.style.setProperty('--ry', '0deg');
+              card.style.setProperty('--cx', '0');
+              card.style.setProperty('--cy', '0');
+            });
+          }
 
           card.addEventListener('click', () => {
             if (card.dataset.type === 'peak') {
@@ -3228,9 +3321,15 @@
         });
 
         sectionLinks.forEach((link) => {
-          link.addEventListener('click', () => {
+          link.addEventListener('click', (e) => {
             setMobileMusicOpen(false);
             sectionLinks.forEach((l) => l.classList.toggle('is-active', l === link));
+            const targetId = link.dataset.mdockSec;
+            const targetEl = targetId ? document.getElementById(targetId) : null;
+            if (targetEl) {
+              e.preventDefault();
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
           });
         });
 
@@ -3915,6 +4014,26 @@
             renderCollection();
           });
         });
+
+        const viewBtns = Array.from(document.querySelectorAll('.view-toggle-btn'));
+        function syncViewButtons() {
+          viewBtns.forEach((b) => {
+            const on = b.dataset.cview === currentView;
+            b.classList.toggle('active', on);
+            b.setAttribute('aria-selected', String(on));
+          });
+        }
+        viewBtns.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const next = btn.dataset.cview === 'showcase' ? 'showcase' : 'grid';
+            if (next === currentView) return;
+            currentView = next;
+            try { localStorage.setItem(VIEW_STORAGE_KEY, currentView); } catch (e) {}
+            syncViewButtons();
+            renderCollection();
+          });
+        });
+        syncViewButtons();
 
         const searchInput = document.getElementById('collection-search');
         if (searchInput) {

@@ -33,6 +33,7 @@
     body {
       min-height: 100vh;
       overflow-x: hidden;
+      overflow-x: clip;
       background-color: var(--bg-base);
       position: relative;
       line-height: 1.5;
@@ -1748,13 +1749,17 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.25s ease;
+      overscroll-behavior: contain;
+      transition: opacity 0.25s ease, visibility 0s linear 0.25s;
     }
 
     .modal-backdrop.is-open {
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
+      transition: opacity 0.25s ease, visibility 0s linear 0s;
     }
 
     .modal-card {
@@ -2367,13 +2372,16 @@
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.28s ease;
+      transition: opacity 0.28s ease, visibility 0s linear 0.28s;
     }
 
     .spotify-backdrop.is-open {
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
+      transition: opacity 0.28s ease, visibility 0s linear 0s;
     }
 
     .spotify-drawer {
@@ -2394,12 +2402,18 @@
       flex-direction: column;
       padding: 18px;
       gap: 14px;
+      visibility: hidden;
+      pointer-events: none;
+      overscroll-behavior: contain;
       transform: translateX(calc(100% + 28px));
-      transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.34s;
     }
 
     .spotify-drawer.is-open {
+      visibility: visible;
+      pointer-events: auto;
       transform: translateX(0);
+      transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0s;
     }
 
     .spotify-drawer-head {
@@ -4027,13 +4041,17 @@
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.26s ease;
+      overscroll-behavior: contain;
+      transition: opacity 0.26s ease, visibility 0s linear 0.26s;
     }
 
     .arena-backdrop.is-open {
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
+      transition: opacity 0.26s ease, visibility 0s linear 0s;
     }
 
     .arena-card {
@@ -5132,13 +5150,17 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.28s ease;
+      overscroll-behavior: contain;
+      transition: opacity 0.28s ease, visibility 0s linear 0.28s;
     }
 
     .holo-backdrop.is-open {
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
+      transition: opacity 0.28s ease, visibility 0s linear 0s;
     }
 
     .holo-close-btn {
@@ -5862,6 +5884,10 @@
       transition: opacity 0.36s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0s;
     }
 
+    .galaxy-overlay.is-open .galaxy-dock-bar {
+      pointer-events: auto;
+    }
+
     #galaxy-canvas-wrap {
       position: absolute;
       inset: 0;
@@ -5980,7 +6006,7 @@
       pointer-events: none;
     }
 
-    .galaxy-hud-top > * {
+    .galaxy-overlay.is-open .galaxy-hud-top > * {
       pointer-events: auto;
     }
 
@@ -6309,7 +6335,7 @@
     }
 
     .galaxy-dock-bar {
-      pointer-events: auto;
+      pointer-events: none;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -6838,13 +6864,17 @@
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.26s ease;
+      overscroll-behavior: contain;
+      transition: opacity 0.26s ease, visibility 0s linear 0.26s;
     }
 
     .coop-modal-backdrop.is-open {
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
+      transition: opacity 0.26s ease, visibility 0s linear 0s;
     }
 
     .coop-modal-card {
@@ -7372,7 +7402,8 @@
       .trophy-card *,
       .trophy-filter-btn,
       .trophy-ev-row,
-      .trophy-ev-row * {
+      .trophy-ev-row *,
+      .view-toggle-btn {
         cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23edf3ff%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%271.35%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M16.5%2015.2%20L19.8%2018.5%20L16.5%2021.8%20L13.2%2018.5%20Z%27%20fill%3D%27%23adbfde%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%270.9%27/%3E%3C/svg%3E") 3 2, pointer !important;
       }
 
@@ -8901,5 +8932,533 @@
       }
       .trophy-coin-glyph {
         font-size: 24px;
+      }
+    }
+
+
+    /* =========================================
+       V21: TACTILE CARD POLISH (NO.01 // MYTHIC + GPU 3D DEPTH PARALLAX + «ВИТРИНА»)
+       ========================================= */
+    .view-toggle-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px;
+      border-radius: 999px;
+      background: rgba(6, 8, 14, 0.78);
+      border: 1px solid rgba(var(--bright), 0.22);
+    }
+
+    .view-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 0;
+      background: transparent;
+      color: rgba(var(--light), 0.70);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .view-toggle-btn:hover {
+      color: #fff;
+    }
+
+    .view-toggle-btn.active {
+      color: #fff;
+      background: rgba(var(--bright), 0.24);
+      box-shadow: 0 0 12px rgba(var(--bright), 0.24);
+    }
+
+    /* Engraved Serial Header Strip (NO.01 // MYTHIC) */
+    .card-serial-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      padding: 1px 2px 5px;
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(var(--light), 0.60);
+      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), color 0.22s ease;
+    }
+
+    .card-serial-num {
+      color: rgba(232, 240, 252, 0.88);
+    }
+
+    .card-rarity-tag {
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 7.5px;
+      letter-spacing: 0.9px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(var(--bright), 0.20);
+      color: rgba(var(--light), 0.76);
+    }
+
+    .catalog-card[data-rarity="mythic"] {
+      border-color: rgba(235, 244, 255, 0.34);
+      background: linear-gradient(165deg, rgba(16, 22, 34, 0.84) 0%, rgba(8, 10, 16, 0.88) 100%);
+    }
+
+    .catalog-card[data-rarity="mythic"] .card-serial-num {
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(210, 228, 255, 0.55);
+    }
+
+    .catalog-card[data-rarity="mythic"] .card-rarity-tag {
+      background: linear-gradient(135deg, rgba(242, 248, 255, 0.22), rgba(160, 190, 236, 0.12));
+      border-color: rgba(242, 248, 255, 0.72);
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(190, 218, 255, 0.28);
+    }
+
+    .catalog-card[data-rarity="ssr"] .card-rarity-tag {
+      background: rgba(var(--bright), 0.13);
+      border-color: rgba(var(--bright), 0.44);
+      color: #e4effe;
+    }
+
+    .catalog-card[data-rarity="sr"] .card-rarity-tag {
+      border-color: rgba(var(--muted), 0.26);
+      color: rgba(var(--light), 0.64);
+    }
+
+    /* Rarity badge tint on WAIFU cards */
+    .waifu-card[data-rarity="mythic"] .waifu-rank {
+      color: #ffffff;
+      border-color: rgba(242, 248, 255, 0.86);
+      box-shadow: 0 0 12px rgba(196, 222, 255, 0.44);
+    }
+
+    .waifu-card .waifu-rank em {
+      font-style: normal;
+      opacity: 0.72;
+      font-size: 8px;
+      margin-left: 3px;
+      letter-spacing: 0.6px;
+    }
+
+    /* GPU 3D Multi-Layer Depth Parallax on Desktop Hover */
+    .poster-glare {
+      position: absolute;
+      inset: 0;
+      z-index: 7;
+      pointer-events: none;
+      opacity: 0;
+      mix-blend-mode: screen;
+      background: radial-gradient(
+        180px circle at var(--gx, 50%) var(--gy, 50%),
+        rgba(255, 255, 255, 0.28),
+        rgba(185, 210, 248, 0.10) 42%,
+        transparent 74%
+      );
+      transition: opacity 0.26s ease;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .catalog-card {
+        transform: perspective(860px) translate3d(0, var(--lift, 0px), 0) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+      }
+
+      .catalog-card.is-tilting {
+        transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+        will-change: transform;
+      }
+
+      .catalog-card.is-tilting .poster-glare {
+        opacity: 1;
+      }
+
+      .catalog-card.is-tilting .poster-box img {
+        transform: scale(1.08) translate3d(calc(var(--cx, 0) * -6px), calc(var(--cy, 0) * -6px), 0);
+        transition: filter 0.35s ease, opacity 0.45s ease;
+      }
+
+      .catalog-card.is-tilting .score-pill {
+        transform: translate3d(calc(var(--cx, 0) * 5px), calc(var(--cy, 0) * 4px), 16px);
+      }
+
+      .catalog-card.is-tilting .card-serial-bar {
+        transform: translate3d(calc(var(--cx, 0) * 3px), calc(var(--cy, 0) * 2px), 10px);
+      }
+    }
+
+    .catalog-card .score-pill {
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.22s ease;
+    }
+
+    /* Hide editorial showcase-only nodes when in compact Grid mode */
+    .card-showcase-body {
+      display: none;
+    }
+
+    .card-grid-footer {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    /* =========================================
+       MAGAZINE SHOWCASE MODE («ВИТРИНА»)
+       ========================================= */
+    .cards-grid.is-showcase {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .cards-grid.is-showcase .catalog-card {
+      flex-direction: row;
+      align-items: stretch;
+      gap: 16px;
+      padding: 13px;
+      border-radius: 16px;
+      background: linear-gradient(155deg, rgba(11, 15, 24, 0.84) 0%, rgba(7, 9, 15, 0.90) 100%);
+    }
+
+    .cards-grid.is-showcase .catalog-card[data-rarity="mythic"] {
+      background:
+        radial-gradient(circle at 12% 18%, rgba(210, 228, 255, 0.12), transparent 55%),
+        linear-gradient(155deg, rgba(16, 22, 34, 0.88) 0%, rgba(8, 10, 16, 0.92) 100%);
+      border-color: rgba(235, 244, 255, 0.36);
+    }
+
+    .cards-grid.is-showcase .card-serial-bar,
+    .cards-grid.is-showcase .card-grid-footer {
+      display: none;
+    }
+
+    .cards-grid.is-showcase .poster-box {
+      width: 118px;
+      min-width: 118px;
+      height: 174px;
+      aspect-ratio: auto;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    .cards-grid.is-showcase .card-showcase-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+      padding: 2px 2px 2px 0;
+    }
+
+    .sc-head-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: rgba(var(--light), 0.62);
+    }
+
+    .sc-serial {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .sc-title {
+      font-family: var(--font-display);
+      font-size: 14.5px;
+      font-weight: 600;
+      line-height: 1.28;
+      color: #ffffff;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .sc-note {
+      font-size: 12px;
+      line-height: 1.48;
+      color: rgba(var(--light), 0.78);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .sc-vibes {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .sc-vibe-chip {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(var(--bright), 0.10);
+      border: 1px solid rgba(var(--bright), 0.22);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: rgba(226, 235, 248, 0.88);
+    }
+
+    .sc-foot-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 7px;
+      border-top: 1px solid rgba(var(--bright), 0.12);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: rgba(var(--light), 0.64);
+    }
+
+    .sc-cta {
+      color: rgb(var(--bright));
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .catalog-card:hover .sc-cta {
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(var(--bright), 0.65);
+    }
+
+    /* =========================================
+       V21: COMPREHENSIVE MOBILE & TOUCH OPTIMIZATION
+       ========================================= */
+
+    /* 1. Disable sticky :has(:hover) dimming and reveal color/names on touch devices */
+    @media (hover: none), (pointer: coarse) {
+      .cards-grid:has(.catalog-card:hover) .catalog-card:not(:hover),
+      .waifu-carousel:not(.is-scrolling):not(.is-dragging):has(.waifu-card:hover) .waifu-card:not(:hover),
+      .graph-bars:has(.graph-col:hover) .graph-col:not(:hover) .graph-bar,
+      .dna-scores-chart:has(.dna-score-col:hover) .dna-score-col:not(:hover) .dna-score-bar {
+        opacity: 1 !important;
+        filter: none !important;
+      }
+
+      /* On touch devices without hover, keep posters rich & crisp instead of permanently grey */
+      .poster-box img,
+      .waifu-card img,
+      .watching-poster img,
+      .history-thumb img,
+      .base-row-thumb img,
+      .ht-thumb img,
+      .coop-thumb img {
+        filter: grayscale(0.10) saturate(0.96) contrast(1.04) brightness(0.98);
+      }
+
+      /* Always show Waifu names cleanly on phones since there is no hover */
+      .waifu-name {
+        opacity: 1;
+        transform: none;
+        padding: 20px 6px 7px;
+        font-size: 10.5px;
+      }
+    }
+
+    /* 2. Mobile Bottom Dock & Drawer Hit-Testing Hardening (<= 860px) */
+    @media (max-width: 860px) {
+      .weather-hud {
+        display: none !important;
+      }
+
+      .mobile-dock {
+        z-index: 460;
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        padding: 6px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        touch-action: manipulation;
+      }
+
+      .mdock-btn {
+        min-height: 48px;
+        padding: 6px 4px;
+        font-size: 9px;
+        color: rgba(var(--light), 0.78);
+        touch-action: manipulation;
+        user-select: none;
+      }
+
+      .mdock-btn > * {
+        pointer-events: none;
+      }
+
+      /* Hide closed mobile music drawer completely from touch hit-testing */
+      .music-dock {
+        z-index: 455;
+        bottom: calc(82px + env(safe-area-inset-bottom, 0px));
+        visibility: hidden;
+        pointer-events: none;
+        transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease, visibility 0s linear 0.26s;
+      }
+
+      .music-dock.is-mobile-open {
+        visibility: visible;
+        pointer-events: auto;
+        transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease, visibility 0s linear 0s;
+      }
+
+      .cards-grid.is-showcase {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 3. Prevent iOS Safari 16px input zoom + refine mobile spacing & touch targets (<= 720px) */
+    @media (max-width: 720px) {
+      input[type="text"],
+      .search-box input,
+      .base-input,
+      .galaxy-search-input {
+        font-size: 16px !important;
+      }
+
+      .container {
+        padding: 20px 14px calc(114px + env(safe-area-inset-bottom, 0px));
+        gap: 36px;
+      }
+
+      .glass-card {
+        padding: 16px 15px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+
+      .bento-pilot,
+      .bento-telemetry,
+      .bento-dna,
+      .base-check-card,
+      .hottakes-card,
+      .trophies-card {
+        padding: 16px 15px;
+      }
+
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .search-box {
+        max-width: none;
+        min-width: 0;
+        width: 100%;
+      }
+
+      .toolbar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .base-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .base-input-wrap {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .base-submit-btn {
+        width: 100%;
+        min-height: 44px;
+      }
+
+      .section-title {
+        min-width: 0;
+        letter-spacing: 2px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .cards-grid.is-showcase .catalog-card {
+        gap: 12px;
+        padding: 11px;
+      }
+
+      .cards-grid.is-showcase .poster-box {
+        width: 96px;
+        min-width: 96px;
+        height: 142px;
+      }
+
+      .cards-grid.is-showcase .sc-title {
+        font-size: 13px;
+      }
+
+      .cards-grid.is-showcase .sc-note {
+        font-size: 11.5px;
+        -webkit-line-clamp: 3;
+      }
+
+      .topbar-inner {
+        padding: 9px 12px;
+        gap: 6px;
+        flex-wrap: nowrap;
+      }
+
+      .brand {
+        font-size: 11px;
+        letter-spacing: 0.6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+      }
+
+      .topbar-controls {
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      .galaxy-nav-btn {
+        padding: 6px 10px;
+        font-size: 9.5px;
+      }
+
+      .audio-btn {
+        padding: 5px 9px;
+        max-width: 120px;
+      }
+
+      .audio-btn-label {
+        max-width: 58px;
+      }
+
+      .base-mini-metrics {
+        width: 100%;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .trophies-xp-wrap {
+        min-width: 0;
+        width: 100%;
+        flex: 1 1 100%;
+      }
+
+      .randomizer-btn,
+      .arena-launch-btn {
+        flex: 1 1 auto;
+        justify-content: center;
       }
     }
