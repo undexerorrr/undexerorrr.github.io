@@ -8,8 +8,8 @@
 
 - Статический сайт для GitHub Pages без сборщика и транспиляции:
   - `index.html` — разметка, мета-теги (`viewport-fit=cover`), шрифты Google Fonts и подключение ресурсов с версионированием.
-  - `assets/css/archive.css` — единая таблица стилей (токены `:root` в начале файла, единая система модалок, `content-visibility`, capability- и responsive-медиазапросы в конце).
-  - `assets/js/main.js` + `assets/js/modules/` — модульная ES-архитектура без сборщика (`config.js`, `data.js`, `shikimori.js`, `music.js`, `weather.js`, `galaxy.js`, `coop.js`, `trophies.js`, `ui.js`), где `main.js` выступает точкой входа и задаёт порядок инициализации, а `data.js` хранит общее состояние `appState`, локальные снапшоты (`SNAPSHOT`, `PEAK_FICTION`, `WAIFU_LIST`, `LITERALLY_ME`, `PLAYLIST`) и `localStorage`-кэши; сетевые интеграции — Shikimori, AniList GraphQL, Lanyard, Open-Meteo, Spotify Embed/oEmbed, ленивая подгрузка Three.js для 3D-Галактики.
+  - `assets/css/archive.css` — единая таблица стилей (токены `:root` в начале файла, единая система модалок, `content-visibility`, capability- и responsive-медиазапросы в конце); `assets/css/giscus-noir.css` — кастомная нуар-тема для iframe Giscus.
+  - `assets/js/main.js` + `assets/js/modules/` — модульная ES-архитектура без сборщика (`config.js`, `data.js`, `shikimori.js`, `music.js`, `weather.js`, `galaxy.js`, `coop.js`, `trophies.js`, `cinema.js`, `guestbook.js`, `ui.js`), где `main.js` выступает точкой входа и задаёт порядок инициализации, а `data.js` хранит общее состояние `appState`, локальные снапшоты (`SNAPSHOT`, `PEAK_FICTION`, `WAIFU_LIST`, `LITERALLY_ME`, `PLAYLIST`) и `localStorage`-кэши; сетевые интеграции — Shikimori, AniList GraphQL, Lanyard, Open-Meteo, Spotify Embed/oEmbed, Giscus / GitHub Discussions (ленивая загрузка) и локальный `assets/js/vendor/three.min.js` для 3D-Галактики.
 - Сохранять существующий порядок CSS-каскада, ключи `localStorage` и работу в оффлайн/fallback-режиме (через `SNAPSHOT` и `fetchWithTimeout`).
 
 ---
