@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/css/archive.css" />
+  <link rel="stylesheet" href="./assets/css/archive.css?v=19" />
 </head>
 <body>
 
@@ -604,7 +604,7 @@
               <button type="button" class="sort-btn" data-sort="score">По оценке</button>
               <button type="button" class="sort-btn" data-sort="year">По году</button>
             </div>
-            <button type="button" class="randomizer-btn" id="randomizer-btn" title="Случайная рекомендация из Top 16 и твоих 9–10★ на Shikimori">◈ Что посмотреть от меня <span class="randomizer-count-badge" id="randomizer-count-badge">16</span></button>
+            <button type="button" class="randomizer-btn" id="randomizer-btn" title="Открыть фольгированный бустер-пак ARCHIVE PACK (Top 16 и все твои 9–10★ на Shikimori)">◈ Бустер-пак · Что посмотреть <span class="randomizer-count-badge" id="randomizer-count-badge">16</span></button>
             <button type="button" class="arena-launch-btn" id="collection-arena-btn" title="Мини-турнир 1v1: выбери лучшего из моего топа за 15 секунд">⚔ Турнир 1v1</button>
           </div>
         </div>
@@ -905,7 +905,7 @@
     </button>
     <button type="button" class="mdock-btn" id="mdock-random-btn">
       <span class="mdock-icon" aria-hidden="true">✦</span>
-      <span>Рулетка</span>
+      <span>Пак</span>
     </button>
     <button type="button" class="mdock-btn mdock-music-btn" id="mdock-music-btn" aria-expanded="false">
       <span class="mdock-icon" aria-hidden="true">
@@ -1087,6 +1087,166 @@
     <div class="holo-kbd-hint">Двигай мышкой для 3D-голограммы · Клик / Пробел — переворот · ← / → — листать колоду</div>
   </div>
 
+  <!-- V19: Foil Booster Pack Overlay (ARCHIVE PACK -> 3D Holo Reveal) -->
+  <div class="pack-backdrop" id="pack-modal" role="dialog" aria-modal="true" aria-label="Бустер-пак ARCHIVE PACK" aria-hidden="true">
+    <button type="button" class="holo-close-btn" id="pack-close" aria-label="Закрыть бустер-пак">×</button>
+
+    <div class="pack-topbar">
+      <div class="pack-mode-bar" role="tablist" aria-label="Пул бустер-пака">
+        <button type="button" class="pack-mode-btn active" data-pmode="all" id="pack-mode-all">Все 9–10★ (<span id="pack-all-count">16</span>)</button>
+        <button type="button" class="pack-mode-btn" data-pmode="peak" id="pack-mode-peak">Только Top 16</button>
+      </div>
+      <span class="panel-badge" id="pack-drop-counter">ARCHIVE PACK · #01</span>
+    </div>
+
+    <div class="pack-stage" id="pack-stage" data-state="sealed">
+      <div class="pack-flash" id="pack-flash" aria-hidden="true"></div>
+      <div class="pack-sparks" id="pack-sparks" aria-hidden="true">
+        <span style="--sx:-155px;--sy:-95px;--sd:0ms;--ss:1.1"></span>
+        <span style="--sx:-110px;--sy:-145px;--sd:25ms;--ss:0.8"></span>
+        <span style="--sx:-68px;--sy:-115px;--sd:10ms;--ss:1.25"></span>
+        <span style="--sx:-22px;--sy:-160px;--sd:35ms;--ss:0.9"></span>
+        <span style="--sx:28px;--sy:-150px;--sd:15ms;--ss:1.15"></span>
+        <span style="--sx:78px;--sy:-122px;--sd:30ms;--ss:0.85"></span>
+        <span style="--sx:132px;--sy:-105px;--sd:20ms;--ss:1.2"></span>
+        <span style="--sx:168px;--sy:-62px;--sd:40ms;--ss:0.95"></span>
+        <span style="--sx:-142px;--sy:-38px;--sd:45ms;--ss:0.75"></span>
+        <span style="--sx:-85px;--sy:-58px;--sd:18ms;--ss:0.9"></span>
+        <span style="--sx:52px;--sy:-68px;--sd:22ms;--ss:1.05"></span>
+        <span style="--sx:118px;--sy:-40px;--sd:38ms;--ss:0.8"></span>
+        <span style="--sx:0px;--sy:-128px;--sd:12ms;--ss:1.3"></span>
+        <span style="--sx:94px;--sy:-148px;--sd:28ms;--ss:0.7"></span>
+      </div>
+
+      <!-- PHASE 1: SEALED FOIL BOOSTER PACK -->
+      <div class="pack-pouch-wrap" id="pack-pouch-wrap">
+        <div class="pack-pouch" id="pack-pouch" role="button" tabindex="0" aria-label="Вскрыть фольгированный пакет ARCHIVE PACK">
+          <div class="pack-top-strip" id="pack-top-strip">
+            <div class="pack-crimp pack-crimp-top" aria-hidden="true"></div>
+            <div class="pack-tear-zone">
+              <span class="pack-tear-notch" aria-hidden="true"></span>
+              <span class="pack-tear-label" id="pack-tear-label">✂ ТЯНИ ВПРАВО ИЛИ КЛИКНИ ▸▸▸</span>
+            </div>
+            <div class="pack-tear-seam" aria-hidden="true">
+              <div class="pack-tear-glow" id="pack-tear-glow"></div>
+            </div>
+          </div>
+
+          <div class="pack-body">
+            <div class="pack-foil" aria-hidden="true"></div>
+            <div class="pack-glare" aria-hidden="true"></div>
+            <div class="pack-inner-frame" aria-hidden="true"></div>
+
+            <div class="pack-body-head">
+              <span>UNDEXEROR // ARCHIVE</span>
+              <span class="pack-edition-tag">VOL.01</span>
+            </div>
+
+            <div class="pack-emblem">
+              <div class="pack-sigil-ring" aria-hidden="true"><span>◈</span></div>
+              <div class="pack-brand-title">ARCHIVE<span>PACK</span></div>
+              <div class="pack-brand-sub" id="pack-brand-sub">CURATED 9–10★ EDITION</div>
+            </div>
+
+            <div class="pack-odds-row">
+              <span>★ MYTHIC</span>
+              <span>◈ SSR</span>
+              <span>◇ SR</span>
+            </div>
+
+            <div class="pack-body-foot">
+              <div class="pack-barcode" aria-hidden="true"></div>
+              <div class="pack-foot-meta">
+                <span>1 HOLO CARD · 53.9° N</span>
+                <span class="pack-sync-tag" id="pack-sync-badge">READY</span>
+              </div>
+            </div>
+
+            <div class="pack-crimp pack-crimp-bottom" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 2: REVEALED 3D HOLOGRAPHIC CARD -->
+      <div class="pack-card-wrap" id="pack-card-wrap">
+        <div class="holo-tilt-wrap pack-holo-tilt" id="pack-holo-tilt" data-rarity="mythic">
+          <div class="holo-flipper" id="pack-holo-flipper">
+            <!-- FRONT FACE -->
+            <div class="holo-face holo-front">
+              <img class="holo-art" id="pack-card-img" src="" alt="" />
+              <div class="holo-foil" aria-hidden="true"></div>
+              <div class="holo-sparkle" aria-hidden="true"></div>
+              <div class="holo-glare" aria-hidden="true"></div>
+              <div class="holo-bezel" aria-hidden="true"></div>
+
+              <div class="holo-front-top">
+                <span class="holo-rarity-chip" id="pack-rarity-chip">★ MYTHIC</span>
+                <span class="holo-serial" id="pack-serial">DROP #01</span>
+              </div>
+
+              <div class="holo-front-bottom">
+                <div class="holo-cat-label" id="pack-cat-label">ARCHIVE PACK DROP</div>
+                <h3 class="holo-front-title" id="pack-front-title"></h3>
+                <div class="holo-front-meta">
+                  <span id="pack-front-sub"></span>
+                  <span class="holo-front-score" id="pack-front-score"></span>
+                </div>
+                <div class="holo-flip-hint">
+                  <span>undexeror // pack</span>
+                  <span>↻ клик — оборот</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- BACK FACE -->
+            <div class="holo-face holo-back">
+              <div class="holo-foil" aria-hidden="true"></div>
+              <div class="holo-glare" aria-hidden="true"></div>
+              <div class="holo-bezel" aria-hidden="true"></div>
+
+              <div class="holo-back-inner">
+                <div class="holo-back-head">
+                  <span id="pack-back-deck">ARCHIVE DROP // DOSSIER</span>
+                  <strong id="pack-back-serial">DROP #01 · MYTHIC</strong>
+                </div>
+
+                <h3 class="holo-back-title" id="pack-back-title"></h3>
+                <div class="holo-back-sub" id="pack-back-sub"></div>
+
+                <div class="holo-back-pills" id="pack-back-pills"></div>
+
+                <div class="holo-back-note">
+                  <span class="holo-back-quote-lbl">◈ Рекомендация архива</span>
+                  <div id="pack-back-note-text"></div>
+                </div>
+
+                <div class="holo-back-vibes" id="pack-back-vibes"></div>
+
+                <div class="holo-back-foot">
+                  <a class="modal-link" id="pack-card-link" href="#" target="_blank" rel="noopener noreferrer">Открыть на Shikimori →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pack-controls" id="pack-controls">
+      <div class="pack-ctrl-group" id="pack-sealed-actions">
+        <button type="button" class="holo-ctrl-btn is-pack-primary" id="pack-quick-rip-btn">✦ Вскрыть ARCHIVE PACK</button>
+      </div>
+      <div class="pack-ctrl-group" id="pack-revealed-actions" style="display:none;">
+        <button type="button" class="holo-ctrl-btn" id="pack-flip-btn">↻ Перевернуть</button>
+        <button type="button" class="holo-ctrl-btn is-pack-primary" id="pack-again-btn">✦ Открыть ещё пак</button>
+        <a class="holo-ctrl-btn" id="pack-shiki-quick-btn" href="#" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Shikimori ↗</a>
+      </div>
+    </div>
+
+    <div class="pack-history-bar" id="pack-history-bar" aria-label="Выпавшие за сессию карты"></div>
+    <div class="holo-kbd-hint" id="pack-kbd-hint">Проведи по кромке пакета или кликни, чтобы вскрыть · Пробел — действие · Esc — выход</div>
+  </div>
+
   <!-- Detail Modal -->
   <div class="modal-backdrop" id="detail-modal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true">
@@ -1113,6 +1273,6 @@
     </div>
   </div>
 
-  <script src="./assets/js/archive.js"></script>
+  <script src="./assets/js/archive.js?v=19"></script>
 </body>
 </html>

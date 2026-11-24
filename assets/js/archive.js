@@ -440,6 +440,8 @@
         if (badge) badge.textContent = String(totalAll);
         const allCountEl = document.getElementById('rmode-all-count');
         if (allCountEl) allCountEl.textContent = String(totalAll);
+        const packCountEl = document.getElementById('pack-all-count');
+        if (packCountEl) packCountEl.textContent = String(totalAll);
       }
 
       function loadCoverCache() {
@@ -590,6 +592,7 @@
           if (topIcon) topIcon.textContent = symbol;
           if (topBtn) topBtn.classList.toggle('is-playing', isPlaying);
           document.body.classList.toggle('is-audio-playing', isPlaying);
+          if (typeof syncVisualizer === 'function') syncVisualizer();
         }
 
         function setupAnalyser() {
@@ -783,13 +786,76 @@
           saveVolume(targetVolume);
         });
 
-        // Visualizer + Beat-Reactive Avatar Ring Loop
+        // Visualizer + Beat-Reactive Avatar Ring Loop (on-demand RAF — zero idle overhead)
         let smoothBeat = 0;
         let lastWrittenBeat = -1;
         let fallbackPhase = 0;
+        let visRafId = null;
         const avatarBeatHost = document.querySelector('.avatar-wrap');
 
+        function drawIdleBaseline() {
+          if (!visCtx || !visCanvas) return;
+          const vw = visCanvas.width;
+          const vh = visCanvas.height;
+          const barCount = 24;
+          const gap = 3;
+          const barW = (vw - gap * (barCount - 1)) / barCount;
+          visCtx.clearRect(0, 0, vw, vh);
+          visCtx.fillStyle = 'rgba(173, 191, 222, 0.22)';
+          for (let i = 0; i < barCount; i++) {
+            visCtx.fillRect(i * (barW + gap), vh - 2, barW, 2);
+          }
+        }
+
+        function writeBeatEnergy(val) {
+          if (Math.abs(val - lastWrittenBeat) <= 0.004) return;
+          lastWrittenBeat = val;
+          const bStr = val.toFixed(3);
+          if (avatarBeatHost) avatarBeatHost.style.setProperty('--beat-energy', bStr);
+          if (dock) dock.style.setProperty('--beat-energy', bStr);
+        }
+
+        function shouldRunVisualizer() {
+          if (document.hidden) return false;
+          if (document.body.classList.contains('galaxy-active')) return false;
+          return isPlaying || smoothBeat > 0.004;
+        }
+
+        function stopVisualizerLoop() {
+          if (visRafId !== null) {
+            cancelAnimationFrame(visRafId);
+            visRafId = null;
+          }
+        }
+
+        function syncVisualizer() {
+          if (shouldRunVisualizer()) {
+            if (visRafId === null) {
+              visRafId = requestAnimationFrame(visualizerFrame);
+            }
+          } else {
+            stopVisualizerLoop();
+            if (!isPlaying) {
+              smoothBeat = 0;
+              liveBeatEnergy = 0;
+              writeBeatEnergy(0);
+              drawIdleBaseline();
+            }
+          }
+        }
+
         function visualizerFrame() {
+          visRafId = null;
+          if (!shouldRunVisualizer()) {
+            if (!isPlaying) {
+              smoothBeat = 0;
+              liveBeatEnergy = 0;
+              writeBeatEnergy(0);
+              drawIdleBaseline();
+            }
+            return;
+          }
+
           let targetEnergy = 0;
           const barCount = 24;
 
@@ -800,7 +866,6 @@
 
             if (isPlaying && analyser && freqData) {
               analyser.getByteFrequencyData(freqData);
-              // Bass range (first 6 bins ~ 0-220Hz)
               let bassSum = 0;
               for (let b = 0; b < 6; b++) bassSum += freqData[b];
               const bassNorm = bassSum / (6 * 255);
@@ -821,7 +886,6 @@
                 visCtx.fillRect(x, y, barW, bh);
               }
             } else if (isPlaying) {
-              // Smooth synthetic fallback if opened via local file://
               fallbackPhase += 0.14;
               targetEnergy = 0.25 + 0.35 * Math.pow((Math.sin(fallbackPhase * 1.7) + 1) * 0.5, 2);
               const gap = 3;
@@ -833,35 +897,31 @@
                 visCtx.fillRect(i * (barW + gap), vh - bh, barW, bh);
               }
             } else {
-              // Subtle idle baseline
-              const gap = 3;
-              const barW = (vw - gap * (barCount - 1)) / barCount;
-              visCtx.fillStyle = 'rgba(173, 191, 222, 0.22)';
-              for (let i = 0; i < barCount; i++) {
-                visCtx.fillRect(i * (barW + gap), vh - 2, barW, 2);
-              }
+              drawIdleBaseline();
             }
           }
 
-          smoothBeat += (targetEnergy - smoothBeat) * (targetEnergy > smoothBeat ? 0.38 : 0.14);
+          smoothBeat += (targetEnergy - smoothBeat) * (targetEnergy > smoothBeat ? 0.38 : 0.16);
+          if (!isPlaying && smoothBeat < 0.004) smoothBeat = 0;
           liveBeatEnergy = smoothBeat;
-          if (Math.abs(smoothBeat - lastWrittenBeat) > 0.004) {
-            lastWrittenBeat = smoothBeat;
-            const bStr = smoothBeat.toFixed(3);
-            if (avatarBeatHost) avatarBeatHost.style.setProperty('--beat-energy', bStr);
-            if (dock) dock.style.setProperty('--beat-energy', bStr);
-          }
+          writeBeatEnergy(smoothBeat);
 
-          requestAnimationFrame(visualizerFrame);
+          if (shouldRunVisualizer()) {
+            visRafId = requestAnimationFrame(visualizerFrame);
+          } else if (!isPlaying) {
+            drawIdleBaseline();
+          }
         }
 
+        document.addEventListener('visibilitychange', syncVisualizer);
         loadTrack(0, false);
-        requestAnimationFrame(visualizerFrame);
+        drawIdleBaseline();
 
         return {
           play: playCurrent,
           pause: pauseCurrent,
-          isPlaying: () => isPlaying
+          isPlaying: () => isPlaying,
+          syncVisualizer
         };
       }
 
@@ -995,7 +1055,8 @@
             document.getElementById('holo-modal')?.classList.contains('is-open') ||
             document.getElementById('detail-modal')?.classList.contains('is-open') ||
             document.getElementById('arena-modal')?.classList.contains('is-open') ||
-            document.getElementById('coop-modal')?.classList.contains('is-open')
+            document.getElementById('coop-modal')?.classList.contains('is-open') ||
+            document.getElementById('pack-modal')?.classList.contains('is-open')
           );
         }
 
@@ -2414,7 +2475,7 @@
 
         function updateSurfaces() {
           rafPending = false;
-          if (document.body.classList.contains('galaxy-active') || document.getElementById('holo-modal')?.classList.contains('is-open')) {
+          if (document.body.classList.contains('galaxy-active') || document.getElementById('holo-modal')?.classList.contains('is-open') || document.getElementById('pack-modal')?.classList.contains('is-open')) {
             return;
           }
           const now = performance.now();
@@ -5422,13 +5483,54 @@
          ========================================= */
       function initRandomizer() {
         const triggerBtn = document.getElementById('randomizer-btn');
-        const rerollBtn = document.getElementById('modal-reroll-btn');
-        const modalCard = document.querySelector('#detail-modal .modal-card');
-        const modeBtns = Array.from(document.querySelectorAll('.mode-chip'));
-        if (!triggerBtn) return;
+        const backdrop = document.getElementById('pack-modal');
+        const closeBtn = document.getElementById('pack-close');
+        const stage = document.getElementById('pack-stage');
+        const pouch = document.getElementById('pack-pouch');
+        const topStrip = document.getElementById('pack-top-strip');
+        const tearLabel = document.getElementById('pack-tear-label');
+        const brandSub = document.getElementById('pack-brand-sub');
+        const syncBadge = document.getElementById('pack-sync-badge');
+        const dropCounterEl = document.getElementById('pack-drop-counter');
+        const modeBtns = Array.from(document.querySelectorAll('.pack-mode-btn'));
 
+        const sealedActions = document.getElementById('pack-sealed-actions');
+        const revealedActions = document.getElementById('pack-revealed-actions');
+        const quickRipBtn = document.getElementById('pack-quick-rip-btn');
+        const flipBtn = document.getElementById('pack-flip-btn');
+        const againBtn = document.getElementById('pack-again-btn');
+        const shikiQuickBtn = document.getElementById('pack-shiki-quick-btn');
+        const historyBar = document.getElementById('pack-history-bar');
+        const kbdHint = document.getElementById('pack-kbd-hint');
+
+        const holoTilt = document.getElementById('pack-holo-tilt');
+        const holoFlipper = document.getElementById('pack-holo-flipper');
+        const cardImg = document.getElementById('pack-card-img');
+        const rarityChip = document.getElementById('pack-rarity-chip');
+        const serialEl = document.getElementById('pack-serial');
+        const catLabel = document.getElementById('pack-cat-label');
+        const frontTitle = document.getElementById('pack-front-title');
+        const frontSub = document.getElementById('pack-front-sub');
+        const frontScore = document.getElementById('pack-front-score');
+        const backDeck = document.getElementById('pack-back-deck');
+        const backSerial = document.getElementById('pack-back-serial');
+        const backTitle = document.getElementById('pack-back-title');
+        const backSub = document.getElementById('pack-back-sub');
+        const backPills = document.getElementById('pack-back-pills');
+        const backNote = document.getElementById('pack-back-note-text');
+        const backVibes = document.getElementById('pack-back-vibes');
+        const cardLink = document.getElementById('pack-card-link');
+
+        if (!triggerBtn || !backdrop || !stage || !pouch || !holoTilt || !holoFlipper) return;
+
+        let packState = 'sealed'; // 'sealed' | 'ripping' | 'revealed'
+        let dropNumber = 0;
         let lastMalId = null;
-        let isRolling = false;
+        let pendingWinner = null;
+        let currentDrop = null;
+        let cardFlipped = false;
+        let sessionDrops = [];
+        let ripSeqToken = 0;
 
         function getActivePool() {
           if (randomizerMode === 'peak') {
@@ -5443,142 +5545,479 @@
           return list[Math.floor(Math.random() * list.length)] || PEAK_FICTION[0];
         }
 
-        function updateModeButtons() {
-          modeBtns.forEach((b) => b.classList.toggle('active', b.dataset.rmode === randomizerMode));
+        function computeDropRarity(a) {
+          const isPeak = a.source === 'peak' || typeof a.rank === 'number';
+          const uScore = Number(a.userScore) || 0;
+          const sScore = Number(a.score) || 0;
+          if ((isPeak && a.rank <= 3) || uScore >= 10) {
+            return { key: 'mythic', label: '★ MYTHIC', short: 'MYTHIC' };
+          }
+          if ((isPeak && a.rank <= 10) || (uScore >= 9 && sScore >= 8.2)) {
+            return { key: 'ssr', label: '◈ SSR', short: 'SSR' };
+          }
+          return { key: 'sr', label: '◇ SR', short: 'SR' };
         }
 
-        function showAnimeInModal(a, isFinal) {
-          const img = coverCache['anime_' + a.malId] || a.shikiImg || '';
-          const isPeak = a.source === 'peak' || typeof a.rank === 'number';
-          const tag = !isFinal
-            ? 'ВЫБИРАЮ ТАЙТЛ...'
-            : isPeak
-              ? `PEAK FICTION · #${formatRank(a.rank)}`
-              : `ИЗ ПРОСМОТРЕННОГО · МОЯ ОЦЕНКА ${a.userScore || 9}/10`;
+        function updateModeButtons() {
+          modeBtns.forEach((b) => b.classList.toggle('active', b.dataset.pmode === randomizerMode));
+          if (brandSub) {
+            brandSub.textContent = randomizerMode === 'peak'
+              ? 'TOP 16 PEAK EDITION'
+              : 'CURATED 9–10★ EDITION';
+          }
+        }
 
-          const pills = [];
-          if (isPeak && a.rank) pills.push(`Топ #${formatRank(a.rank)}`);
-          if (a.userScore) pills.push(`Моя оценка ${a.userScore}/10`);
-          if (a.score) pills.push(`★ ${Number(a.score).toFixed(2)}`);
-          if (a.year) pills.push(String(a.year));
+        function setTearProgress(val) {
+          const clamped = Math.max(0, Math.min(1, val));
+          pouch.style.setProperty('--tear', clamped.toFixed(3));
+        }
 
-          openModal({
-            tag,
-            title: a.title,
-            sub: [a.kind, a.year].filter(Boolean).join(' · '),
-            pills,
-            vibes: isFinal ? (a.vibes || []) : ['#рулетка', randomizerMode === 'peak' ? '#top-16' : '#9-10★'],
-            note: isFinal ? `«${a.note}»` : 'Прокрутка коллекции...',
-            img,
-            url: a.url || `${activeShikiOrigin}/animes/${a.malId}`,
-            showReroll: true,
-            showModeBar: true
-          });
+        function resetTiltOn(el) {
+          if (!el) return;
+          el.classList.add('is-resetting');
+          el.style.setProperty('--rx', '0deg');
+          el.style.setProperty('--ry', '0deg');
+          el.style.setProperty('--hx', '50%');
+          el.style.setProperty('--hy', '48%');
+          el.style.setProperty('--hbg-x', '50%');
+          el.style.setProperty('--hbg-y', '50%');
+          el.style.setProperty('--hop', '0.28');
+        }
 
-          if (isFinal && a.malId && !coverCache['anime_' + a.malId]) {
+        function applyTiltOn(el, clientX, clientY, maxX, maxY) {
+          const rect = el.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          const nx = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+          const ny = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+          const dx = nx - 0.5;
+          const dy = ny - 0.5;
+          const rx = (-dy * maxX).toFixed(2);
+          const ry = (dx * maxY).toFixed(2);
+          const intensity = Math.min(0.88, 0.28 + Math.hypot(dx, dy) * 0.95);
+          el.classList.remove('is-resetting');
+          el.style.setProperty('--rx', `${rx}deg`);
+          el.style.setProperty('--ry', `${ry}deg`);
+          el.style.setProperty('--hx', `${(nx * 100).toFixed(1)}%`);
+          el.style.setProperty('--hy', `${(ny * 100).toFixed(1)}%`);
+          el.style.setProperty('--hbg-x', `${(16 + nx * 68).toFixed(1)}%`);
+          el.style.setProperty('--hbg-y', `${(16 + ny * 68).toFixed(1)}%`);
+          el.style.setProperty('--hop', intensity.toFixed(3));
+        }
+
+        function preloadWinnerArt(a) {
+          if (!a) return;
+          const cached = coverCache['anime_' + a.malId] || a.shikiImg || '';
+          if (cached) {
+            const img = new Image();
+            img.src = cached;
+          }
+          if (a.malId && !coverCache['anime_' + a.malId]) {
             loadAnimeCoversBatch([a.malId]).then(() => {
               const hd = coverCache['anime_' + a.malId];
-              const modalImg = document.getElementById('modal-img');
-              if (hd && modalImg && document.getElementById('modal-title')?.textContent === a.title) {
-                modalImg.src = hd;
+              if (hd && currentDrop && currentDrop.anime.malId === a.malId && cardImg) {
+                cardImg.src = hd;
+                renderSessionHistory();
               }
             });
           }
         }
 
-        async function rollRecommendation() {
-          if (isRolling) return;
-          isRolling = true;
+        function prepareSealedPack() {
+          ripSeqToken++;
+          packState = 'sealed';
+          cardFlipped = false;
+          stage.dataset.state = 'sealed';
+          stage.classList.remove('is-flashing', 'is-dropping');
+          topStrip?.classList.remove('is-sheared');
+          holoFlipper.classList.remove('is-flipped');
+          setTearProgress(0);
+          resetTiltOn(pouch);
+          resetTiltOn(holoTilt);
+
+          if (sealedActions) sealedActions.style.display = 'flex';
+          if (revealedActions) revealedActions.style.display = 'none';
+          if (tearLabel) tearLabel.textContent = '✂ ТЯНИ ВПРАВО ИЛИ КЛИКНИ ▸▸▸';
+          if (dropCounterEl) {
+            dropCounterEl.textContent = `ARCHIVE PACK · #${formatRank(dropNumber + 1)}`;
+          }
+          if (kbdHint) {
+            kbdHint.textContent = 'Проведи по кромке пакета или кликни, чтобы вскрыть · Пробел — вскрыть · Esc — выход';
+          }
+
           updateModeButtons();
           updateRandomizerPoolCounts();
 
-          if (randomizerMode === 'all' && ratedAnimePool.length === 0) {
-            openModal({
-              tag: 'SHIKIMORI SYNC · 9–10★',
-              title: 'Подгружаю список 9–10★...',
-              sub: 'Синхронизация с Shikimori API',
-              pills: ['Top 16 + 9–10★'],
-              vibes: ['#загрузка', '#shikimori'],
-              note: 'Секунду — забираю все просмотренные тайтлы с оценками 9–10★, чтобы крутить полный пул.',
-              img: coverCache['anime_' + PEAK_FICTION[0].malId] || '',
-              url: `${activeShikiOrigin}/undereror+nyashka/list/anime`,
-              showReroll: false,
-              showModeBar: true
-            });
-            await Promise.race([loadHostAnimeRates(), sleep(6500)]);
-            updateRandomizerPoolCounts();
-            if (!modalBackdrop || !modalBackdrop.classList.contains('is-open')) {
-              isRolling = false;
-              return;
-            }
-          }
-
           const pool = getActivePool();
-          const winner = pickRandomAnime(pool, lastMalId);
-          lastMalId = winner.malId;
+          pendingWinner = pickRandomAnime(pool, lastMalId);
+          preloadWinnerArt(pendingWinner);
 
-          const cachedPool = pool.filter((a) => Boolean(coverCache['anime_' + a.malId]));
-          const spinPool = cachedPool.length >= 4 ? cachedPool : pool;
-
-          const winnerCachedUrl = coverCache['anime_' + winner.malId] || winner.shikiImg || '';
-          if (winnerCachedUrl) {
-            const pre = new Image();
-            pre.src = winnerCachedUrl;
-          } else if (winner.malId) {
-            loadAnimeCoversBatch([winner.malId]);
+          if (randomizerMode === 'all' && ratedAnimePool.length === 0) {
+            if (syncBadge) syncBadge.textContent = 'SYNC 9–10★...';
+            loadHostAnimeRates().then(() => {
+              updateRandomizerPoolCounts();
+              if (packState === 'sealed') {
+                if (syncBadge) syncBadge.textContent = `POOL ${getActivePool().length}`;
+                pendingWinner = pickRandomAnime(getActivePool(), lastMalId);
+                preloadWinnerArt(pendingWinner);
+              }
+            });
+          } else if (syncBadge) {
+            syncBadge.textContent = `POOL ${pool.length}`;
           }
-
-          const firstFrame = pickRandomAnime(spinPool, winner.malId);
-          showAnimeInModal(firstFrame, false);
-
-          if (modalCard) {
-            modalCard.classList.remove('is-rolled');
-            modalCard.classList.add('is-rolling');
-          }
-
-          const titleEl = document.getElementById('modal-title');
-          const subEl = document.getElementById('modal-sub');
-          const imgEl = document.getElementById('modal-img');
-          const delays = [52, 62, 76, 94, 118, 150];
-          let prevTemp = firstFrame.malId;
-
-          for (const d of delays) {
-            await sleep(d);
-            if (!modalBackdrop || !modalBackdrop.classList.contains('is-open')) {
-              isRolling = false;
-              return;
-            }
-            const temp = pickRandomAnime(spinPool, prevTemp);
-            prevTemp = temp.malId;
-            if (titleEl) titleEl.textContent = temp.title;
-            if (subEl) subEl.textContent = [temp.kind, temp.year].filter(Boolean).join(' · ');
-            const tImg = coverCache['anime_' + temp.malId] || temp.shikiImg || '';
-            if (imgEl && tImg && imgEl.getAttribute('src') !== tImg) imgEl.src = tImg;
-          }
-
-          await sleep(165);
-          showAnimeInModal(winner, true);
-          if (modalCard) {
-            modalCard.classList.remove('is-rolling');
-            requestAnimationFrame(() => modalCard.classList.add('is-rolled'));
-          }
-          isRolling = false;
         }
 
+        function renderDropCard(dropEntry) {
+          if (!dropEntry) return;
+          currentDrop = dropEntry;
+          const a = dropEntry.anime;
+          const rarity = dropEntry.rarity;
+          const isPeak = a.source === 'peak' || typeof a.rank === 'number';
+          const imgUrl = coverCache['anime_' + a.malId] || a.shikiImg || '';
+          const serialStr = isPeak ? `NO.${formatRank(a.rank)} / 16` : `DROP #${formatRank(dropEntry.num)}`;
+          const shikiHref = a.url || `${activeShikiOrigin}/animes/${a.malId}`;
+
+          holoTilt.dataset.rarity = rarity.key;
+          cardFlipped = false;
+          holoFlipper.classList.remove('is-flipped');
+          resetTiltOn(holoTilt);
+
+          if (cardImg) {
+            cardImg.src = imgUrl;
+            cardImg.alt = a.title;
+          }
+          if (rarityChip) rarityChip.textContent = rarity.label;
+          if (serialEl) serialEl.textContent = serialStr;
+          if (catLabel) {
+            catLabel.textContent = isPeak ? 'PEAK FICTION · PACK DROP' : '9–10★ ARCHIVE · PACK DROP';
+          }
+          if (frontTitle) frontTitle.textContent = a.title;
+          if (frontSub) frontSub.textContent = [a.kind, a.year].filter(Boolean).join(' · ');
+          if (frontScore) {
+            if (a.userScore && a.score) {
+              frontScore.textContent = `Я ${a.userScore}/10 · ★${Number(a.score).toFixed(2)}`;
+            } else if (a.userScore) {
+              frontScore.textContent = `Я ${a.userScore}/10`;
+            } else if (a.score) {
+              frontScore.textContent = `★ ${Number(a.score).toFixed(2)}`;
+            } else {
+              frontScore.textContent = 'ARCHIVE';
+            }
+          }
+
+          if (backDeck) {
+            backDeck.textContent = isPeak ? 'PEAK FICTION // DOSSIER' : 'ARCHIVE DROP // DOSSIER';
+          }
+          if (backSerial) backSerial.textContent = `${serialStr} · ${rarity.short}`;
+          if (backTitle) backTitle.textContent = a.title;
+          if (backSub) backSub.textContent = [a.kind, a.year].filter(Boolean).join(' · ');
+
+          const pills = [];
+          if (isPeak && a.rank) pills.push(`Топ #${formatRank(a.rank)}`);
+          if (a.userScore) pills.push(`Моя оценка ${a.userScore}/10`);
+          if (a.score) pills.push(`Шики ★ ${Number(a.score).toFixed(2)}`);
+          if (a.year) pills.push(String(a.year));
+          if (backPills) {
+            backPills.innerHTML = pills.map((p) => `<span class="modal-pill">${escapeHtml(p)}</span>`).join('');
+          }
+
+          if (backNote) {
+            backNote.textContent = a.note
+              ? `«${a.note}»`
+              : 'Рекомендация из личного архива undereror nyashka на Shikimori.';
+          }
+
+          const vibes = (a.vibes && a.vibes.length)
+            ? a.vibes
+            : [isPeak ? '#peak-fiction' : '#9-10★', a.userScore ? `#${a.userScore}/10` : '#archive'];
+          if (backVibes) {
+            backVibes.innerHTML = vibes.map((v) => `<span class="vibe-tag">${escapeHtml(v)}</span>`).join('');
+          }
+
+          if (cardLink) cardLink.href = shikiHref;
+          if (shikiQuickBtn) shikiQuickBtn.href = shikiHref;
+          if (flipBtn) flipBtn.textContent = '↻ Перевернуть';
+          if (dropCounterEl) {
+            dropCounterEl.textContent = `DROP #${formatRank(dropEntry.num)} · ${rarity.short}`;
+          }
+
+          preloadWinnerArt(a);
+          renderSessionHistory();
+        }
+
+        function renderSessionHistory() {
+          if (!historyBar) return;
+          if (!sessionDrops.length) {
+            historyBar.classList.remove('is-visible');
+            historyBar.innerHTML = '';
+            return;
+          }
+          historyBar.classList.add('is-visible');
+          historyBar.innerHTML = sessionDrops.map((entry, idx) => {
+            const img = coverCache['anime_' + entry.anime.malId] || entry.anime.shikiImg || '';
+            const isActive = packState === 'revealed' && currentDrop && currentDrop.num === entry.num;
+            const cls = ['pack-hist-chip'];
+            if (isActive) cls.push('active');
+            if (entry.rarity.key === 'mythic') cls.push('is-mythic');
+            return `
+              <button type="button" class="${cls.join(' ')}" data-hidx="${idx}" title="${escapeHtml(entry.anime.title)}">
+                <img src="${escapeHtml(img)}" alt="" />
+                <span>${escapeHtml(entry.anime.title)}</span>
+              </button>
+            `;
+          }).join('');
+
+          historyBar.querySelectorAll('.pack-hist-chip').forEach((btn) => {
+            btn.addEventListener('click', () => {
+              const entry = sessionDrops[Number(btn.dataset.hidx)];
+              if (!entry || packState === 'ripping') return;
+              packState = 'revealed';
+              stage.dataset.state = 'revealed';
+              stage.classList.remove('is-flashing', 'is-dropping');
+              if (sealedActions) sealedActions.style.display = 'none';
+              if (revealedActions) revealedActions.style.display = 'flex';
+              renderDropCard(entry);
+            });
+          });
+        }
+
+        async function triggerRipOpen(fromDrag) {
+          if (packState !== 'sealed') return;
+          const myToken = ++ripSeqToken;
+          packState = 'ripping';
+          stage.dataset.state = 'ripping';
+          if (tearLabel) tearLabel.textContent = '✦ ВСКРЫТИЕ...';
+
+          // Wait briefly if first-time visitor is still pulling the 9-10 pool
+          if (randomizerMode === 'all' && ratedAnimePool.length === 0) {
+            if (syncBadge) syncBadge.textContent = 'SYNC...';
+            await Promise.race([loadHostAnimeRates(), sleep(2600)]);
+            if (myToken !== ripSeqToken || !backdrop.classList.contains('is-open')) return;
+            updateRandomizerPoolCounts();
+            if (ratedAnimePool.length > 0) {
+              pendingWinner = pickRandomAnime(getActivePool(), lastMalId);
+            }
+          }
+
+          const winner = pendingWinner || pickRandomAnime(getActivePool(), lastMalId);
+          lastMalId = winner.malId;
+          preloadWinnerArt(winner);
+
+          // Animate the glowing tear line across if clicked rather than dragged
+          if (!fromDrag) {
+            const startAt = performance.now();
+            const dur = 240;
+            await new Promise((resolve) => {
+              function step(now) {
+                if (myToken !== ripSeqToken) { resolve(); return; }
+                const t = Math.min(1, (now - startAt) / dur);
+                const eased = 1 - Math.pow(1 - t, 2);
+                setTearProgress(eased);
+                if (t < 1) requestAnimationFrame(step);
+                else resolve();
+              }
+              requestAnimationFrame(step);
+            });
+          } else {
+            setTearProgress(1);
+          }
+
+          if (myToken !== ripSeqToken || !backdrop.classList.contains('is-open')) return;
+
+          // Shear top foil strip + flash + silver micro-sparks
+          topStrip?.classList.add('is-sheared');
+          stage.classList.remove('is-flashing');
+          void stage.offsetWidth;
+          stage.classList.add('is-flashing');
+
+          await sleep(165);
+          if (myToken !== ripSeqToken || !backdrop.classList.contains('is-open')) return;
+
+          // Drop the torn pouch away and eject the 3D Holo card
+          stage.classList.add('is-dropping');
+          await sleep(135);
+          if (myToken !== ripSeqToken || !backdrop.classList.contains('is-open')) return;
+
+          dropNumber++;
+          const dropEntry = {
+            num: dropNumber,
+            anime: winner,
+            rarity: computeDropRarity(winner)
+          };
+          sessionDrops = [dropEntry, ...sessionDrops.filter((d) => d.anime.malId !== winner.malId)].slice(0, 5);
+
+          packState = 'revealed';
+          stage.dataset.state = 'revealed';
+          renderDropCard(dropEntry);
+
+          if (sealedActions) sealedActions.style.display = 'none';
+          if (revealedActions) revealedActions.style.display = 'flex';
+          if (kbdHint) {
+            kbdHint.textContent = 'Двигай мышкой для 3D-голограммы · Клик / Пробел — переворот · R — новый пак';
+          }
+        }
+
+        function togglePackCardFlip() {
+          if (packState !== 'revealed') return;
+          cardFlipped = !cardFlipped;
+          holoFlipper.classList.toggle('is-flipped', cardFlipped);
+          if (flipBtn) flipBtn.textContent = cardFlipped ? '↻ Показать арт' : '↻ Перевернуть';
+        }
+
+        function openPackOverlay() {
+          backdrop.classList.add('is-open');
+          backdrop.setAttribute('aria-hidden', 'false');
+          prepareSealedPack();
+          renderSessionHistory();
+        }
+
+        function closePackOverlay() {
+          ripSeqToken++;
+          backdrop.classList.remove('is-open');
+          backdrop.setAttribute('aria-hidden', 'true');
+        }
+
+        // Sealed Pack Pointer Interactions: 3D foil tilt + swipe-to-rip + tap-to-open
+        let pouchDown = false;
+        let pouchStartX = 0;
+        let pouchStartY = 0;
+        let pouchDragged = false;
+        let pouchCurrentTear = 0;
+
+        pouch.addEventListener('pointerdown', (e) => {
+          if (packState !== 'sealed') return;
+          pouchDown = true;
+          pouchDragged = false;
+          pouchCurrentTear = 0;
+          pouchStartX = e.clientX;
+          pouchStartY = e.clientY;
+          try { pouch.setPointerCapture(e.pointerId); } catch (err) {}
+        });
+
+        pouch.addEventListener('pointermove', (e) => {
+          if (packState !== 'sealed') return;
+          applyTiltOn(pouch, e.clientX, e.clientY, 18, 22);
+
+          if (!pouchDown) return;
+          const dx = e.clientX - pouchStartX;
+          const dy = e.clientY - pouchStartY;
+          if (Math.hypot(dx, dy) > 10) pouchDragged = true;
+
+          const rect = pouch.getBoundingClientRect();
+          const dragSpan = Math.max(120, rect.width * 0.62);
+          if (dx > 6) {
+            pouchCurrentTear = Math.min(1, dx / dragSpan);
+            setTearProgress(pouchCurrentTear);
+            if (pouchCurrentTear >= 0.55) {
+              pouchDown = false;
+              triggerRipOpen(true);
+            }
+          }
+        });
+
+        function finishPouchPointer(e) {
+          if (!pouchDown) return;
+          pouchDown = false;
+          try { pouch.releasePointerCapture(e.pointerId); } catch (err) {}
+          if (packState !== 'sealed') return;
+
+          if (!pouchDragged) {
+            triggerRipOpen(false);
+          } else if (pouchCurrentTear >= 0.38) {
+            triggerRipOpen(true);
+          } else {
+            pouchCurrentTear = 0;
+            setTearProgress(0);
+          }
+        }
+
+        pouch.addEventListener('pointerup', finishPouchPointer);
+        pouch.addEventListener('pointercancel', () => {
+          pouchDown = false;
+          if (packState === 'sealed') {
+            pouchCurrentTear = 0;
+            setTearProgress(0);
+            resetTiltOn(pouch);
+          }
+        });
+        pouch.addEventListener('pointerleave', () => {
+          if (!pouchDown && packState === 'sealed') {
+            resetTiltOn(pouch);
+          }
+        });
+
+        // Revealed 3D Holo Card Tilt + Flip Interactions
+        let cardDownX = 0;
+        let cardDownY = 0;
+        let cardDragged = false;
+
+        holoTilt.addEventListener('pointerdown', (e) => {
+          cardDownX = e.clientX;
+          cardDownY = e.clientY;
+          cardDragged = false;
+        });
+
+        holoTilt.addEventListener('pointermove', (e) => {
+          if (packState !== 'revealed') return;
+          if (e.pointerType === 'touch' && e.buttons === 0) return;
+          if (Math.hypot(e.clientX - cardDownX, e.clientY - cardDownY) > 10) {
+            cardDragged = true;
+          }
+          applyTiltOn(holoTilt, e.clientX, e.clientY, 24, 26);
+        });
+
+        holoTilt.addEventListener('pointerleave', () => resetTiltOn(holoTilt));
+        holoTilt.addEventListener('pointerup', (e) => {
+          if (e.pointerType === 'touch') resetTiltOn(holoTilt);
+        });
+        holoTilt.addEventListener('pointercancel', () => resetTiltOn(holoTilt));
+
+        holoTilt.addEventListener('click', (e) => {
+          if (e.target && e.target.closest('a, button')) return;
+          if (cardDragged) {
+            cardDragged = false;
+            return;
+          }
+          togglePackCardFlip();
+        });
+
+        cardLink?.addEventListener('click', (e) => e.stopPropagation());
+
+        // Pool mode switcher
         modeBtns.forEach((btn) => {
           btn.addEventListener('click', () => {
-            if (isRolling) return;
-            randomizerMode = btn.dataset.rmode || 'all';
-            updateModeButtons();
-            rollRecommendation();
+            if (packState === 'ripping') return;
+            const nextMode = btn.dataset.pmode || 'all';
+            if (nextMode === randomizerMode && packState === 'sealed') return;
+            randomizerMode = nextMode;
+            prepareSealedPack();
           });
         });
 
-        triggerBtn.addEventListener('click', rollRecommendation);
-        rerollBtn?.addEventListener('click', rollRecommendation);
+        triggerBtn.addEventListener('click', openPackOverlay);
+        closeBtn?.addEventListener('click', closePackOverlay);
+        backdrop.addEventListener('click', (e) => {
+          if (e.target === backdrop) closePackOverlay();
+        });
+        quickRipBtn?.addEventListener('click', () => triggerRipOpen(false));
+        flipBtn?.addEventListener('click', togglePackCardFlip);
+        againBtn?.addEventListener('click', prepareSealedPack);
+
+        window.addEventListener('keydown', (e) => {
+          if (!backdrop.classList.contains('is-open')) return;
+          if (e.key === 'Escape') {
+            closePackOverlay();
+          } else if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            if (packState === 'sealed') triggerRipOpen(false);
+            else if (packState === 'revealed') togglePackCardFlip();
+          } else if ((e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') && packState === 'revealed') {
+            e.preventDefault();
+            prepareSealedPack();
+          }
+        });
+
         updateRandomizerPoolCounts();
       }
-
 
       /* =========================================
          V15 STAGE 3: 3D ARCHIVE GALAXY ENGINE (WEBGL / THREE.JS)
@@ -6845,6 +7284,7 @@
           overlay.setAttribute('aria-hidden', 'false');
           document.body.classList.add('galaxy-active');
           document.body.style.overflow = 'hidden';
+          playerControls?.syncVisualizer?.();
 
           if (!renderer && !isBooting) {
             isBooting = true;
@@ -6888,6 +7328,7 @@
           overlay.setAttribute('aria-hidden', 'true');
           document.body.classList.remove('galaxy-active');
           document.body.style.overflow = '';
+          playerControls?.syncVisualizer?.();
           updateHoverTooltip(-1, 0, 0);
           if (rafId) {
             cancelAnimationFrame(rafId);
