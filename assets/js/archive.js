@@ -522,6 +522,38 @@
         return new Promise((resolve) => setTimeout(resolve, ms));
       }
 
+      const reducedMotionMQ = window.matchMedia
+        ? window.matchMedia('(prefers-reduced-motion: reduce)')
+        : null;
+      let prefersReducedMotion = Boolean(reducedMotionMQ && reducedMotionMQ.matches);
+      if (reducedMotionMQ) {
+        const onMotionPrefChange = (e) => {
+          prefersReducedMotion = Boolean(e.matches);
+          document.dispatchEvent(new CustomEvent('archive:motionchange', { detail: prefersReducedMotion }));
+        };
+        if (typeof reducedMotionMQ.addEventListener === 'function') {
+          reducedMotionMQ.addEventListener('change', onMotionPrefChange);
+        } else if (typeof reducedMotionMQ.addListener === 'function') {
+          reducedMotionMQ.addListener(onMotionPrefChange);
+        }
+      }
+
+      async function fetchWithTimeout(url, options, timeoutMs) {
+        const limit = typeof timeoutMs === 'number' && timeoutMs > 0 ? timeoutMs : 9000;
+        const opts = Object.assign({}, options || {});
+        if (typeof AbortController === 'undefined') {
+          return fetch(url, opts);
+        }
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), limit);
+        opts.signal = ctrl.signal;
+        try {
+          return await fetch(url, opts);
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
       /* =========================================
          BEAT-REACTIVE PLAYLIST PLAYER (REAL TRACKS + ANALYSER)
          ========================================= */
@@ -1079,22 +1111,53 @@
 
         resize();
 
-        function isHeavyOverlayOpen() {
-          return (
-            document.hidden ||
-            document.body.classList.contains('galaxy-active') ||
-            document.getElementById('holo-modal')?.classList.contains('is-open') ||
-            document.getElementById('detail-modal')?.classList.contains('is-open') ||
-            document.getElementById('arena-modal')?.classList.contains('is-open') ||
-            document.getElementById('coop-modal')?.classList.contains('is-open') ||
-            document.getElementById('pack-modal')?.classList.contains('is-open') ||
-            document.getElementById('trophy-modal')?.classList.contains('is-open')
-          );
+        const heavyModalEls = [
+          'holo-modal',
+          'detail-modal',
+          'arena-modal',
+          'coop-modal',
+          'pack-modal',
+          'trophy-modal'
+        ].map((id) => document.getElementById(id)).filter(Boolean);
+
+        let atmoRafId = null;
+
+        function isAtmospherePaused() {
+          if (document.hidden || prefersReducedMotion) return true;
+          if (document.body.classList.contains('galaxy-active')) return true;
+          for (let i = 0; i < heavyModalEls.length; i++) {
+            if (heavyModalEls[i].classList.contains('is-open')) return true;
+          }
+          return false;
+        }
+
+        function drawStaticStarfield() {
+          ctx.clearRect(0, 0, w, h);
+          for (let i = 0; i < stars.length; i++) {
+            const s = stars[i];
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(220, 230, 245, 0.42)';
+            ctx.fill();
+          }
+        }
+
+        function syncAtmosphereLoop() {
+          if (isAtmospherePaused()) {
+            if (atmoRafId !== null) {
+              cancelAnimationFrame(atmoRafId);
+              atmoRafId = null;
+            }
+            if (prefersReducedMotion) drawStaticStarfield();
+          } else if (atmoRafId === null) {
+            atmoRafId = requestAnimationFrame(frame);
+          }
         }
 
         function frame(now) {
-          if (isHeavyOverlayOpen()) {
-            requestAnimationFrame(frame);
+          atmoRafId = null;
+          if (isAtmospherePaused()) {
+            if (prefersReducedMotion) drawStaticStarfield();
             return;
           }
           ctx.clearRect(0, 0, w, h);
@@ -1268,10 +1331,23 @@
             }
           }
 
-          requestAnimationFrame(frame);
+          if (!isAtmospherePaused()) {
+            atmoRafId = requestAnimationFrame(frame);
+          }
         }
 
-        requestAnimationFrame(frame);
+        if (typeof MutationObserver !== 'undefined') {
+          const mo = new MutationObserver(syncAtmosphereLoop);
+          mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+          heavyModalEls.forEach((el) => mo.observe(el, { attributes: true, attributeFilter: ['class'] }));
+        }
+        document.addEventListener('visibilitychange', syncAtmosphereLoop);
+        document.addEventListener('archive:motionchange', syncAtmosphereLoop);
+        window.addEventListener('resize', () => {
+          if (prefersReducedMotion) drawStaticStarfield();
+        });
+
+        syncAtmosphereLoop();
       }
 
       function initLiveWeather() {
@@ -1335,8 +1411,8 @@
         async function fetchOpenMeteo() {
           try {
             const url = 'https://api.open-meteo.com/v1/forecast?latitude=53.9006&longitude=27.5590&current=temperature_2m,weather_code,is_day,wind_speed_10m&timezone=Europe%2FMinsk';
-            const res = await fetch(url);
-            if (!res.ok) return;
+            const res = await fetchWithTimeout(url, {}, 8000);
+            if (!res.ok) throw new Error('HTTP ' + res.status);
             const json = await res.json();
             const cur = json?.current;
             if (!cur) return;
@@ -1346,7 +1422,11 @@
             weatherEngineState.windSpeed = Number(cur.wind_speed_10m) || 8;
             weatherEngineState.liveMode = mapWmoToWeather(weatherEngineState.code);
             updateWeatherUI();
-          } catch (e) {}
+          } catch (e) {
+            if (weatherEngineState.temp === null && popDesc) {
+              popDesc.textContent = '✦ Погода офлайн · режим по умолчанию';
+            }
+          }
         }
 
         hudBtn?.addEventListener('click', (e) => {
@@ -1378,8 +1458,11 @@
 
         updateWeatherUI();
         fetchOpenMeteo();
-        setInterval(updateWeatherUI, 30000);
-        setInterval(fetchOpenMeteo, 15 * 60 * 1000);
+        setInterval(() => { if (!document.hidden) updateWeatherUI(); }, 30000);
+        setInterval(() => { if (!document.hidden) fetchOpenMeteo(); }, 15 * 60 * 1000);
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) updateWeatherUI();
+        });
       }
 
       /* =========================================
@@ -1968,7 +2051,6 @@
         toggleBtn?.addEventListener('click', () => {
           hotTakesShowFive = !hotTakesShowFive;
           renderHotTakes(hotTakesState, false);
-      initTrophiesShowcase();
         });
 
         dlBtn?.addEventListener('click', () => {
@@ -2506,7 +2588,7 @@
          STAGE 5: GLASS SPOTLIGHT (EDGE + SURFACE REVEAL)
          ========================================= */
       function initGlassSpotlight() {
-        const isFine = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        const isFine = !prefersReducedMotion && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
         if (!isFine) return;
 
         const SELECTOR = '.glass-card, .discord-card, .watching-card, .music-dock, .modal-card, .arena-card';
@@ -2865,7 +2947,7 @@
       }
 
       function attachCardInteractions(grid) {
-        const isFine = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        const isFine = !prefersReducedMotion && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
         grid.querySelectorAll('.catalog-card').forEach((card) => {
           if (isFine) {
@@ -3366,7 +3448,7 @@
          COVER LOADING ENGINE (ANILIST BATCH + SEQUENTIAL JIKAN FALLBACK)
          ========================================= */
       async function anilistQuery(query, variables) {
-        const res = await fetch(ANILIST_ENDPOINT, {
+        const res = await fetchWithTimeout(ANILIST_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({ query, variables })
@@ -3408,7 +3490,7 @@
         const stillMissing = missing.filter((id) => !coverCache['anime_' + id]);
         if (stillMissing.length) {
           try {
-            const res = await fetch(`${activeShikiOrigin}/api/animes?ids=${stillMissing.join(',')}&limit=50`);
+            const res = await fetchWithTimeout(`${activeShikiOrigin}/api/animes?ids=${stillMissing.join(',')}&limit=50`, {}, 8500);
             if (res.ok) {
               const items = await res.json();
               items.forEach((a) => {
@@ -3459,7 +3541,7 @@
           while (attempts < 2) {
             attempts++;
             try {
-              const res = await fetch(`https://api.jikan.moe/v4/characters?q=${encodeURIComponent(c.search)}&limit=1&order_by=favorites&sort=desc`);
+              const res = await fetchWithTimeout(`https://api.jikan.moe/v4/characters?q=${encodeURIComponent(c.search)}&limit=1&order_by=favorites&sort=desc`, {}, 8000);
               if (res.status === 429) {
                 await sleep(1600);
                 continue;
@@ -3535,7 +3617,7 @@
 
         for (let attempt = 0; attempt <= retries; attempt++) {
           try {
-            const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+            const res = await fetchWithTimeout(url, { headers: { 'Accept': 'application/json' } }, 9500);
             lastStatus = res.status;
             if (res.ok) {
               const data = await res.json();
@@ -4160,7 +4242,7 @@
 
         // Try fetching actual Spotify playlist titles via public oEmbed
         SPOTIFY_PLAYLISTS.forEach((pl, idx) => {
-          fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(pl.url)}`)
+          fetchWithTimeout(`https://open.spotify.com/oembed?url=${encodeURIComponent(pl.url)}`, {}, 6500)
             .then((r) => (r.ok ? r.json() : null))
             .then((data) => {
               if (data && data.title) {
@@ -4359,22 +4441,42 @@
           }
         }
 
-        setInterval(updateTimers, 1000);
+        let hasRenderedPresence = false;
+        setInterval(() => { if (!document.hidden) updateTimers(); }, 1000);
+
+        function renderLanyardUnavailable() {
+          if (hasRenderedPresence) return;
+          currentSpotify = null;
+          currentActivityStart = null;
+          card.classList.remove('is-spotify');
+          spProgWrap?.classList.remove('is-visible');
+          if (dotEl) dotEl.className = 'discord-status-badge offline';
+          if (stateLabelEl) stateLabelEl.textContent = 'DISCORD · OFFLINE';
+          setTitleContent('undereror nyashka', '');
+          if (subEl) subEl.textContent = 'Статус Discord временно недоступен · плейлисты активны';
+        }
 
         async function fetchRest() {
           try {
-            const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
+            const res = await fetchWithTimeout(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`, {}, 8000);
             if (res.status === 404) {
+              hasRenderedPresence = true;
               renderNotMonitored();
               return false;
             }
-            if (!res.ok) return false;
+            if (!res.ok) {
+              renderLanyardUnavailable();
+              return false;
+            }
             const json = await res.json();
             if (json && json.success && json.data) {
+              hasRenderedPresence = true;
               renderPresence(json.data);
               return true;
             }
-          } catch (e) {}
+          } catch (e) {
+            renderLanyardUnavailable();
+          }
           return false;
         }
 
@@ -4418,7 +4520,13 @@
         fetchRest().then((ok) => {
           if (ok) connectWS();
         });
-        setInterval(fetchRest, 45000);
+        setInterval(() => { if (!document.hidden) fetchRest(); }, 45000);
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) {
+            updateTimers();
+            if (!ws || ws.readyState !== WebSocket.OPEN) fetchRest();
+          }
+        });
       }
 
       /* =========================================
@@ -4493,9 +4601,9 @@
           let lastStatus = 0;
           for (const origin of origins) {
             try {
-              const res = await fetch(`${origin}/api/users/${encodeURIComponent(nickname)}?is_nickname=1`, {
+              const res = await fetchWithTimeout(`${origin}/api/users/${encodeURIComponent(nickname)}?is_nickname=1`, {
                 headers: { 'Accept': 'application/json' }
-              });
+              }, 9000);
               lastStatus = res.status;
               if (res.ok) {
                 const data = await res.json();
@@ -6238,7 +6346,7 @@
 
         const cdns = [
           'https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js',
-          'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'
+          'https://unpkg.com/three@0.147.0/build/three.min.js'
         ];
 
         threeLoadPromise = new Promise((resolve, reject) => {
@@ -6349,7 +6457,7 @@
         let activeFilter = 'all';
         let activeSearch = '';
         let showLinks = true;
-        let autoOrbit = true;
+        let autoOrbit = !prefersReducedMotion;
 
         let currentPos = null;
         let startPos = null;
@@ -7604,6 +7712,7 @@
           linesBtn.classList.toggle('active', showLinks);
         });
 
+        orbitBtn?.classList.toggle('active', autoOrbit);
         orbitBtn?.addEventListener('click', () => {
           autoOrbit = !autoOrbit;
           orbitBtn.classList.toggle('active', autoOrbit);
@@ -9128,7 +9237,7 @@
         }).join('');
 
         // Bind stationary-card 3D metallic coin tilt (zero flicker, GPU-only) + inspect click
-        const isFine = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        const isFine = !prefersReducedMotion && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
         grid.querySelectorAll('.trophy-card').forEach((card) => {
           const coin = card.querySelector('.trophy-coin');
           if (isFine && coin) {
@@ -9506,6 +9615,7 @@
       renderAnimeDna(animeDnaState || SNAPSHOT_DNA);
       initHotTakesControls();
       renderHotTakes(hotTakesState, false);
+      initTrophiesShowcase();
       renderHistory(SNAPSHOT.history, false);
       renderActivityGraph(SNAPSHOT.activity);
       renderWatchingShelf(watchingList.length ? watchingList : SNAPSHOT.watching);
