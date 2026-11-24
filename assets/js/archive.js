@@ -1104,7 +1104,6 @@
           clearTimeout(resizeTimer);
           resizeTimer = setTimeout(() => {
             resize();
-            if (prefersReducedMotion) drawStaticStarfield();
           }, 120);
         }, { passive: true });
         window.addEventListener('mousemove', (e) => {
@@ -1130,23 +1129,12 @@
         let atmoRafId = null;
 
         function isAtmospherePaused() {
-          if (document.hidden || prefersReducedMotion) return true;
+          if (document.hidden) return true;
           if (document.body.classList.contains('galaxy-active') || document.body.classList.contains('is-modal-open')) return true;
           for (let i = 0; i < heavyModalEls.length; i++) {
             if (heavyModalEls[i].classList.contains('is-open')) return true;
           }
           return false;
-        }
-
-        function drawStaticStarfield() {
-          ctx.clearRect(0, 0, w, h);
-          for (let i = 0; i < stars.length; i++) {
-            const s = stars[i];
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(220, 230, 245, 0.42)';
-            ctx.fill();
-          }
         }
 
         function syncAtmosphereLoop() {
@@ -1155,7 +1143,6 @@
               cancelAnimationFrame(atmoRafId);
               atmoRafId = null;
             }
-            if (prefersReducedMotion) drawStaticStarfield();
           } else if (atmoRafId === null) {
             atmoRafId = requestAnimationFrame(frame);
           }
@@ -1163,10 +1150,7 @@
 
         function frame(now) {
           atmoRafId = null;
-          if (isAtmospherePaused()) {
-            if (prefersReducedMotion) drawStaticStarfield();
-            return;
-          }
+          if (isAtmospherePaused()) return;
           ctx.clearRect(0, 0, w, h);
           const mode = weatherEngineState.activeMode || 'clear';
           const beatBoost = 1 + liveBeatEnergy * 1.15;
