@@ -1,16 +1,65 @@
     :root {
+      /* === Color Palette (Cold Noir Monochrome) === */
       --bg-base: #07090d;
       --white: 255, 255, 255;
       --light: 205, 212, 224;
       --muted: 145, 155, 170;
       --bright: 173, 191, 222;
       --accent-dark: 67, 82, 101;
-      --glass-bg: rgba(10, 12, 18, 0.56);
-      --glass-border: rgba(173, 191, 222, 0.18);
+
+      /* === Surface Hierarchy === */
+      --surface-1: rgba(6, 8, 13, 0.56);
+      --surface-2: rgba(10, 12, 18, 0.56);
+      --surface-3: rgba(12, 16, 25, 0.84);
+      --surface-modal: rgba(10, 13, 21, 0.95);
+      --surface-overlay: rgba(4, 6, 11, 0.84);
+      --glass-bg: var(--surface-2);
+
+      /* === Border Hierarchy === */
+      --border-subtle: rgba(173, 191, 222, 0.14);
+      --border-default: rgba(173, 191, 222, 0.18);
+      --border-strong: rgba(173, 191, 222, 0.36);
+      --glass-border: var(--border-default);
+
+      /* === Radii & Layout Rhythm === */
+      --radius-xs: 6px;
+      --radius-sm: 10px;
+      --radius-md: 12px;
       --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-pill: 999px;
+      --container-max: 1160px;
+      --section-gap: 54px;
+      --section-gap-mobile: 36px;
+
+      /* === Typography === */
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
       --font-display: 'Unbounded', var(--font-sans);
+
+      /* === Centralized Z-Index Scale === */
+      --z-bg: 0;
+      --z-canvas: 1;
+      --z-shell: 2;
+      --z-grain: 50;
+      --z-topbar: 100;
+      --z-hud: 315;
+      --z-dock: 320;
+      --z-mobile-music: 455;
+      --z-mobile-dock: 460;
+      --z-modal: 500;
+      --z-arena: 560;
+      --z-coop: 570;
+      --z-galaxy: 580;
+      --z-spotify-bg: 600;
+      --z-spotify: 610;
+      --z-trophy: 640;
+      --z-pack: 645;
+      --z-holo: 650;
+      --z-holo-close: 660;
+      --z-intro: 9999;
+
+      /* === Dynamic Runtime State === */
       --beat-energy: 0;
     }
 
@@ -47,10 +96,11 @@
     /* =========================================
        BACKGROUND ART + VIGNETTE + CANVAS
        ========================================= */
+
     .bg-layer {
       position: fixed;
       inset: 0;
-      z-index: 0;
+      z-index: var(--z-bg);
       pointer-events: none;
       overflow: hidden;
       background: #07090d;
@@ -72,8 +122,7 @@
     .bg-vignette {
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(ellipse at center, transparent 28%, rgba(4, 6, 10, 0.78) 100%),
+      background: radial-gradient(ellipse at center, transparent 28%, rgba(4, 6, 10, 0.78) 100%),
         linear-gradient(180deg, rgba(7, 9, 14, 0.42) 0%, rgba(7, 9, 14, 0.54) 55%, rgba(6, 8, 12, 0.74) 100%);
     }
 
@@ -87,16 +136,17 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      z-index: 1;
+      z-index: var(--z-canvas);
       pointer-events: none;
     }
 
     /* =========================================
        LAYOUT & STICKY NAVBAR
        ========================================= */
+
     .app-shell {
       position: relative;
-      z-index: 2;
+      z-index: var(--z-shell);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -105,7 +155,7 @@
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: var(--z-topbar);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       background: linear-gradient(180deg, rgba(7, 9, 14, 0.88) 0%, rgba(7, 9, 14, 0.58) 82%, transparent 100%);
@@ -113,7 +163,7 @@
     }
 
     .topbar-inner {
-      max-width: 1160px;
+      max-width: var(--container-max);
       margin: 0 auto;
       padding: 12px 22px;
       display: flex;
@@ -247,9 +297,17 @@
       animation: eq-bounce 0.85s ease-in-out infinite;
     }
 
-    .audio-btn.is-playing .eq-bars span:nth-child(2) { animation-delay: -0.28s; }
-    .audio-btn.is-playing .eq-bars span:nth-child(3) { animation-delay: -0.56s; }
-    .audio-btn.is-playing .eq-bars span:nth-child(4) { animation-delay: -0.14s; }
+    .audio-btn.is-playing .eq-bars span:nth-child(2) {
+      animation-delay: -0.28s;
+    }
+
+    .audio-btn.is-playing .eq-bars span:nth-child(3) {
+      animation-delay: -0.56s;
+    }
+
+    .audio-btn.is-playing .eq-bars span:nth-child(4) {
+      animation-delay: -0.14s;
+    }
 
     @keyframes eq-bounce {
       0%, 100% { height: 3px; }
@@ -259,14 +317,15 @@
     /* =========================================
        MAIN CONTAINER & SECTIONS
        ========================================= */
+
     .container {
       width: 100%;
-      max-width: 1160px;
+      max-width: var(--container-max);
       margin: 0 auto;
       padding: 36px 22px 110px;
       display: flex;
       flex-direction: column;
-      gap: 54px;
+      gap: var(--section-gap);
     }
 
     section[id] {
@@ -284,10 +343,6 @@
     }
 
     .section-title {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 3.2px;
       text-transform: uppercase;
       color: rgb(var(--light));
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.90), 0 0 16px rgba(var(--bright), 0.28);
@@ -295,6 +350,10 @@
       border-bottom: 1px solid transparent;
       border-image: linear-gradient(90deg, transparent 5%, rgba(var(--bright), 0.45) 50%, transparent 95%) 1;
       min-width: 240px;
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 2.6px;
     }
 
     .section-title a {
@@ -311,13 +370,11 @@
     /* =========================================
        HERO SECTION (AVATAR + BEAT RING + STATS)
        ========================================= */
+
     .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 14px;
-      padding-top: 8px;
+      display: block;
+      text-align: left;
+      padding-top: 4px;
     }
 
     .avatar-wrap {
@@ -333,14 +390,14 @@
     }
 
     /* Beat-reactive outer pulse halo */
+
     .avatar-beat-ring {
       position: absolute;
       inset: -12px;
       border-radius: 50%;
       pointer-events: none;
       border: 1.5px solid rgba(var(--bright), calc(0.18 + var(--beat-energy) * 0.75));
-      box-shadow:
-        0 0 calc(16px + var(--beat-energy) * 34px) rgba(var(--bright), calc(0.14 + var(--beat-energy) * 0.55)),
+      box-shadow: 0 0 calc(16px + var(--beat-energy) * 34px) rgba(var(--bright), calc(0.14 + var(--beat-energy) * 0.55)),
         inset 0 0 calc(8px + var(--beat-energy) * 16px) rgba(var(--bright), calc(0.08 + var(--beat-energy) * 0.30));
       transform: scale(calc(1 + var(--beat-energy) * 0.14));
       transition: transform 0.06s linear, box-shadow 0.06s linear, border-color 0.06s linear;
@@ -361,7 +418,7 @@
         transparent 208deg,
         rgba(var(--bright), 0.48) 256deg,
         transparent 318deg
-      );
+        );
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -403,14 +460,15 @@
 
     .hero-nick {
       font-size: clamp(28px, 4.4vw, 40px);
-      font-weight: 600;
-      letter-spacing: 0.6px;
       margin-top: 6px;
       background: linear-gradient(180deg, #ffffff 0%, rgb(var(--light)) 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 3px 12px rgba(0, 0, 0, 0.82));
+      font-family: var(--font-display);
+      font-weight: 600;
+      letter-spacing: -0.02em;
     }
 
     .hero-meta {
@@ -457,8 +515,7 @@
     .rank-badge {
       padding: 6px 18px;
       border-radius: 999px;
-      background:
-        linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.32) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
+      background: linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.32) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
         rgba(8, 10, 14, 0.68);
       border: 1px solid rgba(var(--bright), 0.38);
       box-shadow: 0 0 20px rgba(var(--bright), 0.14);
@@ -492,6 +549,7 @@
     /* =========================================
        GLASS CARDS & STATS GRID
        ========================================= */
+
     .glass-card {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
@@ -533,7 +591,6 @@
     }
 
     .stat-hero-val {
-      font-size: 40px;
       font-weight: 700;
       line-height: 1;
       background: linear-gradient(180deg, #ffffff 0%, rgba(var(--bright), 0.80) 100%);
@@ -541,6 +598,9 @@
       background-clip: text;
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 0 12px rgba(var(--bright), 0.32));
+      font-family: var(--font-display);
+      font-size: 36px;
+      letter-spacing: -0.03em;
     }
 
     .stat-hero-label {
@@ -580,10 +640,21 @@
       transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .prog-completed { background: linear-gradient(90deg, rgba(var(--bright), 0.75), #ffffff); }
-    .prog-watching  { background: rgba(var(--bright), 0.45); }
-    .prog-planned   { background: rgba(var(--accent-dark), 0.65); }
-    .prog-other     { background: rgba(255, 255, 255, 0.14); }
+    .prog-completed {
+      background: linear-gradient(90deg, rgba(var(--bright), 0.75), #ffffff);
+    }
+
+    .prog-watching {
+      background: rgba(var(--bright), 0.45);
+    }
+
+    .prog-planned {
+      background: rgba(var(--accent-dark), 0.65);
+    }
+
+    .prog-other {
+      background: rgba(255, 255, 255, 0.14);
+    }
 
     .mini-stats {
       display: grid;
@@ -737,6 +808,7 @@
     /* =========================================
        ACTIVITY & HISTORY GRID
        ========================================= */
+
     .activity-grid {
       display: grid;
       grid-template-columns: 1.05fr 1.35fr;
@@ -848,6 +920,7 @@
     }
 
     /* Reactive Activity Graph */
+
     .graph-wrap {
       display: flex;
       flex-direction: column;
@@ -928,6 +1001,7 @@
     /* =========================================
        WAIFU CAROUSEL (CLEAR ARROWS + VISIBLE SCROLL)
        ========================================= */
+
     .waifu-head-bar {
       display: flex;
       align-items: center;
@@ -1003,6 +1077,7 @@
     }
 
     /* Crisp custom WebKit scrollbar so scrolling is ALWAYS clearly visible */
+
     .waifu-carousel::-webkit-scrollbar {
       height: 7px;
     }
@@ -1125,6 +1200,7 @@
     /* =========================================
        COLLECTION (PEAK FICTION / LITERALLY ME)
        ========================================= */
+
     .tabs-bar {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1157,8 +1233,7 @@
     .tab-btn.active {
       color: #fff;
       border-color: rgba(var(--bright), 0.95);
-      background:
-        linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.30) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
+      background: linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.30) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
         linear-gradient(to bottom, rgba(var(--bright), 0.24), rgba(8, 10, 14, 0.72));
       box-shadow: 0 0 20px rgba(var(--bright), 0.28), inset 0 0 12px rgba(var(--bright), 0.14);
       text-shadow: 0 0 10px rgba(var(--bright), 0.62);
@@ -1274,8 +1349,8 @@
     }
 
     .cards-grid:has(.catalog-card:hover) .catalog-card:not(:hover) {
-      opacity: 0.45;
-      filter: saturate(0.68);
+      opacity: 0.44;
+      filter: grayscale(0.35);
     }
 
     .catalog-card:hover {
@@ -1371,7 +1446,7 @@
         rgba(255, 255, 255, 0.25) 48%,
         rgba(var(--bright), 0.16) 54%,
         transparent 76%
-      );
+        );
       transform: translateX(-145%) skewX(-20deg);
       transition: none;
     }
@@ -1454,11 +1529,12 @@
     /* =========================================
        FLOATING MUSIC PLAYER DOCK (REAL MP3 + VISUALIZER)
        ========================================= */
+
     .music-dock {
       position: fixed;
       right: 22px;
       bottom: 22px;
-      z-index: 320;
+      z-index: var(--z-dock);
       width: 332px;
       max-width: calc(100vw - 28px);
       border-radius: 16px;
@@ -1466,11 +1542,11 @@
       border: 1px solid rgba(var(--bright), calc(0.26 + var(--beat-energy) * 0.45));
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      box-shadow:
-        0 14px 36px rgba(0, 0, 0, 0.68),
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.68),
         0 0 calc(16px + var(--beat-energy) * 26px) rgba(var(--bright), calc(0.10 + var(--beat-energy) * 0.26));
       padding: 12px 14px;
       transition: width 0.28s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      overflow: hidden;
     }
 
     .music-dock.is-minimized {
@@ -1737,10 +1813,11 @@
     /* =========================================
        MODAL DIALOG
        ========================================= */
+
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      z-index: 500;
+      z-index: var(--z-modal);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1817,6 +1894,7 @@
       display: grid;
       place-items: center;
       transition: border-color 0.2s ease, transform 0.2s ease;
+      z-index: 12;
     }
 
     .modal-close:hover {
@@ -1898,6 +1976,7 @@
     /* =========================================
        FOOTER
        ========================================= */
+
     .footer {
       margin-top: auto;
       padding: 26px 22px 34px;
@@ -1915,21 +1994,20 @@
       text-shadow: 0 0 12px rgba(var(--bright), 0.45);
     }
 
-
     /* =========================================
        INTRO OVERLAY ([ CLICK TO ENTER ])
        ========================================= */
+
     .intro-overlay {
       position: fixed;
       inset: 0;
-      z-index: 9999;
+      z-index: var(--z-intro);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 24px;
-      background:
-        radial-gradient(circle at center, rgba(22, 28, 42, 0.42) 0%, rgba(5, 7, 11, 0.94) 72%),
+      background: radial-gradient(circle at center, rgba(22, 28, 42, 0.42) 0%, rgba(5, 7, 11, 0.94) 72%),
         rgba(5, 7, 11, 0.90);
       backdrop-filter: blur(22px);
       -webkit-backdrop-filter: blur(22px);
@@ -1981,7 +2059,7 @@
         transparent 220deg,
         rgba(var(--bright), 0.48) 275deg,
         transparent 330deg
-      );
+        );
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -1997,15 +2075,15 @@
     }
 
     .intro-title {
-      font-family: var(--font-mono);
       font-size: clamp(24px, 4.6vw, 38px);
-      font-weight: 600;
-      letter-spacing: 3px;
       background: linear-gradient(180deg, #ffffff 0%, rgba(var(--bright), 0.85) 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 0 22px rgba(var(--bright), 0.36));
+      font-family: var(--font-display);
+      font-weight: 600;
+      letter-spacing: 1.5px;
     }
 
     .intro-sub {
@@ -2021,8 +2099,7 @@
       padding: 12px 28px;
       border-radius: 999px;
       border: 1px solid rgba(var(--bright), 0.58);
-      background:
-        linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.32) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
+      background: linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.32) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
         rgba(10, 14, 22, 0.78);
       color: #fff;
       font-family: var(--font-mono);
@@ -2070,6 +2147,7 @@
     /* =========================================
        LIVE DISCORD / SPOTIFY PRESENCE CARD
        ========================================= */
+
     .discord-card {
       width: 100%;
       max-width: 560px;
@@ -2131,10 +2209,24 @@
       box-shadow: 0 0 8px rgba(0, 0, 0, 0.65);
     }
 
-    .discord-status-badge.online  { background: #6ee7b7; box-shadow: 0 0 10px rgba(110, 231, 183, 0.85); }
-    .discord-status-badge.idle    { background: #fbbf24; box-shadow: 0 0 10px rgba(251, 191, 36, 0.75); }
-    .discord-status-badge.dnd     { background: #f87171; box-shadow: 0 0 10px rgba(248, 113, 113, 0.75); }
-    .discord-status-badge.offline { background: rgba(var(--muted), 0.65); }
+    .discord-status-badge.online {
+      background: #6ee7b7;
+      box-shadow: 0 0 10px rgba(110, 231, 183, 0.85);
+    }
+
+    .discord-status-badge.idle {
+      background: #fbbf24;
+      box-shadow: 0 0 10px rgba(251, 191, 36, 0.75);
+    }
+
+    .discord-status-badge.dnd {
+      background: #f87171;
+      box-shadow: 0 0 10px rgba(248, 113, 113, 0.75);
+    }
+
+    .discord-status-badge.offline {
+      background: rgba(var(--muted), 0.65);
+    }
 
     .discord-body {
       min-width: 0;
@@ -2256,6 +2348,7 @@
     /* =========================================
        RANDOMIZER BUTTON & ROULETTE MODAL
        ========================================= */
+
     .toolbar-right {
       display: flex;
       align-items: center;
@@ -2270,8 +2363,7 @@
       padding: 8px 15px;
       border-radius: 999px;
       border: 1px solid rgba(var(--bright), 0.56);
-      background:
-        linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.30) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
+      background: linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.30) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
         linear-gradient(to bottom, rgba(var(--bright), 0.22), rgba(8, 10, 15, 0.80));
       color: #fff;
       font-family: var(--font-mono);
@@ -2364,10 +2456,11 @@
     /* =========================================
        SPOTIFY PLAYLISTS DRAWER
        ========================================= */
+
     .spotify-backdrop {
       position: fixed;
       inset: 0;
-      z-index: 600;
+      z-index: var(--z-spotify-bg);
       background: rgba(4, 6, 10, 0.68);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
@@ -2389,7 +2482,7 @@
       top: 16px;
       right: 16px;
       bottom: 16px;
-      z-index: 610;
+      z-index: var(--z-spotify);
       width: 410px;
       max-width: calc(100vw - 32px);
       border-radius: 18px;
@@ -2553,21 +2646,10 @@
       transform: translateY(-1px);
     }
 
-    @media (max-width: 560px) {
-      .discord-card {
-        flex-wrap: wrap;
-      }
-      .discord-actions {
-        width: 100%;
-        flex-direction: row;
-        justify-content: flex-end;
-      }
-    }
-
-
     /* =========================================
        STAGE 4: RANDOMIZER MODE BAR
        ========================================= */
+
     .modal-mode-bar {
       display: none;
       align-items: center;
@@ -2614,11 +2696,10 @@
       margin-left: 2px;
     }
 
-
-
     /* =========================================
        STAGE 5: LIVE "WATCHING NOW" SHELF
        ========================================= */
+
     .watching-head-bar {
       display: flex;
       align-items: center;
@@ -2817,90 +2898,16 @@
     /* =========================================
        STAGE 5: GLASS SPOTLIGHT (EDGE + SURFACE REVEAL)
        ========================================= */
+
     .glass-card,
     .discord-card {
       position: relative;
       overflow: hidden;
     }
 
-    .music-dock {
-      overflow: hidden;
-    }
-
-    .modal-close {
-      z-index: 12;
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      .glass-card::before,
-      .discord-card::before,
-      .watching-card::before,
-      .music-dock::before,
-      .modal-card::before,
-      .arena-card::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        pointer-events: none;
-        z-index: 1;
-        background: radial-gradient(
-          360px circle at var(--spot-x, -999px) var(--spot-y, -999px),
-          rgba(var(--bright), 0.11),
-          rgba(255, 255, 255, 0.03) 38%,
-          transparent 68%
-        );
-        opacity: var(--spot-o, 0);
-        transition: opacity 0.28s ease;
-      }
-
-      .glass-card::after,
-      .discord-card::after,
-      .watching-card::after,
-      .music-dock::after,
-      .modal-card::after,
-      .arena-card::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        padding: 1.2px;
-        pointer-events: none;
-        z-index: 4;
-        background: radial-gradient(
-          250px circle at var(--spot-x, -999px) var(--spot-y, -999px),
-          rgba(255, 255, 255, 0.78),
-          rgba(var(--bright), 0.40) 42%,
-          transparent 72%
-        );
-        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-        -webkit-mask-composite: xor;
-        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-        mask-composite: exclude;
-        opacity: var(--spot-o, 0);
-        transition: opacity 0.28s ease;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .watching-head-bar {
-        flex-direction: column;
-        gap: 12px;
-      }
-      .watching-nav-controls {
-        position: static;
-      }
-    }
-
-
     /* =========================================
        STAGE 1 NEW: BENTO COMMAND DECK + ANIME-DNA X-RAY
        ========================================= */
-    .hero {
-      display: block;
-      text-align: left;
-      padding-top: 4px;
-    }
 
     .bento-deck {
       display: grid;
@@ -2956,9 +2963,9 @@
     }
 
     .bento-pilot .hero-nick {
-      font-size: clamp(24px, 2.8vw, 31px);
       margin-top: 2px;
       line-height: 1.15;
+      font-size: clamp(20px, 2.25vw, 27px);
     }
 
     .pilot-bio-line {
@@ -3099,6 +3106,7 @@
     /* =========================================
        TILE 4: ANIME-DNA // TASTE X-RAY
        ========================================= */
+
     .bento-dna {
       grid-column: span 12;
       padding: 20px 24px 22px;
@@ -3182,6 +3190,7 @@
     }
 
     /* Col 1: Archetype + 2x2 KPI */
+
     .dna-archetype-box {
       padding: 10px 12px;
       border-radius: 10px;
@@ -3190,11 +3199,13 @@
     }
 
     .dna-archetype-name {
-      font-size: 14.5px;
-      font-weight: 700;
       color: #fff;
       line-height: 1.25;
       text-shadow: 0 0 14px rgba(var(--bright), 0.35);
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
     }
 
     .dna-archetype-desc {
@@ -3252,6 +3263,7 @@
     }
 
     /* Col 2: Score Distribution Histogram 1..10 */
+
     .dna-scores-chart {
       flex: 1;
       min-height: 128px;
@@ -3343,6 +3355,7 @@
     }
 
     /* Col 3: Switchable X-Ray (Genres / Studios / Eras) */
+
     .dna-tabs {
       display: inline-flex;
       align-items: center;
@@ -3452,28 +3465,10 @@
       margin-left: 3px;
     }
 
-    @media (max-width: 1020px) {
-      .bento-pilot,
-      .bento-discord-slot,
-      .bento-telemetry {
-        grid-column: span 12;
-        grid-row: auto;
-      }
-      .dna-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .telemetry-footer {
-        grid-template-columns: 1fr;
-      }
-    }
-
-
     /* =========================================
        STAGE 2 NEW: TASTE MATCH («ПРОВЕРКА НА БАЗУ»)
        ========================================= */
+
     .base-check-card {
       padding: 24px 26px;
       display: flex;
@@ -3570,8 +3565,7 @@
       padding: 12px 22px;
       border-radius: 999px;
       border: 1px solid rgba(var(--bright), 0.68);
-      background:
-        linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.34) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
+      background: linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.34) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
         linear-gradient(to bottom, rgba(var(--bright), 0.26), rgba(9, 12, 20, 0.88));
       color: #fff;
       font-family: var(--font-mono);
@@ -3690,11 +3684,12 @@
     }
 
     .base-pct-num {
-      font-family: var(--font-mono);
-      font-size: 26px;
       font-weight: 700;
       color: #fff;
       line-height: 1;
+      font-family: var(--font-display);
+      font-size: 22px;
+      letter-spacing: -0.02em;
     }
 
     .base-pct-lbl {
@@ -3742,11 +3737,13 @@
     }
 
     .base-rank-title {
-      font-size: clamp(18px, 2.5vw, 22px);
       font-weight: 700;
       color: #fff;
       line-height: 1.2;
       text-shadow: 0 0 16px rgba(var(--bright), 0.34);
+      font-family: var(--font-display);
+      font-size: clamp(15px, 2vw, 19px);
+      letter-spacing: -0.01em;
     }
 
     .base-rank-desc {
@@ -3974,24 +3971,10 @@
       box-shadow: 0 0 18px rgba(110, 231, 183, 0.38);
     }
 
-    @media (max-width: 900px) {
-      .base-verdict-hero {
-        grid-template-columns: 1fr;
-        text-align: center;
-        justify-items: center;
-      }
-      .base-matchup-row {
-        justify-content: center;
-      }
-      .base-details-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-
     /* =========================================
        STAGE 3 NEW: 1v1 TOURNAMENT ARENA
        ========================================= */
+
     .waifu-head-left {
       position: absolute;
       left: 0;
@@ -4007,8 +3990,7 @@
       padding: 8px 14px;
       border-radius: 999px;
       border: 1px solid rgba(var(--bright), 0.44);
-      background:
-        linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.28) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
+      background: linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.28) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
         rgba(10, 14, 22, 0.78);
       color: #fff;
       font-family: var(--font-mono);
@@ -4032,7 +4014,7 @@
     .arena-backdrop {
       position: fixed;
       inset: 0;
-      z-index: 560;
+      z-index: var(--z-arena);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -4304,6 +4286,7 @@
     }
 
     /* Champion Verdict View */
+
     .arena-champion-view {
       display: none;
       flex-direction: column;
@@ -4361,10 +4344,12 @@
     }
 
     .arena-champ-name {
-      font-size: clamp(22px, 3vw, 28px);
       font-weight: 700;
       color: #fff;
       line-height: 1.18;
+      font-family: var(--font-display);
+      font-size: clamp(19px, 2.5vw, 25px);
+      letter-spacing: -0.01em;
     }
 
     .arena-champ-compare {
@@ -4424,6 +4409,7 @@
     /* =========================================
        STAGE 4 NEW: LIVE WEATHER HUD (53.9° N)
        ========================================= */
+
     .pilot-weather-chip {
       display: inline-flex;
       align-items: center;
@@ -4450,7 +4436,7 @@
       position: fixed;
       left: 22px;
       bottom: 22px;
-      z-index: 315;
+      z-index: var(--z-hud);
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -4585,9 +4571,9 @@
     }
 
     /* Subtle night / storm vignette mood shift */
+
     body.weather-night .bg-vignette {
-      background:
-        radial-gradient(ellipse at center, transparent 22%, rgba(2, 4, 9, 0.86) 100%),
+      background: radial-gradient(ellipse at center, transparent 22%, rgba(2, 4, 9, 0.86) 100%),
         linear-gradient(180deg, rgba(5, 7, 13, 0.50) 0%, rgba(5, 7, 13, 0.62) 55%, rgba(4, 6, 10, 0.82) 100%);
     }
 
@@ -4595,59 +4581,16 @@
       filter: blur(1.4px) saturate(0.75);
     }
 
-    @media (max-width: 780px) {
-      .weather-hud {
-        display: none;
-      }
-      .waifu-head-left {
-        position: static;
-      }
-      .waifu-head-bar {
-        flex-direction: column;
-        gap: 10px;
-      }
-      .waifu-nav-controls {
-        position: static;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .arena-duel-stage {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-      .arena-vs-orb {
-        margin: 0 auto;
-        width: 38px;
-        height: 38px;
-        font-size: 11px;
-      }
-      .arena-poster {
-        max-height: 230px;
-      }
-      .arena-champ-hero {
-        grid-template-columns: 1fr;
-        text-align: center;
-        justify-items: center;
-      }
-      .arena-champ-poster {
-        max-width: 170px;
-      }
-      .arena-podium-row {
-        grid-template-columns: 1fr;
-      }
-    }
-
-
     /* =========================================
        V13 STAGE 1: FILM GRAIN + DISPLAY FONTS + NOIR POSTER FILTER + HOT TAKES
        ========================================= */
+
     .film-grain {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
-      z-index: 50;
+      z-index: var(--z-grain);
       pointer-events: none;
       opacity: 0.026;
       background-repeat: repeat;
@@ -4663,48 +4606,7 @@
       100% { transform: translate3d(0.8%, 1.5%, 0); }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .film-grain {
-        animation: none;
-      }
-    }
-
     /* Editorial Display Typography (Unbounded) */
-    .intro-title {
-      font-family: var(--font-display);
-      font-weight: 600;
-      letter-spacing: 1.5px;
-    }
-
-    .hero-nick {
-      font-family: var(--font-display);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-    }
-
-    .bento-pilot .hero-nick {
-      font-size: clamp(20px, 2.25vw, 27px);
-    }
-
-    .stat-hero-val {
-      font-family: var(--font-display);
-      font-size: 36px;
-      letter-spacing: -0.03em;
-    }
-
-    .section-title {
-      font-family: var(--font-display);
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 2.6px;
-    }
-
-    .dna-archetype-name {
-      font-family: var(--font-display);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
 
     .base-heading,
     .ht-heading {
@@ -4716,25 +4618,8 @@
       line-height: 1.25;
     }
 
-    .base-pct-num {
-      font-family: var(--font-display);
-      font-size: 22px;
-      letter-spacing: -0.02em;
-    }
-
-    .base-rank-title {
-      font-family: var(--font-display);
-      font-size: clamp(15px, 2vw, 19px);
-      letter-spacing: -0.01em;
-    }
-
-    .arena-champ-name {
-      font-family: var(--font-display);
-      font-size: clamp(19px, 2.5vw, 25px);
-      letter-spacing: -0.01em;
-    }
-
     /* Unified Noir Poster Filter (desaturated monochrome at rest -> vivid full color on hover) */
+
     .poster-box img,
     .waifu-card img,
     .watching-poster img,
@@ -4742,8 +4627,7 @@
     .base-row-thumb img,
     .ht-thumb img {
       filter: grayscale(0.58) saturate(0.45) contrast(1.09) brightness(0.92);
-      transition:
-        opacity 0.45s ease,
+      transition: opacity 0.45s ease,
         transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
         filter 0.42s cubic-bezier(0.22, 1, 0.36, 1);
     }
@@ -4765,14 +4649,10 @@
       transform: scale(1.06);
     }
 
-    .cards-grid:has(.catalog-card:hover) .catalog-card:not(:hover) {
-      opacity: 0.44;
-      filter: grayscale(0.35);
-    }
-
     /* =========================================
        HOT TAKES SECTION (MAIN DISAGREEMENTS WITH SHIKIMORI)
        ========================================= */
+
     .hottakes-card {
       padding: 24px 26px;
       display: flex;
@@ -5107,45 +4987,21 @@
       flex-wrap: wrap;
     }
 
-    @media (max-width: 900px) {
-      .ht-columns {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .hottakes-card {
-        padding: 18px 16px;
-      }
-      .ht-card {
-        padding: 9px 10px;
-        gap: 10px;
-      }
-      .ht-delta-badge {
-        min-width: 56px;
-        padding: 6px 6px;
-      }
-      .ht-delta-val {
-        font-size: 11.5px;
-      }
-    }
-
-
     /* =========================================
        V14 STAGE 2: 3D HOLOGRAPHIC COLLECTIBLE CARDS + MOBILE TIKTOK DOCK
        ========================================= */
+
     .holo-backdrop {
       position: fixed;
       inset: 0;
-      z-index: 650;
+      z-index: var(--z-holo);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 16px;
       padding: 20px 16px;
-      background:
-        radial-gradient(circle at 50% 45%, rgba(28, 38, 58, 0.42) 0%, rgba(4, 6, 11, 0.90) 70%),
+      background: radial-gradient(circle at 50% 45%, rgba(28, 38, 58, 0.42) 0%, rgba(4, 6, 11, 0.90) 70%),
         rgba(4, 6, 10, 0.86);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
@@ -5167,7 +5023,7 @@
       position: fixed;
       top: 18px;
       right: 18px;
-      z-index: 660;
+      z-index: var(--z-holo-close);
       width: 38px;
       height: 38px;
       border-radius: 50%;
@@ -5241,34 +5097,32 @@
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       background: #080b12;
-      box-shadow:
-        0 26px 64px rgba(0, 0, 0, 0.82),
+      box-shadow: 0 26px 64px rgba(0, 0, 0, 0.82),
         0 0 0 1px rgba(var(--bright), 0.34);
     }
 
     /* Rarity frame styling */
+
     .holo-tilt-wrap[data-rarity="mythic"] .holo-face {
-      box-shadow:
-        0 28px 68px rgba(0, 0, 0, 0.86),
+      box-shadow: 0 28px 68px rgba(0, 0, 0, 0.86),
         0 0 0 1.5px rgba(240, 246, 255, 0.88),
         0 0 36px rgba(173, 205, 255, 0.36);
     }
 
     .holo-tilt-wrap[data-rarity="ssr"] .holo-face {
-      box-shadow:
-        0 26px 64px rgba(0, 0, 0, 0.84),
+      box-shadow: 0 26px 64px rgba(0, 0, 0, 0.84),
         0 0 0 1.3px rgba(173, 198, 238, 0.68),
         0 0 26px rgba(173, 191, 222, 0.24);
     }
 
     .holo-tilt-wrap[data-rarity="sr"] .holo-face {
-      box-shadow:
-        0 24px 58px rgba(0, 0, 0, 0.82),
+      box-shadow: 0 24px 58px rgba(0, 0, 0, 0.82),
         0 0 0 1.1px rgba(150, 166, 192, 0.45),
         0 0 18px rgba(140, 158, 188, 0.16);
     }
 
     /* FRONT FACE */
+
     .holo-front {
       display: flex;
       flex-direction: column;
@@ -5288,6 +5142,7 @@
     }
 
     /* Holographic Prismatic Foil Layer */
+
     .holo-foil {
       position: absolute;
       inset: 0;
@@ -5295,22 +5150,21 @@
       pointer-events: none;
       mix-blend-mode: color-dodge;
       opacity: var(--hop, 0.24);
-      background-image:
-        repeating-linear-gradient(
-          118deg,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(182, 210, 255, 0.22) 10%,
-          rgba(218, 196, 255, 0.24) 18%,
-          rgba(176, 244, 232, 0.24) 26%,
-          rgba(255, 255, 255, 0.28) 32%,
-          rgba(173, 191, 222, 0.16) 40%,
-          rgba(255, 255, 255, 0) 52%
+      background-image: repeating-linear-gradient(
+        118deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(182, 210, 255, 0.22) 10%,
+        rgba(218, 196, 255, 0.24) 18%,
+        rgba(176, 244, 232, 0.24) 26%,
+        rgba(255, 255, 255, 0.28) 32%,
+        rgba(173, 191, 222, 0.16) 40%,
+        rgba(255, 255, 255, 0) 52%
         ),
         radial-gradient(
-          circle at var(--hx, 50%) var(--hy, 50%),
-          rgba(255, 255, 255, 0.55) 0%,
-          rgba(190, 214, 255, 0.26) 24%,
-          transparent 62%
+        circle at var(--hx, 50%) var(--hy, 50%),
+        rgba(255, 255, 255, 0.55) 0%,
+        rgba(190, 214, 255, 0.26) 24%,
+        transparent 62%
         );
       background-size: 240% 240%, 100% 100%;
       background-position: var(--hbg-x, 50%) var(--hbg-y, 50%), center;
@@ -5326,6 +5180,7 @@
     }
 
     /* Fine Diamond Foil Grid Sparkle */
+
     .holo-sparkle {
       position: absolute;
       inset: 0;
@@ -5333,14 +5188,14 @@
       pointer-events: none;
       opacity: calc(var(--hop, 0.18) * 0.75);
       mix-blend-mode: overlay;
-      background-image:
-        radial-gradient(rgba(255, 255, 255, 0.45) 0.75px, transparent 0.75px),
+      background-image: radial-gradient(rgba(255, 255, 255, 0.45) 0.75px, transparent 0.75px),
         linear-gradient(135deg, transparent 35%, rgba(255, 255, 255, 0.26) 50%, transparent 65%);
       background-size: 10px 10px, 260% 260%;
       background-position: 0 0, var(--hbg-x, 50%) var(--hbg-y, 50%);
     }
 
     /* Specular Glare Reflection */
+
     .holo-glare {
       position: absolute;
       inset: 0;
@@ -5353,10 +5208,11 @@
         rgba(255, 255, 255, 0.82),
         rgba(210, 226, 255, 0.22) 38%,
         transparent 72%
-      );
+        );
     }
 
     /* Inner metallic foil bezel */
+
     .holo-bezel {
       position: absolute;
       inset: 8px;
@@ -5490,10 +5346,10 @@
     }
 
     /* BACK FACE (180deg) */
+
     .holo-back {
       transform: rotateY(180deg);
-      background:
-        radial-gradient(circle at 20% 15%, rgba(var(--bright), 0.16), transparent 52%),
+      background: radial-gradient(circle at 20% 15%, rgba(var(--bright), 0.16), transparent 52%),
         radial-gradient(circle at 85% 88%, rgba(var(--bright), 0.11), transparent 50%),
         linear-gradient(155deg, #0b101b 0%, #070a11 55%, #090d16 100%);
       display: flex;
@@ -5508,8 +5364,7 @@
       inset: 0;
       pointer-events: none;
       opacity: 0.25;
-      background-image:
-        linear-gradient(rgba(var(--bright), 0.08) 1px, transparent 1px),
+      background-image: linear-gradient(rgba(var(--bright), 0.08) 1px, transparent 1px),
         linear-gradient(90deg, rgba(var(--bright), 0.08) 1px, transparent 1px);
       background-size: 24px 24px;
     }
@@ -5606,6 +5461,7 @@
     }
 
     /* Controls below 3D card */
+
     .holo-controls {
       position: relative;
       z-index: 10;
@@ -5659,178 +5515,22 @@
     /* =========================================
        MOBILE TIKTOK BOTTOM DOCK (<= 860px)
        ========================================= */
+
     .mobile-dock {
       display: none;
     }
 
-    @media (max-width: 860px) {
-      .container {
-        padding-bottom: calc(116px + env(safe-area-inset-bottom, 0px));
-      }
-
-      .footer {
-        padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
-      }
-
-      .mobile-dock {
-        display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        align-items: center;
-        position: fixed;
-        left: 10px;
-        right: 10px;
-        bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-        z-index: 420;
-        padding: 6px 6px;
-        border-radius: 20px;
-        background: rgba(8, 11, 18, 0.88);
-        border: 1px solid rgba(var(--bright), 0.28);
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-        box-shadow:
-          0 12px 34px rgba(0, 0, 0, 0.78),
-          0 0 22px rgba(var(--bright), 0.14);
-      }
-
-      .mdock-btn {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 3px;
-        padding: 7px 4px;
-        border-radius: 14px;
-        border: 1px solid transparent;
-        background: transparent;
-        color: rgba(var(--light), 0.66);
-        text-decoration: none;
-        font-family: var(--font-mono);
-        font-size: 8.5px;
-        font-weight: 500;
-        letter-spacing: 0.7px;
-        text-transform: uppercase;
-        transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.16s ease;
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      .mdock-btn:active {
-        transform: scale(0.94);
-      }
-
-      .mdock-icon {
-        font-size: 15px;
-        line-height: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        height: 18px;
-      }
-
-      .mdock-btn.is-active,
-      .mdock-btn.is-open {
-        color: #fff;
-        background: rgba(var(--bright), 0.18);
-        border-color: rgba(var(--bright), 0.42);
-        box-shadow: 0 0 14px rgba(var(--bright), 0.18);
-      }
-
-      .mdock-eq {
-        display: none;
-        align-items: flex-end;
-        gap: 2px;
-        height: 12px;
-      }
-
-      .mdock-eq span {
-        width: 2.5px;
-        height: 4px;
-        border-radius: 2px;
-        background: #6ee7b7;
-        animation: eq-bounce 0.8s ease-in-out infinite;
-      }
-
-      .mdock-eq span:nth-child(2) { animation-delay: -0.25s; }
-      .mdock-eq span:nth-child(3) { animation-delay: -0.50s; }
-
-      body.is-audio-playing .mdock-music-btn .mdock-music-glyph {
-        display: none;
-      }
-
-      body.is-audio-playing .mdock-music-btn .mdock-eq {
-        display: inline-flex;
-      }
-
-      body.is-audio-playing .mdock-music-btn {
-        color: #d1fae5;
-      }
-
-      /* Smart mobile music drawer: tucked away until user opens it from the mobile dock */
-      .music-dock {
-        left: 10px;
-        right: 10px;
-        bottom: calc(80px + env(safe-area-inset-bottom, 0px));
-        width: auto;
-        max-width: none;
-        transform: translateY(18px) scale(0.97);
-        opacity: 0;
-        pointer-events: none;
-        transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.24s ease;
-      }
-
-      .music-dock.is-mobile-open {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      .music-dock.is-minimized {
-        width: auto;
-        border-radius: 16px;
-        padding: 12px 14px;
-      }
-
-      .music-dock.is-minimized .dock-expandable {
-        display: block;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .topbar-inner {
-        padding: 10px 14px;
-        gap: 8px;
-      }
-      .brand {
-        font-size: 11.5px;
-        letter-spacing: 1px;
-      }
-      .status-pill {
-        display: none;
-      }
-      .audio-btn {
-        padding: 5px 10px;
-        max-width: 150px;
-      }
-      .audio-btn-label {
-        max-width: 82px;
-      }
-      .holo-kbd-hint {
-        display: none;
-      }
-    }
-
-
     /* =========================================
        V15 STAGE 3: 3D ARCHIVE GALAXY (WEBGL / THREE.JS)
        ========================================= */
+
     .galaxy-nav-btn {
       display: inline-flex;
       align-items: center;
       gap: 7px;
       padding: 6px 13px;
       border-radius: 999px;
-      background:
-        linear-gradient(110deg, transparent 32%, rgba(var(--bright), 0.34) 50%, transparent 68%) -150% 0 / 250% 100% no-repeat,
+      background: linear-gradient(110deg, transparent 32%, rgba(var(--bright), 0.34) 50%, transparent 68%) -150% 0 / 250% 100% no-repeat,
         rgba(12, 17, 28, 0.84);
       border: 1px solid rgba(var(--bright), 0.56);
       color: #fff;
@@ -5866,9 +5566,8 @@
     .galaxy-overlay {
       position: fixed;
       inset: 0;
-      z-index: 580;
-      background:
-        radial-gradient(ellipse at 50% 45%, rgba(16, 23, 38, 0.96) 0%, rgba(5, 7, 13, 0.99) 62%, #020307 100%);
+      z-index: var(--z-galaxy);
+      background: radial-gradient(ellipse at 50% 45%, rgba(16, 23, 38, 0.96) 0%, rgba(5, 7, 13, 0.99) 62%, #020307 100%);
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
@@ -5903,6 +5602,7 @@
     }
 
     /* Subtle radial vignette + astrolabe frame over WebGL */
+
     .galaxy-vignette {
       position: absolute;
       inset: 0;
@@ -5912,6 +5612,7 @@
     }
 
     /* Floating 3D Cluster Labels Layer */
+
     .galaxy-labels-layer {
       position: absolute;
       inset: 0;
@@ -5945,6 +5646,7 @@
     }
 
     /* Target Reticle Locked on Hovered / Selected Star */
+
     .galaxy-reticle {
       position: absolute;
       left: 0;
@@ -5992,6 +5694,7 @@
     }
 
     /* Galaxy Top HUD */
+
     .galaxy-hud-top {
       position: absolute;
       top: 16px;
@@ -6129,6 +5832,7 @@
     }
 
     /* Galaxy Hover Tooltip */
+
     .galaxy-hover-tip {
       position: absolute;
       left: 0;
@@ -6203,6 +5907,7 @@
     }
 
     /* Galaxy Selected Star Dossier Panel */
+
     .galaxy-inspector {
       position: absolute;
       right: 18px;
@@ -6321,6 +6026,7 @@
     }
 
     /* Galaxy Bottom HUD (Formations + Filters + Legend) */
+
     .galaxy-hud-bottom {
       position: absolute;
       left: 18px;
@@ -6408,6 +6114,7 @@
     }
 
     /* Loading Overlay inside Galaxy */
+
     .galaxy-loader {
       position: absolute;
       inset: 0;
@@ -6432,48 +6139,10 @@
       pointer-events: none;
     }
 
-    @media (max-width: 720px) {
-      .galaxy-hud-top {
-        top: 10px;
-        left: 10px;
-        right: 10px;
-      }
-      .galaxy-brand-box {
-        padding: 6px 11px;
-      }
-      .galaxy-brand-title {
-        font-size: 10px;
-      }
-      .galaxy-search-wrap {
-        width: 155px;
-      }
-      .galaxy-hide-sm {
-        display: none;
-      }
-      .galaxy-inspector {
-        top: auto;
-        left: 10px;
-        right: 10px;
-        bottom: calc(96px + env(safe-area-inset-bottom, 0px));
-        width: auto;
-        max-width: none;
-        transform: translateY(20px);
-      }
-      .galaxy-inspector.is-open {
-        transform: translateY(0);
-      }
-      .galaxy-legend-hint {
-        display: none;
-      }
-      .galaxy-nav-btn .g-text-full {
-        display: none;
-      }
-    }
-
-
     /* =========================================
        V16 STAGE 4: CO-OP EVENING PICKER + SWIPE ARENA + CINEMA TICKET
        ========================================= */
+
     .station-switcher {
       display: inline-flex;
       align-items: center;
@@ -6529,6 +6198,7 @@
     }
 
     /* Two-player Co-op Form */
+
     .coop-form {
       display: grid;
       grid-template-columns: 1fr auto 1fr auto;
@@ -6852,10 +6522,11 @@
     /* =========================================
        CO-OP SWIPE ARENA & EVENING TICKET MODAL
        ========================================= */
+
     .coop-modal-backdrop {
       position: fixed;
       inset: 0;
-      z-index: 570;
+      z-index: var(--z-coop);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -7079,6 +6750,7 @@
     }
 
     /* Turn Handoff Curtain */
+
     .coop-handoff-view {
       display: none;
       flex-direction: column;
@@ -7106,6 +6778,7 @@
     }
 
     /* Evening Ticket View */
+
     .coop-ticket-view {
       display: none;
       flex-direction: column;
@@ -7124,8 +6797,7 @@
       gap: 16px;
       padding: 16px;
       border-radius: 16px;
-      background:
-        radial-gradient(circle at 15% 20%, rgba(110, 231, 183, 0.14), transparent 55%),
+      background: radial-gradient(circle at 15% 20%, rgba(110, 231, 183, 0.14), transparent 55%),
         linear-gradient(145deg, rgba(14, 20, 32, 0.92), rgba(7, 10, 17, 0.96));
       border: 1px dashed rgba(110, 231, 183, 0.52);
       box-shadow: 0 18px 42px rgba(0, 0, 0, 0.65), 0 0 26px rgba(110, 231, 183, 0.12);
@@ -7211,41 +6883,10 @@
       background: rgba(110, 231, 183, 0.14);
     }
 
-    @media (max-width: 960px) {
-      .coop-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 720px) {
-      .coop-form {
-        grid-template-columns: 1fr;
-      }
-      .coop-swap-btn {
-        margin: 0 auto;
-        width: 34px;
-        height: 34px;
-      }
-      .coop-grid {
-        grid-template-columns: 1fr;
-      }
-      .coop-ticket-card {
-        grid-template-columns: 1fr;
-        text-align: center;
-        justify-items: center;
-      }
-      .coop-ticket-poster {
-        max-width: 155px;
-      }
-      .coop-ticket-body {
-        align-items: center;
-      }
-    }
-
-
     /* =========================================
        V18: 60/120 FPS CONTAINMENT + 3D GALAXY STAR-HOPPING ROULETTE HUD
        ========================================= */
+
     .waifu-card,
     .catalog-card,
     .watching-card,
@@ -7324,154 +6965,25 @@
       box-shadow: 0 0 22px rgba(110, 231, 183, 0.90), inset 0 0 12px rgba(110, 231, 183, 0.45);
     }
 
-    @media (max-width: 720px) {
-      .galaxy-hop-pill {
-        top: 64px;
-        padding: 7px 13px;
-      }
-      .galaxy-hop-title {
-        font-size: 10.5px;
-      }
-    }
-
     /* =========================================
        NATIVE SVG ARROW CURSOR (MONOCHROME THEME)
        ========================================= */
-    @media (hover: hover) and (pointer: fine) {
-      html, body, .carousel-arrow:disabled {
-        cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23090c13%27%20stroke%3D%27%23adbfde%27%20stroke-width%3D%271.4%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M5.6%205.2%20L14.6%2010.5%20L10.3%2011.4%20L8.6%2015.8%20Z%27%20fill%3D%27%23dce6f7%27%20fill-opacity%3D%270.18%27/%3E%3C/svg%3E") 3 2, default !important;
-      }
-
-      a,
-      a *,
-      button:not(:disabled),
-      button:not(:disabled) *,
-      [role="button"],
-      .catalog-card,
-      .catalog-card *,
-      .watching-card,
-      .watching-card *,
-      .waifu-card,
-      .waifu-card *,
-      .graph-col,
-      .graph-col *,
-      .history-item,
-      .history-item *,
-      .track-row,
-      .track-row *,
-      .dock-slider,
-      .intro-overlay,
-      .social-pill,
-      .spotify-tab,
-      .dna-score-col,
-      .dna-score-col *,
-      .dna-tab-btn,
-      .base-anime-row,
-      .base-anime-row *,
-      .arena-contender,
-      .arena-contender *,
-      .arena-mode-btn,
-      .arena-launch-btn,
-      .weather-hud-pill,
-      .weather-hud-pill *,
-      .weather-chip,
-      .pilot-weather-chip,
-      .mode-chip,
-      .ht-card,
-      .ht-card *,
-      .holo-tilt-wrap,
-      .holo-ctrl-btn,
-      .holo-close-btn,
-      .mdock-btn,
-      .galaxy-nav-btn,
-      .galaxy-hud-btn,
-      .galaxy-seg-btn,
-      .station-tab,
-      .coop-swap-btn,
-      .coop-chip,
-      .coop-pick-btn,
-      .coop-circle-btn,
-      .coop-instant-btn,
-      .coop-match-alt-btn,
-      .pack-pouch,
-      .pack-pouch *,
-      .pack-mode-btn,
-      .pack-hist-chip,
-      .pack-hist-chip *,
-      .trophy-card,
-      .trophy-card *,
-      .trophy-filter-btn,
-      .trophy-ev-row,
-      .trophy-ev-row *,
-      .view-toggle-btn {
-        cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23edf3ff%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%271.35%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M16.5%2015.2%20L19.8%2018.5%20L16.5%2021.8%20L13.2%2018.5%20Z%27%20fill%3D%27%23adbfde%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%270.9%27/%3E%3C/svg%3E") 3 2, pointer !important;
-      }
-
-      input[type="text"],
-      textarea {
-        cursor: text !important;
-      }
-    }
-    /* =========================================
-       RESPONSIVE
-       ========================================= */
-    @media (max-width: 1100px) {
-      .cards-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 860px) {
-      .stats-grid,
-      .activity-grid {
-        grid-template-columns: 1fr;
-      }
-      .nav-links {
-        display: none;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .waifu-head-bar {
-        flex-direction: column;
-        gap: 12px;
-      }
-      .waifu-nav-controls {
-        position: static;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .cards-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .mini-stats {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-      .modal-card {
-        grid-template-columns: 1fr;
-      }
-      .modal-poster {
-        height: 220px;
-      }
-    }
-
 
     /* =========================================
        V19: FOIL BOOSTER PACK (ARCHIVE PACK) + FPS HYGIENE
        ========================================= */
+
     .pack-backdrop {
       position: fixed;
       inset: 0;
-      z-index: 645;
+      z-index: var(--z-pack);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 14px;
       padding: 18px 16px;
-      background:
-        radial-gradient(circle at 50% 42%, rgba(34, 46, 68, 0.48) 0%, rgba(4, 6, 11, 0.94) 68%),
+      background: radial-gradient(circle at 50% 42%, rgba(34, 46, 68, 0.48) 0%, rgba(4, 6, 11, 0.94) 68%),
         rgba(3, 5, 9, 0.90);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
@@ -7546,6 +7058,7 @@
     }
 
     /* Slit Burst Flash & Silver Micro-Sparks */
+
     .pack-flash {
       position: absolute;
       left: 50%;
@@ -7613,6 +7126,7 @@
     }
 
     /* PHASE 1: SEALED FOIL BOOSTER PACK */
+
     .pack-pouch-wrap {
       position: absolute;
       inset: 0;
@@ -7676,17 +7190,17 @@
     }
 
     /* Metallic Crimped Edges (Top & Bottom) */
+
     .pack-crimp {
       height: 18px;
       width: 100%;
       flex-shrink: 0;
-      background-image:
-        repeating-linear-gradient(
-          90deg,
-          rgba(255, 255, 255, 0.16) 0px,
-          rgba(255, 255, 255, 0.16) 2px,
-          rgba(10, 14, 22, 0.72) 2px,
-          rgba(10, 14, 22, 0.72) 5px
+      background-image: repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.16) 0px,
+        rgba(255, 255, 255, 0.16) 2px,
+        rgba(10, 14, 22, 0.72) 2px,
+        rgba(10, 14, 22, 0.72) 5px
         ),
         linear-gradient(180deg, #273245 0%, #101622 50%, #202a3b 100%);
       border-top: 1px solid rgba(255, 255, 255, 0.28);
@@ -7703,6 +7217,7 @@
     }
 
     /* Tearable Top Strip */
+
     .pack-top-strip {
       position: relative;
       z-index: 9;
@@ -7765,7 +7280,7 @@
         rgba(220, 232, 252, 0.48) 6px,
         transparent 6px,
         transparent 11px
-      );
+        );
       overflow: visible;
     }
 
@@ -7780,6 +7295,7 @@
     }
 
     /* Main Foil Pouch Body */
+
     .pack-body {
       position: relative;
       flex: 1;
@@ -7789,8 +7305,7 @@
       border-radius: 0 0 8px 8px;
       border-left: 1px solid rgba(210, 224, 248, 0.36);
       border-right: 1px solid rgba(210, 224, 248, 0.36);
-      background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0%, transparent 10%, transparent 90%, rgba(255, 255, 255, 0.12) 100%),
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0%, transparent 10%, transparent 90%, rgba(255, 255, 255, 0.12) 100%),
         radial-gradient(circle at 50% 34%, rgba(173, 198, 238, 0.22) 0%, rgba(14, 19, 30, 0.94) 58%, #070a11 100%);
       overflow: hidden;
       isolation: isolate;
@@ -7804,22 +7319,21 @@
       pointer-events: none;
       mix-blend-mode: screen;
       opacity: var(--hop, 0.34);
-      background-image:
-        repeating-linear-gradient(
-          115deg,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(182, 212, 255, 0.24) 11%,
-          rgba(224, 204, 255, 0.20) 20%,
-          rgba(176, 244, 232, 0.20) 29%,
-          rgba(255, 255, 255, 0.30) 36%,
-          rgba(173, 191, 222, 0.14) 45%,
-          rgba(255, 255, 255, 0) 56%
+      background-image: repeating-linear-gradient(
+        115deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(182, 212, 255, 0.24) 11%,
+        rgba(224, 204, 255, 0.20) 20%,
+        rgba(176, 244, 232, 0.20) 29%,
+        rgba(255, 255, 255, 0.30) 36%,
+        rgba(173, 191, 222, 0.14) 45%,
+        rgba(255, 255, 255, 0) 56%
         ),
         radial-gradient(
-          260px circle at var(--hx, 50%) var(--hy, 45%),
-          rgba(255, 255, 255, 0.56),
-          rgba(185, 210, 250, 0.18) 38%,
-          transparent 72%
+        260px circle at var(--hx, 50%) var(--hy, 45%),
+        rgba(255, 255, 255, 0.56),
+        rgba(185, 210, 250, 0.18) 38%,
+        transparent 72%
         );
       background-size: 240% 240%, 100% 100%;
       background-position: var(--hbg-x, 50%) var(--hbg-y, 50%), center;
@@ -7838,7 +7352,7 @@
         rgba(255, 255, 255, 0.32) 48%,
         rgba(173, 191, 222, 0.12) 55%,
         transparent 76%
-      );
+        );
       background-size: 250% 250%;
       background-position: var(--hbg-x, 30%) var(--hbg-y, 30%);
     }
@@ -7973,7 +7487,7 @@
         transparent 5px, transparent 8px,
         #dfe9f8 8px, #dfe9f8 11px,
         transparent 11px, transparent 13px
-      );
+        );
     }
 
     .pack-foot-meta {
@@ -7992,6 +7506,7 @@
     }
 
     /* PHASE 2: REVEALED 3D HOLO CARD INSIDE STAGE */
+
     .pack-card-wrap {
       position: absolute;
       inset: 0;
@@ -8036,6 +7551,7 @@
     }
 
     /* Controls & Session History Strip */
+
     .pack-controls {
       z-index: 10;
       display: flex;
@@ -8054,8 +7570,7 @@
 
     .holo-ctrl-btn.is-pack-primary {
       border-color: rgba(110, 231, 183, 0.62);
-      background:
-        linear-gradient(110deg, transparent 35%, rgba(110, 231, 183, 0.28) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
+      background: linear-gradient(110deg, transparent 35%, rgba(110, 231, 183, 0.28) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
         linear-gradient(to bottom, rgba(110, 231, 183, 0.20), rgba(9, 14, 20, 0.90));
       color: #ecfdf5;
       box-shadow: 0 0 20px rgba(110, 231, 183, 0.20);
@@ -8122,41 +7637,10 @@
       text-overflow: ellipsis;
     }
 
-    @media (max-width: 560px) {
-      .pack-backdrop {
-        gap: 10px;
-        padding: 14px 12px;
-      }
-      .pack-stage {
-        height: min(58vh, 420px);
-        min-height: 320px;
-      }
-      .pack-pouch {
-        width: min(74vw, 260px);
-        height: min(54vh, 386px);
-        min-height: 310px;
-      }
-      .pack-brand-title {
-        font-size: 21px;
-      }
-      .pack-holo-tilt {
-        width: min(78vw, 286px);
-        max-height: min(56vh, 418px);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .bg-photo,
-      .pack-stage[data-state="sealed"] .pack-pouch-wrap,
-      .pack-stage[data-state="revealed"] .pack-card-wrap {
-        animation: none !important;
-      }
-    }
-
-
     /* =========================================
        V20: ARCHIVE TROPHIES («ТРОФЕИ АРХИВА» — 3D METALLIC TOKENS)
        ========================================= */
+
     .trophies-card {
       padding: 24px 26px;
       display: flex;
@@ -8295,6 +7779,7 @@
     }
 
     /* 3D Metallic Tokens Grid */
+
     .trophies-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -8402,6 +7887,7 @@
     }
 
     /* Sculpted 3D Milled Metallic Coin */
+
     .trophy-coin,
     .trophy-coin-lg {
       position: relative;
@@ -8433,6 +7919,7 @@
     }
 
     /* Outer Milled Metallic Rim */
+
     .trophy-coin::before,
     .trophy-coin-lg::before {
       content: "";
@@ -8449,14 +7936,14 @@
         var(--m-mid, #7e92b0) 275deg,
         var(--m-hi, #ffffff) 316deg,
         var(--m-dark, #161d2b) 360deg
-      );
-      box-shadow:
-        0 14px 28px rgba(0, 0, 0, 0.72),
+        );
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.72),
         0 0 22px var(--m-glow, rgba(173, 191, 222, 0.22)),
         inset 0 1.5px 2px rgba(255, 255, 255, 0.55);
     }
 
     /* Tier Metal Palettes (Cold Noir Collector Finishes) */
+
     .trophy-coin[data-tier="platinum"],
     .trophy-coin-lg[data-tier="platinum"] {
       --m-hi: #ffffff;
@@ -8502,6 +7989,7 @@
     }
 
     /* Engraved inner bevel ring & knurled notches */
+
     .trophy-coin-notches {
       position: absolute;
       inset: 4px;
@@ -8522,10 +8010,17 @@
       z-index: 2;
     }
 
-    .trophy-coin-lg .trophy-coin-notches { inset: 7px; border-width: 2px; }
-    .trophy-coin-lg .trophy-coin-ring { inset: 14px; }
+    .trophy-coin-lg .trophy-coin-notches {
+      inset: 7px;
+      border-width: 2px;
+    }
+
+    .trophy-coin-lg .trophy-coin-ring {
+      inset: 14px;
+    }
 
     /* Recessed Dark Metal Core */
+
     .trophy-coin-core {
       position: relative;
       z-index: 3;
@@ -8586,6 +8081,7 @@
     }
 
     /* Dynamic Metallic Sheen & Cursor Specular Glare */
+
     .trophy-coin-sheen {
       position: absolute;
       inset: 0;
@@ -8600,7 +8096,7 @@
         rgba(255, 255, 255, 0.30) 47%,
         rgba(195, 218, 255, 0.16) 54%,
         transparent 76%
-      );
+        );
       background-size: 250% 250%;
       background-position: var(--tgx, 50%) var(--tgy, 50%);
     }
@@ -8618,7 +8114,7 @@
         rgba(255, 255, 255, 0.90),
         rgba(200, 220, 255, 0.22) 45%,
         transparent 75%
-      );
+        );
     }
 
     .trophy-coin-lg .trophy-coin-glare {
@@ -8627,7 +8123,7 @@
         rgba(255, 255, 255, 0.92),
         rgba(200, 220, 255, 0.22) 45%,
         transparent 75%
-      );
+        );
     }
 
     .trophy-name {
@@ -8702,10 +8198,11 @@
     /* =========================================
        V20: 3D TROPHY INSPECT MODAL
        ========================================= */
+
     .trophy-backdrop {
       position: fixed;
       inset: 0;
-      z-index: 640;
+      z-index: var(--z-trophy);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -8753,8 +8250,7 @@
       justify-content: center;
       gap: 16px;
       padding: 28px 20px;
-      background:
-        radial-gradient(circle at 50% 45%, rgba(var(--bright), 0.15) 0%, rgba(6, 9, 15, 0.92) 72%);
+      background: radial-gradient(circle at 50% 45%, rgba(var(--bright), 0.15) 0%, rgba(6, 9, 15, 0.92) 72%);
       border-right: 1px solid rgba(var(--bright), 0.14);
       perspective: 1100px;
       user-select: none;
@@ -8892,53 +8388,10 @@
       margin-top: auto;
     }
 
-    @media (max-width: 1020px) {
-      .trophies-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 720px) {
-      .trophies-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .trophy-modal-card {
-        grid-template-columns: 1fr;
-      }
-      .trophy-inspect-left {
-        border-right: 0;
-        border-bottom: 1px solid rgba(var(--bright), 0.14);
-        padding: 22px 16px;
-      }
-      .trophy-coin-lg {
-        width: 152px;
-        height: 152px;
-      }
-      .trophy-coin-lg .trophy-coin-glyph {
-        font-size: 46px;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .trophies-card {
-        padding: 18px 16px;
-      }
-      .trophy-card {
-        padding: 14px 10px 12px;
-      }
-      .trophy-coin {
-        width: 84px;
-        height: 84px;
-      }
-      .trophy-coin-glyph {
-        font-size: 24px;
-      }
-    }
-
-
     /* =========================================
        V21: TACTILE CARD POLISH (NO.01 // MYTHIC + GPU 3D DEPTH PARALLAX + «ВИТРИНА»)
        ========================================= */
+
     .view-toggle-group {
       display: inline-flex;
       align-items: center;
@@ -8977,6 +8430,7 @@
     }
 
     /* Engraved Serial Header Strip (NO.01 // MYTHIC) */
+
     .card-serial-bar {
       display: flex;
       align-items: center;
@@ -9035,6 +8489,7 @@
     }
 
     /* Rarity badge tint on WAIFU cards */
+
     .waifu-card[data-rarity="mythic"] .waifu-rank {
       color: #ffffff;
       border-color: rgba(242, 248, 255, 0.86);
@@ -9050,6 +8505,7 @@
     }
 
     /* GPU 3D Multi-Layer Depth Parallax on Desktop Hover */
+
     .poster-glare {
       position: absolute;
       inset: 0;
@@ -9062,36 +8518,8 @@
         rgba(255, 255, 255, 0.28),
         rgba(185, 210, 248, 0.10) 42%,
         transparent 74%
-      );
+        );
       transition: opacity 0.26s ease;
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      .catalog-card {
-        transform: perspective(860px) translate3d(0, var(--lift, 0px), 0) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-      }
-
-      .catalog-card.is-tilting {
-        transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
-        will-change: transform;
-      }
-
-      .catalog-card.is-tilting .poster-glare {
-        opacity: 1;
-      }
-
-      .catalog-card.is-tilting .poster-box img {
-        transform: scale(1.08) translate3d(calc(var(--cx, 0) * -6px), calc(var(--cy, 0) * -6px), 0);
-        transition: filter 0.35s ease, opacity 0.45s ease;
-      }
-
-      .catalog-card.is-tilting .score-pill {
-        transform: translate3d(calc(var(--cx, 0) * 5px), calc(var(--cy, 0) * 4px), 16px);
-      }
-
-      .catalog-card.is-tilting .card-serial-bar {
-        transform: translate3d(calc(var(--cx, 0) * 3px), calc(var(--cy, 0) * 2px), 10px);
-      }
     }
 
     .catalog-card .score-pill {
@@ -9099,6 +8527,7 @@
     }
 
     /* Hide editorial showcase-only nodes when in compact Grid mode */
+
     .card-showcase-body {
       display: none;
     }
@@ -9112,6 +8541,7 @@
     /* =========================================
        MAGAZINE SHOWCASE MODE («ВИТРИНА»)
        ========================================= */
+
     .cards-grid.is-showcase {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
@@ -9127,8 +8557,7 @@
     }
 
     .cards-grid.is-showcase .catalog-card[data-rarity="mythic"] {
-      background:
-        radial-gradient(circle at 12% 18%, rgba(210, 228, 255, 0.12), transparent 55%),
+      background: radial-gradient(circle at 12% 18%, rgba(210, 228, 255, 0.12), transparent 55%),
         linear-gradient(155deg, rgba(16, 22, 34, 0.88) 0%, rgba(8, 10, 16, 0.92) 100%);
       border-color: rgba(235, 244, 255, 0.36);
     }
@@ -9246,6 +8675,166 @@
        ========================================= */
 
     /* 1. Disable sticky :has(:hover) dimming and reveal color/names on touch devices */
+
+    /* 2. Mobile Bottom Dock & Drawer Hit-Testing Hardening (<= 860px) */
+
+    /* 3. Prevent iOS Safari 16px input zoom + refine mobile spacing & touch targets (<= 720px) */
+
+    /* =========================================
+       UNIFIED CAPABILITY & RESPONSIVE SYSTEM (STAGE 1)
+       ========================================= */
+
+    @media (hover: hover) and (pointer: fine) {
+      .glass-card::before,
+      .discord-card::before,
+      .watching-card::before,
+      .music-dock::before,
+      .modal-card::before,
+      .arena-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        pointer-events: none;
+        z-index: 1;
+        background: radial-gradient(
+          360px circle at var(--spot-x, -999px) var(--spot-y, -999px),
+          rgba(var(--bright), 0.11),
+          rgba(255, 255, 255, 0.03) 38%,
+          transparent 68%
+          );
+        opacity: var(--spot-o, 0);
+        transition: opacity 0.28s ease;
+      }
+
+      .glass-card::after,
+      .discord-card::after,
+      .watching-card::after,
+      .music-dock::after,
+      .modal-card::after,
+      .arena-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1.2px;
+        pointer-events: none;
+        z-index: 4;
+        background: radial-gradient(
+          250px circle at var(--spot-x, -999px) var(--spot-y, -999px),
+          rgba(255, 255, 255, 0.78),
+          rgba(var(--bright), 0.40) 42%,
+          transparent 72%
+          );
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        opacity: var(--spot-o, 0);
+        transition: opacity 0.28s ease;
+      }
+
+      html, body, .carousel-arrow:disabled {
+        cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23090c13%27%20stroke%3D%27%23adbfde%27%20stroke-width%3D%271.4%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M5.6%205.2%20L14.6%2010.5%20L10.3%2011.4%20L8.6%2015.8%20Z%27%20fill%3D%27%23dce6f7%27%20fill-opacity%3D%270.18%27/%3E%3C/svg%3E") 3 2, default !important;
+      }
+
+      a,
+      a *,
+      button:not(:disabled),
+      button:not(:disabled) *,
+      [role="button"],
+      .catalog-card,
+      .catalog-card *,
+      .watching-card,
+      .watching-card *,
+      .waifu-card,
+      .waifu-card *,
+      .graph-col,
+      .graph-col *,
+      .history-item,
+      .history-item *,
+      .track-row,
+      .track-row *,
+      .dock-slider,
+      .intro-overlay,
+      .social-pill,
+      .spotify-tab,
+      .dna-score-col,
+      .dna-score-col *,
+      .dna-tab-btn,
+      .base-anime-row,
+      .base-anime-row *,
+      .arena-contender,
+      .arena-contender *,
+      .arena-mode-btn,
+      .arena-launch-btn,
+      .weather-hud-pill,
+      .weather-hud-pill *,
+      .weather-chip,
+      .pilot-weather-chip,
+      .mode-chip,
+      .ht-card,
+      .ht-card *,
+      .holo-tilt-wrap,
+      .holo-ctrl-btn,
+      .holo-close-btn,
+      .mdock-btn,
+      .galaxy-nav-btn,
+      .galaxy-hud-btn,
+      .galaxy-seg-btn,
+      .station-tab,
+      .coop-swap-btn,
+      .coop-chip,
+      .coop-pick-btn,
+      .coop-circle-btn,
+      .coop-instant-btn,
+      .coop-match-alt-btn,
+      .pack-pouch,
+      .pack-pouch *,
+      .pack-mode-btn,
+      .pack-hist-chip,
+      .pack-hist-chip *,
+      .trophy-card,
+      .trophy-card *,
+      .trophy-filter-btn,
+      .trophy-ev-row,
+      .trophy-ev-row *,
+      .view-toggle-btn {
+        cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23edf3ff%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%271.35%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M16.5%2015.2%20L19.8%2018.5%20L16.5%2021.8%20L13.2%2018.5%20Z%27%20fill%3D%27%23adbfde%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%270.9%27/%3E%3C/svg%3E") 3 2, pointer !important;
+      }
+
+      input[type="text"],
+      textarea {
+        cursor: text !important;
+      }
+
+      .catalog-card {
+        transform: perspective(860px) translate3d(0, var(--lift, 0px), 0) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+      }
+
+      .catalog-card.is-tilting {
+        transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+        will-change: transform;
+      }
+
+      .catalog-card.is-tilting .poster-glare {
+        opacity: 1;
+      }
+
+      .catalog-card.is-tilting .poster-box img {
+        transform: scale(1.08) translate3d(calc(var(--cx, 0) * -6px), calc(var(--cy, 0) * -6px), 0);
+        transition: filter 0.35s ease, opacity 0.45s ease;
+      }
+
+      .catalog-card.is-tilting .score-pill {
+        transform: translate3d(calc(var(--cx, 0) * 5px), calc(var(--cy, 0) * 4px), 16px);
+      }
+
+      .catalog-card.is-tilting .card-serial-bar {
+        transform: translate3d(calc(var(--cx, 0) * 3px), calc(var(--cy, 0) * 2px), 10px);
+      }
+    }
+
     @media (hover: none), (pointer: coarse) {
       .cards-grid:has(.catalog-card:hover) .catalog-card:not(:hover),
       .waifu-carousel:not(.is-scrolling):not(.is-dragging):has(.waifu-card:hover) .waifu-card:not(:hover),
@@ -9255,7 +8844,6 @@
         filter: none !important;
       }
 
-      /* On touch devices without hover, keep posters rich & crisp instead of permanently grey */
       .poster-box img,
       .waifu-card img,
       .watching-poster img,
@@ -9266,7 +8854,6 @@
         filter: grayscale(0.10) saturate(0.96) contrast(1.04) brightness(0.98);
       }
 
-      /* Always show Waifu names cleanly on phones since there is no hover */
       .waifu-name {
         opacity: 1;
         transform: none;
@@ -9275,14 +8862,77 @@
       }
     }
 
-    /* 2. Mobile Bottom Dock & Drawer Hit-Testing Hardening (<= 860px) */
+    @media (max-width: 1100px) {
+      .cards-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1020px) {
+      .bento-pilot,
+      .bento-discord-slot,
+      .bento-telemetry {
+        grid-column: span 12;
+        grid-row: auto;
+      }
+
+      .dna-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .trophies-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 960px) {
+      .coop-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .base-verdict-hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        justify-items: center;
+      }
+
+      .base-matchup-row {
+        justify-content: center;
+      }
+
+      .base-details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ht-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 860px) {
-      .weather-hud {
-        display: none !important;
+      .container {
+        padding-bottom: calc(116px + env(safe-area-inset-bottom, 0px));
+      }
+
+      .footer {
+        padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
       }
 
       .mobile-dock {
-        z-index: 460;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        align-items: center;
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        border-radius: 20px;
+        background: rgba(8, 11, 18, 0.88);
+        border: 1px solid rgba(var(--bright), 0.28);
+        box-shadow: 0 12px 34px rgba(0, 0, 0, 0.78),
+          0 0 22px rgba(var(--bright), 0.14);
+        z-index: var(--z-mobile-dock);
         bottom: calc(12px + env(safe-area-inset-bottom, 0px));
         padding: 6px;
         backdrop-filter: blur(12px);
@@ -9291,6 +8941,22 @@
       }
 
       .mdock-btn {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        border-radius: 14px;
+        border: 1px solid transparent;
+        background: transparent;
+        text-decoration: none;
+        font-family: var(--font-mono);
+        font-weight: 500;
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
+        transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.16s ease;
+        -webkit-tap-highlight-color: transparent;
         min-height: 48px;
         padding: 6px 4px;
         font-size: 9px;
@@ -9299,13 +8965,70 @@
         user-select: none;
       }
 
-      .mdock-btn > * {
-        pointer-events: none;
+      .mdock-btn:active {
+        transform: scale(0.94);
       }
 
-      /* Hide closed mobile music drawer completely from touch hit-testing */
+      .mdock-icon {
+        font-size: 15px;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 18px;
+      }
+
+      .mdock-btn.is-active,
+      .mdock-btn.is-open {
+        color: #fff;
+        background: rgba(var(--bright), 0.18);
+        border-color: rgba(var(--bright), 0.42);
+        box-shadow: 0 0 14px rgba(var(--bright), 0.18);
+      }
+
+      .mdock-eq {
+        display: none;
+        align-items: flex-end;
+        gap: 2px;
+        height: 12px;
+      }
+
+      .mdock-eq span {
+        width: 2.5px;
+        height: 4px;
+        border-radius: 2px;
+        background: #6ee7b7;
+        animation: eq-bounce 0.8s ease-in-out infinite;
+      }
+
+      .mdock-eq span:nth-child(2) {
+        animation-delay: -0.25s;
+      }
+
+      .mdock-eq span:nth-child(3) {
+        animation-delay: -0.50s;
+      }
+
+      body.is-audio-playing .mdock-music-btn .mdock-music-glyph {
+        display: none;
+      }
+
+      body.is-audio-playing .mdock-music-btn .mdock-eq {
+        display: inline-flex;
+      }
+
+      body.is-audio-playing .mdock-music-btn {
+        color: #d1fae5;
+      }
+
       .music-dock {
-        z-index: 455;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        max-width: none;
+        transform: translateY(18px) scale(0.97);
+        opacity: 0;
+        z-index: var(--z-mobile-music);
         bottom: calc(82px + env(safe-area-inset-bottom, 0px));
         visibility: hidden;
         pointer-events: none;
@@ -9313,9 +9036,38 @@
       }
 
       .music-dock.is-mobile-open {
+        transform: translateY(0) scale(1);
+        opacity: 1;
         visibility: visible;
         pointer-events: auto;
         transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease, visibility 0s linear 0s;
+      }
+
+      .music-dock.is-minimized {
+        width: auto;
+        border-radius: 16px;
+        padding: 12px 14px;
+      }
+
+      .music-dock.is-minimized .dock-expandable {
+        display: block;
+      }
+
+      .stats-grid,
+      .activity-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .weather-hud {
+        display: none !important;
+      }
+
+      .mdock-btn > * {
+        pointer-events: none;
       }
 
       .cards-grid.is-showcase {
@@ -9323,8 +9075,126 @@
       }
     }
 
-    /* 3. Prevent iOS Safari 16px input zoom + refine mobile spacing & touch targets (<= 720px) */
+    @media (max-width: 780px) {
+      .waifu-head-left {
+        position: static;
+      }
+
+      .waifu-head-bar {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .waifu-nav-controls {
+        position: static;
+      }
+    }
+
     @media (max-width: 720px) {
+      .galaxy-hud-top {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+      }
+
+      .galaxy-brand-box {
+        padding: 6px 11px;
+      }
+
+      .galaxy-brand-title {
+        font-size: 10px;
+      }
+
+      .galaxy-search-wrap {
+        width: 155px;
+      }
+
+      .galaxy-hide-sm {
+        display: none;
+      }
+
+      .galaxy-inspector {
+        top: auto;
+        left: 10px;
+        right: 10px;
+        bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+        width: auto;
+        max-width: none;
+        transform: translateY(20px);
+      }
+
+      .galaxy-inspector.is-open {
+        transform: translateY(0);
+      }
+
+      .galaxy-legend-hint {
+        display: none;
+      }
+
+      .galaxy-nav-btn .g-text-full {
+        display: none;
+      }
+
+      .coop-form {
+        grid-template-columns: 1fr;
+      }
+
+      .coop-swap-btn {
+        margin: 0 auto;
+        width: 34px;
+        height: 34px;
+      }
+
+      .coop-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .coop-ticket-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        justify-items: center;
+      }
+
+      .coop-ticket-poster {
+        max-width: 155px;
+      }
+
+      .coop-ticket-body {
+        align-items: center;
+      }
+
+      .galaxy-hop-pill {
+        top: 64px;
+        padding: 7px 13px;
+      }
+
+      .galaxy-hop-title {
+        font-size: 10.5px;
+      }
+
+      .trophies-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .trophy-modal-card {
+        grid-template-columns: 1fr;
+      }
+
+      .trophy-inspect-left {
+        border-right: 0;
+        border-bottom: 1px solid rgba(var(--bright), 0.14);
+        padding: 22px 16px;
+      }
+
+      .trophy-coin-lg {
+        width: 152px;
+        height: 152px;
+      }
+
+      .trophy-coin-lg .trophy-coin-glyph {
+        font-size: 46px;
+      }
+
       input[type="text"],
       .search-box input,
       .base-input,
@@ -9334,7 +9204,7 @@
 
       .container {
         padding: 20px 14px calc(114px + env(safe-area-inset-bottom, 0px));
-        gap: 36px;
+        gap: var(--section-gap-mobile);
       }
 
       .glass-card {
@@ -9390,7 +9260,130 @@
       }
     }
 
+    @media (max-width: 640px) {
+      .watching-head-bar {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .watching-nav-controls {
+        position: static;
+      }
+
+      .telemetry-footer {
+        grid-template-columns: 1fr;
+      }
+
+      .arena-duel-stage {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .arena-vs-orb {
+        margin: 0 auto;
+        width: 38px;
+        height: 38px;
+        font-size: 11px;
+      }
+
+      .arena-poster {
+        max-height: 230px;
+      }
+
+      .arena-champ-hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        justify-items: center;
+      }
+
+      .arena-champ-poster {
+        max-width: 170px;
+      }
+
+      .arena-podium-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 560px) {
+      .discord-card {
+        flex-wrap: wrap;
+      }
+
+      .discord-actions {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-end;
+      }
+
+      .ht-card {
+        padding: 9px 10px;
+        gap: 10px;
+      }
+
+      .ht-delta-badge {
+        min-width: 56px;
+        padding: 6px 6px;
+      }
+
+      .ht-delta-val {
+        font-size: 11.5px;
+      }
+
+      .cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .mini-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .modal-card {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-poster {
+        height: 220px;
+      }
+
+      .pack-backdrop {
+        gap: 10px;
+        padding: 14px 12px;
+      }
+
+      .pack-stage {
+        height: min(58vh, 420px);
+        min-height: 320px;
+      }
+
+      .pack-pouch {
+        width: min(74vw, 260px);
+        height: min(54vh, 386px);
+        min-height: 310px;
+      }
+
+      .pack-brand-title {
+        font-size: 21px;
+      }
+
+      .pack-holo-tilt {
+        width: min(78vw, 286px);
+        max-height: min(56vh, 418px);
+      }
+
+      .trophy-card {
+        padding: 14px 10px 12px;
+      }
+
+      .trophy-coin {
+        width: 84px;
+        height: 84px;
+      }
+
+      .trophy-coin-glyph {
+        font-size: 24px;
+      }
+
       .cards-grid.is-showcase .catalog-card {
         gap: 12px;
         padding: 11px;
@@ -9460,5 +9453,27 @@
       .arena-launch-btn {
         flex: 1 1 auto;
         justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .status-pill {
+        display: none;
+      }
+
+      .holo-kbd-hint {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .film-grain {
+        animation: none;
+      }
+
+      .bg-photo,
+      .pack-stage[data-state="sealed"] .pack-pouch-wrap,
+      .pack-stage[data-state="revealed"] .pack-card-wrap {
+        animation: none !important;
       }
     }

@@ -10,14 +10,14 @@
       const COVER_CACHE_KEY = 'undexeror_archive_covers_v4';
       const RATED_POOL_CACHE_KEY = 'undexeror_archive_rated910_v1';
       const WATCHING_CACHE_KEY = 'undexeror_archive_watching_v1';
-      const DNA_CACHE_KEY = 'undexeror_archive_dna_v1';
+      const DNA_CACHE_KEY = 'undexeror_archive_dna_v2';
       const MY_RATES_CACHE_KEY = 'undexeror_archive_my_rates_v1';
       const VOLUME_STORAGE_KEY = 'undexeror_archive_volume_v1';
       const DEFAULT_VOLUME = 0.18;
       const HOT_TAKES_CACHE_KEY = 'undexeror_archive_hottakes_v1';
       const GALAXY_CACHE_KEY = 'undexeror_archive_galaxy_v1';
       const COOP_HOST_CACHE_KEY = 'undexeror_archive_coop_host_v1';
-      const TROPHIES_CACHE_KEY = 'undexeror_archive_trophies_v1';
+      const TROPHIES_CACHE_KEY = 'undexeror_archive_trophies_v2';
       const GENRE_RU = {
         Action: 'Экшен',
         Adventure: 'Приключения',
@@ -384,7 +384,7 @@
         eliteCount: 84,
         eliteShare: 23,
         tensCount: 31,
-        totalEpisodes: 9420,
+        totalEpisodes: 7158,
         crowdDelta: 0.16,
         scores: { 1: 2, 2: 3, 3: 6, 4: 11, 5: 22, 6: 44, 7: 88, 8: 100, 9: 53, 10: 31 },
         eras: [
@@ -2213,7 +2213,83 @@
         });
       }
 
-      async function hydrateDnaFromShikiRates(rates, userStats) {
+      const KIND_AVG_MINUTES = {
+        movie: 98,
+        tv_special: 45,
+        ova: 34,
+        special: 28,
+        tv: 24,
+        ona: 22,
+        music: 4,
+        cm: 1,
+        pv: 2
+      };
+
+      function computeWatchedStats(allRates) {
+        const seen = new Set();
+        const entries = [];
+        let totalEps = 0;
+        let totalMins = 0;
+
+        (Array.isArray(allRates) ? allRates : []).forEach((r) => {
+          const a = r && r.anime;
+          if (!a || !a.id) return;
+          const id = Number(a.id);
+          if (seen.has(id)) return;
+          seen.add(id);
+
+          const status = String(r.status || '').toLowerCase();
+          const kind = String(a.kind || 'tv').toLowerCase();
+          const curEps = Math.max(0, Number(r.episodes) || 0);
+          const fullEps = Math.max(0, Number(a.episodes) || Number(a.episodes_aired) || (kind === 'movie' ? 1 : 0));
+          const rewatches = Math.max(0, Number(r.rewatches) || 0);
+
+          let watchedEps = 0;
+          if (status === 'completed') {
+            const baseEps = curEps > 0 ? curEps : fullEps;
+            watchedEps = baseEps + rewatches * (fullEps || baseEps);
+          } else if (status === 'rewatching') {
+            watchedEps = fullEps + curEps + rewatches * fullEps;
+          } else if (curEps > 0 || rewatches > 0) {
+            // Includes watching, on_hold, dropped (and any planned entry with logged episodes)
+            watchedEps = curEps + rewatches * (fullEps || curEps);
+          }
+
+          if (watchedEps <= 0 && status !== 'completed') return;
+
+          const apiDur = Number(a.duration) || 0;
+          const minPerEp = apiDur > 0 ? apiDur : (KIND_AVG_MINUTES[kind] || 24);
+          const watchedMins = watchedEps * minPerEp;
+
+          totalEps += watchedEps;
+          totalMins += watchedMins;
+
+          entries.push({
+            id,
+            title: a.russian || a.name || `#${id}`,
+            kind,
+            year: a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || 0 : 0,
+            status,
+            score: Number(r.score) || 0,
+            shikiScore: Number(a.score) || 0,
+            curEps,
+            fullEps,
+            rewatches,
+            watchedEps,
+            watchedMins,
+            url: a.url ? normalizeShikiUrl(a.url, activeShikiOrigin) : `${activeShikiOrigin}/animes/${id}`
+          });
+        });
+
+        return {
+          totalEps,
+          totalMins,
+          estDays: Math.round(totalMins / 1440),
+          entries
+        };
+      }
+
+      async function hydrateDnaFromShikiRates(rates, userStats, allRates) {
         if (!Array.isArray(rates) || !rates.length) return;
 
         // Cache compact rates map for Stage 2 ("Проверка на базу")
@@ -2297,6 +2373,9 @@
           .sort((a, b) => b[1] - a[1])
           .map(([name, count]) => ({ name, count }));
 
+        const watchedTotals = computeWatchedStats(Array.isArray(allRates) && allRates.length ? allRates : rates);
+        const totalWatchedEpisodes = watchedTotals.totalEps > 0 ? watchedTotals.totalEps : totalEpisodes;
+
         const prev = animeDnaState || SNAPSHOT_DNA;
         const baseDna = {
           isLive: true,
@@ -2306,7 +2385,7 @@
           eliteCount,
           eliteShare: ratedCount ? (eliteCount / ratedCount) * 100 : prev.eliteShare,
           tensCount: scoreCounts[10] || 0,
-          totalEpisodes,
+          totalEpisodes: totalWatchedEpisodes,
           crowdDelta: deltaCount ? deltaSum / deltaCount : 0,
           scores: scoreCounts,
           eras,
@@ -3708,7 +3787,7 @@
           (r) => r && r.anime && r.anime.id && r.status === 'completed'
         );
         if (completedRates.length) {
-          hydrateDnaFromShikiRates(completedRates, userStats);
+          hydrateDnaFromShikiRates(completedRates, userStats, allRates);
         }
 
         // Also index any non-completed rated entries into myRatesIndex for Taste Match
@@ -8787,8 +8866,8 @@
         const watching = Number(liveStatsSnapshot.animeWatching) || SNAPSHOT.anime.watching;
         const mangaDone = Number(liveStatsSnapshot.mangaCompleted) || SNAPSHOT.manga.completed;
         const mangaRead = Number(liveStatsSnapshot.mangaReading) || SNAPSHOT.manga.reading;
-        const totalEps = Number(dna.totalEpisodes) || 9420;
-        const estDays = Math.round((totalEps * 24) / 1440);
+        const totalEps = Number(dna.totalEpisodes) || 7158;
+        const estDays = Math.round((totalEps * 28) / 1440);
         const ratedCount = Number(dna.ratedCount) || 360;
         const meanScore = Number(dna.meanScore) || 7.94;
         const tensCount = Number(dna.tensCount) || 31;
@@ -8944,7 +9023,10 @@
         const mangaDone = Number(liveStatsSnapshot.mangaCompleted) || SNAPSHOT.manga.completed;
         const mangaRead = Number(liveStatsSnapshot.mangaReading) || SNAPSHOT.manga.reading;
 
-        let totalEps = 0;
+        const watchedStats = computeWatchedStats(allRates);
+        const totalEps = watchedStats.totalEps;
+        const estDays = watchedStats.estDays;
+
         let ratedCount = 0;
         let scoreSum = 0;
         const tensList = [];
@@ -8958,45 +9040,48 @@
         const makeUrl = (a) => (a.url ? normalizeShikiUrl(a.url, activeShikiOrigin) : `${activeShikiOrigin}/animes/${a.id}`);
         const getName = (a) => a.russian || a.name || `#${a.id}`;
 
-        completedRates.forEach((r) => {
-          const a = r.anime;
-          const uScore = Number(r.score) || 0;
-          const sScore = Number(a.score) || 0;
-          const eps = Number(r.episodes) || Number(a.episodes) || 0;
-          const year = a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || 0 : 0;
-          const kind = String(a.kind || 'tv').toLowerCase();
+        watchedStats.entries.forEach((e) => {
+          const isFinished = e.status === 'completed' || e.status === 'rewatching';
+          const isActiveSubstantial = e.status === 'watching' && e.watchedEps >= 12;
 
-          totalEps += eps;
-
-          if (uScore >= 1 && uScore <= 10) {
+          if (e.score >= 1 && e.score <= 10) {
             ratedCount++;
-            scoreSum += uScore;
-            if (uScore === 10) {
-              tensList.push({ title: getName(a), score: uScore, shiki: sScore, year, url: makeUrl(a) });
+            scoreSum += e.score;
+            if (e.score === 10 && (isFinished || e.status === 'watching')) {
+              tensList.push({ title: e.title, score: e.score, shiki: e.shikiScore, year: e.year, url: e.url });
             }
-            if (sScore >= 5) {
-              const delta = uScore - sScore;
+            if (e.shikiScore >= 5) {
+              const delta = e.score - e.shikiScore;
               if (Math.abs(delta) >= 1.8) {
-                clashesList.push({ title: getName(a), score: uScore, shiki: sScore, delta, absDelta: Math.abs(delta), url: makeUrl(a) });
+                clashesList.push({ title: e.title, score: e.score, shiki: e.shikiScore, delta, absDelta: Math.abs(delta), url: e.url });
               }
-              if (delta <= -1.2 && sScore >= 7.2) {
-                criticalLowList.push({ title: getName(a), score: uScore, shiki: sScore, delta, url: makeUrl(a) });
+              if (delta <= -1.2 && e.shikiScore >= 7.2) {
+                criticalLowList.push({ title: e.title, score: e.score, shiki: e.shikiScore, delta, url: e.url });
               }
             }
           }
 
-          if (year >= 2005 && year <= 2012) {
-            goldenList.push({ title: getName(a), score: uScore, shiki: sScore, year, url: makeUrl(a) });
-          } else if (year > 1950 && year < 2005) {
-            classicList.push({ title: getName(a), score: uScore, shiki: sScore, year, url: makeUrl(a) });
+          if (isFinished || isActiveSubstantial) {
+            if (e.year >= 2005 && e.year <= 2012) {
+              goldenList.push({ title: e.title, score: e.score, shiki: e.shikiScore, year: e.year, url: e.url });
+            } else if (e.year > 1950 && e.year < 2005) {
+              classicList.push({ title: e.title, score: e.score, shiki: e.shikiScore, year: e.year, url: e.url });
+            }
           }
 
-          if (kind === 'movie') {
-            moviesList.push({ title: getName(a), score: uScore, shiki: sScore, year, url: makeUrl(a) });
+          if (e.kind === 'movie' && (isFinished || (e.status === 'watching' && e.watchedEps >= 1))) {
+            moviesList.push({ title: e.title, score: e.score, shiki: e.shikiScore, year: e.year, url: e.url });
           }
 
-          if (kind === 'tv' && eps >= 50) {
-            marathonList.push({ title: getName(a), eps, score: uScore, url: makeUrl(a) });
+          if ((e.kind === 'tv' || e.kind === 'ona') && e.watchedEps >= 50) {
+            marathonList.push({
+              title: e.title,
+              eps: e.watchedEps,
+              score: e.score,
+              status: e.status,
+              rewatches: e.rewatches,
+              url: e.url
+            });
           }
         });
 
@@ -9009,8 +9094,20 @@
         clashesList.sort((a, b) => b.absDelta - a.absDelta);
         criticalLowList.sort((a, b) => a.delta - b.delta);
 
+        const topWatchedByEps = [...watchedStats.entries]
+          .sort((a, b) => b.watchedEps - a.watchedEps || b.score - a.score);
+
+        const formatEpsMeta = (x) => {
+          const epsNum = x.watchedEps !== undefined ? x.watchedEps : x.eps;
+          const parts = [`${Number(epsNum || 0).toLocaleString('ru-RU')} эп.`];
+          if (x.status === 'watching') parts.push('Смотрю');
+          else if (x.status === 'rewatching') parts.push('Пересмотр');
+          else if (x.rewatches > 0) parts.push(`×${x.rewatches + 1}`);
+          if (x.score) parts.push(`${x.score}★`);
+          return parts.join(' · ');
+        };
+
         const meanScore = ratedCount ? scoreSum / ratedCount : 7.94;
-        const estDays = Math.round((totalEps * 24) / 1440);
 
         const defs = [
           {
@@ -9027,11 +9124,11 @@
           {
             id: 'timelord', code: 'TR-02', tier: 'platinum', glyph: '⧗',
             name: 'TIME LORD', sub: 'Повелитель хронометража',
-            desc: 'Более 7 500 просмотренных эпизодов — месяцы непрерывного погружения в аниме-миры.',
+            desc: 'Более 7 500 просмотренных эпизодов по всему списку (включая «Смотрю», онгоинги и пересмотры).',
             current: totalEps, target: 7500, metric: `${totalEps.toLocaleString('ru-RU')} эп. · ~${estDays} дн.`,
-            evidence: marathonList.slice(0, 4).map((x) => ({
+            evidence: topWatchedByEps.slice(0, 4).map((x) => ({
               title: x.title,
-              meta: `${x.eps} эп.${x.score ? ' · ' + x.score + '★' : ''}`,
+              meta: formatEpsMeta(x),
               url: x.url
             }))
           },
@@ -9071,11 +9168,11 @@
           {
             id: 'marathon', code: 'TR-06', tier: 'gold', glyph: '∞',
             name: 'MARATHON RUNNER', sub: 'Покоритель длинных саг',
-            desc: 'Завершены как минимум 8 масштабных сериалов длиной от 50 эпизодов и выше.',
+            desc: 'Пройдено от 50 эпизодов как минимум в 8 масштабных сериалах (включая длинные онгоинги).',
             current: marathonList.length, target: 8, metric: `${marathonList.length} саг по 50+ эп.`,
             evidence: marathonList.slice(0, 4).map((x) => ({
               title: x.title,
-              meta: `${x.eps} эп.${x.score ? ' · ' + x.score + '★' : ''}`,
+              meta: formatEpsMeta(x),
               url: x.url
             }))
           },
