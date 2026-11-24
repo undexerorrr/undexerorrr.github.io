@@ -12,7 +12,8 @@ function ensureThreeJsLoaded() {
   if (window.THREE) return Promise.resolve(window.THREE);
   if (threeLoadPromise) return threeLoadPromise;
 
-  const cdns = [
+  const sources = [
+    './assets/js/vendor/three.min.js',
     'https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js',
     'https://unpkg.com/three@0.147.0/build/three.min.js'
   ];
@@ -21,15 +22,18 @@ function ensureThreeJsLoaded() {
     let idx = 0;
     function tryNext() {
       if (window.THREE) return resolve(window.THREE);
-      if (idx >= cdns.length) {
+      if (idx >= sources.length) {
         threeLoadPromise = null;
-        return reject(new Error('Three.js CDN load failed'));
+        return reject(new Error('Three.js load failed'));
       }
+      const src = sources[idx++];
       const script = document.createElement('script');
-      script.src = cdns[idx++];
+      script.src = src;
       script.async = true;
-      script.crossOrigin = 'anonymous';
-      script.referrerPolicy = 'no-referrer';
+      if (/^https?:\/\//i.test(src)) {
+        script.crossOrigin = 'anonymous';
+        script.referrerPolicy = 'no-referrer';
+      }
       script.onload = () => {
         if (window.THREE) resolve(window.THREE);
         else tryNext();

@@ -2,7 +2,8 @@
    CONFIGURATION, TRACKS & SNAPSHOT DATA
    ========================================= */
 export const SHIKI_NICKNAME = 'undereror nyashka';
-export const SHIKI_ORIGINS = ['https://shikimori.one', 'https://shikimori.io'];
+export const SHIKI_ORIGINS = ['https://shikimori.io', 'https://shikimori.one'];
+export const SHIKI_ORIGIN_STORAGE_KEY = 'undexeror_shiki_origin_v1';
 export const ANILIST_ENDPOINT = 'https://graphql.anilist.co';
 export const COVER_CACHE_KEY = 'undexeror_archive_covers_v4';
 export const RATED_POOL_CACHE_KEY = 'undexeror_archive_rated910_v1';

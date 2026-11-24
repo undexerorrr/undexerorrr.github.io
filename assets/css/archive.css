@@ -488,17 +488,6 @@
       letter-spacing: -0.02em;
     }
 
-    .hero-meta {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px 10px;
-      font-size: 13px;
-      color: rgba(var(--light), 0.82);
-      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95);
-    }
-
     .social-pill {
       display: inline-flex;
       align-items: center;
@@ -577,15 +566,6 @@
     .glass-card:hover {
       border-color: rgba(var(--bright), 0.36);
       box-shadow: var(--shadow-card-hover);
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-      width: 100%;
-      margin-top: 20px;
-      text-align: left;
     }
 
     .card-kicker {
@@ -707,33 +687,6 @@
       font-size: 14px;
       font-weight: 600;
       color: #fff;
-    }
-
-    .manga-pills {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .manga-pill {
-      padding: 4px 11px;
-      border-radius: 999px;
-      background: rgba(6, 8, 13, 0.62);
-      border: 1px solid rgba(var(--bright), 0.20);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: rgba(var(--light), 0.82);
-    }
-
-    .manga-pill b {
-      color: #fff;
-      margin-left: 4px;
-    }
-
-    .lifetime-box {
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(var(--bright), 0.14);
     }
 
     .lifetime-head {
@@ -1467,32 +1420,6 @@
     .waifu-card:hover::after {
       transform: translateX(145%) skewX(-20deg);
       transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .rank-pill {
-      position: absolute;
-      top: 7px;
-      left: 7px;
-      z-index: 10;
-      min-width: 26px;
-      height: 20px;
-      padding: 0 5px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 5px;
-      background: rgba(8, 10, 14, 0.84);
-      border: 1px solid rgba(var(--bright), 0.30);
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 600;
-      color: rgb(225, 231, 240);
-    }
-
-    .catalog-card.is-top5 .rank-pill {
-      color: #fff;
-      border-color: rgba(var(--bright), 0.88);
-      box-shadow: 0 0 10px rgba(var(--bright), 0.38);
     }
 
     .score-pill {
@@ -2385,20 +2312,6 @@
       transform: translateY(-1px) scale(1.02);
       border-color: #fff;
       box-shadow: 0 0 22px rgba(var(--bright), 0.44);
-    }
-
-    .modal-card.is-rolling {
-      border-color: rgba(255, 255, 255, 0.75);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.78), 0 0 42px rgba(var(--bright), 0.42);
-    }
-
-    .modal-card.is-rolled {
-      animation: roll-land 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    @keyframes roll-land {
-      0%   { transform: scale(0.97); box-shadow: 0 0 46px rgba(var(--bright), 0.65); }
-      100% { transform: scale(1); }
     }
 
     .vibe-tags {
@@ -4587,14 +4500,6 @@
       background-repeat: repeat;
       background-size: 200px 200px;
       background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%3Cfilter%20id%3D%27n%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.82%27%20numOctaves%3D%272%27%20stitchTiles%3D%27stitch%27/%3E%3C/filter%3E%3Crect%20width%3D%27200%27%20height%3D%27200%27%20filter%3D%27url(%23n)%27%20opacity%3D%271%27/%3E%3C/svg%3E");
-    }
-
-    @keyframes film-grain-shift {
-      0%   { transform: translate3d(0, 0, 0); }
-      25%  { transform: translate3d(-1.5%, 1.2%, 0); }
-      50%  { transform: translate3d(1.2%, -1.4%, 0); }
-      75%  { transform: translate3d(-0.9%, -0.8%, 0); }
-      100% { transform: translate3d(0.8%, 1.5%, 0); }
     }
 
     /* Editorial Display Typography (Unbounded) */
@@ -9331,7 +9236,6 @@
         display: block;
       }
 
-      .stats-grid,
       .activity-grid {
         grid-template-columns: 1fr;
       }

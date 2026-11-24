@@ -1,5 +1,6 @@
 import {
   SHIKI_ORIGINS,
+  SHIKI_ORIGIN_STORAGE_KEY,
   COVER_CACHE_KEY,
   RATED_POOL_CACHE_KEY,
   WATCHING_CACHE_KEY,
@@ -123,8 +124,24 @@ const reducedMotionMQ = window.matchMedia
   ? window.matchMedia('(prefers-reduced-motion: reduce)')
   : null;
 
+export function loadSavedShikiOrigin() {
+  try {
+    const saved = localStorage.getItem(SHIKI_ORIGIN_STORAGE_KEY);
+    if (saved && SHIKI_ORIGINS.includes(saved)) return saved;
+  } catch (e) {}
+  return SHIKI_ORIGINS[0];
+}
+
+export function setActiveShikiOrigin(origin) {
+  if (!origin) return;
+  appState.activeShikiOrigin = origin;
+  try {
+    localStorage.setItem(SHIKI_ORIGIN_STORAGE_KEY, origin);
+  } catch (e) {}
+}
+
 export const appState = {
-  activeShikiOrigin: SHIKI_ORIGINS[0],
+  activeShikiOrigin: loadSavedShikiOrigin(),
   liveBeatEnergy: 0,
   currentTab: 'peak',
   currentSort: 'rank',

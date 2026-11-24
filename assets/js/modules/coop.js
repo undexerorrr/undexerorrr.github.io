@@ -1,5 +1,5 @@
 import { SHIKI_NICKNAME, SHIKI_ORIGINS, SHIKI_KIND_LABELS, escapeHtml, sleep } from './config.js';
-import { appState, normalizeShikiUrl } from './data.js';
+import { appState, normalizeShikiUrl, setActiveShikiOrigin } from './data.js';
 import {
   fetchShikiWithRetry,
   resolveHostUser,
@@ -174,7 +174,7 @@ export function initCoopPicker() {
       if (res.ok && res.data && res.data.id) {
         user = res.data;
         originUsed = origin;
-        appState.activeShikiOrigin = origin;
+        setActiveShikiOrigin(origin);
         break;
       }
       if (res.status === 404) {

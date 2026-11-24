@@ -17,7 +17,8 @@ import {
   buildFallbackGalaxyNodes,
   getCombinedRandomizerPool,
   updateRandomizerPoolCounts,
-  normalizeShikiUrl
+  normalizeShikiUrl,
+  setActiveShikiOrigin
 } from './data.js';
 import {
   fetchShikiWithRetry,
@@ -1915,7 +1916,7 @@ export function initTasteMatcher() {
         if (res.ok) {
           const data = await res.json();
           if (data && data.id) {
-            appState.activeShikiOrigin = origin;
+            setActiveShikiOrigin(origin);
             return { user: data, origin };
           }
         }

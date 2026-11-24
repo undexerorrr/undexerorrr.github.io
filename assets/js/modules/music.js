@@ -80,8 +80,8 @@ export function initMusicPlayer() {
     const urls = [];
     (track.files || []).forEach((fname) => {
       const enc = encodeURIComponent(fname);
-      urls.push('./' + enc);
       urls.push('./music/' + enc);
+      urls.push('./' + enc);
     });
     return urls;
   }
