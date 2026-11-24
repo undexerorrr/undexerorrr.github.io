@@ -7230,7 +7230,7 @@
 
 
     /* =========================================
-       V17: 60/120 FPS PERFORMANCE CONTAINMENT + PLATFORM MODE (?u=НИК)
+       V18: 60/120 FPS CONTAINMENT + 3D GALAXY STAR-HOPPING ROULETTE HUD
        ========================================= */
     .waifu-card,
     .catalog-card,
@@ -7240,8 +7240,7 @@
       contain: layout style paint;
     }
 
-    body.galaxy-active .bg-photo,
-    body.overlay-active .bg-photo {
+    body.galaxy-active .bg-photo {
       animation-play-state: paused;
     }
 
@@ -7254,251 +7253,70 @@
       pointer-events: none;
     }
 
-    /* Platform Switch Button in Topbar */
-    .platform-nav-btn {
+    .galaxy-hop-pill {
+      position: absolute;
+      top: 72px;
+      left: 50%;
+      z-index: 16;
+      transform: translate3d(-50%, -10px, 0);
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(10, 13, 20, 0.84);
-      border: 1px solid rgba(var(--bright), 0.30);
-      color: rgba(var(--light), 0.90);
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 1.1px;
-      text-transform: uppercase;
-      transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .platform-nav-btn:hover {
-      color: #fff;
-      border-color: rgba(110, 231, 183, 0.82);
-      box-shadow: 0 0 16px rgba(110, 231, 183, 0.24);
-      transform: translateY(-1px);
-    }
-
-    .platform-nav-btn.is-guest-active {
-      background: rgba(110, 231, 183, 0.14);
-      border-color: rgba(110, 231, 183, 0.68);
-      color: #ecfdf5;
-    }
-
-    /* Platform Guest Mode Banner at top of <main> */
-    .platform-banner {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      padding: 12px 18px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, rgba(110, 231, 183, 0.12), rgba(9, 13, 22, 0.86));
-      border: 1px solid rgba(110, 231, 183, 0.42);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.50);
-    }
-
-    .platform-banner.is-visible {
-      display: flex;
-    }
-
-    .platform-banner-left {
-      display: flex;
-      align-items: center;
       gap: 10px;
-      flex-wrap: wrap;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: rgba(var(--light), 0.86);
-    }
-
-    .platform-banner-left strong {
-      color: #fff;
-      font-size: 12px;
-    }
-
-    .platform-banner-tag {
-      padding: 3px 9px;
+      max-width: min(86vw, 480px);
+      padding: 8px 16px;
       border-radius: 999px;
-      background: rgba(110, 231, 183, 0.16);
-      border: 1px solid rgba(110, 231, 183, 0.45);
-      color: #a7f3d0;
+      background: rgba(7, 10, 18, 0.94);
+      border: 1px solid rgba(110, 231, 183, 0.55);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.75), 0 0 20px rgba(110, 231, 183, 0.18);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.22s ease, transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease;
+      will-change: transform, opacity;
+    }
+
+    .galaxy-hop-pill.is-visible {
+      opacity: 1;
+      transform: translate3d(-50%, 0, 0);
+    }
+
+    .galaxy-hop-pill.is-locked {
+      border-color: #ffffff;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.82), 0 0 28px rgba(var(--bright), 0.42);
+    }
+
+    .galaxy-hop-step {
+      font-family: var(--font-mono);
       font-size: 9.5px;
       font-weight: 600;
       letter-spacing: 1.4px;
       text-transform: uppercase;
-    }
-
-    .platform-banner-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .platform-banner-actions .base-action-btn {
-      padding: 7px 13px;
-      font-size: 9.5px;
-    }
-
-    /* Guest Pass Card (replaces host Discord card in ?u=NICK mode) */
-    .guest-pass-card {
-      display: none;
-      width: 100%;
-      padding: 16px 18px;
-      border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, rgba(110, 231, 183, 0.08), var(--glass-bg));
-      border: 1px solid rgba(110, 231, 183, 0.34);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    body.is-guest-archive #discord-card {
-      display: none;
-    }
-
-    body.is-guest-archive .guest-pass-card {
-      display: flex;
-    }
-
-    body.is-guest-archive .host-only-social {
-      display: none;
-    }
-
-    .guest-pass-info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .guest-pass-kicker {
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      font-weight: 600;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
       color: #6ee7b7;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
-    .guest-pass-title {
+    .galaxy-hop-title {
       font-family: var(--font-display);
-      font-size: 14px;
-      font-weight: 600;
-      color: #fff;
-    }
-
-    .guest-pass-sub {
       font-size: 11.5px;
-      color: rgba(var(--light), 0.72);
-    }
-
-    .guest-pass-btns {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .guest-pass-btns .base-action-btn {
-      padding: 7px 12px;
-      font-size: 9.5px;
-    }
-
-    /* Quick Profile Switcher Modal */
-    .pswitch-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 615;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      background: rgba(4, 6, 11, 0.84);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.24s ease;
-    }
-
-    .pswitch-backdrop.is-open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .pswitch-card {
-      position: relative;
-      width: 100%;
-      max-width: 490px;
-      border-radius: 20px;
-      background: rgba(10, 13, 21, 0.96);
-      border: 1px solid rgba(var(--bright), 0.38);
-      box-shadow: 0 26px 68px rgba(0, 0, 0, 0.84), 0 0 34px rgba(var(--bright), 0.16);
-      padding: 22px 24px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      transform: translateY(14px) scale(0.97);
-      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .pswitch-backdrop.is-open .pswitch-card {
-      transform: none;
-    }
-
-    .pswitch-title {
-      font-family: var(--font-display);
-      font-size: 17px;
       font-weight: 600;
-      color: #fff;
-      line-height: 1.25;
-      padding-right: 28px;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .pswitch-desc {
-      font-size: 12.5px;
-      color: rgba(var(--light), 0.72);
-      line-height: 1.48;
+    .galaxy-reticle.is-hopping {
+      border-color: #6ee7b7;
+      box-shadow: 0 0 22px rgba(110, 231, 183, 0.90), inset 0 0 12px rgba(110, 231, 183, 0.45);
     }
 
-    .pswitch-perks {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .pswitch-form {
-      display: flex;
-      gap: 9px;
-      flex-wrap: wrap;
-    }
-
-    .pswitch-form .base-input-wrap {
-      min-width: 210px;
-    }
-
-    .pswitch-footer-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
-      padding-top: 10px;
-      border-top: 1px solid rgba(var(--bright), 0.14);
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: rgba(var(--light), 0.56);
-    }
-
-    @media (max-width: 640px) {
-      .platform-nav-btn .p-text-full {
-        display: none;
+    @media (max-width: 720px) {
+      .galaxy-hop-pill {
+        top: 64px;
+        padding: 7px 13px;
+      }
+      .galaxy-hop-title {
+        font-size: 10.5px;
       }
     }
 
@@ -7560,8 +7378,7 @@
       .coop-pick-btn,
       .coop-circle-btn,
       .coop-instant-btn,
-      .coop-match-alt-btn,
-      .platform-nav-btn {
+      .coop-match-alt-btn {
         cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23edf3ff%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%271.35%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M16.5%2015.2%20L19.8%2018.5%20L16.5%2021.8%20L13.2%2018.5%20Z%27%20fill%3D%27%23adbfde%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%270.9%27/%3E%3C/svg%3E") 3 2, pointer !important;
       }
 
@@ -7621,8 +7438,8 @@
   <div class="intro-overlay" id="intro-overlay" role="dialog" aria-label="Экран входа">
     <div class="intro-core">
       <div class="intro-orb" aria-hidden="true"><span>◈</span></div>
-      <div class="intro-title" id="intro-title">undexeror // archive</div>
-      <div class="intro-sub" id="intro-sub">undereror · 53.9° N · monochrome worldline</div>
+      <div class="intro-title">undexeror // archive</div>
+      <div class="intro-sub">undereror · 53.9° N · monochrome worldline</div>
       <button type="button" class="intro-enter-btn" id="intro-enter-btn">[ CLICK TO ENTER ]</button>
     </div>
     <button type="button" class="intro-mute-btn" id="intro-mute-btn">войти без звука</button>
@@ -7668,10 +7485,6 @@
             <span class="g-star" aria-hidden="true">✦</span>
             <span>3D<span class="g-text-full"> Космос</span></span>
           </button>
-          <button type="button" class="platform-nav-btn" id="open-platform-btn" title="Примерить весь сайт на свой профиль Shikimori (?u=НИК)">
-            <span aria-hidden="true">◎</span>
-            <span id="platform-nav-label">Свой<span class="p-text-full"> профиль</span></span>
-          </button>
           <button type="button" class="audio-btn" id="audio-toggle-btn" title="Play / Pause плейлист">
             <span id="audio-icon">▶</span>
             <span class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
@@ -7682,26 +7495,13 @@
     </header>
 
     <main class="container">
-      <!-- V17 Platform Mode Guest Banner (?u=НИК) -->
-      <div class="platform-banner" id="platform-banner" role="region" aria-label="Режим чужого профиля">
-        <div class="platform-banner-left">
-          <span class="platform-banner-tag">◎ РЕЖИМ ПЛАТФОРМЫ</span>
-          <span>Архив собран для <strong id="platform-banner-nick">—</strong></span>
-        </div>
-        <div class="platform-banner-actions">
-          <button type="button" class="base-action-btn is-primary" id="platform-copy-link-btn">⎘ Скопировать мою ссылку</button>
-          <button type="button" class="base-action-btn" id="platform-change-btn">◎ Другой ник</button>
-          <button type="button" class="base-action-btn" id="platform-back-host-btn">← К undereror</button>
-        </div>
-      </div>
-
       <!-- HERO BENTO COMMAND DECK & ANIME-DNA -->
       <section class="hero" id="profile">
         <div class="bento-deck">
           <!-- TILE 1: PILOT DOSSIER -->
           <div class="glass-card bento-pilot">
             <div class="pilot-top-bar">
-              <span class="pilot-id-tag" id="pilot-id-tag">DOSSIER // 1308586</span>
+              <span class="pilot-id-tag">DOSSIER // 1308586</span>
               <button type="button" class="pilot-weather-chip" id="pilot-weather-chip" title="Погода в точке 53.9° N (нажми для переключения режима)">53.9° N · SYNC...</button>
             </div>
 
@@ -7726,11 +7526,10 @@
             </div>
 
             <div class="pilot-socials">
-              <a class="social-pill host-only-social" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">♪ TikTok</a>
+              <a class="social-pill" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">♪ TikTok</a>
               <a class="social-pill" id="shiki-profile-link" href="https://shikimori.one/undereror+nyashka" target="_blank" rel="noopener noreferrer">◈ Shikimori</a>
-              <a class="social-pill host-only-social" href="https://github.com/undexerorrr" target="_blank" rel="noopener noreferrer">⌘ GitHub</a>
-              <button type="button" class="social-pill host-only-social" id="hero-spotify-btn" style="font-family:inherit;">♫ Spotify</button>
-              <button type="button" class="social-pill" id="hero-try-profile-btn" style="font-family:inherit;">◎ Примерить свой ник</button>
+              <a class="social-pill" href="https://github.com/undexerorrr" target="_blank" rel="noopener noreferrer">⌘ GitHub</a>
+              <button type="button" class="social-pill" id="hero-spotify-btn" style="font-family:inherit;">♫ Spotify</button>
             </div>
           </div>
 
@@ -7756,19 +7555,6 @@
               </div>
               <div class="discord-actions">
                 <button type="button" class="spotify-open-pill" id="discord-spotify-btn">♫ Плейлисты</button>
-              </div>
-            </div>
-            <!-- Guest Archive Quick Actions Card (visible in ?u=NICK mode) -->
-            <div class="guest-pass-card" id="guest-pass-card">
-              <div class="guest-pass-info">
-                <span class="guest-pass-kicker">● SHIKIMORI ARCHIVE // LIVE MIRROR</span>
-                <div class="guest-pass-title" id="guest-pass-title">Архив гостя</div>
-                <div class="guest-pass-sub">Все блоки — ДНК, Hot Takes, 3D-карты и 3D-Галактика — перестроены под этот профиль.</div>
-              </div>
-              <div class="guest-pass-btns">
-                <button type="button" class="base-action-btn is-primary" id="guest-pass-match-btn">◈ База с undereror</button>
-                <button type="button" class="base-action-btn" id="guest-pass-coop-btn">🎬 Кооп</button>
-                <button type="button" class="base-action-btn" id="guest-pass-copy-btn">⎘ Ссылка</button>
               </div>
             </div>
           </div>
@@ -8550,6 +8336,12 @@
     <div class="galaxy-labels-layer" id="galaxy-labels-layer" aria-hidden="true"></div>
     <div class="galaxy-reticle" id="galaxy-reticle" aria-hidden="true"></div>
 
+    <!-- V18 Star-Hopping Roulette HUD Pill -->
+    <div class="galaxy-hop-pill" id="galaxy-hop-pill" aria-hidden="true">
+      <span class="galaxy-hop-step" id="galaxy-hop-step">✦ ПРЫЖОК 1/8</span>
+      <span class="galaxy-hop-title" id="galaxy-hop-title"></span>
+    </div>
+
     <!-- Hover Preview Tooltip -->
     <div class="galaxy-hover-tip" id="galaxy-hover-tip" aria-hidden="true">
       <div class="galaxy-tip-thumb"><img id="galaxy-tip-img" src="" alt="" /></div>
@@ -8706,40 +8498,6 @@
       <button type="button" class="holo-ctrl-btn is-icon" id="holo-next-btn" aria-label="Следующая карта">›</button>
     </div>
     <div class="holo-kbd-hint">Двигай мышкой для 3D-голограммы · Клик / Пробел — переворот · ← / → — листать колоду</div>
-  </div>
-
-  <!-- V17 Platform Mode Switcher Modal (?u=НИК) -->
-  <div class="pswitch-backdrop" id="profile-switch-modal" aria-hidden="true">
-    <div class="pswitch-card" role="dialog" aria-modal="true" aria-label="Примерить архив на свой ник Shikimori">
-      <button type="button" class="modal-close" id="pswitch-close" aria-label="Закрыть">×</button>
-      <div class="base-title-row">
-        <span class="dna-pulse-icon" style="background:#6ee7b7;box-shadow:0 0 12px rgba(110,231,183,0.9);" aria-hidden="true"></span>
-        <span class="card-kicker" style="color:#a7f3d0;letter-spacing:2.2px;">Platform Mode // ?u=НИК</span>
-      </div>
-      <h3 class="pswitch-title">Примерить весь сайт на свой профиль Shikimori</h3>
-      <p class="pswitch-desc">Вбей свой ник или вставь ссылку на профиль — за пару секунд весь архив перестроится под тебя: твоё Аниме-ДНК, Hot Takes, избранное, 3D-карты, рулетка и 3D-Галактика.</p>
-      <div class="pswitch-perks">
-        <span class="vibe-tag">#Аниме-ДНК</span>
-        <span class="vibe-tag">#Hot Takes</span>
-        <span class="vibe-tag">#3D-Галактика</span>
-        <span class="vibe-tag">#Твоя ссылка ?u=</span>
-      </div>
-      <form class="pswitch-form" id="pswitch-form" autocomplete="off">
-        <div class="base-input-wrap">
-          <span class="base-input-icon" style="color:#6ee7b7;">◎</span>
-          <input type="text" class="base-input" id="pswitch-input" placeholder="Ник на Shikimori или ссылка на профиль..." aria-label="Ник на Shikimori" />
-        </div>
-        <button type="submit" class="base-submit-btn" id="pswitch-submit" style="border-color:rgba(110,231,183,0.68);">✦ Собрать</button>
-      </form>
-      <div class="base-status-line" id="pswitch-status" role="status" aria-live="polite">
-        <span class="base-spinner" id="pswitch-spinner"></span>
-        <span id="pswitch-status-text">Подгружаю профиль...</span>
-      </div>
-      <div class="pswitch-footer-row">
-        <span>Делись ссылкой: undexerorrr.github.io/?u=НИК</span>
-        <button type="button" class="base-action-btn" id="pswitch-reset-host-btn" style="padding:5px 11px;font-size:9.5px;display:none;">← Вернуть undereror</button>
-      </div>
-    </div>
   </div>
 
   <!-- Detail Modal -->
@@ -8911,7 +8669,7 @@
         ]
       };
 
-      const HOST_PEAK_FICTION = [
+      const PEAK_FICTION = [
         { rank: 1,  malId: 21,    title: 'Ван-Пис', kind: 'TV Сериал', year: 1999, score: 8.84, note: 'Абсолютная эпопея о свободе и масштабе мира, к которой хочется возвращаться снова и снова.', vibes: ['#эпопея', '#свобода', '#масштаб'] },
         { rank: 2,  malId: 9253,  title: 'Врата Штейна', kind: 'TV Сериал', year: 2011, score: 8.84, note: '10/10. Безупречная драматургия мировых линий, саспенс и эмоциональный пик.', vibes: ['#таймлуп', '#саспенс', '#10/10'] },
         { rank: 3,  malId: 16498, title: 'Атака титанов', kind: 'TV Сериал', year: 2013, score: 8.59, note: 'Жёсткая трагедия о выборе, свободе и цене идеалов без единой проходной арки.', vibes: ['#трагедия', '#выбор', '#эпик'] },
@@ -8930,7 +8688,7 @@
         { rank: 16, malId: 33,    title: 'Берсерк', kind: 'TV Сериал', year: 1997, score: 8.86, note: 'Мрачная классика тёмного фэнтези о воле, амбициях и неизбежном затмении.', vibes: ['#дарк-фэнтези', '#воля', '#затмение'] }
       ];
 
-      const HOST_WAIFU_LIST = [
+      const WAIFU_LIST = [
         { rank: 1,  key: 'w1',  name: 'C.C.', search: 'C.C.', anime: 'Code Geass' },
         { rank: 2,  key: 'w2',  name: 'Крул Цепеш', search: 'Krul Tepes', anime: 'Owari no Seraph' },
         { rank: 3,  key: 'w3',  name: 'Резе', search: 'Reze', anime: 'Chainsaw Man' },
@@ -8948,7 +8706,7 @@
         { rank: 15, key: 'w15', name: 'Тока Киришима', search: 'Touka Kirishima', anime: 'Tokyo Ghoul' }
       ];
 
-      const HOST_LITERALLY_ME = [
+      const LITERALLY_ME = [
         { rank: 1,  key: 'l1',  name: 'Эрен Йегер', search: 'Eren Yeager', anime: 'Attack on Titan' },
         { rank: 2,  key: 'l2',  name: 'Лелуш Ламперуж', search: 'Lelouch Lamperouge', anime: 'Code Geass' },
         { rank: 3,  key: 'l3',  name: 'Кэн Канэки', search: 'Ken Kaneki', anime: 'Tokyo Ghoul' },
@@ -8966,12 +8724,6 @@
         { rank: 15, key: 'l15', name: 'Габимару', search: 'Gabimaru', anime: "Hell's Paradise" },
         { rank: 16, key: 'l16', name: 'Сэйсиро Наги', search: 'Seishirou Nagi', anime: 'Blue Lock' }
       ];
-
-      let PEAK_FICTION = HOST_PEAK_FICTION.map((x) => ({ ...x }));
-      let WAIFU_LIST = HOST_WAIFU_LIST.map((x) => ({ ...x }));
-      let LITERALLY_ME = HOST_LITERALLY_ME.map((x) => ({ ...x }));
-      let activeProfileNickname = SHIKI_NICKNAME;
-      let isGuestArchiveMode = false;
 
       /* =========================================
          STATE & CACHE HELPERS
@@ -9772,8 +9524,7 @@
             document.getElementById('holo-modal')?.classList.contains('is-open') ||
             document.getElementById('detail-modal')?.classList.contains('is-open') ||
             document.getElementById('arena-modal')?.classList.contains('is-open') ||
-            document.getElementById('coop-modal')?.classList.contains('is-open') ||
-            document.getElementById('profile-switch-modal')?.classList.contains('is-open')
+            document.getElementById('coop-modal')?.classList.contains('is-open')
           );
         }
 
@@ -10107,19 +9858,9 @@
         }
 
         const badge = document.getElementById('rank-badge');
-        if (badge) {
-          if (completed >= 400) {
-            const milestone = Math.floor(completed / 50) * 50;
-            badge.textContent = `★ ${milestone}+ ТАЙТЛОВ · АНИМЕ ПСИХ`;
-          } else if (completed >= 250) {
-            badge.textContent = `★ ${completed} ТАЙТЛОВ · АРХИВАРИУС`;
-          } else if (completed >= 100) {
-            badge.textContent = `★ ${completed} ТАЙТЛОВ · ВЕТЕРАН`;
-          } else if (completed >= 30) {
-            badge.textContent = `★ ${completed} ТАЙТЛОВ · ОТАКУ`;
-          } else {
-            badge.textContent = `★ ${completed} ТАЙТЛОВ · СТАРТ АРХИВА`;
-          }
+        if (badge && completed >= 400) {
+          const milestone = Math.floor(completed / 50) * 50;
+          badge.textContent = `★ ${milestone}+ ТАЙТЛОВ · АНИМЕ ПСИХ`;
         }
       }
 
@@ -10803,7 +10544,7 @@
           ctx.fillText('ПРОВЕРЬ СВОЮ БАЗУ  →  https://undexerorrr.github.io/', 62, H - 46);
           ctx.textAlign = 'right';
           ctx.fillStyle = 'rgba(173, 191, 222, 0.65)';
-          ctx.fillText(`${activeProfileNickname} · undexeror // archive`, W - 62, H - 46);
+          ctx.fillText('undereror nyashka · undexeror // archive', W - 62, H - 46);
 
           const link = document.createElement('a');
           link.download = 'undexeror-hot-takes.png';
@@ -10831,12 +10572,10 @@
                 img: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : ''
               };
             });
-          if (!isGuestArchiveMode) {
-            myRatesIndex = new Map(compactRates.map((x) => [x.id, x]));
-            localStorage.setItem(MY_RATES_CACHE_KEY, JSON.stringify({ ts: Date.now(), rates: compactRates }));
-            const readyBadge = document.getElementById('base-host-ready-badge');
-            if (readyBadge) readyBadge.textContent = `БАЗА ГОТОВА · ${compactRates.length} ТАЙТЛОВ`;
-          }
+          myRatesIndex = new Map(compactRates.map((x) => [x.id, x]));
+          localStorage.setItem(MY_RATES_CACHE_KEY, JSON.stringify({ ts: Date.now(), rates: compactRates }));
+          const readyBadge = document.getElementById('base-host-ready-badge');
+          if (readyBadge) readyBadge.textContent = `БАЗА ГОТОВА · ${compactRates.length} ТАЙТЛОВ`;
         } catch (e) {}
 
         const scoreCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 };
@@ -10921,11 +10660,11 @@
 
         animeDnaState = baseDna;
         renderAnimeDna(animeDnaState);
-        if (!isGuestArchiveMode) saveDnaCache(animeDnaState);
+        saveDnaCache(animeDnaState);
 
         // Hydrate real Top Genres & Top Studios from AniList (top 100 highest-rated completed titles)
         // Skip re-fetching AniList if cached live genres/studios are fresh (< 12h)
-        const hasFreshMeta = !isGuestArchiveMode && prev && prev.isLive && prev.metaUpdatedAt && (Date.now() - prev.metaUpdatedAt < 12 * 3600 * 1000) && prev.genres?.length && prev.studios?.length;
+        const hasFreshMeta = prev && prev.isLive && prev.metaUpdatedAt && (Date.now() - prev.metaUpdatedAt < 12 * 3600 * 1000) && prev.genres?.length && prev.studios?.length;
         if (hasFreshMeta) {
           animeDnaState.metaUpdatedAt = prev.metaUpdatedAt;
           saveDnaCache(animeDnaState);
@@ -11012,7 +10751,7 @@
           }
 
           animeDnaState.metaUpdatedAt = Date.now();
-          if (!isGuestArchiveMode) saveDnaCache(animeDnaState);
+          saveDnaCache(animeDnaState);
           renderAnimeDna(animeDnaState);
         } catch (e) {
           console.warn('AniList DNA meta sync failed:', e);
@@ -11284,7 +11023,6 @@
 
         wrap.scrollLeft = 0;
         attachImageHandlers(wrap);
-        if (typeof updateWaifuNavRef === 'function') requestAnimationFrame(updateWaifuNavRef);
 
         wrap.querySelectorAll('.waifu-card').forEach((card) => {
           card.addEventListener('click', () => {
@@ -11295,8 +11033,6 @@
           });
         });
       }
-
-      let updateWaifuNavRef = null;
 
       function initWaifuControls() {
         const slider = document.getElementById('waifu-carousel');
@@ -11331,8 +11067,6 @@
             counter.textContent = `${formatRank(firstIdx)}–${formatRank(lastIdx)} / ${formatRank(total)}`;
           }
         }
-
-        updateWaifuNavRef = () => updateNavState(true);
 
         prevBtn?.addEventListener('click', () => {
           slider.scrollBy({ left: -stepPx, behavior: 'smooth' });
@@ -12211,7 +11945,7 @@
 
           if (parsedWatching.length) {
             watchingList = parsedWatching;
-            if (!isGuestArchiveMode) saveWatchingCache();
+            saveWatchingCache();
             renderWatchingShelf(watchingList);
             loadAnimeCoversBatch(parsedWatching.map((x) => x.malId));
           }
@@ -12297,7 +12031,7 @@
 
         if (extracted.length) {
           ratedAnimePool = extracted;
-          if (!isGuestArchiveMode) saveRatedPoolCache();
+          saveRatedPoolCache();
           updateRandomizerPoolCounts();
         }
 
@@ -12305,7 +12039,7 @@
         const computedTakes = computeHotTakesFromRates(allRates);
         if (computedTakes) {
           hotTakesState = computedTakes;
-          if (!isGuestArchiveMode) saveHotTakesCache(hotTakesState);
+          saveHotTakesCache(hotTakesState);
           renderHotTakes(hotTakesState, false);
         }
 
@@ -12370,7 +12104,7 @@
 
         if (builtGalaxy.length) {
           galaxyNodes = builtGalaxy;
-          if (!isGuestArchiveMode) saveGalaxyCache(galaxyNodes);
+          saveGalaxyCache(galaxyNodes);
           if (typeof galaxyRefreshHook === 'function') galaxyRefreshHook();
         }
 
@@ -12398,7 +12132,7 @@
               url: a.url ? normalizeShikiUrl(a.url, activeShikiOrigin) : `${activeShikiOrigin}/animes/${id}`
             });
           });
-          if (compactAll.length && !isGuestArchiveMode) {
+          if (compactAll.length) {
             hostFullRates = compactAll;
             saveHostFullRatesCache(hostFullRates);
           }
@@ -14312,11 +14046,9 @@
           const winner = pickRandomAnime(pool, lastMalId);
           lastMalId = winner.malId;
 
-          // Open modal cleanly once, then spin using ONLY already-cached posters (zero decode lag!)
           const cachedPool = pool.filter((a) => Boolean(coverCache['anime_' + a.malId]));
           const spinPool = cachedPool.length >= 4 ? cachedPool : pool;
 
-          // Warm winner cover in background while roulette spins
           const winnerCachedUrl = coverCache['anime_' + winner.malId] || winner.shikiImg || '';
           if (winnerCachedUrl) {
             const pre = new Image();
@@ -14422,6 +14154,9 @@
         const canvasWrap = document.getElementById('galaxy-canvas-wrap');
         const labelsLayer = document.getElementById('galaxy-labels-layer');
         const reticle = document.getElementById('galaxy-reticle');
+        const hopPill = document.getElementById('galaxy-hop-pill');
+        const hopStepEl = document.getElementById('galaxy-hop-step');
+        const hopTitleEl = document.getElementById('galaxy-hop-title');
         const hoverTip = document.getElementById('galaxy-hover-tip');
         const tipImg = document.getElementById('galaxy-tip-img');
         const tipTitle = document.getElementById('galaxy-tip-title');
@@ -14471,6 +14206,25 @@
         let linkGeom = null;
         let highlightLine = null;
         let highlightGeom = null;
+        let hopTrailLine = null;
+        let hopTrailGeom = null;
+        let hopTrailMat = null;
+        let hopTrailPosBuf = null;
+        let hopTrailColBuf = null;
+        const HOP_MAX_VERTS = 16;
+
+        // V18 Zero-Lag rAF Star-Hopping Roulette State
+        const hopState = {
+          active: false,
+          chain: [],
+          durations: [],
+          segIdx: 0,
+          segStart: 0,
+          fadeStart: 0,
+          fading: false,
+          focusIdx: -1,
+          hidePillTimer: null
+        };
 
         let activeNodes = [];
         let activeLayout = 'spiral';
@@ -14909,6 +14663,7 @@
 
         function switchGalaxyLayout(newMode) {
           if (!activeNodes.length || !currentPos) return;
+          cancelStarHop(false);
           activeLayout = newMode;
           layoutBtns.forEach((b) => b.classList.toggle('active', b.dataset.glayout === newMode));
 
@@ -14925,8 +14680,233 @@
           camState.targetRadius = newMode === 'eras' ? 215 : 178;
         }
 
-        function flyToStar(idx, openDossier) {
+        function cancelStarHop(keepTrailFade) {
+          hopState.active = false;
+          hopState.focusIdx = -1;
+          reticle?.classList.remove('is-hopping');
+          clearTimeout(hopState.hidePillTimer);
+          if (!keepTrailFade) {
+            hopState.fading = false;
+            if (hopTrailLine) hopTrailLine.visible = false;
+            hopPill?.classList.remove('is-visible', 'is-locked');
+          }
+        }
+
+        function setHopHud(stepText, titleText, locked) {
+          if (hopStepEl) hopStepEl.textContent = stepText;
+          if (hopTitleEl) hopTitleEl.textContent = titleText;
+          if (hopPill) {
+            hopPill.classList.add('is-visible');
+            hopPill.classList.toggle('is-locked', Boolean(locked));
+          }
+        }
+
+        function startStarHopRoulette() {
+          if (!currentPos || !activeNodes.length) return;
+          const pool = [];
+          for (let i = 0; i < activeNodes.length; i++) {
+            if (nodeMatchesFilter(activeNodes[i])) pool.push(i);
+          }
+          if (!pool.length) return;
+          if (pool.length === 1) {
+            cancelStarHop(false);
+            flyToStar(pool[0], true);
+            return;
+          }
+
+          cancelStarHop(false);
+          inspector?.classList.remove('is-open');
+          updateHoverTooltip(-1, 0, 0);
+          hoveredIdx = -1;
+          autoOrbit = false;
+          orbitBtn?.classList.remove('active');
+
+          // Build a dramatic chain of distinct stars (start from current selected star if valid)
+          const totalHops = Math.min(8, Math.max(4, pool.length - 1));
+          const used = new Set();
+          const chain = [];
+
+          if (selectedIdx >= 0 && selectedIdx < activeNodes.length && nodeMatchesFilter(activeNodes[selectedIdx])) {
+            chain.push(selectedIdx);
+            used.add(selectedIdx);
+          } else {
+            const first = pool[Math.floor(Math.random() * pool.length)];
+            chain.push(first);
+            used.add(first);
+          }
+
+          // Pick visually punchy hops (sample candidates and pick one with nice 3D travel distance)
+          for (let h = 0; h < totalHops; h++) {
+            const prevIdx = chain[chain.length - 1];
+            const px = currentPos[prevIdx * 3];
+            const py = currentPos[prevIdx * 3 + 1];
+            const pz = currentPos[prevIdx * 3 + 2];
+
+            let bestCand = -1;
+            let bestScore = -1;
+            const tries = Math.min(10, pool.length);
+            for (let t = 0; t < tries; t++) {
+              const c = pool[Math.floor(Math.random() * pool.length)];
+              if (used.has(c)) continue;
+              const dx = currentPos[c * 3] - px;
+              const dy = currentPos[c * 3 + 1] - py;
+              const dz = currentPos[c * 3 + 2] - pz;
+              const dist = Math.hypot(dx, dy, dz);
+              // Sweet spot 35..145 units so jumps feel wide & cinematic without throwing camera off-galaxy
+              const distScore = 100 - Math.abs(dist - 82) + Math.random() * 28;
+              if (distScore > bestScore) {
+                bestScore = distScore;
+                bestCand = c;
+              }
+            }
+            if (bestCand === -1) {
+              for (let k = 0; k < pool.length; k++) {
+                if (!used.has(pool[k])) { bestCand = pool[k]; break; }
+              }
+            }
+            if (bestCand === -1) break;
+            chain.push(bestCand);
+            used.add(bestCand);
+          }
+
+          if (chain.length < 2) {
+            flyToStar(chain[0], true);
+            return;
+          }
+
+          // Classic smooth roulette deceleration timings (ms per hop)
+          const segCount = chain.length - 1;
+          const durations = [];
+          for (let s = 0; s < segCount; s++) {
+            const prog = segCount > 1 ? s / (segCount - 1) : 1;
+            durations.push(Math.round(115 + Math.pow(prog, 1.85) * 320));
+          }
+
+          // Warm winner HD cover in background while hopping
+          const winnerNode = activeNodes[chain[chain.length - 1]];
+          if (winnerNode && winnerNode.id && !coverCache['anime_' + winnerNode.id]) {
+            loadAnimeCoversBatch([winnerNode.id]);
+          }
+
+          hopState.active = true;
+          hopState.chain = chain;
+          hopState.durations = durations;
+          hopState.segIdx = 0;
+          hopState.segStart = performance.now();
+          hopState.fading = false;
+          hopState.focusIdx = chain[1];
+
+          reticle?.classList.add('is-hopping');
+          if (hopTrailMat) hopTrailMat.opacity = 0.94;
+          if (hopTrailLine) hopTrailLine.visible = true;
+          if (highlightLine) highlightLine.visible = false;
+
+          // Seed first hop target
+          const targetIdx = chain[1];
+          camState.targetLook.x = currentPos[targetIdx * 3];
+          camState.targetLook.y = currentPos[targetIdx * 3 + 1];
+          camState.targetLook.z = currentPos[targetIdx * 3 + 2];
+          camState.targetRadius = 114;
+          camState.targetTheta += 0.18;
+
+          setHopHud(`✦ ПРЫЖОК 1 / ${segCount}`, activeNodes[targetIdx].title, false);
+        }
+
+        function updateStarHopFrame(now) {
+          if (hopState.active && hopTrailGeom && hopTrailPosBuf && hopTrailColBuf && currentPos) {
+            const chain = hopState.chain;
+            const segCount = chain.length - 1;
+            const s = hopState.segIdx;
+            const dur = hopState.durations[s] || 220;
+            const rawT = Math.min(1, (now - hopState.segStart) / dur);
+            // Smooth cubic ease-out for snappy launch & crisp landing on each star
+            const eased = 1 - Math.pow(1 - rawT, 3);
+
+            const fromIdx = chain[s];
+            const toIdx = chain[s + 1];
+
+            // Fill visited chain vertices (0..s) + animated leaping tip (s+1)
+            const vertCount = Math.min(HOP_MAX_VERTS, s + 2);
+            for (let k = 0; k <= s && k < HOP_MAX_VERTS - 1; k++) {
+              const ni = chain[k];
+              hopTrailPosBuf[k * 3]     = currentPos[ni * 3];
+              hopTrailPosBuf[k * 3 + 1] = currentPos[ni * 3 + 1];
+              hopTrailPosBuf[k * 3 + 2] = currentPos[ni * 3 + 2];
+
+              const ageFade = (k + 1) / vertCount;
+              hopTrailColBuf[k * 3]     = 0.24 + ageFade * 0.45;
+              hopTrailColBuf[k * 3 + 1] = 0.42 + ageFade * 0.52;
+              hopTrailColBuf[k * 3 + 2] = 0.62 + ageFade * 0.34;
+            }
+
+            const tipSlot = vertCount - 1;
+            const fx = currentPos[fromIdx * 3];
+            const fy = currentPos[fromIdx * 3 + 1];
+            const fz = currentPos[fromIdx * 3 + 2];
+            const tx = currentPos[toIdx * 3];
+            const ty = currentPos[toIdx * 3 + 1];
+            const tz = currentPos[toIdx * 3 + 2];
+            const arcLift = Math.sin(rawT * Math.PI) * 8.5;
+
+            hopTrailPosBuf[tipSlot * 3]     = fx + (tx - fx) * eased;
+            hopTrailPosBuf[tipSlot * 3 + 1] = fy + (ty - fy) * eased + arcLift;
+            hopTrailPosBuf[tipSlot * 3 + 2] = fz + (tz - fz) * eased;
+
+            // Blazing mint-white head of the star-hop beam
+            hopTrailColBuf[tipSlot * 3]     = 0.72;
+            hopTrailColBuf[tipSlot * 3 + 1] = 1.00;
+            hopTrailColBuf[tipSlot * 3 + 2] = 0.88;
+
+            hopTrailGeom.setDrawRange(0, vertCount);
+            hopTrailGeom.getAttribute('position').needsUpdate = true;
+            hopTrailGeom.getAttribute('color').needsUpdate = true;
+
+            if (rawT >= 1) {
+              if (s + 1 < segCount) {
+                // Advance to next star hop!
+                hopState.segIdx = s + 1;
+                hopState.segStart = now;
+                const nextTarget = chain[s + 2];
+                hopState.focusIdx = nextTarget;
+
+                camState.targetLook.x = currentPos[nextTarget * 3];
+                camState.targetLook.y = currentPos[nextTarget * 3 + 1];
+                camState.targetLook.z = currentPos[nextTarget * 3 + 2];
+                camState.targetRadius = s + 2 >= segCount ? 84 : 112;
+                camState.targetTheta += 0.16;
+
+                setHopHud(`✦ ПРЫЖОК ${s + 2} / ${segCount}`, activeNodes[nextTarget].title, false);
+              } else {
+                // Final landing on winning star!
+                const winnerIdx = toIdx;
+                hopState.active = false;
+                hopState.focusIdx = -1;
+                hopState.fading = true;
+                hopState.fadeStart = now;
+                reticle?.classList.remove('is-hopping');
+
+                setHopHud('★ ВЫБРАНО', activeNodes[winnerIdx].title, true);
+                clearTimeout(hopState.hidePillTimer);
+                hopState.hidePillTimer = setTimeout(() => {
+                  hopPill?.classList.remove('is-visible', 'is-locked');
+                }, 1650);
+
+                flyToStar(winnerIdx, true, true);
+              }
+            }
+          } else if (hopState.fading && hopTrailMat && hopTrailLine) {
+            const ft = Math.min(1, (now - hopState.fadeStart) / 950);
+            hopTrailMat.opacity = 0.94 * (1 - ft);
+            if (ft >= 1) {
+              hopState.fading = false;
+              hopTrailLine.visible = false;
+            }
+          }
+        }
+
+        function flyToStar(idx, openDossier, keepHopTrail) {
           if (idx < 0 || idx >= activeNodes.length || !currentPos) return;
+          if (!keepHopTrail) cancelStarHop(false);
           selectedIdx = idx;
           const sx = currentPos[idx * 3];
           const sy = currentPos[idx * 3 + 1];
@@ -15088,6 +15068,25 @@
           highlightLine.visible = false;
           scene.add(highlightLine);
 
+          // 5. V18 Pre-allocated GPU Star-Hopping Warp Trail (zero allocation during hops)
+          hopTrailPosBuf = new Float32Array(HOP_MAX_VERTS * 3);
+          hopTrailColBuf = new Float32Array(HOP_MAX_VERTS * 3);
+          hopTrailGeom = new T.BufferGeometry();
+          hopTrailGeom.setAttribute('position', new T.BufferAttribute(hopTrailPosBuf, 3));
+          hopTrailGeom.setAttribute('color', new T.BufferAttribute(hopTrailColBuf, 3));
+          hopTrailGeom.setDrawRange(0, 0);
+          hopTrailMat = new T.LineBasicMaterial({
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.92,
+            depthWrite: false,
+            blending: T.AdditiveBlending
+          });
+          hopTrailLine = new T.Line(hopTrailGeom, hopTrailMat);
+          hopTrailLine.frustumCulled = false;
+          hopTrailLine.visible = false;
+          scene.add(hopTrailLine);
+
           populateGalaxyScene();
         }
 
@@ -15181,7 +15180,7 @@
           }
 
           // Reticle on hovered or selected star
-          const focusIdx = hoveredIdx >= 0 ? hoveredIdx : selectedIdx;
+          const focusIdx = hopState.active ? hopState.focusIdx : (hoveredIdx >= 0 ? hoveredIdx : selectedIdx);
           if (reticle) {
             if (focusIdx >= 0 && currentPos && focusIdx < activeNodes.length) {
               proj.set(currentPos[focusIdx * 3], currentPos[focusIdx * 3 + 1], currentPos[focusIdx * 3 + 2]).project(camera);
@@ -15220,16 +15219,21 @@
             }
           }
 
+          // 1b. V18 Star-Hopping Roulette frame step (100% rAF synced)
+          updateStarHopFrame(now);
+
           // 2. Smooth inertial camera orbit + zoom + fly-to
-          if (autoOrbit) {
+          if (autoOrbit && !hopState.active) {
             camState.targetTheta += 0.0014 + liveBeatEnergy * 0.0018;
           }
-          camState.theta += (camState.targetTheta - camState.theta) * 0.085;
-          camState.phi += (camState.targetPhi - camState.phi) * 0.085;
-          camState.radius += (camState.targetRadius - camState.radius) * 0.085;
-          camState.look.x += (camState.targetLook.x - camState.look.x) * 0.08;
-          camState.look.y += (camState.targetLook.y - camState.look.y) * 0.08;
-          camState.look.z += (camState.targetLook.z - camState.look.z) * 0.08;
+          const camLerp = hopState.active ? 0.14 : 0.085;
+          const lookLerp = hopState.active ? 0.16 : 0.08;
+          camState.theta += (camState.targetTheta - camState.theta) * camLerp;
+          camState.phi += (camState.targetPhi - camState.phi) * camLerp;
+          camState.radius += (camState.targetRadius - camState.radius) * camLerp;
+          camState.look.x += (camState.targetLook.x - camState.look.x) * lookLerp;
+          camState.look.y += (camState.targetLook.y - camState.look.y) * lookLerp;
+          camState.look.z += (camState.targetLook.z - camState.look.z) * lookLerp;
 
           const sinPhi = Math.sin(camState.phi);
           camera.position.set(
@@ -15254,7 +15258,7 @@
           if (starMat) {
             starMat.uniforms.uTime.value = now * 0.001;
             starMat.uniforms.uBeat.value = liveBeatEnergy;
-            starMat.uniforms.uFocusIdx.value = hoveredIdx >= 0 ? hoveredIdx : selectedIdx;
+            starMat.uniforms.uFocusIdx.value = hopState.active ? hopState.focusIdx : (hoveredIdx >= 0 ? hoveredIdx : selectedIdx);
           }
 
           renderer.render(scene, camera);
@@ -15313,8 +15317,9 @@
             return;
           }
 
-          // Desktop hover snap (throttled to ~30Hz to keep orbit silky smooth)
+          // Desktop hover snap (throttled to ~30Hz, paused during star-hopping)
           if (e.pointerType !== 'touch') {
+            if (hopState.active) return;
             const nowTs = performance.now();
             if (nowTs - lastHoverCheckAt < 32) return;
             lastHoverCheckAt = nowTs;
@@ -15406,6 +15411,7 @@
 
         function closeGalaxy() {
           if (!isOpen) return;
+          cancelStarHop(false);
           isOpen = false;
           overlay.classList.remove('is-open');
           overlay.setAttribute('aria-hidden', 'true');
@@ -15470,13 +15476,7 @@
         });
 
         warpBtn?.addEventListener('click', () => {
-          const pool = [];
-          for (let i = 0; i < activeNodes.length; i++) {
-            if (nodeMatchesFilter(activeNodes[i])) pool.push(i);
-          }
-          if (!pool.length) return;
-          const pick = pool[Math.floor(Math.random() * pool.length)];
-          flyToStar(pick, true);
+          startStarHopRoulette();
         });
 
         linesBtn?.addEventListener('click', () => {
@@ -15490,6 +15490,7 @@
         });
 
         resetBtn?.addEventListener('click', () => {
+          cancelStarHop(false);
           camState.targetLook.x = 0;
           camState.targetLook.y = 0;
           camState.targetLook.z = 0;
@@ -16548,525 +16549,6 @@
         };
       }
 
-
-      /* =========================================
-         V17: PLATFORM MODE (?u=НИК) — TRY ARCHIVE ON ANY SHIKIMORI PROFILE
-         ========================================= */
-      function initPlatformMode() {
-        const topBtn = document.getElementById('open-platform-btn');
-        const topBtnLabel = document.getElementById('platform-nav-label');
-        const heroTryBtn = document.getElementById('hero-try-profile-btn');
-        const banner = document.getElementById('platform-banner');
-        const bannerNick = document.getElementById('platform-banner-nick');
-        const copyLinkBtn = document.getElementById('platform-copy-link-btn');
-        const changeBtn = document.getElementById('platform-change-btn');
-        const backHostBtn = document.getElementById('platform-back-host-btn');
-
-        const guestPassTitle = document.getElementById('guest-pass-title');
-        const guestPassMatchBtn = document.getElementById('guest-pass-match-btn');
-        const guestPassCoopBtn = document.getElementById('guest-pass-coop-btn');
-        const guestPassCopyBtn = document.getElementById('guest-pass-copy-btn');
-
-        const modal = document.getElementById('profile-switch-modal');
-        const modalClose = document.getElementById('pswitch-close');
-        const form = document.getElementById('pswitch-form');
-        const input = document.getElementById('pswitch-input');
-        const submitBtn = document.getElementById('pswitch-submit');
-        const statusLine = document.getElementById('pswitch-status');
-        const spinner = document.getElementById('pswitch-spinner');
-        const statusText = document.getElementById('pswitch-status-text');
-        const resetHostBtn = document.getElementById('pswitch-reset-host-btn');
-
-        function sanitizeNick(raw) {
-          let s = String(raw || '').trim();
-          if (!s) return '';
-          s = s.replace(/^https?:\/\/(www\.)?shikimori\.(one|io|me|org)\//i, '');
-          s = s.split(/[/?#]/)[0];
-          s = s.replace(/^@+/, '');
-          try { s = decodeURIComponent(s.replace(/\+/g, ' ')); }
-          catch (e) { s = s.replace(/\+/g, ' '); }
-          return s.trim();
-        }
-
-        function setSwitchStatus(msg, mode) {
-          if (!statusLine || !statusText) return;
-          if (!msg) {
-            statusLine.classList.remove('is-visible', 'is-error');
-            return;
-          }
-          statusLine.classList.add('is-visible');
-          statusLine.classList.toggle('is-error', mode === 'error');
-          if (spinner) spinner.style.display = mode === 'loading' ? 'inline-block' : 'none';
-          statusText.textContent = msg;
-        }
-
-        function openSwitchModal() {
-          if (!modal) return;
-          if (resetHostBtn) resetHostBtn.style.display = isGuestArchiveMode ? 'inline-flex' : 'none';
-          setSwitchStatus('', '');
-          modal.classList.add('is-open');
-          modal.setAttribute('aria-hidden', 'false');
-          setTimeout(() => input?.focus(), 60);
-        }
-
-        function closeSwitchModal() {
-          modal?.classList.remove('is-open');
-          modal?.setAttribute('aria-hidden', 'true');
-        }
-
-        function buildShareUrl(nick) {
-          const base = `${location.origin}${location.pathname}`;
-          if (!nick || nick.toLowerCase() === SHIKI_NICKNAME.toLowerCase()) return base;
-          return `${base}?u=${encodeURIComponent(nick)}`;
-        }
-
-        function updateUrlParam(nick) {
-          try {
-            const url = buildShareUrl(nick);
-            window.history.replaceState({}, '', url);
-          } catch (e) {}
-        }
-
-        function estimateLifetimeText(totalEps) {
-          const hours = Math.round((Number(totalEps) || 0) * 24 / 60);
-          const days = Math.floor(hours / 24);
-          if (days >= 365) {
-            const yrs = Math.floor(days / 365);
-            const mos = Math.floor((days % 365) / 30);
-            return mos > 0 ? `~${yrs} г. и ${mos} мес.` : `~${yrs} г.`;
-          }
-          if (days >= 30) {
-            const mos = Math.floor(days / 30);
-            const wks = Math.floor((days % 30) / 7);
-            return wks > 0 ? `~${mos} мес. и ${wks} нед.` : `~${mos} мес.`;
-          }
-          if (days >= 1) return `~${days} дн.`;
-          return `~${hours} ч.`;
-        }
-
-        async function copyCurrentShareLink(btnEl) {
-          const url = buildShareUrl(isGuestArchiveMode ? activeProfileNickname : '');
-          try {
-            await navigator.clipboard.writeText(url);
-            if (btnEl) {
-              const orig = btnEl.textContent;
-              btnEl.textContent = '✓ Ссылка скопирована!';
-              setTimeout(() => { btnEl.textContent = orig; }, 1800);
-            }
-          } catch (e) {}
-        }
-
-        function restoreHostArchive() {
-          isGuestArchiveMode = false;
-          activeProfileNickname = SHIKI_NICKNAME;
-          document.body.classList.remove('is-guest-archive');
-          document.title = 'undereror nyashka — undexeror // archive';
-          updateUrlParam('');
-
-          PEAK_FICTION = HOST_PEAK_FICTION.map((x) => ({ ...x }));
-          WAIFU_LIST = HOST_WAIFU_LIST.map((x) => ({ ...x }));
-          LITERALLY_ME = HOST_LITERALLY_ME.map((x) => ({ ...x }));
-
-          banner?.classList.remove('is-visible');
-          if (topBtn) topBtn.classList.remove('is-guest-active');
-          if (topBtnLabel) topBtnLabel.innerHTML = 'Свой<span class="p-text-full"> профиль</span>';
-          if (heroTryBtn) heroTryBtn.textContent = '◎ Примерить свой ник';
-
-          const nickEl = document.getElementById('profile-nick');
-          if (nickEl) nickEl.textContent = SNAPSHOT.nickname;
-          const bioEl = document.getElementById('profile-bio-meta');
-          if (bioEl) bioEl.textContent = 'муж. · 20 лет · на сайте с 2023 г.';
-          const idTagEl = document.getElementById('pilot-id-tag');
-          if (idTagEl) idTagEl.textContent = 'DOSSIER // 1308586';
-          const avatarEl = document.getElementById('profile-avatar');
-          if (avatarEl) avatarEl.src = 'https://shikimori.one/system/users/x160/1308586.png';
-          const shikiLink = document.getElementById('shiki-profile-link');
-          if (shikiLink) shikiLink.href = `${activeShikiOrigin}/undereror+nyashka`;
-
-          const litTab = document.querySelector('.tab-btn[data-tab="literally"]');
-          if (litTab) litTab.style.display = '';
-          const waifuSec = document.getElementById('waifu');
-          if (waifuSec) waifuSec.style.display = '';
-
-          ratedAnimePool = loadRatedPoolCache();
-          watchingList = loadWatchingCache();
-          animeDnaState = loadDnaCache();
-          hotTakesState = loadHotTakesCache();
-          galaxyNodes = loadGalaxyCache();
-
-          renderStats(SNAPSHOT.anime, SNAPSHOT.manga, SNAPSHOT.lifetimeText);
-          renderAnimeDna(animeDnaState || SNAPSHOT_DNA);
-          renderHotTakes(hotTakesState, false);
-          renderHistory(SNAPSHOT.history, false);
-          renderActivityGraph(SNAPSHOT.activity);
-          renderWatchingShelf(watchingList.length ? watchingList : SNAPSHOT.watching);
-          renderWaifu();
-          renderCollection();
-          updateRandomizerPoolCounts();
-          if (typeof galaxyRefreshHook === 'function') galaxyRefreshHook();
-
-          hostRatesPromise = null;
-          syncShikimoriLive();
-          loadAnimeCoversBatch(PEAK_FICTION.map((a) => a.malId));
-          loadCharacterCoversBatch([...WAIFU_LIST, ...LITERALLY_ME]);
-          closeSwitchModal();
-        }
-
-        async function loadGuestArchive(rawNick, silentFromUrl) {
-          const nick = sanitizeNick(rawNick);
-          if (!nick) {
-            setSwitchStatus('Введи ник на Shikimori.', 'error');
-            return false;
-          }
-          if (nick.toLowerCase() === SHIKI_NICKNAME.toLowerCase()) {
-            restoreHostArchive();
-            return true;
-          }
-
-          if (submitBtn) submitBtn.disabled = true;
-          if (!silentFromUrl) setSwitchStatus(`Ищу профиль «${nick}» на Shikimori...`, 'loading');
-
-          const pill = document.getElementById('api-status-pill');
-          const pillText = document.getElementById('api-status-text');
-          if (pillText) pillText.textContent = 'LOADING...';
-
-          try {
-            const origins = [activeShikiOrigin, ...SHIKI_ORIGINS.filter((o) => o !== activeShikiOrigin)];
-            let user = null;
-            for (const origin of origins) {
-              const res = await fetchShikiWithRetry(
-                `${origin}/api/users/${encodeURIComponent(nick)}?is_nickname=1`,
-                { retries: 2, baseDelay: 650 }
-              );
-              if (res.ok && res.data && res.data.id) {
-                activeShikiOrigin = origin;
-                user = res.data;
-                break;
-              }
-              if (res.status === 404) {
-                setSwitchStatus(`Профиль «${nick}» не найден на Shikimori — проверь написание.`, 'error');
-                if (pillText) pillText.textContent = 'NOT FOUND';
-                return false;
-              }
-            }
-
-            if (!user || !user.id) {
-              setSwitchStatus('Shikimori API временно не отвечает — попробуй через пару секунд.', 'error');
-              return false;
-            }
-
-            if (!silentFromUrl) setSwitchStatus(`Собираю архив для «${user.nickname}»...`, 'loading');
-
-            isGuestArchiveMode = true;
-            activeProfileNickname = user.nickname || nick;
-            document.body.classList.add('is-guest-archive');
-            document.title = `${activeProfileNickname} — undexeror // archive`;
-            updateUrlParam(activeProfileNickname);
-
-            const introTitleEl = document.getElementById('intro-title');
-            const introSubEl = document.getElementById('intro-sub');
-            if (introTitleEl) introTitleEl.textContent = `${activeProfileNickname} // archive`;
-            if (introSubEl) introSubEl.textContent = 'shikimori live mirror · powered by undexeror';
-
-            if (pill) pill.classList.add('is-live');
-            if (pillText) pillText.textContent = `LIVE · ${activeProfileNickname.slice(0, 14)}`;
-
-            if (banner) banner.classList.add('is-visible');
-            if (bannerNick) bannerNick.textContent = activeProfileNickname;
-            if (guestPassTitle) guestPassTitle.textContent = `${activeProfileNickname} · Личный нуар-архив`;
-            if (topBtn) topBtn.classList.add('is-guest-active');
-            if (topBtnLabel) topBtnLabel.textContent = `@${activeProfileNickname.slice(0, 12)}`;
-            if (heroTryBtn) heroTryBtn.textContent = '◎ Сменить ник';
-
-            const avatarEl = document.getElementById('profile-avatar');
-            const liveAvatar = user.image?.x160 || user.image?.x148 || user.avatar;
-            if (avatarEl && liveAvatar) avatarEl.src = normalizeShikiUrl(liveAvatar, activeShikiOrigin);
-
-            const nickEl = document.getElementById('profile-nick');
-            if (nickEl) nickEl.textContent = activeProfileNickname;
-
-            const idTagEl = document.getElementById('pilot-id-tag');
-            if (idTagEl) idTagEl.textContent = `DOSSIER // ${user.id}`;
-
-            const bioEl = document.getElementById('profile-bio-meta');
-            if (bioEl) {
-              const bioParts = [];
-              if (user.sex === 'male') bioParts.push('муж.');
-              else if (user.sex === 'female') bioParts.push('жен.');
-              if (user.full_years) bioParts.push(`${user.full_years} лет`);
-              if (user.common_info && Array.isArray(user.common_info) && !bioParts.length) {
-                bioParts.push(stripHtml(user.common_info.slice(0, 2).join(' · ')));
-              }
-              bioEl.textContent = bioParts.join(' · ') || 'Профиль Shikimori · Platform Mode';
-            }
-
-            const shikiLink = document.getElementById('shiki-profile-link');
-            if (shikiLink) {
-              shikiLink.href = user.url ? normalizeShikiUrl(user.url, activeShikiOrigin) : `${activeShikiOrigin}/${encodeURIComponent(activeProfileNickname)}`;
-            }
-
-            const baseInput = document.getElementById('base-nick-input');
-            if (baseInput) baseInput.value = activeProfileNickname;
-            const coopNick2 = document.getElementById('coop-nick-2');
-            if (coopNick2) coopNick2.value = activeProfileNickname;
-
-            const animeStatuses = user.stats?.full_statuses?.anime || user.stats?.statuses?.anime || [];
-            const mangaStatuses = user.stats?.full_statuses?.manga || user.stats?.statuses?.manga || [];
-            const mapStatus = (arr) => {
-              const out = {};
-              arr.forEach((s) => { out[s.name] = Number(s.size) || 0; });
-              return out;
-            };
-            const aMap = mapStatus(animeStatuses);
-            const mMap = mapStatus(mangaStatuses);
-            renderStats(
-              {
-                planned: aMap.planned || 0,
-                watching: (aMap.watching || 0) + (aMap.rewatching || 0),
-                completed: aMap.completed || 0,
-                on_hold: aMap.on_hold || 0,
-                dropped: aMap.dropped || 0
-              },
-              {
-                reading: (mMap.watching || 0) + (mMap.reading || 0) + (mMap.rewatching || 0),
-                completed: mMap.completed || 0
-              },
-              'Считаю время...'
-            );
-
-            const liveGraph = parseShikiActivity(user.stats?.activity);
-            if (liveGraph && liveGraph.length >= 2) {
-              renderActivityGraph(liveGraph);
-            }
-
-            await sleep(160);
-            const rRes = await fetchShikiWithRetry(
-              `${activeShikiOrigin}/api/users/${user.id}/anime_rates?limit=1000`,
-              { retries: 3, baseDelay: 750 }
-            );
-            const guestRates = (rRes.ok && Array.isArray(rRes.data)) ? rRes.data : [];
-
-            watchingList = [];
-            ratedAnimePool = [];
-            hotTakesState = null;
-            animeDnaState = null;
-            galaxyNodes = [];
-
-            await sleep(180);
-            const fRes = await fetchShikiWithRetry(
-              `${activeShikiOrigin}/api/users/${user.id}/favourites`,
-              { retries: 2, baseDelay: 700 }
-            );
-            const favs = (fRes.ok && fRes.data) ? fRes.data : {};
-
-            const guestPeak = [];
-            const seenPeakIds = new Set();
-            const rateById = new Map();
-            let guestTotalEps = 0;
-
-            guestRates.forEach((r) => {
-              if (!r || !r.anime || !r.anime.id) return;
-              const id = Number(r.anime.id);
-              rateById.set(id, r);
-              if (r.status === 'completed' || r.status === 'rewatching' || r.status === 'watching') {
-                guestTotalEps += Number(r.episodes) || Number(r.anime.episodes) || 0;
-              }
-            });
-
-            const lifeEl = document.getElementById('lifetime-text');
-            if (lifeEl) lifeEl.textContent = estimateLifetimeText(guestTotalEps);
-
-            (favs.animes || []).forEach((fa) => {
-              if (!fa || !fa.id || seenPeakIds.has(Number(fa.id))) return;
-              const id = Number(fa.id);
-              seenPeakIds.add(id);
-              const rate = rateById.get(id);
-              const rawImg = fa.image || rate?.anime?.image?.original || '';
-              if (rawImg && !coverCache['anime_' + id]) {
-                coverCache['anime_' + id] = normalizeShikiUrl(rawImg, activeShikiOrigin);
-              }
-              guestPeak.push({
-                rank: guestPeak.length + 1,
-                malId: id,
-                title: fa.russian || fa.name || rate?.anime?.russian || `#${id}`,
-                kind: SHIKI_KIND_LABELS[String(rate?.anime?.kind || 'tv').toLowerCase()] || 'Аниме',
-                year: rate?.anime?.aired_on ? Number(String(rate.anime.aired_on).slice(0, 4)) || 2020 : 2020,
-                score: Number(rate?.anime?.score) || 8.0,
-                userScore: Number(rate?.score) || 10,
-                note: stripHtml(rate?.text || '').trim() || `Избранное аниме из профиля ${activeProfileNickname} на Shikimori.`,
-                vibes: ['#избранное', rate?.score ? `#${rate.score}/10` : '#peak']
-              });
-            });
-
-            const topRatedSorted = guestRates
-              .filter((r) => r && r.anime && r.anime.id && (r.status === 'completed' || r.status === 'rewatching') && !seenPeakIds.has(Number(r.anime.id)))
-              .sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0) || (Number(b.anime.score) || 0) - (Number(a.anime.score) || 0));
-
-            for (const r of topRatedSorted) {
-              if (guestPeak.length >= 16) break;
-              const a = r.anime;
-              const id = Number(a.id);
-              seenPeakIds.add(id);
-              const rawImg = a.image?.original || a.image?.preview || '';
-              if (rawImg && !coverCache['anime_' + id]) {
-                coverCache['anime_' + id] = normalizeShikiUrl(rawImg, activeShikiOrigin);
-              }
-              guestPeak.push({
-                rank: guestPeak.length + 1,
-                malId: id,
-                title: a.russian || a.name,
-                kind: SHIKI_KIND_LABELS[String(a.kind || 'tv').toLowerCase()] || 'Аниме',
-                year: a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || 2020 : 2020,
-                score: Number(a.score) || 7.5,
-                userScore: Number(r.score) || 0,
-                note: stripHtml(r.text || '').trim() || `Один из самых высоко оценённых тайтлов в списке ${activeProfileNickname}.`,
-                vibes: [r.score ? `#${r.score}/10` : '#топ', '#архив']
-              });
-            }
-
-            if (guestPeak.length) {
-              PEAK_FICTION = guestPeak.slice(0, 16);
-              loadAnimeCoversBatch(PEAK_FICTION.map((x) => x.malId));
-            }
-
-            const favChars = Array.isArray(favs.characters) ? favs.characters : [];
-            const waifuSec = document.getElementById('waifu');
-            if (favChars.length) {
-              WAIFU_LIST = favChars.slice(0, 20).map((fc, idx) => {
-                const fullImg = fc.image ? normalizeShikiUrl(fc.image, activeShikiOrigin) : '';
-                const key = `gchar_${user.id}_${fc.id || idx}`;
-                if (fullImg) coverCache['char_' + key] = fullImg;
-                return {
-                  rank: idx + 1,
-                  key,
-                  name: fc.russian || fc.name || 'Персонаж',
-                  search: fc.name || fc.russian || '',
-                  anime: 'Избранное',
-                  shikiImg: fullImg,
-                  url: fc.url ? normalizeShikiUrl(fc.url, activeShikiOrigin) : `${activeShikiOrigin}/characters/${fc.id}`
-                };
-              });
-              if (waifuSec) waifuSec.style.display = '';
-            } else {
-              WAIFU_LIST = [];
-              if (waifuSec) waifuSec.style.display = 'none';
-            }
-
-            const litTab = document.querySelector('.tab-btn[data-tab="literally"]');
-            if (litTab) litTab.style.display = 'none';
-            currentTab = 'peak';
-            document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b.dataset.tab === 'peak'));
-
-            if (guestRates.length) {
-              processHostAnimeRates(guestRates, user.stats);
-              if (!watchingList.length) {
-                const wSec = document.getElementById('watching');
-                if (wSec) wSec.style.display = 'none';
-              }
-            } else {
-              renderHotTakes(null, true);
-              const wSec = document.getElementById('watching');
-              if (wSec) wSec.style.display = 'none';
-            }
-
-            renderWaifu();
-            renderCollection();
-            updateRandomizerPoolCounts();
-
-            await sleep(200);
-            const hRes = await fetchShikiWithRetry(
-              `${activeShikiOrigin}/api/users/${user.id}/history?limit=30`,
-              { retries: 2, baseDelay: 700 }
-            );
-            if (hRes.ok && Array.isArray(hRes.data)) {
-              const seenTargets = new Set();
-              const parsedHistory = [];
-              for (const h of hRes.data) {
-                const t = h && h.target;
-                if (!t || (!t.russian && !t.name)) continue;
-                const key = t.id ? 'id_' + t.id : 't_' + String(t.russian || t.name).toLowerCase();
-                if (seenTargets.has(key)) continue;
-                seenTargets.add(key);
-                const rawImg = t.image?.original || t.image?.preview || t.image?.x96 || '';
-                parsedHistory.push({
-                  id: t.id,
-                  title: t.russian || t.name,
-                  action: stripHtml(h.description) || 'Обновление списка',
-                  dateText: formatRelativeTime(h.created_at),
-                  url: normalizeShikiUrl(t.url, activeShikiOrigin),
-                  image: rawImg ? normalizeShikiUrl(rawImg, activeShikiOrigin) : ''
-                });
-                if (parsedHistory.length >= 5) break;
-              }
-              if (parsedHistory.length) {
-                renderHistory(parsedHistory, true);
-                loadAnimeCoversBatch(parsedHistory.map((h) => h.id));
-              }
-            }
-
-            setSwitchStatus('', '');
-            closeSwitchModal();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return true;
-          } catch (err) {
-            console.warn('Platform guest load failed:', err);
-            setSwitchStatus('Ошибка при загрузке профиля с Shikimori API.', 'error');
-            return false;
-          } finally {
-            if (submitBtn) submitBtn.disabled = false;
-          }
-        }
-
-        topBtn?.addEventListener('click', openSwitchModal);
-        heroTryBtn?.addEventListener('click', openSwitchModal);
-        changeBtn?.addEventListener('click', openSwitchModal);
-        modalClose?.addEventListener('click', closeSwitchModal);
-        modal?.addEventListener('click', (e) => {
-          if (e.target === modal) closeSwitchModal();
-        });
-
-        form?.addEventListener('submit', (e) => {
-          e.preventDefault();
-          loadGuestArchive(input?.value || '', false);
-        });
-
-        copyLinkBtn?.addEventListener('click', () => copyCurrentShareLink(copyLinkBtn));
-        guestPassCopyBtn?.addEventListener('click', () => copyCurrentShareLink(guestPassCopyBtn));
-        backHostBtn?.addEventListener('click', restoreHostArchive);
-        resetHostBtn?.addEventListener('click', restoreHostArchive);
-
-        guestPassMatchBtn?.addEventListener('click', () => {
-          document.querySelector('[data-station-tab="base"]')?.click();
-          const bInput = document.getElementById('base-nick-input');
-          if (bInput) bInput.value = activeProfileNickname;
-          document.getElementById('compatibility')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          document.getElementById('base-check-form')?.requestSubmit?.();
-        });
-
-        guestPassCoopBtn?.addEventListener('click', () => {
-          if (typeof coopOpenWithGuestHook === 'function') {
-            coopOpenWithGuestHook(activeProfileNickname);
-          }
-        });
-
-        window.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && modal?.classList.contains('is-open')) {
-            closeSwitchModal();
-          }
-        });
-
-        const params = new URLSearchParams(window.location.search);
-        const urlNick = sanitizeNick(params.get('u') || params.get('user') || '');
-        if (urlNick && urlNick.toLowerCase() !== SHIKI_NICKNAME.toLowerCase()) {
-          const introTitleEl = document.getElementById('intro-title');
-          const introSubEl = document.getElementById('intro-sub');
-          if (introTitleEl) introTitleEl.textContent = `${urlNick} // archive`;
-          if (introSubEl) introSubEl.textContent = 'shikimori live mirror · powered by undexeror';
-          return { initialGuestNick: urlNick, loadGuestArchive };
-        }
-        return { initialGuestNick: '', loadGuestArchive };
-      }
-
       const playerControls = initMusicPlayer();
       initIntroOverlay(playerControls);
       initSpotifyDrawer(playerControls);
@@ -17096,18 +16578,13 @@
       initWaifuControls();
       renderCollection();
 
-      const platformCtrl = initPlatformMode();
-      if (platformCtrl && platformCtrl.initialGuestNick) {
-        platformCtrl.loadGuestArchive(platformCtrl.initialGuestNick, true);
-      } else {
-        syncShikimoriLive();
-        loadAnimeCoversBatch([
-          ...PEAK_FICTION.map((a) => a.malId),
-          ...SNAPSHOT.history.map((h) => h.id),
-          ...(watchingList.length ? watchingList : SNAPSHOT.watching).map((w) => w.malId)
-        ]);
-        loadCharacterCoversBatch([...WAIFU_LIST, ...LITERALLY_ME]);
-      }
+      syncShikimoriLive();
+      loadAnimeCoversBatch([
+        ...PEAK_FICTION.map((a) => a.malId),
+        ...SNAPSHOT.history.map((h) => h.id),
+        ...(watchingList.length ? watchingList : SNAPSHOT.watching).map((w) => w.malId)
+      ]);
+      loadCharacterCoversBatch([...WAIFU_LIST, ...LITERALLY_ME]);
     })();
   </script>
 </body>
