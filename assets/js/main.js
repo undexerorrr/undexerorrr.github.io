@@ -12,6 +12,7 @@ import { syncShikimoriLive, loadAnimeCoversBatch, loadCharacterCoversBatch } fro
 import { initArchiveGalaxy } from './modules/galaxy.js';
 import { initCoopPicker } from './modules/coop.js';
 import { initTrophiesShowcase } from './modules/trophies.js';
+import { initGuestbook } from './modules/guestbook.js';
 import {
   initModalScrollLock,
   initIntroOverlay,
@@ -66,6 +67,7 @@ initGlassSpotlight();
 renderWaifu();
 initWaifuControls();
 renderCollection();
+initGuestbook();
 
 syncShikimoriLive();
 loadAnimeCoversBatch([

@@ -1,0 +1,216 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/*!
+ * undexeror // archive — Cold Noir Monochrome Theme for Giscus
+ * Matte obsidian surfaces, no blur filters, Inter + JetBrains Mono
+ */
+
+main {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  color-scheme: dark;
+  font-family: var(--font-sans);
+
+  /* Syntax & Code Highlights */
+  --color-prettylights-syntax-comment: #6e7b8f;
+  --color-prettylights-syntax-constant: #adbfde;
+  --color-prettylights-syntax-entity: #d6e2f5;
+  --color-prettylights-syntax-storage-modifier-import: #cdd4e0;
+  --color-prettylights-syntax-entity-tag: #6ee7b7;
+  --color-prettylights-syntax-keyword: #fca5a5;
+  --color-prettylights-syntax-string: #a7f3d0;
+  --color-prettylights-syntax-variable: #adbfde;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #f87171;
+  --color-prettylights-syntax-invalid-illegal-text: #fef2f2;
+  --color-prettylights-syntax-invalid-illegal-bg: rgba(248, 113, 113, 0.24);
+  --color-prettylights-syntax-markup-heading: #eef4ff;
+  --color-prettylights-syntax-markup-bold: #ffffff;
+  --color-prettylights-syntax-markup-italic: #cdd4e0;
+  --color-prettylights-syntax-markup-inserted-text: #a7f3d0;
+  --color-prettylights-syntax-markup-inserted-bg: rgba(110, 231, 183, 0.12);
+  --color-prettylights-syntax-markup-deleted-text: #fecaca;
+  --color-prettylights-syntax-markup-deleted-bg: rgba(248, 113, 113, 0.14);
+
+  /* Canvas & Obsidian Surfaces */
+  --color-canvas-default: #07090d;
+  --color-canvas-overlay: #0c1019;
+  --color-canvas-inset: #06080d;
+  --color-canvas-subtle: rgba(13, 17, 27, 0.88);
+
+  /* Foreground Typography */
+  --color-fg-default: #cdd4e0;
+  --color-fg-muted: #919baa;
+  --color-fg-subtle: rgba(145, 155, 170, 0.72);
+  --color-fg-on-emphasis: #ffffff;
+
+  /* Borders */
+  --color-border-default: rgba(173, 191, 222, 0.21);
+  --color-border-muted: rgba(173, 191, 222, 0.14);
+  --color-border-subtle: rgba(173, 191, 222, 0.12);
+
+  /* Neutral & Accents */
+  --color-neutral-emphasis-plus: #435265;
+  --color-neutral-emphasis: rgba(173, 191, 222, 0.28);
+  --color-neutral-muted: rgba(173, 191, 222, 0.14);
+  --color-neutral-subtle: rgba(173, 191, 222, 0.08);
+
+  --color-accent-fg: #adbfde;
+  --color-accent-emphasis: rgba(173, 191, 222, 0.28);
+  --color-accent-muted: rgba(173, 191, 222, 0.36);
+  --color-accent-subtle: rgba(173, 191, 222, 0.10);
+
+  --color-success-fg: #6ee7b7;
+  --color-success-emphasis: rgba(110, 231, 183, 0.26);
+  --color-success-muted: rgba(110, 231, 183, 0.34);
+  --color-success-subtle: rgba(110, 231, 183, 0.10);
+
+  --color-attention-fg: #adbfde;
+  --color-attention-muted: rgba(173, 191, 222, 0.30);
+  --color-attention-subtle: rgba(173, 191, 222, 0.10);
+
+  --color-danger-fg: #f87171;
+  --color-danger-muted: rgba(248, 113, 113, 0.34);
+  --color-danger-subtle: rgba(248, 113, 113, 0.12);
+
+  /* Buttons */
+  --color-btn-text: #cdd4e0;
+  --color-btn-bg: rgba(12, 16, 25, 0.92);
+  --color-btn-border: rgba(173, 191, 222, 0.24);
+  --color-btn-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(235, 242, 255, 0.08);
+  --color-btn-inset-shadow: inset 0 1px 0 rgba(235, 242, 255, 0.06);
+  --color-btn-hover-bg: rgba(20, 27, 42, 0.96);
+  --color-btn-hover-border: rgba(173, 191, 222, 0.48);
+  --color-btn-active-bg: rgba(16, 21, 33, 0.98);
+  --color-btn-active-border: rgba(173, 191, 222, 0.56);
+  --color-btn-selected-bg: rgba(173, 191, 222, 0.16);
+
+  --color-btn-primary-text: #ffffff;
+  --color-btn-primary-bg: rgba(67, 82, 101, 0.52);
+  --color-btn-primary-border: rgba(173, 191, 222, 0.44);
+  --color-btn-primary-shadow: 0 8px 20px rgba(0, 0, 0, 0.52), inset 0 1px 0 rgba(235, 242, 255, 0.14);
+  --color-btn-primary-inset-shadow: inset 0 1px 0 rgba(235, 242, 255, 0.12);
+  --color-btn-primary-hover-bg: rgba(173, 191, 222, 0.24);
+  --color-btn-primary-hover-border: rgba(173, 191, 222, 0.72);
+  --color-btn-primary-selected-bg: rgba(173, 191, 222, 0.28);
+  --color-btn-primary-disabled-text: rgba(205, 212, 224, 0.42);
+  --color-btn-primary-disabled-bg: rgba(12, 16, 25, 0.65);
+  --color-btn-primary-disabled-border: rgba(173, 191, 222, 0.14);
+
+  /* Reactions & Shadows */
+  --color-social-reaction-bg-hover: rgba(173, 191, 222, 0.14);
+  --color-social-reaction-bg-reacted-hover: rgba(173, 191, 222, 0.24);
+  --color-shadow-small: 0 4px 14px rgba(0, 0, 0, 0.52);
+  --color-shadow-medium: 0 14px 36px rgba(0, 0, 0, 0.62);
+  --color-shadow-large: 0 22px 54px rgba(0, 0, 0, 0.78);
+  --color-primer-shadow-focus: 0 0 0 2px rgba(173, 191, 222, 0.34);
+
+  /* Giscus Loader */
+  --color-scale-gray-8: #0c1019;
+}
+
+.gsc-main {
+  font-family: var(--font-sans);
+  color: var(--color-fg-default);
+}
+
+.gsc-header,
+.gsc-comments-count,
+.gsc-reactions-count,
+.gsc-social-reaction-summary-item,
+.gsc-comment-author-avatar,
+.gsc-comment-header,
+.gsc-comment-box-tabs,
+.gsc-comment-box-tabs button,
+.gsc-timeline-filter,
+.btn {
+  font-family: var(--font-mono);
+}
+
+.gsc-header {
+  padding-bottom: 10px;
+}
+
+.gsc-comments-count,
+.gsc-reactions-count {
+  letter-spacing: 0.04em;
+  color: #eef4ff;
+}
+
+.gsc-comment-box,
+.gsc-comment > div,
+.gsc-reply-box {
+  background: linear-gradient(164deg, rgba(13, 17, 27, 0.90) 0%, rgba(7, 9, 14, 0.95) 100%);
+  border-color: rgba(173, 191, 222, 0.21);
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.52), inset 0 1px 0 rgba(235, 242, 255, 0.08);
+}
+
+.gsc-comment-box-tabs {
+  border-bottom-color: rgba(173, 191, 222, 0.16);
+}
+
+.gsc-comment-box-textarea,
+.gsc-comment-box textarea {
+  font-family: var(--font-sans);
+  background-color: #06080d;
+  border-color: rgba(173, 191, 222, 0.20);
+  border-radius: 10px;
+  color: #eef4ff;
+}
+
+.gsc-comment-box-textarea:focus,
+.gsc-comment-box textarea:focus {
+  border-color: rgba(173, 191, 222, 0.56);
+  box-shadow: 0 0 0 2px rgba(173, 191, 222, 0.20);
+}
+
+.gsc-comment-box-textarea::placeholder,
+.gsc-comment-box textarea::placeholder {
+  color: rgba(145, 155, 170, 0.65);
+}
+
+.gsc-comment-content {
+  font-family: var(--font-sans);
+  line-height: 1.6;
+}
+
+.gsc-comment-author a,
+.gsc-comment-header a {
+  color: #eef4ff;
+}
+
+.gsc-social-reaction-summary-item {
+  border-radius: 999px;
+  border-color: rgba(173, 191, 222, 0.22);
+  background: rgba(10, 13, 21, 0.85);
+}
+
+.gsc-social-reaction-summary-item:hover {
+  border-color: rgba(173, 191, 222, 0.48);
+}
+
+.gsc-social-reaction-summary-item.has-reacted {
+  background: rgba(173, 191, 222, 0.16);
+  border-color: rgba(173, 191, 222, 0.46);
+  color: #ffffff;
+}
+
+.btn {
+  border-radius: 999px;
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  color: #ffffff;
+}
+
+.gsc-direct-reaction-buttons {
+  gap: 6px;
+}
+
+.gsc-loading-image {
+  filter: grayscale(1) brightness(1.2);
+}

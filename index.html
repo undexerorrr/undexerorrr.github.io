@@ -63,6 +63,7 @@
           <a href="#watching">Смотрю</a>
           <a href="#waifu">Waifu</a>
           <a href="#collection">Коллекция</a>
+          <a href="#guestbook">Стена</a>
         </nav>
         <div class="topbar-controls">
           <div class="status-pill" id="api-status-pill">
@@ -663,6 +664,42 @@
         </div>
 
         <div class="cards-grid" id="collection-grid"></div>
+      </section>
+
+      <!-- GUESTBOOK (GITHUB DISCUSSIONS / GISCUS) -->
+      <section id="guestbook">
+        <div class="glass-card guestbook-card">
+          <div class="gb-head">
+            <div class="gb-head-left">
+              <div class="ht-title-row">
+                <span class="dna-pulse-icon" aria-hidden="true"></span>
+                <span class="card-kicker gb-kicker">Guestbook // GitHub Discussions</span>
+              </div>
+              <h2 class="ht-heading">Оставь след</h2>
+              <p class="ht-subtitle">Гостевая стена архива — напиши пару слов, посоветуй тайтл или поспорь с моим топом. Вход через GitHub.</p>
+            </div>
+            <div class="gb-head-badges">
+              <span class="panel-badge" id="guestbook-status-badge">STANDBY</span>
+              <a class="gb-ext-link" href="https://github.com/undexerorrr/undexerorrr.github.io/discussions" target="_blank" rel="noopener noreferrer">Discussions ↗</a>
+            </div>
+          </div>
+
+          <div class="gb-stage" id="guestbook-stage" data-state="idle">
+            <div class="gb-skeleton" id="guestbook-skeleton" aria-hidden="true">
+              <div class="gb-skel-bar gb-skel-meta"></div>
+              <div class="gb-skel-box">
+                <div class="gb-skel-line w-85"></div>
+                <div class="gb-skel-line w-60"></div>
+              </div>
+              <div class="gb-skel-box is-short">
+                <div class="gb-skel-line w-70"></div>
+                <div class="gb-skel-line w-45"></div>
+              </div>
+              <div class="gb-skel-note" id="guestbook-skel-note">Ожидание прокрутки · загрузка Giscus...</div>
+            </div>
+            <div class="gb-mount" id="guestbook-mount"></div>
+          </div>
+        </div>
       </section>
     </main>
 
