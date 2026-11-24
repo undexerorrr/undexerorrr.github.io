@@ -2847,7 +2847,8 @@
       .discord-card::before,
       .watching-card::before,
       .music-dock::before,
-      .modal-card::before {
+      .modal-card::before,
+      .arena-card::before {
         content: "";
         position: absolute;
         inset: 0;
@@ -2868,7 +2869,8 @@
       .discord-card::after,
       .watching-card::after,
       .music-dock::after,
-      .modal-card::after {
+      .modal-card::after,
+      .arena-card::after {
         content: "";
         position: absolute;
         inset: 0;
@@ -3997,6 +3999,652 @@
       }
     }
 
+
+    /* =========================================
+       STAGE 3 NEW: 1v1 TOURNAMENT ARENA
+       ========================================= */
+    .waifu-head-left {
+      position: absolute;
+      left: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .arena-launch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(var(--bright), 0.44);
+      background:
+        linear-gradient(110deg, transparent 35%, rgba(var(--bright), 0.28) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat,
+        rgba(10, 14, 22, 0.78);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 14px rgba(var(--bright), 0.16);
+      animation: badge-sheen 8s ease-in-out infinite;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .arena-launch-btn:hover {
+      transform: translateY(-1px) scale(1.03);
+      border-color: #fff;
+      box-shadow: 0 0 20px rgba(var(--bright), 0.42);
+    }
+
+    .arena-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 560;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(4, 6, 11, 0.84);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.26s ease;
+    }
+
+    .arena-backdrop.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .arena-card {
+      position: relative;
+      width: 100%;
+      max-width: 780px;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      border-radius: 20px;
+      background: rgba(10, 13, 21, 0.94);
+      border: 1px solid rgba(var(--bright), 0.36);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.82), 0 0 38px rgba(var(--bright), 0.16);
+      padding: 22px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transform: translateY(16px) scale(0.97);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .arena-backdrop.is-open .arena-card {
+      transform: none;
+    }
+
+    .arena-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-right: 36px;
+    }
+
+    .arena-title-group {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .arena-kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .arena-controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .arena-mode-tabs {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(6, 8, 14, 0.78);
+      border: 1px solid rgba(var(--bright), 0.20);
+      border-radius: 999px;
+      padding: 3px;
+    }
+
+    .arena-mode-btn {
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 0;
+      background: transparent;
+      color: rgba(var(--light), 0.70);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .arena-mode-btn:hover {
+      color: #fff;
+    }
+
+    .arena-mode-btn.active {
+      color: #fff;
+      background: rgba(var(--bright), 0.24);
+      box-shadow: 0 0 12px rgba(var(--bright), 0.24);
+    }
+
+    .arena-round-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: rgba(var(--light), 0.76);
+    }
+
+    .arena-round-label {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .arena-progress-track {
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      border: 1px solid rgba(var(--bright), 0.14);
+    }
+
+    .arena-progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(var(--bright), 0.72), #ffffff);
+      box-shadow: 0 0 12px rgba(var(--bright), 0.55);
+      transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .arena-duel-stage {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: stretch;
+      gap: 16px;
+      margin-top: 2px;
+    }
+
+    .arena-contender {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(7, 10, 16, 0.78);
+      border: 1px solid rgba(var(--bright), 0.24);
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.24s ease, box-shadow 0.24s ease, opacity 0.24s ease, background 0.24s ease;
+    }
+
+    .arena-contender:hover {
+      transform: translateY(-5px) scale(1.015);
+      background: rgba(13, 18, 29, 0.92);
+      border-color: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.65), 0 0 26px rgba(var(--bright), 0.32);
+    }
+
+    .arena-contender.is-picked {
+      transform: scale(1.03);
+      border-color: #6ee7b7;
+      box-shadow: 0 0 34px rgba(110, 231, 183, 0.48);
+    }
+
+    .arena-contender.is-eliminated {
+      opacity: 0.22;
+      transform: scale(0.95);
+      filter: grayscale(0.85);
+    }
+
+    .arena-poster {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      max-height: 360px;
+      border-radius: 11px;
+      overflow: hidden;
+      background: linear-gradient(155deg, rgba(20, 25, 36, 0.95), rgba(8, 10, 15, 0.98));
+    }
+
+    .arena-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      transition: transform 0.35s ease, filter 0.35s ease;
+    }
+
+    .arena-contender:hover .arena-poster img {
+      transform: scale(1.04);
+      filter: brightness(1.06) contrast(1.04);
+    }
+
+    .arena-key-hint {
+      position: absolute;
+      top: 9px;
+      left: 9px;
+      z-index: 5;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(7, 10, 15, 0.84);
+      border: 1px solid rgba(var(--bright), 0.36);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      color: rgb(232, 238, 248);
+      backdrop-filter: blur(6px);
+    }
+
+    .arena-contender-name {
+      margin-top: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.25;
+      overflow-wrap: break-word;
+    }
+
+    .arena-contender-sub {
+      margin-top: 3px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: rgba(var(--light), 0.66);
+    }
+
+    .arena-vs-orb {
+      align-self: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle, rgba(var(--bright), 0.24), rgba(8, 10, 16, 0.92));
+      border: 1px solid rgba(var(--bright), 0.55);
+      box-shadow: 0 0 22px rgba(var(--bright), 0.28);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .arena-hint-row {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: rgba(var(--light), 0.50);
+    }
+
+    /* Champion Verdict View */
+    .arena-champion-view {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      animation: card-in 0.4s ease backwards;
+    }
+
+    .arena-champion-view.is-visible {
+      display: flex;
+    }
+
+    .arena-champ-hero {
+      display: grid;
+      grid-template-columns: 176px 1fr;
+      gap: 20px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(var(--bright), 0.14), rgba(7, 10, 16, 0.85));
+      border: 1px solid rgba(var(--bright), 0.42);
+    }
+
+    .arena-champ-poster {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      border-radius: 11px;
+      overflow: hidden;
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 0 28px rgba(var(--bright), 0.42);
+      background: #090b10;
+    }
+
+    .arena-champ-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    .arena-champ-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .arena-champ-kicker {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #6ee7b7;
+      font-weight: 600;
+    }
+
+    .arena-champ-name {
+      font-size: clamp(22px, 3vw, 28px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.18;
+    }
+
+    .arena-champ-compare {
+      padding: 10px 12px;
+      border-radius: 11px;
+      background: rgba(6, 8, 14, 0.72);
+      border: 1px solid rgba(var(--bright), 0.24);
+      font-size: 12.5px;
+      color: rgba(var(--light), 0.88);
+      line-height: 1.45;
+    }
+
+    .arena-champ-compare strong {
+      color: #fff;
+      font-family: var(--font-mono);
+    }
+
+    .arena-podium-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .arena-podium-slot {
+      padding: 9px 11px;
+      border-radius: 11px;
+      background: rgba(7, 10, 16, 0.66);
+      border: 1px solid rgba(var(--bright), 0.16);
+      min-width: 0;
+    }
+
+    .arena-podium-slot .p-rank {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: rgba(var(--bright), 0.85);
+    }
+
+    .arena-podium-slot .p-name {
+      margin-top: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .arena-podium-slot .p-sub {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: rgba(var(--light), 0.56);
+      margin-top: 2px;
+    }
+
+    /* =========================================
+       STAGE 4 NEW: LIVE WEATHER HUD (53.9° N)
+       ========================================= */
+    .pilot-weather-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(12, 16, 26, 0.70);
+      border: 1px solid rgba(var(--bright), 0.22);
+      color: rgba(var(--light), 0.82);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: border-color 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .pilot-weather-chip:hover {
+      color: #fff;
+      border-color: rgba(var(--bright), 0.72);
+      box-shadow: 0 0 12px rgba(var(--bright), 0.24);
+    }
+
+    .weather-hud {
+      position: fixed;
+      left: 22px;
+      bottom: 22px;
+      z-index: 315;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .weather-hud-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(9, 12, 18, 0.82);
+      border: 1px solid rgba(var(--bright), 0.28);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.60);
+      color: rgb(232, 238, 248);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease, color 0.2s ease;
+    }
+
+    .weather-hud-pill:hover,
+    .weather-hud.is-open .weather-hud-pill {
+      color: #fff;
+      border-color: rgba(var(--bright), 0.78);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.68), 0 0 18px rgba(var(--bright), 0.24);
+      transform: translateY(-1px);
+    }
+
+    .weather-hud-icon {
+      font-size: 13px;
+      line-height: 1;
+      color: rgb(var(--bright));
+      text-shadow: 0 0 10px rgba(var(--bright), 0.75);
+    }
+
+    .weather-hud-sep {
+      opacity: 0.42;
+    }
+
+    .weather-popover {
+      display: none;
+      width: 286px;
+      max-width: calc(100vw - 28px);
+      padding: 14px 15px;
+      border-radius: 16px;
+      background: rgba(9, 12, 19, 0.94);
+      border: 1px solid rgba(var(--bright), 0.34);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.76), 0 0 22px rgba(var(--bright), 0.14);
+      flex-direction: column;
+      gap: 11px;
+      animation: card-in 0.22s ease backwards;
+    }
+
+    .weather-hud.is-open .weather-popover {
+      display: flex;
+    }
+
+    .weather-pop-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: rgba(var(--light), 0.68);
+    }
+
+    .weather-pop-head strong {
+      color: #fff;
+    }
+
+    .weather-pop-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(6, 8, 14, 0.72);
+      border: 1px solid rgba(var(--bright), 0.16);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: rgba(var(--light), 0.85);
+    }
+
+    .weather-chips-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .weather-chip {
+      padding: 6px 6px;
+      border-radius: 9px;
+      border: 1px solid rgba(var(--bright), 0.20);
+      background: rgba(14, 18, 28, 0.68);
+      color: rgba(var(--light), 0.74);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .weather-chip:hover {
+      color: #fff;
+      border-color: rgba(var(--bright), 0.58);
+    }
+
+    .weather-chip.active {
+      color: #fff;
+      background: rgba(var(--bright), 0.24);
+      border-color: rgba(var(--bright), 0.90);
+      box-shadow: 0 0 12px rgba(var(--bright), 0.24);
+    }
+
+    .weather-chip.is-live-chip.active {
+      border-color: rgba(110, 231, 183, 0.78);
+      background: rgba(110, 231, 183, 0.16);
+      color: #ecfdf5;
+    }
+
+    /* Subtle night / storm vignette mood shift */
+    body.weather-night .bg-vignette {
+      background:
+        radial-gradient(ellipse at center, transparent 22%, rgba(2, 4, 9, 0.86) 100%),
+        linear-gradient(180deg, rgba(5, 7, 13, 0.50) 0%, rgba(5, 7, 13, 0.62) 55%, rgba(4, 6, 10, 0.82) 100%);
+    }
+
+    body.weather-fog .bg-photo {
+      filter: blur(1.4px) saturate(0.75);
+    }
+
+    @media (max-width: 780px) {
+      .weather-hud {
+        display: none;
+      }
+      .waifu-head-left {
+        position: static;
+      }
+      .waifu-head-bar {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .waifu-nav-controls {
+        position: static;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .arena-duel-stage {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .arena-vs-orb {
+        margin: 0 auto;
+        width: 38px;
+        height: 38px;
+        font-size: 11px;
+      }
+      .arena-poster {
+        max-height: 230px;
+      }
+      .arena-champ-hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        justify-items: center;
+      }
+      .arena-champ-poster {
+        max-width: 170px;
+      }
+      .arena-podium-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
     /* =========================================
        NATIVE SVG ARROW CURSOR (MONOCHROME THEME)
        ========================================= */
@@ -4031,6 +4679,14 @@
       .dna-tab-btn,
       .base-anime-row,
       .base-anime-row *,
+      .arena-contender,
+      .arena-contender *,
+      .arena-mode-btn,
+      .arena-launch-btn,
+      .weather-hud-pill,
+      .weather-hud-pill *,
+      .weather-chip,
+      .pilot-weather-chip,
       .mode-chip {
         cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23edf3ff%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%271.35%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M16.5%2015.2%20L19.8%2018.5%20L16.5%2021.8%20L13.2%2018.5%20Z%27%20fill%3D%27%23adbfde%27%20stroke%3D%27%23090c13%27%20stroke-width%3D%270.9%27/%3E%3C/svg%3E") 3 2, pointer !important;
       }
@@ -4154,7 +4810,7 @@
           <div class="glass-card bento-pilot">
             <div class="pilot-top-bar">
               <span class="pilot-id-tag">DOSSIER // 1308586</span>
-              <span>53.9° N · ARCHIVE</span>
+              <button type="button" class="pilot-weather-chip" id="pilot-weather-chip" title="Погода в точке 53.9° N (нажми для переключения режима)">53.9° N · SYNC...</button>
             </div>
 
             <div class="avatar-wrap">
@@ -4484,6 +5140,9 @@
       <!-- WAIFU CAROUSEL -->
       <section id="waifu">
         <div class="waifu-head-bar">
+          <div class="waifu-head-left">
+            <button type="button" class="arena-launch-btn" id="waifu-arena-btn" title="Мини-турнир 1v1 по WAIFU">⚔ Турнир 1v1</button>
+          </div>
           <h2 class="section-title">
             <a href="https://shikimori.one/undereror+nyashka/favorites" target="_blank" rel="noopener noreferrer">WAIFU →</a>
           </h2>
@@ -4521,6 +5180,7 @@
               <button type="button" class="sort-btn" data-sort="year">По году</button>
             </div>
             <button type="button" class="randomizer-btn" id="randomizer-btn" title="Случайная рекомендация из Top 16 и твоих 9–10★ на Shikimori">◈ Что посмотреть от меня <span class="randomizer-count-badge" id="randomizer-count-badge">16</span></button>
+            <button type="button" class="arena-launch-btn" id="collection-arena-btn" title="Мини-турнир 1v1: выбери лучшего из моего топа за 15 секунд">⚔ Турнир 1v1</button>
           </div>
         </div>
 
@@ -4594,6 +5254,124 @@
       <a class="spotify-ext-link" id="spotify-ext-link" href="https://open.spotify.com/playlist/2gmA2vop3KA3QGCGsUkTpC" target="_blank" rel="noopener noreferrer">Открыть в Spotify ↗</a>
     </div>
   </aside>
+
+  <!-- Live Weather HUD (53.9° N · Open-Meteo) -->
+  <div class="weather-hud" id="weather-hud" aria-label="Погода в точке 53.9° N">
+    <div class="weather-popover" id="weather-popover" role="region" aria-label="Управление погодой">
+      <div class="weather-pop-head">
+        <span>ATMOS // <strong>53.9° N</strong></span>
+        <span id="weather-pop-mode">LIVE</span>
+      </div>
+      <div class="weather-pop-meta">
+        <span id="weather-pop-desc">Синхронизация Open-Meteo...</span>
+        <span id="weather-pop-wind">— м/с</span>
+      </div>
+      <div class="weather-chips-grid" id="weather-chips-grid">
+        <button type="button" class="weather-chip is-live-chip active" data-wmode="live">● LIVE</button>
+        <button type="button" class="weather-chip" data-wmode="clear">✦ Ясно</button>
+        <button type="button" class="weather-chip" data-wmode="rain">☂ Дождь</button>
+        <button type="button" class="weather-chip" data-wmode="snow">❄ Снег</button>
+        <button type="button" class="weather-chip" data-wmode="fog">≋ Туман</button>
+        <button type="button" class="weather-chip" data-wmode="storm">⚡ Гроза</button>
+      </div>
+    </div>
+    <button type="button" class="weather-hud-pill" id="weather-hud-btn" title="Живая погода 53.9° N · нажми для переключения эффектов">
+      <span class="weather-hud-icon" id="weather-hud-icon">✦</span>
+      <span>53.9° N</span>
+      <span class="weather-hud-sep">·</span>
+      <span id="weather-hud-clock">--:--</span>
+      <span class="weather-hud-sep">·</span>
+      <span id="weather-hud-temp">--°C</span>
+      <span class="weather-hud-sep">·</span>
+      <span id="weather-hud-cond">SYNC</span>
+    </button>
+  </div>
+
+  <!-- Stage 3: 1v1 Tournament Arena Modal -->
+  <div class="arena-backdrop" id="arena-modal" aria-hidden="true">
+    <div class="arena-card" role="dialog" aria-modal="true" aria-label="Мини-турнир 1v1">
+      <button type="button" class="modal-close" id="arena-close" aria-label="Закрыть">×</button>
+
+      <div class="arena-topbar">
+        <div class="arena-title-group">
+          <span class="dna-pulse-icon" aria-hidden="true"></span>
+          <span class="arena-kicker">⚔ ТУРНИР 1v1 // КТО ЛУЧШИЙ ИЗ МОЕГО ТОПА?</span>
+        </div>
+      </div>
+
+      <div class="arena-controls-bar">
+        <div class="arena-mode-tabs" role="tablist">
+          <button type="button" class="arena-mode-btn active" data-arena-cat="peak">Peak Fiction</button>
+          <button type="button" class="arena-mode-btn" data-arena-cat="waifu">Waifu</button>
+          <button type="button" class="arena-mode-btn" data-arena-cat="literally">Literally Me</button>
+        </div>
+        <div class="arena-mode-tabs">
+          <button type="button" class="arena-mode-btn active" data-arena-size="8">8 · Быстрый</button>
+          <button type="button" class="arena-mode-btn" data-arena-size="16">Все · Полный</button>
+        </div>
+      </div>
+
+      <!-- Active Duel View -->
+      <div id="arena-play-view" style="display:flex;flex-direction:column;gap:12px;">
+        <div class="arena-round-meta">
+          <span class="arena-round-label" id="arena-round-label">ЧЕТВЕРТЬФИНАЛ · 1 / 4</span>
+          <span id="arena-step-counter">МАТЧ 1 ИЗ 7</span>
+        </div>
+        <div class="arena-progress-track">
+          <div class="arena-progress-fill" id="arena-progress-fill"></div>
+        </div>
+
+        <div class="arena-duel-stage" id="arena-duel-stage">
+          <button type="button" class="arena-contender" id="arena-left-btn">
+            <div class="arena-poster">
+              <span class="arena-key-hint">← / 1</span>
+              <img id="arena-left-img" src="" alt="" />
+            </div>
+            <div class="arena-contender-name" id="arena-left-name"></div>
+            <div class="arena-contender-sub" id="arena-left-sub"></div>
+          </button>
+
+          <div class="arena-vs-orb" aria-hidden="true">VS</div>
+
+          <button type="button" class="arena-contender" id="arena-right-btn">
+            <div class="arena-poster">
+              <span class="arena-key-hint">→ / 2</span>
+              <img id="arena-right-img" src="" alt="" />
+            </div>
+            <div class="arena-contender-name" id="arena-right-name"></div>
+            <div class="arena-contender-sub" id="arena-right-sub"></div>
+          </button>
+        </div>
+
+        <div class="arena-hint-row">Кликни по фавориту или жми ← / → на клавиатуре</div>
+      </div>
+
+      <!-- Champion Verdict View -->
+      <div class="arena-champion-view" id="arena-champion-view">
+        <div class="arena-champ-hero">
+          <div class="arena-champ-poster">
+            <img id="arena-champ-img" src="" alt="" />
+          </div>
+          <div class="arena-champ-info">
+            <span class="arena-champ-kicker" id="arena-champ-kicker">★ ТВОЙ #1 ЧЕМПИОН · PEAK FICTION</span>
+            <h3 class="arena-champ-name" id="arena-champ-name"></h3>
+            <div class="modal-sub" id="arena-champ-sub"></div>
+            <div class="arena-champ-compare" id="arena-champ-compare"></div>
+          </div>
+        </div>
+
+        <div class="arena-podium-row" id="arena-podium-row"></div>
+
+        <div class="base-actions">
+          <div class="base-actions-group">
+            <button type="button" class="base-action-btn is-primary" id="arena-download-png-btn">↓ Скачать итог (PNG)</button>
+            <button type="button" class="base-action-btn" id="arena-replay-btn">↻ Сыграть ещё</button>
+          </div>
+          <a class="modal-link" id="arena-champ-link" href="#" target="_blank" rel="noopener noreferrer" style="margin-top:0;">Открыть на Shikimori →</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Detail Modal -->
   <div class="modal-backdrop" id="detail-modal" aria-hidden="true">
@@ -5297,8 +6075,39 @@
       }
 
       /* =========================================
-         INTERACTIVE CANVAS (STARS + PETALS)
+         STAGE 4: LIVE WEATHER ENGINE (53.9° N · OPEN-METEO) + DYNAMIC CANVAS PHYSICS
          ========================================= */
+      const weatherEngineState = {
+        liveMode: 'clear',
+        activeMode: 'clear',
+        override: null,
+        isDay: 0,
+        temp: null,
+        windSpeed: 8,
+        code: 0,
+        condRu: 'Ясно',
+        condShort: 'CLEAR'
+      };
+
+      const WEATHER_PRESETS = {
+        clear:  { icon: '✦', short: 'CLEAR', ru: 'Ясно / звёздное небо', wind: 6 },
+        clouds: { icon: '☁', short: 'CLOUDS', ru: 'Облачно', wind: 10 },
+        fog:    { icon: '≋', short: 'FOG', ru: 'Туман / дымка', wind: 4 },
+        rain:   { icon: '☂', short: 'RAIN', ru: 'Дождь', wind: 16 },
+        storm:  { icon: '⚡', short: 'STORM', ru: 'Гроза', wind: 26 },
+        snow:   { icon: '❄', short: 'SNOW', ru: 'Снег', wind: 11 }
+      };
+
+      function mapWmoToWeather(code) {
+        const c = Number(code) || 0;
+        if (c >= 95) return 'storm';
+        if ((c >= 71 && c <= 77) || c === 85 || c === 86) return 'snow';
+        if ((c >= 51 && c <= 67) || (c >= 80 && c <= 82)) return 'rain';
+        if (c === 45 || c === 48) return 'fog';
+        if (c === 2 || c === 3) return 'clouds';
+        return 'clear';
+      }
+
       function initAtmosphereCanvas() {
         const canvas = document.getElementById('atmosphere-canvas');
         if (!canvas) return;
@@ -5307,6 +6116,12 @@
         const mouse = { x: -9999, y: -9999 };
         let stars = [];
         let petals = [];
+        let raindrops = [];
+        let snowflakes = [];
+        let fogBanks = [];
+        let splashes = [];
+        let lightningAlpha = 0;
+        let nextLightningAt = performance.now() + 4500;
 
         function resize() {
           const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -5316,7 +6131,7 @@
           canvas.height = h * dpr;
           ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-          const starCount = Math.min(90, Math.floor((w * h) / 17000));
+          const starCount = Math.min(92, Math.floor((w * h) / 16500));
           stars = Array.from({ length: starCount }, () => ({
             x: Math.random() * w,
             y: Math.random() * h,
@@ -5338,6 +6153,36 @@
             vrot: (Math.random() - 0.5) * 0.015,
             alpha: Math.random() * 0.45 + 0.20
           }));
+
+          const rainCount = Math.min(135, Math.max(55, Math.floor(w / 11)));
+          raindrops = Array.from({ length: rainCount }, () => ({
+            x: Math.random() * (w + 220) - 110,
+            y: Math.random() * h,
+            len: Math.random() * 16 + 11,
+            speed: Math.random() * 7.5 + 10.5,
+            alpha: Math.random() * 0.34 + 0.16,
+            width: Math.random() * 0.75 + 0.55
+          }));
+
+          const snowCount = Math.min(95, Math.max(40, Math.floor(w / 16)));
+          snowflakes = Array.from({ length: snowCount }, () => ({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            r: Math.random() * 2.5 + 0.9,
+            vy: Math.random() * 1.05 + 0.42,
+            phase: Math.random() * Math.PI * 2,
+            swaySpeed: Math.random() * 0.018 + 0.007,
+            swayAmp: Math.random() * 0.75 + 0.25,
+            alpha: Math.random() * 0.55 + 0.25
+          }));
+
+          fogBanks = Array.from({ length: 7 }, (_, idx) => ({
+            x: Math.random() * w,
+            y: (h / 7) * idx + Math.random() * 90,
+            r: Math.max(w, h) * (0.26 + Math.random() * 0.18),
+            vx: (idx % 2 === 0 ? 1 : -1) * (0.18 + Math.random() * 0.24),
+            alpha: 0.055 + Math.random() * 0.045
+          }));
         }
 
         window.addEventListener('resize', resize);
@@ -5352,14 +6197,23 @@
 
         resize();
 
-        function frame() {
+        function frame(now) {
           ctx.clearRect(0, 0, w, h);
+          const mode = weatherEngineState.activeMode || 'clear';
           const beatBoost = 1 + liveBeatEnergy * 1.15;
+          const isNight = weatherEngineState.isDay === 0;
+
+          // 1. Stars (always softly present in clear/clouds, dim in snow/fog/rain)
+          const starMul = mode === 'clear' ? (isNight ? 1.1 : 0.72)
+            : mode === 'clouds' ? 0.48
+            : mode === 'snow' ? 0.36
+            : 0.18;
 
           for (let i = 0; i < stars.length; i++) {
             const s = stars[i];
             s.phase += s.speed;
-            const alpha = Math.min(1, 0.15 + ((Math.sin(s.phase) + 1) * 0.5) * 0.68 + liveBeatEnergy * 0.15);
+            const alpha = Math.min(1, (0.14 + ((Math.sin(s.phase) + 1) * 0.5) * 0.68 + liveBeatEnergy * 0.15) * starMul);
+            if (alpha < 0.03) continue;
             const px = mouse.x > -1000 ? (mouse.x / w - 0.5) * 10 * s.depth : 0;
             const py = mouse.y > -1000 ? (mouse.y / h - 0.5) * 10 * s.depth : 0;
             ctx.beginPath();
@@ -5368,41 +6222,265 @@
             ctx.fill();
           }
 
-          for (let i = 0; i < petals.length; i++) {
-            const p = petals[i];
-            const dx = p.x - mouse.x;
-            const dy = p.y - mouse.y;
-            const distSq = dx * dx + dy * dy;
-            if (distSq < 13000 && distSq > 1) {
-              const dist = Math.sqrt(distSq);
-              const force = (1 - dist / 114) * 0.9;
-              p.x += (dx / dist) * force;
-              p.y += (dy / dist) * force;
-            }
-            p.x += p.vx * beatBoost;
-            p.y += p.vy * beatBoost;
-            p.rot += p.vrot;
+          // 2. Fog / Clouds Mist Layer
+          if (mode === 'fog' || mode === 'clouds') {
+            const fogScale = mode === 'fog' ? 1.35 : 0.55;
+            for (let i = 0; i < fogBanks.length; i++) {
+              const fb = fogBanks[i];
+              fb.x += fb.vx * (1 + liveBeatEnergy * 0.4);
+              if (fb.x - fb.r > w + 80) fb.x = -fb.r - 60;
+              if (fb.x + fb.r < -80) fb.x = w + fb.r + 60;
 
-            if (p.x < -12) p.x = w + 12;
-            if (p.y > h + 12) {
-              p.y = -12;
-              p.x = Math.random() * w;
+              const g = ctx.createRadialGradient(fb.x, fb.y, 10, fb.x, fb.y, fb.r);
+              g.addColorStop(0, `rgba(195, 210, 234, ${(fb.alpha * fogScale).toFixed(3)})`);
+              g.addColorStop(0.55, `rgba(145, 162, 188, ${(fb.alpha * fogScale * 0.45).toFixed(3)})`);
+              g.addColorStop(1, 'transparent');
+              ctx.fillStyle = g;
+              ctx.beginPath();
+              ctx.arc(fb.x, fb.y, fb.r, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          // 3. Weather-Specific Particles
+          if (mode === 'rain' || mode === 'storm') {
+            const isStorm = mode === 'storm';
+            const windSlant = isStorm ? -3.4 : Math.max(-3.0, Math.min(-1.0, -(weatherEngineState.windSpeed || 12) * 0.12));
+            const speedMul = (isStorm ? 1.35 : 1.0) * (1 + liveBeatEnergy * 0.35);
+            const activeDrops = isStorm ? raindrops.length : Math.floor(raindrops.length * 0.78);
+
+            ctx.lineCap = 'round';
+            for (let i = 0; i < activeDrops; i++) {
+              const d = raindrops[i];
+              const dx = d.x - mouse.x;
+              const dy = d.y - mouse.y;
+              if (dx * dx + dy * dy < 9500) {
+                d.x += (dx >= 0 ? 1.4 : -1.4);
+              }
+              d.x += windSlant * speedMul;
+              d.y += d.speed * speedMul;
+
+              if (d.y > h + 20) {
+                if (splashes.length < 24 && Math.random() < (isStorm ? 0.24 : 0.14)) {
+                  splashes.push({ x: d.x, y: h - 4 - Math.random() * 14, r: 1, maxR: 6 + Math.random() * 7, alpha: 0.42 });
+                }
+                d.y = -20 - Math.random() * 80;
+                d.x = Math.random() * (w + 260) - 80;
+              }
+              if (d.x < -120) d.x = w + 100;
+
+              ctx.beginPath();
+              ctx.moveTo(d.x, d.y);
+              ctx.lineTo(d.x + windSlant * 1.45, d.y + d.len * (isStorm ? 1.25 : 1));
+              ctx.strokeStyle = `rgba(198, 214, 240, ${(d.alpha * (isStorm ? 1.22 : 1)).toFixed(3)})`;
+              ctx.lineWidth = d.width;
+              ctx.stroke();
             }
 
-            ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate(p.rot);
-            ctx.beginPath();
-            ctx.ellipse(0, 0, p.rx, p.ry, 0, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(218, 228, 244, ${p.alpha.toFixed(3)})`;
-            ctx.fill();
-            ctx.restore();
+            // Tiny bottom ripples
+            for (let i = splashes.length - 1; i >= 0; i--) {
+              const sp = splashes[i];
+              sp.r += 0.45;
+              sp.alpha -= 0.025;
+              if (sp.alpha <= 0 || sp.r >= sp.maxR) {
+                splashes.splice(i, 1);
+                continue;
+              }
+              ctx.beginPath();
+              ctx.ellipse(sp.x, sp.y, sp.r * 1.6, sp.r * 0.42, 0, 0, Math.PI * 2);
+              ctx.strokeStyle = `rgba(210, 224, 246, ${sp.alpha.toFixed(3)})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+
+            // Distant monochrome lightning flashes in storm mode
+            if (isStorm) {
+              if (now >= nextLightningAt) {
+                lightningAlpha = 0.18 + Math.random() * 0.14;
+                nextLightningAt = now + 3800 + Math.random() * 6800;
+              }
+              if (lightningAlpha > 0.004) {
+                ctx.fillStyle = `rgba(215, 228, 250, ${lightningAlpha.toFixed(3)})`;
+                ctx.fillRect(0, 0, w, h);
+                lightningAlpha *= 0.86;
+              }
+            }
+          } else if (mode === 'snow') {
+            const windDrift = -0.35 - Math.min(1.2, (weatherEngineState.windSpeed || 8) * 0.04);
+            for (let i = 0; i < snowflakes.length; i++) {
+              const sf = snowflakes[i];
+              sf.phase += sf.swaySpeed;
+              const dx = sf.x - mouse.x;
+              const dy = sf.y - mouse.y;
+              const distSq = dx * dx + dy * dy;
+              if (distSq < 14000 && distSq > 1) {
+                const dist = Math.sqrt(distSq);
+                const force = (1 - dist / 118) * 1.1;
+                sf.x += (dx / dist) * force;
+                sf.y += (dy / dist) * force;
+              }
+              sf.x += (Math.sin(sf.phase) * sf.swayAmp + windDrift) * beatBoost;
+              sf.y += sf.vy * beatBoost;
+
+              if (sf.x < -10) sf.x = w + 10;
+              if (sf.x > w + 10) sf.x = -10;
+              if (sf.y > h + 10) {
+                sf.y = -10;
+                sf.x = Math.random() * w;
+              }
+
+              ctx.beginPath();
+              ctx.arc(sf.x, sf.y, sf.r, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(232, 240, 255, ${sf.alpha.toFixed(3)})`;
+              ctx.fill();
+            }
+          } else {
+            // Clear / Clouds / Fog: signature silver drifting petals
+            const petalAlphaMul = mode === 'fog' ? 0.55 : 1;
+            for (let i = 0; i < petals.length; i++) {
+              const p = petals[i];
+              const dx = p.x - mouse.x;
+              const dy = p.y - mouse.y;
+              const distSq = dx * dx + dy * dy;
+              if (distSq < 13000 && distSq > 1) {
+                const dist = Math.sqrt(distSq);
+                const force = (1 - dist / 114) * 0.9;
+                p.x += (dx / dist) * force;
+                p.y += (dy / dist) * force;
+              }
+              p.x += p.vx * beatBoost;
+              p.y += p.vy * beatBoost;
+              p.rot += p.vrot;
+
+              if (p.x < -12) p.x = w + 12;
+              if (p.y > h + 12) {
+                p.y = -12;
+                p.x = Math.random() * w;
+              }
+
+              ctx.save();
+              ctx.translate(p.x, p.y);
+              ctx.rotate(p.rot);
+              ctx.beginPath();
+              ctx.ellipse(0, 0, p.rx, p.ry, 0, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(218, 228, 244, ${(p.alpha * petalAlphaMul).toFixed(3)})`;
+              ctx.fill();
+              ctx.restore();
+            }
           }
 
           requestAnimationFrame(frame);
         }
 
         requestAnimationFrame(frame);
+      }
+
+      function initLiveWeather() {
+        const hud = document.getElementById('weather-hud');
+        const hudBtn = document.getElementById('weather-hud-btn');
+        const hudIcon = document.getElementById('weather-hud-icon');
+        const hudClock = document.getElementById('weather-hud-clock');
+        const hudTemp = document.getElementById('weather-hud-temp');
+        const hudCond = document.getElementById('weather-hud-cond');
+        const popMode = document.getElementById('weather-pop-mode');
+        const popDesc = document.getElementById('weather-pop-desc');
+        const popWind = document.getElementById('weather-pop-wind');
+        const pilotChip = document.getElementById('pilot-weather-chip');
+        const chips = Array.from(document.querySelectorAll('.weather-chip'));
+
+        function getLocalClock539() {
+          try {
+            return new Intl.DateTimeFormat('ru-RU', {
+              timeZone: 'Europe/Minsk',
+              hour: '2-digit',
+              minute: '2-digit'
+            }).format(new Date());
+          } catch (e) {
+            const d = new Date();
+            return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+          }
+        }
+
+        function updateWeatherUI() {
+          const mode = weatherEngineState.override || weatherEngineState.liveMode || 'clear';
+          weatherEngineState.activeMode = mode;
+          const preset = WEATHER_PRESETS[mode] || WEATHER_PRESETS.clear;
+          const clock = getLocalClock539();
+          const tempStr = weatherEngineState.temp !== null && isFinite(weatherEngineState.temp)
+            ? `${weatherEngineState.temp > 0 ? '+' : ''}${Math.round(weatherEngineState.temp)}°C`
+            : '--°C';
+          const windStr = isFinite(weatherEngineState.windSpeed)
+            ? `${Math.round(weatherEngineState.windSpeed)} км/ч`
+            : '—';
+
+          if (hudIcon) hudIcon.textContent = preset.icon;
+          if (hudClock) hudClock.textContent = clock;
+          if (hudTemp) hudTemp.textContent = tempStr;
+          if (hudCond) hudCond.textContent = weatherEngineState.override ? `${preset.short}*` : preset.short;
+
+          if (popMode) popMode.textContent = weatherEngineState.override ? `PREVIEW · ${preset.short}` : 'LIVE · OPEN-METEO';
+          if (popDesc) popDesc.textContent = `${preset.icon} ${preset.ru} · ${tempStr}`;
+          if (popWind) popWind.textContent = `Ветер ${windStr}`;
+
+          if (pilotChip) {
+            pilotChip.textContent = `53.9° N · ${clock} · ${tempStr} ${preset.icon}`;
+          }
+
+          document.body.classList.toggle('weather-night', weatherEngineState.isDay === 0);
+          document.body.classList.toggle('weather-fog', mode === 'fog');
+
+          const activeKey = weatherEngineState.override || 'live';
+          chips.forEach((c) => c.classList.toggle('active', c.dataset.wmode === activeKey));
+        }
+
+        async function fetchOpenMeteo() {
+          try {
+            const url = 'https://api.open-meteo.com/v1/forecast?latitude=53.9006&longitude=27.5590&current=temperature_2m,weather_code,is_day,wind_speed_10m&timezone=Europe%2FMinsk';
+            const res = await fetch(url);
+            if (!res.ok) return;
+            const json = await res.json();
+            const cur = json?.current;
+            if (!cur) return;
+            weatherEngineState.temp = Number(cur.temperature_2m);
+            weatherEngineState.code = Number(cur.weather_code) || 0;
+            weatherEngineState.isDay = Number(cur.is_day) === 1 ? 1 : 0;
+            weatherEngineState.windSpeed = Number(cur.wind_speed_10m) || 8;
+            weatherEngineState.liveMode = mapWmoToWeather(weatherEngineState.code);
+            updateWeatherUI();
+          } catch (e) {}
+        }
+
+        hudBtn?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          hud?.classList.toggle('is-open');
+        });
+
+        document.addEventListener('click', (e) => {
+          if (hud && hud.classList.contains('is-open') && !hud.contains(e.target)) {
+            hud.classList.remove('is-open');
+          }
+        });
+
+        chips.forEach((chip) => {
+          chip.addEventListener('click', () => {
+            const m = chip.dataset.wmode;
+            weatherEngineState.override = (m === 'live') ? null : m;
+            updateWeatherUI();
+          });
+        });
+
+        // Clicking pilot top-bar weather chip cycles live -> rain -> snow -> fog -> storm -> live
+        const cycleOrder = [null, 'rain', 'snow', 'fog', 'storm', 'clear'];
+        pilotChip?.addEventListener('click', () => {
+          const curIdx = cycleOrder.indexOf(weatherEngineState.override);
+          weatherEngineState.override = cycleOrder[(curIdx + 1) % cycleOrder.length];
+          updateWeatherUI();
+        });
+
+        updateWeatherUI();
+        fetchOpenMeteo();
+        setInterval(updateWeatherUI, 30000);
+        setInterval(fetchOpenMeteo, 15 * 60 * 1000);
       }
 
       /* =========================================
@@ -6083,7 +7161,7 @@
         const isFine = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
         if (!isFine) return;
 
-        const SELECTOR = '.glass-card, .discord-card, .watching-card, .music-dock, .modal-card';
+        const SELECTOR = '.glass-card, .discord-card, .watching-card, .music-dock, .modal-card, .arena-card';
         const PROXIMITY = 220;
         let rafPending = false;
         let lastX = -9999;
@@ -8029,6 +9107,492 @@
       }
 
       /* =========================================
+         STAGE 3 NEW: 1v1 TOURNAMENT ARENA («КТО ЛУЧШИЙ ИЗ МОЕГО ТОПА?»)
+         ========================================= */
+      function initTournamentArena() {
+        const backdrop = document.getElementById('arena-modal');
+        const closeBtn = document.getElementById('arena-close');
+        const waifuLaunchBtn = document.getElementById('waifu-arena-btn');
+        const collLaunchBtn = document.getElementById('collection-arena-btn');
+
+        const catBtns = Array.from(document.querySelectorAll('[data-arena-cat]'));
+        const sizeBtns = Array.from(document.querySelectorAll('[data-arena-size]'));
+
+        const playView = document.getElementById('arena-play-view');
+        const champView = document.getElementById('arena-champion-view');
+        const roundLabel = document.getElementById('arena-round-label');
+        const stepCounter = document.getElementById('arena-step-counter');
+        const progressFill = document.getElementById('arena-progress-fill');
+
+        const leftBtn = document.getElementById('arena-left-btn');
+        const rightBtn = document.getElementById('arena-right-btn');
+        const leftImg = document.getElementById('arena-left-img');
+        const rightImg = document.getElementById('arena-right-img');
+        const leftName = document.getElementById('arena-left-name');
+        const rightName = document.getElementById('arena-right-name');
+        const leftSub = document.getElementById('arena-left-sub');
+        const rightSub = document.getElementById('arena-right-sub');
+
+        const champImg = document.getElementById('arena-champ-img');
+        const champKicker = document.getElementById('arena-champ-kicker');
+        const champName = document.getElementById('arena-champ-name');
+        const champSub = document.getElementById('arena-champ-sub');
+        const champCompare = document.getElementById('arena-champ-compare');
+        const podiumRow = document.getElementById('arena-podium-row');
+        const champLink = document.getElementById('arena-champ-link');
+        const dlPngBtn = document.getElementById('arena-download-png-btn');
+        const replayBtn = document.getElementById('arena-replay-btn');
+
+        if (!backdrop) return;
+
+        const CAT_LABELS = {
+          peak: 'PEAK FICTION',
+          waifu: 'WAIFU',
+          literally: 'LITERALLY ME'
+        };
+
+        let activeCat = 'peak';
+        let activeSize = 8;
+        let roundQueue = [];
+        let nextRound = [];
+        let roundMatchIdx = 0;
+        let roundTotalMatches = 0;
+        let totalMatchesTarget = 7;
+        let completedMatches = 0;
+        let isAnimatingPick = false;
+        let currentPair = null;
+        let semifinalLosers = [];
+        let finalRunnerUp = null;
+        let lastArenaResult = null;
+
+        function shuffleArr(arr) {
+          const a = [...arr];
+          for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+          }
+          return a;
+        }
+
+        function getCategoryItems(cat) {
+          if (cat === 'waifu') {
+            return WAIFU_LIST.map((w) => ({
+              id: w.key,
+              rank: w.rank,
+              name: w.name,
+              sub: w.anime,
+              img: coverCache['char_' + w.key] || w.shikiImg || '',
+              url: w.url || `${activeShikiOrigin}/undereror+nyashka/favorites`
+            }));
+          }
+          if (cat === 'literally') {
+            return LITERALLY_ME.map((c) => ({
+              id: c.key,
+              rank: c.rank,
+              name: c.name,
+              sub: c.anime,
+              img: coverCache['char_' + c.key] || '',
+              url: `${activeShikiOrigin}/characters?search=${encodeURIComponent(c.search)}`
+            }));
+          }
+          return PEAK_FICTION.map((a) => ({
+            id: String(a.malId),
+            rank: a.rank,
+            name: a.title,
+            sub: `${a.kind} · ${a.year} · ★ ${a.score.toFixed(2)}`,
+            img: coverCache['anime_' + a.malId] || '',
+            url: `${activeShikiOrigin}/animes/${a.malId}`
+          }));
+        }
+
+        function getRoundTitle(pairsCount) {
+          if (pairsCount <= 1) return 'ФИНАЛ';
+          if (pairsCount === 2) return 'ПОЛУФИНАЛ';
+          if (pairsCount <= 4) return 'ЧЕТВЕРТЬФИНАЛ';
+          return '1/8 ФИНАЛА';
+        }
+
+        function updateModeTabs() {
+          catBtns.forEach((b) => b.classList.toggle('active', b.dataset.arenaCat === activeCat));
+          sizeBtns.forEach((b) => b.classList.toggle('active', Number(b.dataset.arenaSize) === activeSize));
+        }
+
+        function startTournament(cat, size) {
+          if (cat) activeCat = cat;
+          if (size) activeSize = size;
+          updateModeTabs();
+
+          const allItems = getCategoryItems(activeCat);
+          let pool;
+          if (activeSize === 8 && allItems.length > 8) {
+            // Balanced draw: pick 2 from top-4 + 6 from the rest so every run is exciting
+            const topBucket = shuffleArr(allItems.slice(0, 4)).slice(0, 2);
+            const restBucket = shuffleArr(allItems.slice(4)).slice(0, 6);
+            pool = shuffleArr([...topBucket, ...restBucket]);
+          } else {
+            pool = shuffleArr(allItems);
+          }
+
+          roundQueue = [];
+          nextRound = [];
+          semifinalLosers = [];
+          finalRunnerUp = null;
+          lastArenaResult = null;
+          completedMatches = 0;
+          totalMatchesTarget = Math.max(1, pool.length - 1);
+
+          // If odd count (e.g., 15 waifu in full mode), give 1 contender a bye into next round
+          if (pool.length % 2 === 1) {
+            nextRound.push(pool.pop());
+          }
+          for (let i = 0; i < pool.length; i += 2) {
+            roundQueue.push([pool[i], pool[i + 1]]);
+          }
+          roundMatchIdx = 0;
+          roundTotalMatches = roundQueue.length;
+
+          if (playView) playView.style.display = 'flex';
+          champView?.classList.remove('is-visible');
+          renderCurrentDuel();
+        }
+
+        function renderCurrentDuel() {
+          if (!roundQueue.length) {
+            if (nextRound.length === 1) {
+              showChampion(nextRound[0]);
+              return;
+            }
+            const nextPool = shuffleArr(nextRound);
+            nextRound = [];
+            if (nextPool.length % 2 === 1) {
+              nextRound.push(nextPool.pop());
+            }
+            for (let i = 0; i < nextPool.length; i += 2) {
+              roundQueue.push([nextPool[i], nextPool[i + 1]]);
+            }
+            roundMatchIdx = 0;
+            roundTotalMatches = roundQueue.length;
+          }
+
+          currentPair = roundQueue.shift();
+          roundMatchIdx++;
+
+          const [a, b] = currentPair;
+          const rTitle = getRoundTitle(roundTotalMatches);
+          if (roundLabel) {
+            roundLabel.textContent = roundTotalMatches > 1
+              ? `${rTitle} · ${roundMatchIdx} / ${roundTotalMatches}`
+              : '★ ФИНАЛ ТУРНИРА';
+          }
+          if (stepCounter) {
+            stepCounter.textContent = `МАТЧ ${completedMatches + 1} ИЗ ${totalMatchesTarget}`;
+          }
+          if (progressFill) {
+            progressFill.style.width = `${Math.round((completedMatches / totalMatchesTarget) * 100)}%`;
+          }
+
+          leftBtn?.classList.remove('is-picked', 'is-eliminated');
+          rightBtn?.classList.remove('is-picked', 'is-eliminated');
+
+          if (leftImg) { leftImg.src = a.img || ''; leftImg.alt = a.name; }
+          if (leftName) leftName.textContent = a.name;
+          if (leftSub) leftSub.textContent = a.sub;
+
+          if (rightImg) { rightImg.src = b.img || ''; rightImg.alt = b.name; }
+          if (rightName) rightName.textContent = b.name;
+          if (rightSub) rightSub.textContent = b.sub;
+        }
+
+        function pickWinner(side) {
+          if (isAnimatingPick || !currentPair) return;
+          isAnimatingPick = true;
+          const [a, b] = currentPair;
+          const winner = side === 'left' ? a : b;
+          const loser = side === 'left' ? b : a;
+
+          const winBtn = side === 'left' ? leftBtn : rightBtn;
+          const loseBtn = side === 'left' ? rightBtn : leftBtn;
+          winBtn?.classList.add('is-picked');
+          loseBtn?.classList.add('is-eliminated');
+
+          if (roundTotalMatches === 2) {
+            semifinalLosers.push(loser);
+          } else if (roundTotalMatches === 1) {
+            finalRunnerUp = loser;
+          }
+
+          nextRound.push(winner);
+          completedMatches++;
+
+          setTimeout(() => {
+            isAnimatingPick = false;
+            renderCurrentDuel();
+          }, 240);
+        }
+
+        function buildRankReaction(winner, totalInCat) {
+          const r = winner.rank;
+          if (r === 1) {
+            return `<strong>100% попадание в базу!</strong> У undereror <strong>${escapeHtml(winner.name)}</strong> — тоже абсолютный <strong>#01</strong> из ${totalInCat}.`;
+          }
+          if (r <= 3) {
+            return `<strong>Почти в яблочко.</strong> У тебя это #01, а у undereror — в святой тройке на <strong>#${formatRank(r)}</strong> месте.`;
+          }
+          if (r <= 8) {
+            return `<strong>Крепкий выбор.</strong> У undereror в личном рейтинге это стоит на <strong>#${formatRank(r)}</strong> месте из ${totalInCat}.`;
+          }
+          return `<strong>Андердог прорвался в финал!</strong> У тебя это #01, а у undereror — только <strong>#${formatRank(r)}</strong> место из ${totalInCat}.`;
+        }
+
+        function showChampion(winner) {
+          if (progressFill) progressFill.style.width = '100%';
+          if (playView) playView.style.display = 'none';
+          champView?.classList.add('is-visible');
+
+          const totalInCat = getCategoryItems(activeCat).length;
+          const catTitle = CAT_LABELS[activeCat] || 'PEAK FICTION';
+
+          if (champKicker) champKicker.textContent = `★ ТВОЙ #1 ЧЕМПИОН · ${catTitle}`;
+          if (champImg) { champImg.src = winner.img || ''; champImg.alt = winner.name; }
+          if (champName) champName.textContent = winner.name;
+          if (champSub) champSub.textContent = winner.sub;
+          if (champCompare) champCompare.innerHTML = buildRankReaction(winner, totalInCat);
+          if (champLink) champLink.href = winner.url || `${activeShikiOrigin}/undereror+nyashka`;
+
+          const podiumItems = [];
+          if (finalRunnerUp) {
+            podiumItems.push({ label: '2 место · Финалист', item: finalRunnerUp });
+          }
+          semifinalLosers.slice(0, 2).forEach((s, idx) => {
+            podiumItems.push({ label: `3–4 место · Полуфинал`, item: s });
+          });
+
+          if (podiumRow) {
+            podiumRow.innerHTML = podiumItems.map((p) => `
+              <div class="arena-podium-slot">
+                <div class="p-rank">${escapeHtml(p.label)}</div>
+                <div class="p-name">${escapeHtml(p.item.name)}</div>
+                <div class="p-sub">Топ undereror: #${formatRank(p.item.rank)}</div>
+              </div>
+            `).join('');
+          }
+
+          lastArenaResult = {
+            cat: activeCat,
+            catTitle,
+            totalInCat,
+            size: activeSize,
+            winner,
+            runnerUp: finalRunnerUp,
+            semis: semifinalLosers.slice(0, 2)
+          };
+        }
+
+        function downloadArenaPng() {
+          if (!lastArenaResult) return;
+          const res = lastArenaResult;
+          const W = 1200;
+          const H = 675;
+          const c = document.createElement('canvas');
+          c.width = W;
+          c.height = H;
+          const ctx = c.getContext('2d');
+
+          function rRect(x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+          }
+          function clipText(txt, maxW) {
+            let s = String(txt || '');
+            if (ctx.measureText(s).width <= maxW) return s;
+            while (s.length > 1 && ctx.measureText(s + '…').width > maxW) s = s.slice(0, -1);
+            return s + '…';
+          }
+
+          // Background
+          const g = ctx.createLinearGradient(0, 0, W, H);
+          g.addColorStop(0, '#07090f');
+          g.addColorStop(0.5, '#0c111e');
+          g.addColorStop(1, '#06080d');
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, W, H);
+
+          const halo = ctx.createRadialGradient(320, 250, 20, 320, 250, 440);
+          halo.addColorStop(0, res.winner.rank <= 3 ? 'rgba(110, 231, 183, 0.16)' : 'rgba(173, 191, 222, 0.18)');
+          halo.addColorStop(1, 'transparent');
+          ctx.fillStyle = halo;
+          ctx.fillRect(0, 0, W, H);
+
+          ctx.strokeStyle = 'rgba(173, 191, 222, 0.045)';
+          for (let x = 40; x < W; x += 48) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+          for (let y = 40; y < H; y += 48) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+          rRect(26, 26, W - 52, H - 52, 22);
+          ctx.strokeStyle = 'rgba(173, 191, 222, 0.25)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          // Header
+          ctx.fillStyle = '#adbfde';
+          ctx.font = '600 15px "JetBrains Mono", monospace';
+          ctx.fillText(`⚔  UNDEXEROR // ARCHIVE   ·   ТУРНИР 1v1 (${res.catTitle})`, 62, 74);
+
+          ctx.textAlign = 'right';
+          ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+          ctx.fillText(new Date().toLocaleDateString('ru-RU'), W - 62, 74);
+          ctx.textAlign = 'left';
+
+          ctx.strokeStyle = 'rgba(173, 191, 222, 0.16)';
+          ctx.beginPath(); ctx.moveTo(62, 94); ctx.lineTo(W - 62, 94); ctx.stroke();
+
+          // Champion Main Card
+          rRect(62, 122, W - 124, 250, 18);
+          ctx.fillStyle = 'rgba(10, 14, 24, 0.82)';
+          ctx.fill();
+          ctx.strokeStyle = res.winner.rank <= 3 ? 'rgba(110, 231, 183, 0.48)' : 'rgba(173, 191, 222, 0.36)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          // Left rank emblem
+          rRect(96, 162, 170, 170, 20);
+          ctx.fillStyle = 'rgba(7, 10, 17, 0.90)';
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(173, 191, 222, 0.35)';
+          ctx.stroke();
+
+          ctx.textAlign = 'center';
+          ctx.fillStyle = '#6ee7b7';
+          ctx.font = '600 13px "JetBrains Mono", monospace';
+          ctx.fillText('ТВОЙ ВЫБОР', 181, 204);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '700 58px "JetBrains Mono", monospace';
+          ctx.fillText('#01', 181, 270);
+          ctx.fillStyle = 'rgba(205, 212, 224, 0.65)';
+          ctx.font = '600 12px "JetBrains Mono", monospace';
+          ctx.fillText(`У UNDEREROR: #${formatRank(res.winner.rank)}`, 181, 308);
+          ctx.textAlign = 'left';
+
+          ctx.fillStyle = '#6ee7b7';
+          ctx.font = '600 14px "JetBrains Mono", monospace';
+          ctx.fillText(`★ ЧЕМПИОН ТУРНИРА · ${res.catTitle}`, 300, 186);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '700 38px "Inter", sans-serif';
+          ctx.fillText(clipText(res.winner.name, 790), 300, 238);
+
+          ctx.fillStyle = 'rgba(205, 212, 224, 0.72)';
+          ctx.font = '500 17px "JetBrains Mono", monospace';
+          ctx.fillText(clipText(res.winner.sub, 790), 300, 274);
+
+          const plainCompare = res.winner.rank === 1
+            ? `100% попадание в базу! У undereror это тоже #01 из ${res.totalInCat}.`
+            : res.winner.rank <= 3
+              ? `Почти в яблочко — у undereror это в святой тройке (#${formatRank(res.winner.rank)}).`
+              : `У undereror в личном топе это стоит на #${formatRank(res.winner.rank)} месте из ${res.totalInCat}.`;
+          ctx.fillStyle = '#dce8ff';
+          ctx.font = '500 18px "Inter", sans-serif';
+          ctx.fillText(clipText(plainCompare, 790), 300, 326);
+
+          // Podium Cards
+          const slots = [];
+          if (res.runnerUp) slots.push({ tag: '2 МЕСТО · ФИНАЛИСТ', item: res.runnerUp });
+          res.semis.forEach((s) => slots.push({ tag: '3–4 МЕСТО · ПОЛУФИНАЛ', item: s }));
+
+          const slotW = (W - 124 - 36) / 3;
+          slots.slice(0, 3).forEach((s, idx) => {
+            const sx = 62 + idx * (slotW + 18);
+            const sy = 402;
+            rRect(sx, sy, slotW, 174, 16);
+            ctx.fillStyle = 'rgba(9, 12, 20, 0.80)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(173, 191, 222, 0.22)';
+            ctx.stroke();
+
+            ctx.fillStyle = '#adbfde';
+            ctx.font = '600 12px "JetBrains Mono", monospace';
+            ctx.fillText(s.tag, sx + 22, sy + 38);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '700 21px "Inter", sans-serif';
+            ctx.fillText(clipText(s.item.name, slotW - 44), sx + 22, sy + 84);
+
+            ctx.fillStyle = 'rgba(205, 212, 224, 0.65)';
+            ctx.font = '500 13px "JetBrains Mono", monospace';
+            ctx.fillText(clipText(s.item.sub, slotW - 44), sx + 22, sy + 114);
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillText(`У undereror: #${formatRank(s.item.rank)}`, sx + 22, sy + 148);
+          });
+
+          // Footer
+          ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+          ctx.font = '500 13px "JetBrains Mono", monospace';
+          ctx.fillText('СЫГРАЙ В ТУРНИР 1v1  →  https://undexerorrr.github.io/', 62, H - 46);
+          ctx.textAlign = 'right';
+          ctx.fillStyle = 'rgba(173, 191, 222, 0.65)';
+          ctx.fillText('undexeror // archive', W - 62, H - 46);
+
+          const link = document.createElement('a');
+          link.download = `tournament-${res.cat}-champion.png`;
+          link.href = c.toDataURL('image/png');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+
+        function openArena(cat) {
+          backdrop.classList.add('is-open');
+          backdrop.setAttribute('aria-hidden', 'false');
+          startTournament(cat || activeCat, activeSize);
+        }
+
+        function closeArena() {
+          backdrop.classList.remove('is-open');
+          backdrop.setAttribute('aria-hidden', 'true');
+        }
+
+        waifuLaunchBtn?.addEventListener('click', () => openArena('waifu'));
+        collLaunchBtn?.addEventListener('click', () => openArena(currentTab === 'literally' ? 'literally' : 'peak'));
+        closeBtn?.addEventListener('click', closeArena);
+        backdrop.addEventListener('click', (e) => {
+          if (e.target === backdrop) closeArena();
+        });
+
+        catBtns.forEach((btn) => {
+          btn.addEventListener('click', () => startTournament(btn.dataset.arenaCat, activeSize));
+        });
+
+        sizeBtns.forEach((btn) => {
+          btn.addEventListener('click', () => startTournament(activeCat, Number(btn.dataset.arenaSize) || 8));
+        });
+
+        leftBtn?.addEventListener('click', () => pickWinner('left'));
+        rightBtn?.addEventListener('click', () => pickWinner('right'));
+        replayBtn?.addEventListener('click', () => startTournament(activeCat, activeSize));
+        dlPngBtn?.addEventListener('click', downloadArenaPng);
+
+        window.addEventListener('keydown', (e) => {
+          if (!backdrop.classList.contains('is-open')) return;
+          if (e.key === 'Escape') {
+            closeArena();
+          } else if (playView && playView.style.display !== 'none') {
+            if (e.key === 'ArrowLeft' || e.key === '1') {
+              e.preventDefault();
+              pickWinner('left');
+            } else if (e.key === 'ArrowRight' || e.key === '2') {
+              e.preventDefault();
+              pickWinner('right');
+            }
+          }
+        });
+      }
+
+      /* =========================================
          RANDOMIZER («ЧТО ПОСМОТРЕТЬ ОТ МЕНЯ» — TOP 16 + 9–10★ SHIKIMORI)
          ========================================= */
       function initRandomizer() {
@@ -8150,7 +9714,9 @@
       initLanyardPresence();
       initTasteMatcher();
       initRandomizer();
+      initTournamentArena();
       initAtmosphereCanvas();
+      initLiveWeather();
       initCollectionControls();
 
       renderStats(SNAPSHOT.anime, SNAPSHOT.manga, SNAPSHOT.lifetimeText);
