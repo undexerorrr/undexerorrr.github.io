@@ -460,6 +460,14 @@ export function initMusicPlayer() {
     next: () => loadTrack(trackIdx + 1, true),
     prev: () => loadTrack(trackIdx - 1, true),
     getTrack: () => PLAYLIST[trackIdx] || null,
+    getTrackIndex: () => trackIdx,
+    playTrack(idx) {
+      if (idx === trackIdx) {
+        if (!isPlaying) playCurrent();
+        return;
+      }
+      loadTrack(idx, true);
+    },
     onState(fn) {
       stateListeners.push(fn);
       fn({ playing: isPlaying, track: PLAYLIST[trackIdx] || null });

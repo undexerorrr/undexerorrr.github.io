@@ -70,6 +70,10 @@
             <span class="status-dot"></span>
             <span id="api-status-text">SYNC...</span>
           </div>
+          <button type="button" class="cmdk-nav-btn" id="cmdk-open-btn" aria-label="Открыть командную палитру (Ctrl+K)" aria-haspopup="dialog" aria-expanded="false" aria-controls="cmdk-modal" title="Командная палитра · Ctrl+K">
+            <svg class="cmdk-nav-icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5L14 14"></path></svg>
+            <span class="cmdk-nav-kbd">⌘K</span>
+          </button>
           <button type="button" class="galaxy-nav-btn" id="open-galaxy-topbar-btn" aria-label="Открыть 3D-Галактику архива" title="Открыть 3D-Галактику всех 415+ тайтлов (WebGL / Three.js)">
             <span class="g-star" aria-hidden="true">✦</span>
             <span>3D<span class="g-text-full"> Космос</span></span>
@@ -1434,6 +1438,46 @@
         <div class="modal-actions-row">
           <button type="button" class="modal-reroll-btn" id="modal-reroll-btn" style="display:none;">↻ Крутануть ещё</button>
           <a class="modal-link" id="modal-link" href="#" target="_blank" rel="noopener noreferrer">Открыть на Shikimori →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Archive Command Palette (Ctrl+K / ⌘K) -->
+  <div class="cmdk-backdrop" id="cmdk-modal" role="dialog" aria-modal="true" aria-label="Archive Command Palette" aria-hidden="true" inert>
+    <div class="cmdk-panel">
+      <div class="cmdk-head">
+        <span class="cmdk-search-icon" aria-hidden="true">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5L14 14"></path></svg>
+        </span>
+        <input
+          type="text"
+          class="cmdk-input"
+          id="cmdk-input"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded="true"
+          aria-controls="cmdk-list"
+          placeholder="Команда, погода, трек, тайтл или персонаж..."
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+        />
+        <span class="cmdk-count" id="cmdk-count" aria-live="polite"></span>
+        <button type="button" class="cmdk-close" id="cmdk-close" aria-label="Закрыть палитру">
+          <span class="cmdk-close-esc" aria-hidden="true">ESC</span>
+          <span class="cmdk-close-x" aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="cmdk-list" id="cmdk-list" role="listbox" aria-label="Результаты поиска"></div>
+      <div class="cmdk-foot" aria-hidden="true">
+        <span class="cmdk-foot-brand">ARCHIVE // PALETTE</span>
+        <div class="cmdk-foot-hints">
+          <span><kbd>↑</kbd><kbd>↓</kbd> выбор</span>
+          <span><kbd>↵</kbd> открыть</span>
+          <span><kbd>ESC</kbd> закрыть</span>
+          <span><kbd data-cmdk-shortcut>⌘K</kbd> палитра</span>
         </div>
       </div>
     </div>

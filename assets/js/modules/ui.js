@@ -3657,7 +3657,8 @@ export function initModalScrollLock() {
     'trophy-modal',
     'holo-modal',
     'pack-modal',
-    'spotify-drawer'
+    'spotify-drawer',
+    'cmdk-modal'
   ];
   const modalEls = modalIds.map((id) => document.getElementById(id)).filter(Boolean);
   let isLocked = false;

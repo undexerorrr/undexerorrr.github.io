@@ -14,6 +14,7 @@ import { initCoopPicker } from './modules/coop.js';
 import { initCinemaMode } from './modules/cinema.js';
 import { initTrophiesShowcase } from './modules/trophies.js';
 import { initGuestbook } from './modules/guestbook.js';
+import { initCommandPalette } from './modules/palette.js';
 import {
   initModalScrollLock,
   initIntroOverlay,
@@ -53,6 +54,7 @@ initArchiveGalaxy(playerControls);
 initAtmosphereCanvas();
 initLiveWeather();
 initCinemaMode(playerControls);
+initCommandPalette(playerControls);
 initCollectionControls();
 
 renderStats(SNAPSHOT.anime, SNAPSHOT.manga, SNAPSHOT.lifetimeText);
