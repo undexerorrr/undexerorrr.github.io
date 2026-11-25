@@ -71,23 +71,28 @@ safeInit('initCinemaMode', () => initCinemaMode(playerControls));
 safeInit('initCommandPalette', () => initCommandPalette(playerControls));
 safeInit('initCollectionControls', () => initCollectionControls());
 
-renderStats(SNAPSHOT.anime, SNAPSHOT.manga, SNAPSHOT.lifetimeText);
+safeInit('renderStats', () => renderStats(SNAPSHOT.anime, SNAPSHOT.manga, SNAPSHOT.lifetimeText));
 safeInit('initDnaControls', () => initDnaControls());
-renderAnimeDna(appState.animeDnaState || SNAPSHOT_DNA);
+safeInit('renderAnimeDna', () => renderAnimeDna(appState.animeDnaState || SNAPSHOT_DNA));
 safeInit('initHotTakesControls', () => initHotTakesControls());
-renderHotTakes(appState.hotTakesState, false);
+safeInit('renderHotTakes', () => renderHotTakes(appState.hotTakesState, false));
 safeInit('initTrophiesShowcase', () => initTrophiesShowcase());
-renderHistory(SNAPSHOT.history, false);
-renderActivityGraph(SNAPSHOT.activity);
-renderWatchingShelf(appState.watchingList.length ? appState.watchingList : SNAPSHOT.watching);
+safeInit('renderHistory', () => renderHistory(SNAPSHOT.history, false));
+safeInit('renderActivityGraph', () => renderActivityGraph(SNAPSHOT.activity));
+safeInit('renderWatchingShelf', () => renderWatchingShelf(appState.watchingList.length ? appState.watchingList : SNAPSHOT.watching));
 safeInit('initWatchingControls', () => initWatchingControls());
 safeInit('initGlassSpotlight', () => initGlassSpotlight());
-renderWaifu();
+safeInit('renderWaifu', () => renderWaifu());
 safeInit('initWaifuControls', () => initWaifuControls());
-renderCollection();
+safeInit('renderCollection', () => renderCollection());
 safeInit('initGuestbook', () => initGuestbook());
 
 bootstrapShikimoriSync(
   PEAK_FICTION.map((a) => a.malId),
   [...WAIFU_LIST, ...LITERALLY_ME]
-);
+).catch((err) => {
+  appState.initErrors.push({
+    name: 'bootstrapShikimoriSync',
+    message: String(err?.message || err)
+  });
+});

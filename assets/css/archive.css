@@ -187,24 +187,24 @@
     .topbar-inner {
       max-width: var(--container-max);
       margin: 0 auto;
-      padding: 12px 20px;
+      padding: 11px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: nowrap;
     }
 
     .brand {
       display: inline-flex;
       align-items: center;
-      gap: 9px;
+      gap: 8px;
       text-decoration: none;
       color: #fff;
       font-family: var(--font-mono);
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 600;
-      letter-spacing: 1.1px;
+      letter-spacing: 0.8px;
       white-space: nowrap;
       flex-shrink: 0;
       text-shadow: 0 0 14px rgba(var(--bright), 0.40);
@@ -214,6 +214,7 @@
       width: 7px;
       height: 7px;
       border-radius: 50%;
+      flex-shrink: 0;
       background: rgb(var(--bright));
       box-shadow: 0 0 10px rgba(var(--bright), 0.90);
     }
@@ -221,7 +222,7 @@
     .topbar-controls {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       flex-shrink: 0;
     }
 
@@ -229,22 +230,25 @@
     .audio-btn {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 6px 12px;
+      gap: 6px;
+      padding: 5px 10px;
       border-radius: 999px;
       background: rgba(10, 13, 20, 0.70);
       border: 1px solid rgba(var(--bright), 0.24);
       color: rgba(var(--light), 0.88);
       font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 1.2px;
+      font-size: 9.5px;
+      letter-spacing: 0.9px;
       text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .status-dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
+      flex-shrink: 0;
       background: rgba(var(--bright), 0.75);
       box-shadow: 0 0 8px rgba(var(--bright), 0.75);
     }
@@ -254,17 +258,36 @@
       box-shadow: 0 0 10px rgba(110, 231, 183, 0.85);
     }
 
+    .status-pill.is-stale {
+      border-color: rgba(248, 113, 113, 0.42);
+      color: #fca5a5;
+    }
+
+    .status-pill.is-stale .status-dot {
+      background: #f87171;
+      box-shadow: 0 0 8px rgba(248, 113, 113, 0.80);
+    }
+
     .audio-btn {
       cursor: pointer;
-      max-width: 146px;
+      width: 124px;
+      max-width: 124px;
+      flex: 0 0 auto;
+      overflow: hidden;
       transition: border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.2s ease;
     }
 
+    #audio-icon {
+      flex-shrink: 0;
+    }
+
     .audio-btn-label {
+      flex: 1 1 auto;
+      min-width: 0;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 78px;
+      text-align: left;
     }
 
     .audio-btn:hover {
@@ -5597,18 +5620,20 @@
     .galaxy-nav-btn {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 6px 13px;
+      gap: 5px;
+      padding: 5px 10px;
       border-radius: 999px;
       background: linear-gradient(110deg, transparent 32%, rgba(var(--bright), 0.34) 50%, transparent 68%) -150% 0 / 250% 100% no-repeat,
         rgba(12, 17, 28, 0.84);
       border: 1px solid rgba(var(--bright), 0.56);
       color: #fff;
       font-family: var(--font-mono);
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 600;
-      letter-spacing: 1.3px;
+      letter-spacing: 1px;
       text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
       box-shadow: 0 0 16px rgba(var(--bright), 0.22);
       animation: badge-sheen 6.5s ease-in-out infinite;
       transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
@@ -9482,25 +9507,40 @@
       }
     }
 
-    @media (max-width: 1160px) {
+    @media (max-width: 1280px) {
       .galaxy-nav-btn .g-text-full {
         display: none;
       }
+
+      .galaxy-nav-btn {
+        padding: 5px 9px;
+        gap: 4px;
+      }
+
+      .cinema-btn-label {
+        display: none;
+      }
+
+      .cinema-nav-btn {
+        padding: 5px 8px;
+      }
     }
 
-    @media (max-width: 1120px) {
+    @media (max-width: 1160px) {
       .topbar-inner {
-        padding: 11px 16px;
-        gap: 9px;
+        padding: 10px 14px;
+        gap: 8px;
       }
 
       .brand {
         font-size: 11.5px;
-        letter-spacing: 0.8px;
+        letter-spacing: 0.65px;
       }
 
       .audio-btn {
-        max-width: 140px;
+        width: 114px;
+        max-width: 114px;
+        padding: 5px 9px;
       }
     }
 
@@ -10249,7 +10289,7 @@
 
       .brand {
         font-size: 11px;
-        letter-spacing: 0.6px;
+        letter-spacing: 0.5px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -10258,22 +10298,19 @@
       }
 
       .topbar-controls {
-        gap: 6px;
+        gap: 5px;
         flex-shrink: 0;
       }
 
       .galaxy-nav-btn {
-        padding: 6px 10px;
+        padding: 5px 9px;
         font-size: 9.5px;
       }
 
       .audio-btn {
-        padding: 5px 9px;
-        max-width: 120px;
-      }
-
-      .audio-btn-label {
-        max-width: 58px;
+        padding: 5px 8px;
+        width: 108px;
+        max-width: 108px;
       }
 
       .base-mini-metrics {
@@ -10503,17 +10540,19 @@
     .cinema-nav-btn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 11px;
+      gap: 5px;
+      padding: 5px 9px;
       border-radius: var(--radius-pill);
       background: rgba(10, 13, 20, 0.70);
       border: 1px solid var(--border-default);
       color: rgba(var(--light), 0.88);
       font-family: var(--font-mono);
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 500;
-      letter-spacing: 1.2px;
+      letter-spacing: 0.9px;
       text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
       cursor: pointer;
       transition: border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.2s ease;
     }
@@ -10845,16 +10884,16 @@
     .cmdk-nav-btn {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 6px 9px;
+      gap: 4px;
+      padding: 5px 8px;
       border-radius: var(--radius-pill);
       background: rgba(10, 13, 20, 0.70);
       border: 1px solid var(--border-default);
       color: rgba(var(--light), 0.88);
       font-family: var(--font-mono);
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 500;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.7px;
       white-space: nowrap;
       flex-shrink: 0;
       cursor: pointer;
@@ -11326,39 +11365,39 @@
     .os-nav-cluster {
       display: flex;
       align-items: center;
-      gap: 8px;
-      min-width: 0;
-      flex-shrink: 1;
+      gap: 6px;
+      flex-shrink: 0;
     }
 
     .os-tabs {
       display: inline-flex;
       align-items: center;
-      gap: 3px;
+      gap: 2px;
       padding: 3px;
       border-radius: var(--radius-md);
       background: var(--surface-1);
       border: 1px solid var(--border-subtle);
       box-shadow: inset 0 1px 0 rgba(235, 242, 255, 0.05);
-      min-width: 0;
+      flex-shrink: 0;
     }
 
     .os-tab {
       position: relative;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 6px 10px;
+      gap: 4px;
+      padding: 5px 8px;
       border-radius: calc(var(--radius-md) - 3px);
       border: 1px solid transparent;
       background: transparent;
       color: rgba(var(--light), 0.68);
       font-family: var(--font-mono);
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 500;
-      letter-spacing: 0.9px;
+      letter-spacing: 0.65px;
       text-transform: uppercase;
       white-space: nowrap;
+      flex-shrink: 0;
       cursor: pointer;
       transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
@@ -11413,7 +11452,7 @@
       display: inline-flex;
       align-items: center;
       gap: 2px;
-      padding: 3px;
+      padding: 2px;
       border-radius: var(--radius-md);
       background: var(--surface-1);
       border: 1px solid var(--border-subtle);
@@ -11421,16 +11460,18 @@
     }
 
     .os-mode-btn {
-      padding: 5px 8px;
+      padding: 4px 7px;
       border-radius: calc(var(--radius-md) - 4px);
       border: 1px solid transparent;
       background: transparent;
       color: rgba(var(--muted), 0.86);
       font-family: var(--font-mono);
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 600;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.6px;
       text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
       cursor: pointer;
       transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     }
@@ -11946,19 +11987,57 @@
     }
 
     /* === Responsive Archive OS Breakpoints === */
-    @media (max-width: 1240px) {
+    @media (max-width: 1160px) {
+      .os-tab {
+        padding: 5px 7px;
+        font-size: 9px;
+        letter-spacing: 0.55px;
+      }
+    }
+
+    @media (max-width: 1080px) {
       .topbar-inner {
-        gap: 8px;
+        padding: 10px 12px;
+        gap: 6px;
       }
 
-      .topbar .os-mode-switch {
-        display: none;
+      .brand {
+        font-size: 11px;
+        letter-spacing: 0.5px;
+        gap: 7px;
+      }
+
+      .os-nav-cluster {
+        gap: 5px;
       }
 
       .os-tab {
-        padding: 5px 8px;
-        font-size: 9.5px;
-        letter-spacing: 0.7px;
+        padding: 5px 6px;
+        gap: 3px;
+        font-size: 9px;
+        letter-spacing: 0.45px;
+      }
+
+      .os-mode-btn {
+        padding: 4px 6px;
+        font-size: 8.5px;
+      }
+
+      .topbar-controls {
+        gap: 5px;
+      }
+
+      .cmdk-nav-kbd {
+        display: none;
+      }
+
+      .cmdk-nav-btn {
+        padding: 5px 7px;
+      }
+
+      .audio-btn {
+        width: 108px;
+        max-width: 108px;
       }
     }
 
@@ -12057,9 +12136,11 @@
       }
 
       .audio-btn {
-        min-width: 30px;
+        width: 32px;
+        max-width: 32px;
+        min-width: 32px;
         min-height: 30px;
-        padding: 5px 7px;
+        padding: 5px;
         justify-content: center;
       }
 
@@ -12070,6 +12151,82 @@
       .audio-btn.is-playing #audio-icon {
         display: none;
       }
+    }
+
+    /* Command Palette Diagnostics */
+    .cmdk-meta.is-error {
+      color: #fca5a5;
+      border-color: rgba(248, 113, 113, 0.42);
+      background: rgba(248, 113, 113, 0.12);
+    }
+
+    .cmdk-diag-card {
+      margin: 4px 2px 8px;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      background: var(--surface-1);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cmdk-diag-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #fff;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+
+    .cmdk-diag-badge {
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      font-size: 9.5px;
+      border: 1px solid rgba(110, 231, 183, 0.38);
+      color: #6ee7b7;
+      background: rgba(110, 231, 183, 0.10);
+    }
+
+    .cmdk-diag-badge.is-error {
+      border-color: rgba(248, 113, 113, 0.42);
+      color: #fca5a5;
+      background: rgba(248, 113, 113, 0.12);
+    }
+
+    .cmdk-diag-meta {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: rgba(var(--light), 0.72);
+      line-height: 1.45;
+    }
+
+    .cmdk-diag-row {
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      background: rgba(248, 113, 113, 0.07);
+      border: 1px solid rgba(248, 113, 113, 0.24);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .cmdk-diag-name {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: #fca5a5;
+    }
+
+    .cmdk-diag-msg {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: rgba(var(--light), 0.88);
+      word-break: break-word;
     }
 
     @media (hover: none), (pointer: coarse) {

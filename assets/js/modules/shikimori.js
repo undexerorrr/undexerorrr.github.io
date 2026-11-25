@@ -941,14 +941,18 @@ export async function loadHostAnimeRates(userObj) {
   return hostRatesPromise;
 }
 
+const SNAPSHOT_STALE_MS = 7 * 24 * 60 * 60 * 1000;
+
 function setApiStatusPill(mode, snapshotMeta) {
   const pill = document.getElementById('api-status-pill');
   const pillText = document.getElementById('api-status-text');
   const formattedDate = snapshotMeta && snapshotMeta.formattedDate ? snapshotMeta.formattedDate : '';
+  const isStale = Boolean(snapshotMeta && snapshotMeta.isStale);
 
   if (mode === 'live') {
     if (pill) {
       pill.classList.add('is-live');
+      pill.classList.remove('is-stale');
       pill.title = 'Синхронизировано с Shikimori API в реальном времени';
     }
     if (pillText) pillText.textContent = 'API · LIVE';
@@ -957,17 +961,19 @@ function setApiStatusPill(mode, snapshotMeta) {
 
   if (pill) {
     pill.classList.remove('is-live');
+    pill.classList.toggle('is-stale', isStale);
+    const staleNote = isStale ? ' · устарел (>7 дн.)' : '';
     if (mode === 'snapshot-checking') {
       pill.title = formattedDate
-        ? `Авто-снапшот от ${formattedDate} · фоновая проверка Shikimori API...`
+        ? `Авто-снапшот от ${formattedDate}${staleNote} · фоновая проверка Shikimori API...`
         : 'Авто-снапшот загружен · фоновая проверка Shikimori API...';
     } else if (formattedDate) {
-      pill.title = `Авто-снапшот от ${formattedDate} (Shikimori API недоступен)`;
+      pill.title = `Авто-снапшот от ${formattedDate}${staleNote} (Shikimori API недоступен)`;
     } else {
       pill.title = 'Локальный fallback-снапшот (Shikimori API недоступен)';
     }
   }
-  if (pillText) pillText.textContent = 'SNAPSHOT';
+  if (pillText) pillText.textContent = isStale ? 'SNAPSHOT · STALE' : 'SNAPSHOT';
 }
 
 function applyWaifuFavourites(characters, origin) {
@@ -1045,13 +1051,16 @@ export async function hydrateFromStaticSnapshot() {
       : appState.activeShikiOrigin;
     const generatedAt = data.meta?.generatedAt || null;
     const formattedDate = formatSnapshotDate(generatedAt);
-    const generatedAtMs = generatedAt ? new Date(generatedAt).getTime() : Date.now();
+    const parsedMs = generatedAt ? Date.parse(generatedAt) : NaN;
+    const generatedAtMs = Number.isFinite(parsedMs) ? parsedMs : Date.now();
+    const isStale = Number.isFinite(parsedMs) && (Date.now() - parsedMs > SNAPSHOT_STALE_MS);
 
     appState.snapshotMeta = {
       generatedAt,
       formattedDate,
       origin: snapOrigin,
-      version: Number(data.meta?.version) || 1
+      version: Number(data.meta?.version) || 1,
+      isStale
     };
 
     // 1. Preload HD AniList covers before rendering cards so images appear immediately even if Shikimori is blocked

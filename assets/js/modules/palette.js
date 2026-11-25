@@ -121,10 +121,95 @@ export function initCommandPalette(player) {
   }
 
   /* ---------- Item registry (rebuilt on every open: labels reflect live state) ---------- */
+  function showDiagnosticsView() {
+    const initErrors = Array.isArray(appState.initErrors) ? appState.initErrors : [];
+    const snap = appState.snapshotMeta;
+    const snapSummary = snap && snap.formattedDate
+      ? `Снапшот: ${snap.formattedDate}${snap.isStale ? ' (STALE >7 дн.)' : ''}`
+      : 'Снапшот: локальный fallback';
+
+    let rowsHtml = '';
+    if (initErrors.length) {
+      rowsHtml = initErrors.map((err, i) => `
+        <div class="cmdk-diag-row">
+          <div class="cmdk-diag-name">${escapeHtml(String(i + 1).padStart(2, '0'))} · ${escapeHtml(err && err.name ? err.name : 'unknown')}</div>
+          <div class="cmdk-diag-msg">${escapeHtml(err && err.message ? err.message : String(err))}</div>
+        </div>
+      `).join('');
+    } else {
+      rowsHtml = '<div class="cmdk-diag-meta">Все модули инициализированы без ошибок.</div>';
+    }
+
+    const backItem = {
+      group: 'Диагностика',
+      icon: '←',
+      label: 'Вернуться к списку команд',
+      hint: 'Закрыть отчёт диагностики',
+      keepOpen: true,
+      run: () => {
+        input.value = '';
+        items = buildItems();
+        render();
+      }
+    };
+
+    results = [backItem];
+    list.innerHTML = `
+      <div class="cmdk-diag-card" role="region" aria-label="Диагностика модулей">
+        <div class="cmdk-diag-head">
+          <span>Диагностика · Archive OS</span>
+          <span class="cmdk-diag-badge${initErrors.length ? ' is-error' : ''}">${initErrors.length ? `${initErrors.length} ERR` : '0 ERR · OK'}</span>
+        </div>
+        <div class="cmdk-diag-meta">${escapeHtml(snapSummary)}</div>
+        ${rowsHtml}
+      </div>
+      <div class="cmdk-group" role="group">
+        <div class="cmdk-item" role="option" id="cmdk-opt-0" data-idx="0" aria-selected="false">
+          <span class="cmdk-icon" aria-hidden="true">←</span>
+          <span class="cmdk-text">
+            <span class="cmdk-label">Вернуться к списку команд</span>
+            <span class="cmdk-hint">Или начни вводить новый запрос</span>
+          </span>
+        </div>
+      </div>
+    `;
+    list.scrollTop = 0;
+    if (countEl) countEl.textContent = initErrors.length ? `${initErrors.length} err` : 'OK';
+    setActive(0, false);
+  }
+
   function buildItems() {
     const out = [];
     const cinemaOn = isCinemaActive();
     const { sector: activeSector, navMode } = getSectorState();
+    const initErrors = Array.isArray(appState.initErrors) ? appState.initErrors : [];
+
+    if (initErrors.length > 0) {
+      out.push({
+        group: 'Диагностика · Ошибки модулей',
+        icon: '!',
+        label: `Диагностика модулей (${initErrors.length})`,
+        hint: initErrors.map((e) => e.name).join(', '),
+        meta: `${initErrors.length} ERR`,
+        error: true,
+        keepOpen: true,
+        kw: 'диагностика errors ошибки init debug status модули сбой',
+        run: () => showDiagnosticsView()
+      });
+      initErrors.forEach((err) => {
+        out.push({
+          group: 'Диагностика · Ошибки модулей',
+          icon: '✕',
+          label: `Ошибка: ${err.name || 'module'}`,
+          hint: err.message || 'Неизвестная ошибка',
+          meta: 'ERR',
+          error: true,
+          keepOpen: true,
+          kw: `диагностика errors ошибки init debug ${err.name || ''} ${err.message || ''}`,
+          run: () => showDiagnosticsView()
+        });
+      });
+    }
 
     SECTORS.forEach((sec) => {
       const isActive = sec.id === activeSector && navMode === 'os';
@@ -278,6 +363,20 @@ export function initCommandPalette(player) {
       });
     });
 
+    if (initErrors.length === 0) {
+      out.push({
+        group: 'Система · Диагностика',
+        icon: '✓',
+        label: 'Диагностика модулей',
+        hint: 'Ошибок инициализации нет (0) · статус снапшота',
+        meta: 'OK',
+        on: true,
+        keepOpen: true,
+        kw: 'диагностика errors ошибки init debug status модули здоровье',
+        run: () => showDiagnosticsView()
+      });
+    }
+
     out.forEach((item, i) => {
       item.order = i;
       item.labelNorm = normalize(item.label);
@@ -370,7 +469,7 @@ export function initCommandPalette(player) {
         const visual = it.thumb
           ? `<span class="cmdk-thumb" aria-hidden="true"><img src="${escapeHtml(it.thumb)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" /><span class="cmdk-thumb-fallback">${escapeHtml(it.icon)}</span></span>`
           : `<span class="cmdk-icon" aria-hidden="true">${escapeHtml(it.icon)}</span>`;
-        const meta = it.meta ? `<span class="cmdk-meta${it.on ? ' is-on' : ''}">${escapeHtml(it.meta)}</span>` : '';
+        const meta = it.meta ? `<span class="cmdk-meta${it.error ? ' is-error' : (it.on ? ' is-on' : '')}">${escapeHtml(it.meta)}</span>` : '';
         html += `<div class="cmdk-item" role="option" id="cmdk-opt-${idx}" data-idx="${idx}" aria-selected="false">${visual}<span class="cmdk-text"><span class="cmdk-label">${highlight(it.label, r.token)}</span>${it.hint ? `<span class="cmdk-hint">${escapeHtml(it.hint)}</span>` : ''}</span>${meta}</div>`;
       });
       html += '</div>';
@@ -450,7 +549,7 @@ export function initCommandPalette(player) {
   function execute(idx) {
     const item = results[idx];
     if (!item) return;
-    close(false);
+    if (!item.keepOpen) close(false);
     if (item.page) exitCinemaIfActive();
     item.run();
   }
