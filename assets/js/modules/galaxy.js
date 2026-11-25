@@ -171,6 +171,8 @@ export function initArchiveGalaxy(player) {
   function nodeMatchesFilter(node) {
     const q = activeSearch.trim().toLowerCase();
     if (q && !String(node.title || '').toLowerCase().includes(q)) return false;
+    if (activeFilter === 'planned') return node.status === 'planned';
+    if (node.status === 'planned') return false;
     if (activeFilter === 'peak') return Boolean(node.isPeak);
     if (activeFilter === 'elite') return Boolean(node.isPeak || (Number(node.score) || 0) >= 9);
     if (activeFilter === 'watching') return node.status === 'watching' || node.status === 'rewatching';
@@ -188,6 +190,11 @@ export function initArchiveGalaxy(player) {
     // Returns [r, g, b, size, spike]
     if (node.isPeak) {
       return [1.0, 0.99, 1.0, node.peakRank <= 3 ? 21.0 : 16.5, 1.0];
+    }
+    if (node.status === 'planned') {
+      if (sh >= 8.2) return [0.77, 0.71, 0.99, 13.8, 0.72];
+      if (sh >= 7.5) return [0.69, 0.66, 0.92, 10.2, 0.28];
+      return [0.58, 0.58, 0.78, 7.6, 0.0];
     }
     if (node.status === 'watching' || node.status === 'rewatching') {
       return [0.43, 0.91, 0.72, 13.5, 0.75];
@@ -215,6 +222,7 @@ export function initArchiveGalaxy(player) {
     const count = nodes.length;
     const arr = new Float32Array(count * 3);
     clusterAnchors = [];
+    const isPlannedMode = activeFilter === 'planned';
 
     if (layoutMode === 'eras') {
       // 4 Distinct 3D Floating Era Constellations
@@ -228,6 +236,7 @@ export function initArchiveGalaxy(player) {
 
       const buckets = { modern: [], wave: [], golden: [], classic: [] };
       nodes.forEach((n, idx) => {
+        if (isPlannedMode ? n.status !== 'planned' : n.status === 'planned') return;
         const y = Number(n.year) || 2018;
         if (y >= 2020) buckets.modern.push(idx);
         else if (y >= 2013) buckets.wave.push(idx);
@@ -258,20 +267,39 @@ export function initArchiveGalaxy(player) {
     }
 
     if (layoutMode === 'spectrum') {
-      // 3D Score Stratification Cylinder/Sphere: Y = user score (10 top -> 1 bottom), R = crowd divergence
-      clusterAnchors.push(
-        { x: 0, y:  62, z: 0, label: '★ 10/10 · ЗЕНИТ БАЗЫ' },
-        { x: 0, y:  24, z: 0, label: '8–9★ · ЗОЛОТОЙ СЛОЙ' },
-        { x: 0, y: -26, z: 0, label: '≤ 6★ · НИЖНЯЯ ОРБИТА' }
-      );
+      // 3D Score Stratification Cylinder/Sphere: Y = user score (or Shiki score in planned mode)
+      if (isPlannedMode) {
+        clusterAnchors.push(
+          { x: 0, y:  56, z: 0, label: '★ 8.5+ · ТОП ШИКИМОРИ' },
+          { x: 0, y:  18, z: 0, label: '7.5–8.4 · ОСНОВНОЙ СЛОЙ' },
+          { x: 0, y: -28, z: 0, label: '< 7.5 · НИЖНЯЯ ОРБИТА' }
+        );
+      } else {
+        clusterAnchors.push(
+          { x: 0, y:  62, z: 0, label: '★ 10/10 · ЗЕНИТ БАЗЫ' },
+          { x: 0, y:  24, z: 0, label: '8–9★ · ЗОЛОТОЙ СЛОЙ' },
+          { x: 0, y: -26, z: 0, label: '≤ 6★ · НИЖНЯЯ ОРБИТА' }
+        );
+      }
       nodes.forEach((n, idx) => {
-        const s = Number(n.score) || 6.5;
-        const sh = Number(n.shikiScore) || 7.2;
-        const delta = Math.abs(s - sh);
         const h1 = hash01(n.id * 1.7 + 19);
         const h2 = hash01(n.id * 2.9 + 5);
         const yearNorm = Math.max(0, Math.min(1, ((Number(n.year) || 2016) - 1995) / 31));
         const angle = yearNorm * Math.PI * 2 + (h1 - 0.5) * 1.2;
+
+        if (n.status === 'planned') {
+          const sh = Number(n.shikiScore) || 7.2;
+          const y = Math.max(-52, Math.min(58, ((sh - 7.1) / 2.0) * 50 + (h2 - 0.5) * 7.0));
+          const radius = Math.min(82, 16 + Math.max(0, 9.0 - sh) * 18 + h1 * 24);
+          arr[idx * 3]     = Math.cos(angle) * radius;
+          arr[idx * 3 + 1] = y;
+          arr[idx * 3 + 2] = Math.sin(angle) * radius;
+          return;
+        }
+
+        const s = Number(n.score) || 6.5;
+        const sh = Number(n.shikiScore) || 7.2;
+        const delta = Math.abs(s - sh);
         const y = ((s - 5.5) / 4.5) * 52 + (h2 - 0.5) * 6.5;
         const radius = n.isPeak
           ? 14 + (n.peakRank || 1) * 1.3
@@ -283,15 +311,32 @@ export function initArchiveGalaxy(player) {
       return arr;
     }
 
-    // Default: Logarithmic 4-Arm Spiral Galaxy (Peak 16 in luminous core -> outer rim)
+    // Default: Logarithmic 4-Arm Spiral Galaxy (Peak 16 or Planned Shiki core -> outer rim)
     clusterAnchors.push(
-      { x: 0, y: 16, z: 0, label: '◈ ЯДРО · PEAK 16' }
+      { x: 0, y: 16, z: 0, label: isPlannedMode ? '◈ В ПЛАНАХ · К ПРОСМОТРУ' : '◈ ЯДРО · PEAK 16' }
     );
     const arms = 4;
     nodes.forEach((n, idx) => {
       const h1 = hash01(n.id * 1.37 + 1);
       const h2 = hash01(n.id * 2.83 + 5);
       const h3 = hash01(n.id * 4.19 + 9);
+
+      if (n.status === 'planned') {
+        const sh = Number(n.shikiScore) || 7.0;
+        const scoreNorm = Math.max(0, Math.min(1, (9.1 - sh) / 3.2));
+        const r = 10 + scoreNorm * 72 + h1 * 22;
+        const armIdx = idx % arms;
+        const armBaseAngle = (armIdx / arms) * Math.PI * 2;
+        const twist = r * 0.048;
+        const scatter = (h2 - 0.5) * (0.48 + scoreNorm * 0.42);
+        const angle = armBaseAngle + twist + scatter;
+        const verticalSpread = (h3 - 0.5) * (16 + (1 - scoreNorm) * 10);
+
+        arr[idx * 3]     = Math.cos(angle) * r;
+        arr[idx * 3 + 1] = verticalSpread;
+        arr[idx * 3 + 2] = Math.sin(angle) * r;
+        return;
+      }
 
       if (n.isPeak) {
         const rank = n.peakRank || (idx + 1);
@@ -345,10 +390,10 @@ export function initArchiveGalaxy(player) {
     const lineVerts = [];
     const lineCols = [];
 
-    // 1. Peak 16 backbone ring in order
+    // 1. Peak 16 backbone ring in order (only when Peak stars match current filter)
     const peakIndices = [];
     activeNodes.forEach((n, idx) => {
-      if (n.isPeak) peakIndices.push({ idx, rank: n.peakRank || 99 });
+      if (n.isPeak && nodeMatchesFilter(n)) peakIndices.push({ idx, rank: n.peakRank || 99 });
     });
     peakIndices.sort((a, b) => a.rank - b.rank);
     for (let i = 0; i < peakIndices.length - 1; i++) {
@@ -363,6 +408,7 @@ export function initArchiveGalaxy(player) {
 
     // 2. Nearest neighbor filaments within same score/era tier (max 1 link per star to stay airy & clean)
     const maxDistSq = activeLayout === 'eras' ? 32 * 32 : 24 * 24;
+    const isPlannedMode = activeFilter === 'planned';
     for (let i = 0; i < count; i++) {
       if (!nodeMatchesFilter(activeNodes[i])) continue;
       const ix = positionsArr[i * 3];
@@ -372,7 +418,7 @@ export function initArchiveGalaxy(player) {
       let bestD = maxDistSq;
 
       // Sample stride for fast O(N) performance
-      const step = count > 260 ? 2 : 1;
+      const step = isPlannedMode ? 1 : (count > 260 ? 2 : 1);
       for (let j = i + 1; j < count; j += step) {
         if (!nodeMatchesFilter(activeNodes[j])) continue;
         const dx = positionsArr[j * 3] - ix;
@@ -389,7 +435,11 @@ export function initArchiveGalaxy(player) {
           ix, iy, iz,
           positionsArr[bestJ * 3], positionsArr[bestJ * 3 + 1], positionsArr[bestJ * 3 + 2]
         );
-        lineCols.push(0.54, 0.65, 0.82, 0.42, 0.52, 0.68);
+        if (isPlannedMode) {
+          lineCols.push(0.62, 0.56, 0.84, 0.44, 0.40, 0.68);
+        } else {
+          lineCols.push(0.54, 0.65, 0.82, 0.42, 0.52, 0.68);
+        }
       }
     }
 
@@ -410,7 +460,7 @@ export function initArchiveGalaxy(player) {
 
     const neighbors = [];
     for (let i = 0; i < activeNodes.length; i++) {
-      if (i === focusIdx) continue;
+      if (i === focusIdx || !nodeMatchesFilter(activeNodes[i])) continue;
       const dx = currentPos[i * 3] - fx;
       const dy = currentPos[i * 3 + 1] - fy;
       const dz = currentPos[i * 3 + 2] - fz;
@@ -433,19 +483,29 @@ export function initArchiveGalaxy(player) {
     if (!starGeom || !activeNodes.length) return;
     const alphaAttr = starGeom.getAttribute('aAlpha');
     if (!alphaAttr) return;
+    const isPlannedMode = activeFilter === 'planned';
     let matchedCount = 0;
+    let branchTotal = 0;
     for (let i = 0; i < activeNodes.length; i++) {
-      const ok = nodeMatchesFilter(activeNodes[i]);
+      const node = activeNodes[i];
+      const inBranch = isPlannedMode ? node.status === 'planned' : node.status !== 'planned';
+      if (inBranch) branchTotal++;
+      const ok = nodeMatchesFilter(node);
       if (ok) matchedCount++;
-      alphaAttr.array[i] = ok ? 1.0 : 0.09;
+      alphaAttr.array[i] = ok ? 1.0 : ((isPlannedMode || node.status === 'planned') ? 0.0 : 0.09);
     }
     alphaAttr.needsUpdate = true;
 
     if (countPill) {
-      const total = activeNodes.length;
-      countPill.textContent = matchedCount === total
-        ? `${total} ЗВЁЗД`
-        : `${matchedCount} / ${total} ЗВЁЗД`;
+      if (isPlannedMode) {
+        countPill.textContent = matchedCount === branchTotal
+          ? `${branchTotal} В ПЛАНАХ`
+          : `${matchedCount} / ${branchTotal} В ПЛАНАХ`;
+      } else {
+        countPill.textContent = matchedCount === branchTotal
+          ? `${branchTotal} ЗВЁЗД`
+          : `${matchedCount} / ${branchTotal} ЗВЁЗД`;
+      }
     }
     if (currentPos) buildConstellationLineIndices(currentPos);
   }
@@ -527,7 +587,9 @@ export function initArchiveGalaxy(player) {
           float beatScale = 1.0 + uBeat * (0.28 + aSpike * 0.40);
           float focusScale = 1.0 + vFocus * 0.72;
           float dist = max(18.0, -mvPosition.z);
-          gl_PointSize = clamp((aSize * twinkle * beatScale * focusScale * uPixelRatio * 126.0) / dist, 2.4, 52.0);
+          gl_PointSize = (aAlpha <= 0.01)
+            ? 0.0
+            : clamp((aSize * twinkle * beatScale * focusScale * uPixelRatio * 126.0) / dist, 2.4, 52.0);
           gl_Position = projectionMatrix * mvPosition;
         }
       `,
@@ -538,6 +600,7 @@ export function initArchiveGalaxy(player) {
         varying float vFocus;
 
         void main() {
+          if (vAlpha <= 0.01) discard;
           vec2 uv = gl_PointCoord - vec2(0.5);
           float d = length(uv);
           if (d > 0.5) discard;
@@ -562,9 +625,10 @@ export function initArchiveGalaxy(player) {
 
     rebuildClusterLabelsDOM();
     updateFilterAlphas();
-    if (selectedIdx >= activeNodes.length) {
+    if (selectedIdx >= activeNodes.length || (selectedIdx >= 0 && !nodeMatchesFilter(activeNodes[selectedIdx]))) {
       selectedIdx = -1;
       inspector?.classList.remove('is-open');
+      updateHighlightStarLinks(-1);
     }
   }
 
@@ -837,33 +901,44 @@ export function initArchiveGalaxy(player) {
     const node = activeNodes[idx];
     if (!node || !inspector) return;
 
-    const delta = (node.score > 0 && node.shikiScore > 0) ? (node.score - node.shikiScore) : 0;
+    const isPlanned = node.status === 'planned';
+    const delta = (!isPlanned && node.score > 0 && node.shikiScore > 0) ? (node.score - node.shikiScore) : 0;
     if (inspTag) {
       inspTag.textContent = node.isPeak
         ? `★ PEAK FICTION · #${formatRank(node.peakRank)}`
-        : node.status === 'watching'
-          ? '● СЕЙЧАС СМОТРЮ · LIVE'
-          : node.score >= 9
-            ? `◈ ИЗБРАННАЯ ЗВЕЗДА · ${node.score}/10`
-            : '◇ ЗВЕЗДА АРХИВА';
+        : isPlanned
+          ? '◈ В ПЛАНАХ · BACKLOG'
+          : node.status === 'watching'
+            ? '● СЕЙЧАС СМОТРЮ · LIVE'
+            : node.score >= 9
+              ? `◈ ИЗБРАННАЯ ЗВЕЗДА · ${node.score}/10`
+              : '◇ ЗВЕЗДА АРХИВА';
     }
     if (inspTitle) inspTitle.textContent = node.title;
     if (inspSub) inspSub.textContent = [node.kind, node.year, node.episodes ? `${node.episodes} эп.` : null].filter(Boolean).join(' · ');
 
-    const pills = [
-      node.score ? `Я: ${node.score}★` : 'Без оценки',
-      node.shikiScore ? `Шики: ${node.shikiScore.toFixed(2)}★` : null,
-      Math.abs(delta) >= 0.8 ? `Δ ${delta > 0 ? '+' : ''}${delta.toFixed(2)}` : null
-    ].filter(Boolean);
+    const pills = isPlanned
+      ? [
+          'В планах',
+          node.shikiScore ? `Шики: ${node.shikiScore.toFixed(2)}★` : null,
+          node.episodes ? `${node.episodes} эп.` : null
+        ].filter(Boolean)
+      : [
+          node.score ? `Я: ${node.score}★` : 'Без оценки',
+          node.shikiScore ? `Шики: ${node.shikiScore.toFixed(2)}★` : null,
+          Math.abs(delta) >= 0.8 ? `Δ ${delta > 0 ? '+' : ''}${delta.toFixed(2)}` : null
+        ].filter(Boolean);
     if (inspPills) {
       inspPills.innerHTML = pills.map((p) => `<span class="modal-pill" style="font-size:10px;padding:3px 8px;">${escapeHtml(p)}</span>`).join('');
     }
     if (inspNote) {
       inspNote.textContent = node.comment
         ? `«${node.comment}»`
-        : (node.isPeak
-          ? 'Одна из главных звёзд ядра архива Peak Fiction.'
-          : 'Нажми «3D-карта», чтобы вытянуть коллекционную голографическую карту этого тайтла прямо из галактики.');
+        : (isPlanned
+          ? 'Кандидат на просмотр из твоего списка «Запланировано» на Shikimori.'
+          : node.isPeak
+            ? 'Одна из главных звёзд ядра архива Peak Fiction.'
+            : 'Нажми «3D-карта», чтобы вытянуть коллекционную голографическую карту этого тайтла прямо из галактики.');
     }
     if (inspLink) inspLink.href = node.url || `${appState.activeShikiOrigin}/animes/${node.id}`;
 
@@ -1039,6 +1114,7 @@ export function initArchiveGalaxy(player) {
     if (tipMeta) {
       const parts = [
         node.isPeak ? `<b>Peak #${formatRank(node.peakRank)}</b>` : null,
+        node.status === 'planned' ? '<b>В планах</b>' : null,
         node.score ? `Я: <b>${node.score}★</b>` : null,
         node.shikiScore ? `Шики: ${node.shikiScore.toFixed(2)}` : null,
         node.year ? String(node.year) : null
@@ -1355,10 +1431,10 @@ export function initArchiveGalaxy(player) {
       rafId = requestAnimationFrame(renderLoop);
     }
 
-    // If visitor opened galaxy before live 415+ list finished downloading, pull it immediately
-    if (appState.galaxyNodes.length < 30) {
+    // If visitor opened galaxy before live 415+ list finished downloading, or old cache lacks planned, pull it immediately
+    if (appState.galaxyNodes.length < 30 || !appState.galaxyNodes.some((n) => n.status === 'planned')) {
       loadHostAnimeRates().then(() => {
-        if (appState.galaxyNodes.length > activeNodes.length) {
+        if (appState.galaxyNodes.length && appState.galaxyNodes !== activeNodes) {
           populateGalaxyScene();
         }
       });
@@ -1400,8 +1476,12 @@ export function initArchiveGalaxy(player) {
 
   inspHoloBtn?.addEventListener('click', () => {
     if (selectedIdx < 0 || selectedIdx >= activeNodes.length) return;
-    appState.holoGalaxyList = activeNodes;
-    openHoloDeck('galaxy', selectedIdx);
+    const selectedNode = activeNodes[selectedIdx];
+    const filtered = activeNodes.filter((n) => nodeMatchesFilter(n));
+    const list = filtered.length ? filtered : [selectedNode];
+    const targetIdx = list.indexOf(selectedNode);
+    appState.holoGalaxyList = list;
+    openHoloDeck('galaxy', targetIdx >= 0 ? targetIdx : 0);
   });
 
   layoutBtns.forEach((btn) => {
@@ -1412,8 +1492,36 @@ export function initArchiveGalaxy(player) {
 
   filterBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
-      activeFilter = btn.dataset.gfilter || 'all';
+      const nextFilter = btn.dataset.gfilter || 'all';
+      const prevPlanned = activeFilter === 'planned';
+      const nextPlanned = nextFilter === 'planned';
+
+      activeFilter = nextFilter;
       filterBtns.forEach((b) => b.classList.toggle('active', b === btn));
+      cancelStarHop(false);
+
+      if (selectedIdx >= 0 && (!activeNodes[selectedIdx] || !nodeMatchesFilter(activeNodes[selectedIdx]))) {
+        selectedIdx = -1;
+        inspector?.classList.remove('is-open');
+        updateHighlightStarLinks(-1);
+      }
+      if (hoveredIdx >= 0 && (!activeNodes[hoveredIdx] || !nodeMatchesFilter(activeNodes[hoveredIdx]))) {
+        hoveredIdx = -1;
+        updateHoverTooltip(-1, 0, 0);
+      }
+
+      if (prevPlanned !== nextPlanned && activeNodes.length && currentPos) {
+        startPos = new Float32Array(currentPos);
+        targetPos = computeLayoutPositions(activeNodes, activeLayout);
+        morphStart = performance.now();
+        isMorphing = true;
+        rebuildClusterLabelsDOM();
+        camState.targetLook.x = 0;
+        camState.targetLook.y = 0;
+        camState.targetLook.z = 0;
+        camState.targetRadius = activeLayout === 'eras' ? 215 : 178;
+      }
+
       updateFilterAlphas();
     });
   });

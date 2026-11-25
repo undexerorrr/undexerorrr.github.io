@@ -9,7 +9,7 @@
 - Статический сайт для GitHub Pages без сборщика и транспиляции:
   - `index.html` — разметка, мета-теги (`viewport-fit=cover`), шрифты Google Fonts и подключение ресурсов с версионированием.
   - `assets/css/archive.css` — единая таблица стилей (токены `:root` в начале файла, единая система модалок, `content-visibility`, capability- и responsive-медиазапросы в конце); `assets/css/giscus-noir.css` — кастомная нуар-тема для iframe Giscus.
-  - `assets/js/main.js` + `assets/js/modules/` — модульная ES-архитектура без сборщика (`config.js`, `data.js`, `shikimori.js`, `music.js`, `weather.js`, `galaxy.js`, `coop.js`, `trophies.js`, `cinema.js`, `guestbook.js`, `ui.js`), где `main.js` выступает точкой входа и задаёт порядок инициализации, а `data.js` хранит общее состояние `appState`, локальные снапшоты (`SNAPSHOT`, `PEAK_FICTION`, `WAIFU_LIST`, `LITERALLY_ME`, `PLAYLIST`) и `localStorage`-кэши; сетевые интеграции — Shikimori, AniList GraphQL, Lanyard, Open-Meteo, Spotify Embed/oEmbed, Giscus / GitHub Discussions (ленивая загрузка) и локальный `assets/js/vendor/three.min.js` для 3D-Галактики.
+  - `assets/js/main.js` + `assets/js/modules/` — модульная ES-архитектура без сборщика (`config.js`, `data.js`, `shikimori.js`, `music.js`, `weather.js`, `galaxy.js`, `coop.js`, `trophies.js`, `cinema.js`, `guestbook.js`, `palette.js`, `ui.js`), где `main.js` выступает точкой входа и задаёт порядок инициализации, а `data.js` хранит общее состояние `appState`, локальные снапшоты (`SNAPSHOT`, `PEAK_FICTION`, `WAIFU_LIST`, `LITERALLY_ME`, `PLAYLIST`) и `localStorage`-кэши; сетевые интеграции — Shikimori, AniList GraphQL, Lanyard, Open-Meteo, Spotify Embed/oEmbed, Giscus / GitHub Discussions (ленивая загрузка) и локальный `assets/js/vendor/three.min.js` для 3D-Галактики.
 - Сохранять существующий порядок CSS-каскада, ключи `localStorage` и работу в оффлайн/fallback-режиме (через `SNAPSHOT` и `fetchWithTimeout`).
 
 ---
@@ -40,7 +40,7 @@
 - **Поверхности (`--surface-*`)**: `--surface-1`, `--surface-2`, `--surface-3`, `--surface-modal`, `--surface-overlay` (и алиас `--glass-bg`).
 - **Границы и глубина (`--border-*`)**: `--border-subtle`, `--border-default`, `--border-strong` (и алиас `--glass-border`), `--edge-specular`, `--edge-specular-hover`, `--shadow-card`, `--shadow-card-hover`, `--shadow-floating`.
 - **Слои (`--z-*`)**: только централизованная шкала:
-  - `--z-bg` (0), `--z-canvas` (1), `--z-shell` (2), `--z-grain` (50), `--z-topbar` (100), `--z-hud` (315), `--z-dock` (320), `--z-mobile-music` (455), `--z-mobile-dock` (460), `--z-modal` (500), `--z-arena` (560), `--z-coop` (570), `--z-galaxy` (580), `--z-spotify-bg` (600), `--z-spotify` (610), `--z-trophy` (640), `--z-pack` (645), `--z-holo` (650), `--z-holo-close` (660), `--z-intro` (9999).
+  - `--z-bg` (0), `--z-canvas` (1), `--z-shell` (2), `--z-grain` (50), `--z-topbar` (100), `--z-hud` (315), `--z-dock` (320), `--z-mobile-music` (455), `--z-mobile-dock` (460), `--z-modal` (500), `--z-arena` (560), `--z-coop` (570), `--z-galaxy` (580), `--z-spotify-bg` (600), `--z-spotify` (610), `--z-trophy` (640), `--z-pack` (645), `--z-holo` (650), `--z-holo-close` (660), `--z-palette` (670), `--z-intro` (9999).
   - Если добавляется новый слой, его уровень сначала заводится токеном `--z-*` в `:root`.
 - **Единая система модалок (`--modal-*`)**: `--modal-radius`, `--modal-border`, `--modal-backdrop`, `--modal-backdrop-deep`, `--modal-shadow`, `--modal-ease`.
 - **Динамические runtime-токены**: `--beat-energy`, `--scrollbar-comp` (компенсация скроллбара через `initModalScrollLock()`).
