@@ -26,9 +26,15 @@
 .signal-tile,
 .base-subpanel,
 .ht-panel,
-.trophy-card {
+.trophy-card,
+.vinyl-card {
   background: #0e0e0e;
   border-color: rgba(255, 255, 255, 0.14);
+}
+
+.vinyl-card.is-playing {
+  background: #141414;
+  border-color: #ededed;
 }
 
 .os-tab.is-active,

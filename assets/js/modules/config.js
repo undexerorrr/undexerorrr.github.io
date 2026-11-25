@@ -17,6 +17,7 @@ export const HOT_TAKES_CACHE_KEY = 'undexeror_archive_hottakes_v1';
 export const GALAXY_CACHE_KEY = 'undexeror_archive_galaxy_v3';
 export const COOP_HOST_CACHE_KEY = 'undexeror_archive_coop_host_v1';
 export const TROPHIES_CACHE_KEY = 'undexeror_archive_trophies_v2';
+export const VINYL_CACHE_KEY = 'undexeror_archive_vinyl_v1';
 export const GENRE_RU = {
   Action: 'Экшен',
   Adventure: 'Приключения',
@@ -91,6 +92,141 @@ export const PLAYLIST = [
 
 export const VIEW_STORAGE_KEY = 'undexeror_archive_view_v1';
 export const NAV_MODE_STORAGE_KEY = 'undexeror_archive_nav_mode_v1';
+
+export const VINYL_SHELF = [
+  {
+    id: 'lp-01',
+    catalogNo: 'LP-01',
+    title: 'Be Quiet and Drive (Far Away)',
+    artist: 'Deftones',
+    album: 'Around the Fur',
+    year: 1997,
+    query: 'Deftones Be Quiet and Drive Far Away',
+    fallbackQuery: '',
+    tag: 'ALT METAL'
+  },
+  {
+    id: 'lp-02',
+    catalogNo: 'LP-02',
+    title: 'Beware',
+    artist: 'Deftones',
+    album: 'Saturday Night Wrist',
+    year: 2006,
+    query: 'Deftones Beware',
+    fallbackQuery: '',
+    tag: 'SHOEGAZE'
+  },
+  {
+    id: 'lp-03',
+    catalogNo: 'LP-03',
+    title: 'Tarantula Girl',
+    artist: 'VIOLENT VIRA',
+    album: 'Tarantula Girl',
+    year: 2023,
+    query: 'VIOLENT VIRA Tarantula Girl',
+    fallbackQuery: '',
+    tag: 'ALT ROCK'
+  },
+  {
+    id: 'lp-04',
+    catalogNo: 'LP-04',
+    title: 'In My Room',
+    artist: 'Julia Wolf',
+    album: 'PRESSURE',
+    year: 2025,
+    query: 'Julia Wolf In My Room',
+    fallbackQuery: '',
+    tag: 'ALT ROCK'
+  },
+  {
+    id: 'lp-05',
+    catalogNo: 'LP-05',
+    title: 'Black Fingernails',
+    artist: 'sowhatimdead',
+    album: 'Black Fingernails',
+    year: 2023,
+    query: 'sowhatimdead Black Fingernails',
+    fallbackQuery: 'lookup:6805986923',
+    tag: 'DARK ALT'
+  },
+  {
+    id: 'lp-06',
+    catalogNo: 'LP-06',
+    title: 'God Complex',
+    artist: 'VIOLENT VIRA',
+    album: 'God Complex',
+    year: 2022,
+    query: 'VIOLENT VIRA God Complex',
+    fallbackQuery: '',
+    tag: 'POST-GRUNGE'
+  },
+  {
+    id: 'lp-07',
+    catalogNo: 'LP-07',
+    title: 'Broken Smile (My All)',
+    artist: 'Lil Peep',
+    album: "Come Over When You're Sober, Pt. 2",
+    year: 2018,
+    query: 'Lil Peep Broken Smile My All',
+    fallbackQuery: '',
+    tag: 'EMO RAP'
+  },
+  {
+    id: 'lp-08',
+    catalogNo: 'LP-08',
+    title: 'D>E>A>T>H>M>E>T>A>L',
+    artist: 'Panchiko',
+    album: 'D>E>A>T>H>M>E>T>A>L',
+    year: 2000,
+    query: 'Panchiko DEATHMETAL',
+    fallbackQuery: '',
+    tag: 'INDIE LO-FI'
+  },
+  {
+    id: 'lp-09',
+    catalogNo: 'LP-09',
+    title: 'One Weak',
+    artist: 'Deftones',
+    album: 'Adrenaline',
+    year: 1995,
+    query: 'Deftones One Weak',
+    fallbackQuery: 'lookup:1099840922',
+    tag: 'NU METAL'
+  },
+  {
+    id: 'lp-10',
+    catalogNo: 'LP-10',
+    title: "You're Not Gone, You're Just Dead!",
+    artist: 'VIOLENT VIRA',
+    album: "Till' Death Was Never Enough",
+    year: 2024,
+    query: "VIOLENT VIRA You're Not Gone You're Just Dead",
+    fallbackQuery: '',
+    tag: 'ALT ROCK'
+  },
+  {
+    id: 'lp-11',
+    catalogNo: 'LP-11',
+    title: 'My Own Summer (Shove It)',
+    artist: 'Deftones',
+    album: 'Around the Fur',
+    year: 1997,
+    query: 'Deftones My Own Summer Shove It',
+    fallbackQuery: '',
+    tag: 'ALT METAL'
+  },
+  {
+    id: 'lp-12',
+    catalogNo: 'LP-12',
+    title: '4 Morant (Better Luck Next Time)',
+    artist: 'Com Truise',
+    album: 'Brokendate',
+    year: 2011,
+    query: 'Com Truise 4 Morant',
+    fallbackQuery: 'Com Truise Brokendate',
+    tag: 'SYNTHWAVE'
+  }
+];
 
 export function formatRank(n) {
   return String(n).padStart(2, '0');

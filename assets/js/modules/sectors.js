@@ -37,9 +37,9 @@ export const SECTORS = [
     num: '04',
     label: 'SIGNAL',
     title: '04 // SIGNAL',
-    subtitle: 'CHANNELS, SPOTIFY & GUESTBOOK',
-    hint: 'Контакты, Spotify-плейлисты и Гостевая стена',
-    kw: 'signal сигнал контакты ссылки tiktok discord spotify стена guestbook giscus 04'
+    subtitle: 'CHANNELS, VINYL & GUESTBOOK',
+    hint: 'Контакты, Виниловая полка, Spotify и Гостевая стена',
+    kw: 'signal сигнал контакты ссылки tiktok discord spotify vinyl винил пластинки audio стена guestbook giscus 04'
   }
 ];
 
@@ -65,6 +65,7 @@ const ANCHOR_TO_SECTOR = {
   signal: 'signal',
   'sector-signal': 'signal',
   'signal-hub': 'signal',
+  vinyl: 'signal',
   guestbook: 'signal'
 };
 

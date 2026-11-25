@@ -1,0 +1,657 @@
+/* =========================================
+   05. VINYL // AUDIO SHELF (PURE B&W EDITORIAL)
+   ========================================= */
+
+#vinyl {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 920px;
+}
+
+.vinyl-shelf-card {
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.vinyl-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.vinyl-head-left {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.vinyl-title-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.vinyl-kicker {
+  color: rgb(var(--bright));
+  letter-spacing: 2.2px;
+}
+
+.vinyl-heading {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.4px;
+  line-height: 1.25;
+}
+
+.vinyl-now-playing {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(var(--light), 0.70);
+  letter-spacing: 0.4px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.vinyl-head-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.vinyl-status-badge {
+  font-variant-numeric: tabular-nums;
+}
+
+.vinyl-status-badge.is-active-badge {
+  background: #f0f0f0;
+  color: #080808;
+  border-color: #f0f0f0;
+}
+
+/* --- 4 x 3 Editorial Grid --- */
+
+.vinyl-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.vinyl-card {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 11px 11px 12px;
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--edge-specular);
+  min-width: 0;
+  overflow: hidden;
+  transition: border-color 0.24s ease, background 0.24s ease, box-shadow 0.24s ease;
+}
+
+.vinyl-card.is-playing {
+  background: var(--surface-2);
+  border-color: #ededed;
+  box-shadow: var(--edge-specular-hover);
+}
+
+.vinyl-card.is-paused {
+  border-color: var(--border-strong);
+}
+
+/* --- Sleeve + Sliding Vinyl Stage ---
+   Reserve 26% on the right inside each column so a 34% vinyl slide-out
+   stays strictly inside its own grid cell (zero neighbor overlap, zero overflow). */
+
+.vinyl-stage {
+  position: relative;
+  width: 100%;
+  padding-right: 26%;
+  min-width: 0;
+}
+
+.vinyl-sleeve-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+/* --- Matte Black Vinyl Disc --- */
+
+.vinyl-disc-slot {
+  position: absolute;
+  inset: 3%;
+  z-index: 1;
+  pointer-events: none;
+  transform: translate3d(0%, 0, 0);
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.vinyl-card.is-playing .vinyl-disc-slot {
+  transform: translate3d(34%, 0, 0);
+}
+
+.vinyl-card.is-paused .vinyl-disc-slot {
+  transform: translate3d(18%, 0, 0);
+}
+
+.vinyl-disc {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background:
+    conic-gradient(
+      from 28deg,
+      rgba(255, 255, 255, 0.14) 0deg,
+      rgba(255, 255, 255, 0.03) 26deg,
+      transparent 55deg,
+      transparent 150deg,
+      rgba(255, 255, 255, 0.12) 186deg,
+      rgba(255, 255, 255, 0.02) 216deg,
+      transparent 245deg,
+      transparent 332deg,
+      rgba(255, 255, 255, 0.14) 360deg
+    ),
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      #0a0a0a 0px,
+      #0a0a0a 2px,
+      #1e1e1e 2.6px,
+      #0e0e0e 4px
+    );
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: vinyl-spin 2.4s linear infinite;
+  animation-play-state: paused;
+}
+
+.vinyl-card.is-playing .vinyl-disc {
+  animation-play-state: running;
+}
+
+.vinyl-disc-label {
+  position: relative;
+  width: 42%;
+  height: 42%;
+  border-radius: 50%;
+  background: #e6e6e6;
+  border: 1px solid #080808;
+  color: #080808;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 2px;
+  font-family: var(--font-mono);
+  line-height: 1;
+  text-align: center;
+  user-select: none;
+}
+
+.vinyl-disc-label::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24%;
+  height: 24%;
+  border-radius: 50%;
+  background: #080808;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  transform: translate(-50%, -50%);
+}
+
+.vinyl-disc-code {
+  font-size: 6.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.vinyl-disc-rpm {
+  font-size: 5.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  opacity: 0.78;
+}
+
+@keyframes vinyl-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Square 1:1 Record Sleeve --- */
+
+.vinyl-sleeve-btn {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.vinyl-sleeve-btn:disabled {
+  cursor: default;
+}
+
+.vinyl-sleeve {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+  background: #0b0b0b;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.62);
+  transition: border-color 0.24s ease;
+}
+
+.vinyl-card.is-playing .vinyl-sleeve {
+  border-color: #f0f0f0;
+}
+
+/* Monochrome Typographic Fallback Sleeve */
+
+.vinyl-typo-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 32px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 3px;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.025) 0px,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px,
+      transparent 8px
+    ),
+    #0c0c0c;
+  transition: opacity 0.28s ease;
+}
+
+.vinyl-card.has-cover .vinyl-typo-fallback {
+  opacity: 0;
+}
+
+.vinyl-typo-cat {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  color: rgba(var(--muted), 0.78);
+}
+
+.vinyl-typo-artist {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: rgba(var(--light), 0.82);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vinyl-typo-title {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #ffffff;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.vinyl-typo-badge {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-default);
+  background: #141414;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: rgba(var(--light), 0.85);
+}
+
+.vinyl-card.is-no-preview .vinyl-typo-badge {
+  border-style: dashed;
+  border-color: #ededed;
+  color: #f0f0f0;
+}
+
+/* Album Art Cover Layer */
+
+.vinyl-cover-slot {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.vinyl-cover-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  filter: grayscale(0.28) saturate(0.75) contrast(1.04) brightness(0.95);
+  transition: filter 0.3s ease, opacity 0.35s ease;
+}
+
+.vinyl-cover-img.is-loaded {
+  opacity: 1;
+}
+
+.vinyl-card:focus-within .vinyl-cover-img,
+.vinyl-card.is-playing .vinyl-cover-img {
+  filter: grayscale(0) saturate(1.08) contrast(1.03) brightness(1.04);
+}
+
+/* Catalog Stamp (Top-Left) & Play Indicator (Top-Right) */
+
+.vinyl-stamp {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 3;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  background: rgba(8, 8, 8, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.75px;
+  color: rgb(var(--bright));
+  line-height: 1.3;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.vinyl-play-indicator {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-xs);
+  background: rgba(8, 8, 8, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: #f0f0f0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.vinyl-card.is-playing .vinyl-play-indicator {
+  background: #f0f0f0;
+  color: #080808;
+  border-color: #f0f0f0;
+}
+
+.vinyl-card.is-no-preview .vinyl-play-indicator {
+  color: rgba(var(--muted), 0.72);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+/* Active 30s Progress Overlay & 2px Track */
+
+.vinyl-progress-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 7px 0;
+  background: linear-gradient(180deg, rgba(8, 8, 8, 0) 0%, rgba(8, 8, 8, 0.90) 34%, rgba(8, 8, 8, 0.96) 100%);
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.vinyl-card.is-playing .vinyl-progress-bar,
+.vinyl-card.is-paused .vinyl-progress-bar {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.vinyl-progress-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.5px;
+  color: rgb(var(--bright));
+  font-variant-numeric: tabular-nums;
+}
+
+.vinyl-progress-label {
+  color: rgba(var(--muted), 0.90);
+}
+
+.vinyl-card.is-playing .vinyl-progress-label {
+  color: #ffffff;
+}
+
+.vinyl-timer {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.vinyl-progress-track {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.20);
+  overflow: hidden;
+}
+
+.vinyl-progress-fill {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+/* --- Sleeve Metadata --- */
+
+.vinyl-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.vinyl-meta-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.vinyl-tag {
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.7px;
+  color: rgba(var(--light), 0.82);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vinyl-year {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: rgba(var(--muted), 0.90);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.vinyl-title {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vinyl-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.3;
+  color: rgba(var(--muted), 0.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Desktop Hover Interactions --- */
+
+@media (hover: hover) and (pointer: fine) {
+  .vinyl-card:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-2);
+  }
+
+  .vinyl-card.is-playing:hover {
+    border-color: #ffffff;
+  }
+
+  .vinyl-card:not(.is-no-preview):hover .vinyl-disc-slot {
+    transform: translate3d(24%, 0, 0);
+  }
+
+  .vinyl-card.is-playing:hover .vinyl-disc-slot {
+    transform: translate3d(34%, 0, 0);
+  }
+
+  .vinyl-card:hover .vinyl-cover-img {
+    filter: grayscale(0) saturate(1.08) contrast(1.03) brightness(1.04);
+  }
+
+  .vinyl-card:not(.is-no-preview):not(.is-playing):hover .vinyl-play-indicator {
+    background: #1b1b1b;
+    border-color: #ededed;
+    color: #ffffff;
+  }
+}
+
+/* --- Touch Devices --- */
+
+@media (hover: none), (pointer: coarse) {
+  .vinyl-cover-img {
+    filter: grayscale(0.10) saturate(0.96) contrast(1.04) brightness(0.98);
+  }
+
+  .vinyl-card.is-playing .vinyl-cover-img {
+    filter: grayscale(0) saturate(1.08) contrast(1.03) brightness(1.04);
+  }
+}
+
+/* --- Responsive Breakpoints (Descending) --- */
+
+@media (max-width: 1020px) {
+  .vinyl-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+@media (max-width: 720px) {
+  .vinyl-shelf-card {
+    padding: 16px 15px;
+    gap: 14px;
+  }
+
+  .vinyl-now-playing {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  .vinyl-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .vinyl-card {
+    padding: 12px;
+  }
+
+  .vinyl-play-indicator {
+    width: 32px;
+    height: 32px;
+  }
+
+  .vinyl-title {
+    font-size: 13.5px;
+  }
+
+  .vinyl-sub {
+    font-size: 10.5px;
+  }
+}
+
+/* --- Reduced Motion --- */
+
+@media (prefers-reduced-motion: reduce) {
+  .vinyl-disc {
+    animation: none !important;
+  }
+
+  .vinyl-disc-slot,
+  .vinyl-cover-img,
+  .vinyl-progress-bar {
+    transition-duration: 0.01s;
+  }
+}

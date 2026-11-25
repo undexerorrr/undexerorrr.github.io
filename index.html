@@ -17,12 +17,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/css/tokens.css?v=38" />
-  <link rel="stylesheet" href="./assets/css/layout.css?v=38" />
-  <link rel="stylesheet" href="./assets/css/sections.css?v=38" />
-  <link rel="stylesheet" href="./assets/css/overlays.css?v=38" />
-  <link rel="stylesheet" href="./assets/css/editorial-bw.css?v=38" />
-  <link rel="stylesheet" href="./assets/css/responsive.css?v=38" />
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=40" />
+  <link rel="stylesheet" href="./assets/css/layout.css?v=40" />
+  <link rel="stylesheet" href="./assets/css/sections.css?v=40" />
+  <link rel="stylesheet" href="./assets/css/overlays.css?v=40" />
+  <link rel="stylesheet" href="./assets/css/vinyl.css?v=40" />
+  <link rel="stylesheet" href="./assets/css/editorial-bw.css?v=40" />
+  <link rel="stylesheet" href="./assets/css/responsive.css?v=40" />
 </head>
 <body>
 
@@ -829,6 +830,28 @@
               <span class="signal-tile-arrow" aria-hidden="true">→</span>
             </button>
           </div>
+        </div>
+      </section>
+
+      <!-- VINYL // AUDIO SHELF (12 LP · ITUNES PREVIEW) -->
+      <section id="vinyl">
+        <div class="glass-card vinyl-shelf-card">
+          <div class="vinyl-head">
+            <div class="vinyl-head-left">
+              <div class="vinyl-title-row">
+                <span class="dna-pulse-icon" aria-hidden="true"></span>
+                <span class="card-kicker vinyl-kicker">VINYL // AUDIO</span>
+              </div>
+              <h2 class="vinyl-heading">Виниловая полка</h2>
+              <div class="vinyl-now-playing" id="vinyl-now-playing" aria-live="polite">Архивная полка · 33 RPM</div>
+            </div>
+            <div class="vinyl-head-badges">
+              <span class="panel-badge" id="vinyl-count-badge">12 LP</span>
+              <span class="panel-badge vinyl-status-badge" id="vinyl-status-badge">STANDBY</span>
+            </div>
+          </div>
+
+          <div class="vinyl-grid" id="vinyl-grid" role="list" aria-label="Виниловая полка из 12 пластинок"></div>
         </div>
       </section>
 
@@ -1672,6 +1695,6 @@
     </div>
   </div>
 
-  <script type="module" src="./assets/js/main.js?v=38"></script>
+  <script type="module" src="./assets/js/main.js?v=40"></script>
 </body>
 </html>

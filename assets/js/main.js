@@ -14,6 +14,7 @@ import { initCoopPicker } from './modules/coop.js';
 import { initCinemaMode } from './modules/cinema.js';
 import { initTrophiesShowcase } from './modules/trophies.js';
 import { initGuestbook } from './modules/guestbook.js';
+import { initVinylShelf } from './modules/vinyl.js';
 import { initCommandPalette } from './modules/palette.js';
 import { initSectors } from './modules/sectors.js';
 import {
@@ -85,6 +86,7 @@ safeInit('initGlassSpotlight', () => initGlassSpotlight());
 safeInit('renderWaifu', () => renderWaifu());
 safeInit('initWaifuControls', () => initWaifuControls());
 safeInit('renderCollection', () => renderCollection());
+safeInit('vinyl', () => initVinylShelf(playerControls));
 safeInit('initGuestbook', () => initGuestbook());
 
 bootstrapShikimoriSync(

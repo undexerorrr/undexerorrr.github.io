@@ -276,6 +276,11 @@ export function initCommandPalette(player) {
         run: () => goToSection('compatibility', '#base-nick-input')
       },
       {
+        group: 'Команды', icon: 'LP', label: 'Виниловая полка / Vinyl', hint: 'VINYL // AUDIO · 12 LP в отсеке 04',
+        kw: 'vinyl винил виниловая полка пластинки audio lp музыка deftones violent vira panchiko lil peep com truise', page: true,
+        run: () => goToSection('vinyl')
+      },
+      {
         group: 'Команды', icon: 'GB', label: 'Перейти к гостевой стене', hint: 'Guestbook · GitHub Discussions',
         kw: 'guestbook стена гостевая комментарии giscus отзывы', page: true,
         run: () => goToSection('guestbook')
