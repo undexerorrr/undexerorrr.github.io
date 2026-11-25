@@ -897,8 +897,11 @@ export async function syncShikimoriLive() {
     avatarEl.src = normalizeShikiUrl(liveAvatar, appState.activeShikiOrigin);
   }
   const shikiLink = document.getElementById('shiki-profile-link');
-  if (shikiLink && user.url) {
-    shikiLink.href = normalizeShikiUrl(user.url, appState.activeShikiOrigin);
+  const signalShikiLink = document.getElementById('signal-shiki-link');
+  if (user.url) {
+    const resolvedShikiUrl = normalizeShikiUrl(user.url, appState.activeShikiOrigin);
+    if (shikiLink) shikiLink.href = resolvedShikiUrl;
+    if (signalShikiLink) signalShikiLink.href = resolvedShikiUrl;
   }
 
   const animeStatuses = user.stats?.full_statuses?.anime || user.stats?.statuses?.anime || [];

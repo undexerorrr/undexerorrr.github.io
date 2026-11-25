@@ -852,6 +852,12 @@ export function initWatchingControls() {
     slider.scrollLeft = scrollLeft - walk;
   });
 
+  document.addEventListener('archive:sectorchange', () => {
+    if (!slider.closest('[hidden]')) {
+      requestAnimationFrame(updateNavState);
+    }
+  });
+
   requestAnimationFrame(updateNavState);
 }
 
@@ -877,7 +883,8 @@ export function initGlassSpotlight() {
     }
     const now = performance.now();
     if (!cachedSurfaces.length || now - lastCacheAt > 2500) {
-      cachedSurfaces = Array.from(document.querySelectorAll(SELECTOR));
+      cachedSurfaces = Array.from(document.querySelectorAll(SELECTOR))
+        .filter((el) => !el.closest('[hidden]'));
       lastCacheAt = now;
     }
 
@@ -928,6 +935,22 @@ export function initGlassSpotlight() {
       requestAnimationFrame(updateSurfaces);
     }
   }, { passive: true });
+
+  document.addEventListener('archive:sectorchange', () => {
+    for (let i = 0; i < cachedSurfaces.length; i++) {
+      const el = cachedSurfaces[i];
+      if (el.dataset.spotOn === '1') {
+        el.dataset.spotOn = '0';
+        el.style.setProperty('--spot-o', '0');
+      }
+    }
+    cachedSurfaces = [];
+    lastCacheAt = 0;
+    if (lastX > -1000 && lastY > -1000 && !rafPending) {
+      rafPending = true;
+      requestAnimationFrame(updateSurfaces);
+    }
+  });
 
   document.addEventListener('mouseleave', () => {
     lastX = -9999;
@@ -1072,7 +1095,13 @@ export function initWaifuControls() {
   });
 
   // Initial check after layout
-  requestAnimationFrame(updateNavState);
+  document.addEventListener('archive:sectorchange', () => {
+    if (!slider.closest('[hidden]')) {
+      requestAnimationFrame(() => updateNavState(true));
+    }
+  });
+
+  requestAnimationFrame(() => updateNavState(true));
 }
 
 /* =========================================
@@ -1691,9 +1720,7 @@ export function initMobileTikTokDock() {
   const dockNav = document.getElementById('mobile-dock');
   const musicDock = document.getElementById('music-dock');
   const musicBtn = document.getElementById('mdock-music-btn');
-  const arenaBtn = document.getElementById('mdock-arena-btn');
-  const randomBtn = document.getElementById('mdock-random-btn');
-  const sectionLinks = Array.from(document.querySelectorAll('[data-mdock-sec]'));
+  const sectorBtns = Array.from(document.querySelectorAll('[data-mdock-sector]'));
   if (!dockNav) return;
 
   function setMobileMusicOpen(open) {
@@ -1709,27 +1736,14 @@ export function initMobileTikTokDock() {
     setMobileMusicOpen(next);
   });
 
-  arenaBtn?.addEventListener('click', () => {
-    setMobileMusicOpen(false);
-    document.getElementById('collection-arena-btn')?.click();
-  });
-
-  randomBtn?.addEventListener('click', () => {
-    setMobileMusicOpen(false);
-    document.getElementById('randomizer-btn')?.click();
-  });
-
-  sectionLinks.forEach((link) => {
-    link.addEventListener('click', (e) => {
+  sectorBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
       setMobileMusicOpen(false);
-      sectionLinks.forEach((l) => l.classList.toggle('is-active', l === link));
-      const targetId = link.dataset.mdockSec;
-      const targetEl = targetId ? document.getElementById(targetId) : null;
-      if (targetEl) {
-        e.preventDefault();
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
     });
+  });
+
+  document.addEventListener('archive:sectorchange', () => {
+    setMobileMusicOpen(false);
   });
 
   // Close mobile music drawer when tapping outside
@@ -1739,26 +1753,6 @@ export function initMobileTikTokDock() {
       setMobileMusicOpen(false);
     }
   });
-
-  // Highlight active section while scrolling on mobile
-  if ('IntersectionObserver' in window) {
-    const observedIds = ['profile', 'compatibility'];
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = entry.target.id;
-            sectionLinks.forEach((l) => l.classList.toggle('is-active', l.dataset.mdockSec === id));
-          }
-        });
-      },
-      { rootMargin: '-35% 0px -50% 0px', threshold: 0.05 }
-    );
-    observedIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) io.observe(el);
-    });
-  }
 }
 
 /* =========================================

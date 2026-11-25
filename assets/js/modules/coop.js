@@ -7,6 +7,7 @@ import {
   loadAnimeCoversBatch
 } from './shikimori.js';
 import { attachImageHandlers } from './ui.js';
+import { navigateToTarget } from './sectors.js';
 
 /* =========================================
    CO-OP EVENING PICKER + SWIPE ARENA + TICKET PNG
@@ -1027,7 +1028,7 @@ export function initCoopPicker() {
     switchStationTab('coop');
     input1.value = SHIKI_NICKNAME;
     if (guestNick) input2.value = guestNick;
-    document.getElementById('compatibility')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    navigateToTarget('compatibility');
     if (guestNick && guestNick.toLowerCase() !== SHIKI_NICKNAME.toLowerCase()) {
       runCoopMatch(input1.value, input2.value);
     } else {

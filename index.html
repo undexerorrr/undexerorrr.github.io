@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/css/archive.css?v=32" />
+  <link rel="stylesheet" href="./assets/css/archive.css?v=34" />
 </head>
 <body>
 
@@ -50,21 +50,30 @@
     <!-- Top Sticky Bar -->
     <header class="topbar">
       <div class="topbar-inner">
-        <a href="#profile" class="brand">
+        <a href="#dossier" class="brand">
           <span class="brand-dot"></span>
           <span>undexeror // archive</span>
         </a>
-        <nav class="nav-links" aria-label="Навигация">
-          <a href="#profile">Профиль</a>
-          <a href="#compatibility">База</a>
-          <a href="#hottakes">Hot Takes</a>
-          <a href="#trophies">Трофеи</a>
-          <a href="#activity">Активность</a>
-          <a href="#watching">Смотрю</a>
-          <a href="#waifu">Waifu</a>
-          <a href="#collection">Коллекция</a>
-          <a href="#guestbook">Стена</a>
-        </nav>
+        <div class="os-nav-cluster">
+          <nav class="os-tabs" role="tablist" aria-label="Отсеки Archive OS">
+            <button type="button" class="os-tab is-active" role="tab" aria-selected="true" aria-controls="sector-dossier" data-sector-tab="dossier">
+              <span class="os-tab-num">01</span><span class="os-tab-lbl">DOSSIER</span>
+            </button>
+            <button type="button" class="os-tab" role="tab" aria-selected="false" aria-controls="sector-vault" data-sector-tab="vault">
+              <span class="os-tab-num">02</span><span class="os-tab-lbl">VAULT</span>
+            </button>
+            <button type="button" class="os-tab" role="tab" aria-selected="false" aria-controls="sector-arena" data-sector-tab="arena">
+              <span class="os-tab-num">03</span><span class="os-tab-lbl">ARENA</span>
+            </button>
+            <button type="button" class="os-tab" role="tab" aria-selected="false" aria-controls="sector-signal" data-sector-tab="signal">
+              <span class="os-tab-num">04</span><span class="os-tab-lbl">SIGNAL</span>
+            </button>
+          </nav>
+          <div class="os-mode-switch" role="group" aria-label="Режим отображения">
+            <button type="button" class="os-mode-btn is-active" data-nav-mode="os" aria-pressed="true" title="Отсеки Archive OS">OS</button>
+            <button type="button" class="os-mode-btn" data-nav-mode="all" aria-pressed="false" title="Вся лента целиком">ALL</button>
+          </div>
+        </div>
         <div class="topbar-controls">
           <div class="status-pill" id="api-status-pill">
             <span class="status-dot"></span>
@@ -91,8 +100,34 @@
       </div>
     </header>
 
-    <main class="container">
-      <!-- HERO BENTO COMMAND DECK & ANIME-DNA -->
+    <main class="container" data-nav-mode="os">
+      <!-- Sector Telemetry Strip -->
+      <div class="sector-telemetry" id="sector-telemetry" aria-live="polite">
+        <div class="sector-tel-left">
+          <span class="sector-tel-dot" aria-hidden="true"></span>
+          <span class="sector-tel-code" id="sector-tel-code">SECTOR 01 // DOSSIER</span>
+          <span class="sector-tel-sep" aria-hidden="true">·</span>
+          <span class="sector-tel-desc" id="sector-tel-desc">PILOT DECK, WATCHING &amp; TELEMETRY</span>
+        </div>
+        <div class="sector-tel-right">
+          <span class="sector-tel-kbd" aria-hidden="true">KEYS 1–4</span>
+          <button type="button" class="sector-tel-mode-btn" id="sector-tel-mode-btn" data-nav-mode-toggle aria-pressed="false" title="Переключить режим: Отсеки (OS) / Вся лента (ALL)">
+            <span class="sector-tel-mode-dot" aria-hidden="true"></span>
+            <span id="sector-tel-mode-label">VIEW: OS</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sector-stage" id="sector-stage" data-active-sector="dossier">
+        <!-- =========================================================
+             SECTOR 01 // DOSSIER
+             ========================================================= -->
+        <div class="sector-panel is-active" id="sector-dossier" data-sector="dossier">
+          <div class="sector-feed-divider" aria-hidden="true">
+            <span class="sector-feed-tag">SECTOR 01 // DOSSIER</span>
+            <span class="sector-feed-line"></span>
+          </div>
+          <!-- HERO BENTO COMMAND DECK & ANIME-DNA -->
       <section class="hero" id="profile">
         <div class="bento-deck">
           <!-- TILE 1: PILOT DOSSIER -->
@@ -286,6 +321,210 @@
                 <div class="dna-format-row" id="dna-format-row"></div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WATCHING NOW (SHIKIMORI LIVE SHELF) -->
+      <section id="watching">
+        <div class="watching-head-bar">
+          <h2 class="section-title">
+            <span class="watching-live-dot" aria-hidden="true"></span>
+            <a href="https://shikimori.one/undereror+nyashka/list/anime/mylist/watching" target="_blank" rel="noopener noreferrer">Сейчас смотрю →</a>
+          </h2>
+          <div class="watching-nav-controls">
+            <span class="waifu-counter" id="watching-counter">01–01 / 01</span>
+            <button type="button" class="carousel-arrow" id="watching-prev" aria-label="Прокрутить влево">‹</button>
+            <button type="button" class="carousel-arrow" id="watching-next" aria-label="Прокрутить вправо">›</button>
+          </div>
+        </div>
+        <div class="watching-shelf" id="watching-shelf"></div>
+      </section>
+
+      <!-- HISTORY & ACTIVITY -->
+      <section id="activity">
+        <div class="section-head">
+          <h2 class="section-title">История и активность</h2>
+        </div>
+        <div class="activity-grid">
+          <div class="glass-card">
+            <div class="panel-header">
+              <span class="card-kicker">Последние обновления</span>
+              <span class="panel-badge" id="history-source-badge">SNAPSHOT</span>
+            </div>
+            <div class="history-list" id="history-list"></div>
+          </div>
+
+          <div class="glass-card graph-wrap">
+            <div class="panel-header">
+              <div>
+                <div class="card-kicker">График просмотров</div>
+                <div style="font-size: 11px; color: rgba(var(--light), 0.55); margin-top: 2px;">Наведите или нажмите на столбик для деталей</div>
+              </div>
+              <span class="panel-badge" id="graph-tooltip">Активность</span>
+            </div>
+            <div class="graph-bars" id="activity-graph"></div>
+          </div>
+        </div>
+      </section>
+        </div>
+
+        <!-- =========================================================
+             SECTOR 02 // VAULT
+             ========================================================= -->
+        <div class="sector-panel" id="sector-vault" data-sector="vault" hidden>
+          <div class="sector-feed-divider" aria-hidden="true">
+            <span class="sector-feed-tag">SECTOR 02 // VAULT</span>
+            <span class="sector-feed-line"></span>
+          </div>
+
+      <!-- COLLECTION (PEAK FICTION / LITERALLY ME) -->
+      <section id="collection">
+        <div class="section-head">
+          <h2 class="section-title">Коллекция</h2>
+        </div>
+
+        <div class="tabs-bar" role="tablist">
+          <button type="button" class="tab-btn active" data-tab="peak" role="tab" aria-selected="true">peak fiction</button>
+          <button type="button" class="tab-btn" data-tab="literally" role="tab" aria-selected="false">literally me</button>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-box">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input type="text" id="collection-search" placeholder="Поиск по названию или персонажу..." aria-label="Поиск по названию или персонажу" autocomplete="off" />
+          </div>
+          <div class="toolbar-right">
+            <div class="sort-group" id="sort-controls">
+              <button type="button" class="sort-btn active" data-sort="rank">По топу</button>
+              <button type="button" class="sort-btn" data-sort="score">По оценке</button>
+              <button type="button" class="sort-btn" data-sort="year">По году</button>
+            </div>
+            <div class="view-toggle-group" id="view-toggle-controls" role="tablist" aria-label="Вид коллекции">
+              <button type="button" class="view-toggle-btn active" data-cview="grid" role="tab" aria-selected="true" title="Компактная сетка карточек">⊞ Сетка</button>
+              <button type="button" class="view-toggle-btn" data-cview="showcase" role="tab" aria-selected="false" title="Журнальный режим «Витрина»">▤ Витрина</button>
+            </div>
+            <button type="button" class="randomizer-btn" id="randomizer-btn" title="Открыть фольгированный бустер-пак ARCHIVE PACK (Top 16 и все твои 9–10★ на Shikimori)">◈ Бустер-пак · Что посмотреть <span class="randomizer-count-badge" id="randomizer-count-badge">16</span></button>
+            <button type="button" class="arena-launch-btn" id="collection-arena-btn" title="Мини-турнир 1v1: выбери лучшего из моего топа за 15 секунд">⚔ Турнир 1v1</button>
+          </div>
+        </div>
+
+        <div class="cards-grid" id="collection-grid"></div>
+      </section>
+
+      <!-- WAIFU CAROUSEL -->
+      <section id="waifu">
+        <div class="waifu-head-bar">
+          <div class="waifu-head-left">
+            <button type="button" class="arena-launch-btn" id="waifu-arena-btn" title="Мини-турнир 1v1 по WAIFU">⚔ Турнир 1v1</button>
+          </div>
+          <h2 class="section-title">
+            <a href="https://shikimori.one/undereror+nyashka/favorites" target="_blank" rel="noopener noreferrer">WAIFU →</a>
+          </h2>
+          <div class="waifu-nav-controls">
+            <span class="waifu-counter" id="waifu-counter">01–08 / 15</span>
+            <button type="button" class="carousel-arrow" id="waifu-prev" aria-label="Прокрутить влево">‹</button>
+            <button type="button" class="carousel-arrow" id="waifu-next" aria-label="Прокрутить вправо">›</button>
+          </div>
+        </div>
+        <div class="waifu-stage">
+          <div class="waifu-carousel" id="waifu-carousel"></div>
+        </div>
+      </section>
+
+      <!-- ARCHIVE TROPHIES (3D METALLIC ACHIEVEMENT TOKENS) -->
+      <section id="trophies">
+        <div class="glass-card trophies-card">
+          <div class="trophies-head">
+            <div class="trophies-head-left">
+              <div class="ht-title-row">
+                <span class="dna-pulse-icon" aria-hidden="true"></span>
+                <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.4px;">Трофеи архива // 3D Medallions</span>
+              </div>
+              <h2 class="ht-heading">Коллекционные жетоны достижений</h2>
+              <p class="ht-subtitle">Автоматически чеканятся по реальному списку Shikimori — наведи на любой жетон для 3D-блика или кликни, чтобы открыть досье трофея.</p>
+            </div>
+            <div class="trophies-head-right">
+              <div class="trophies-rank-box">
+                <span class="trophies-rank-kicker">РАНГ КОЛЛЕКЦИИ</span>
+                <strong class="trophies-rank-val" id="trophies-rank-val">ARCHIVIST S</strong>
+              </div>
+              <span class="panel-badge" id="trophies-progress-badge">11 / 12 ОТКРЫТО</span>
+            </div>
+          </div>
+
+          <div class="trophies-toolbar">
+            <div class="trophies-filter-bar" role="tablist" aria-label="Фильтр трофеев">
+              <button type="button" class="trophy-filter-btn active" data-tfilter="all">Все (<span id="tf-cnt-all">12</span>)</button>
+              <button type="button" class="trophy-filter-btn" data-tfilter="unlocked">Открыто (<span id="tf-cnt-unlocked">11</span>)</button>
+              <button type="button" class="trophy-filter-btn" data-tfilter="platinum">Платина (<span id="tf-cnt-plat">3</span>)</button>
+              <button type="button" class="trophy-filter-btn" data-tfilter="locked">В процессе (<span id="tf-cnt-locked">1</span>)</button>
+            </div>
+            <div class="trophies-xp-wrap">
+              <div class="trophies-xp-meta">
+                <span id="trophies-source-note">SHIKIMORI AUTO-CHECK</span>
+                <strong id="trophies-pct-text">92%</strong>
+              </div>
+              <div class="trophies-xp-track">
+                <div class="trophies-xp-fill" id="trophies-xp-fill" style="width:92%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="trophies-grid" id="trophies-grid"></div>
+
+          <div class="trophies-footer">
+            <span class="ht-summary-note" id="trophies-summary-note">Нажми на любой жетон, чтобы рассмотреть его в 3D и увидеть подтверждающие тайтлы из списка.</span>
+            <button type="button" class="base-action-btn is-primary" id="trophies-download-png-btn">↓ Витрина трофеев (PNG)</button>
+          </div>
+        </div>
+      </section>
+        </div>
+
+        <!-- =========================================================
+             SECTOR 03 // ARENA
+             ========================================================= -->
+        <div class="sector-panel" id="sector-arena" data-sector="arena" hidden>
+          <div class="sector-feed-divider" aria-hidden="true">
+            <span class="sector-feed-tag">SECTOR 03 // ARENA</span>
+            <span class="sector-feed-line"></span>
+          </div>
+
+      <!-- INTERACTIVE MODULES QUICK LAUNCHPAD -->
+      <section id="arena-deck">
+        <div class="glass-card arena-launchpad">
+          <div class="arena-launch-head">
+            <div class="arena-launch-title-wrap">
+              <span class="dna-pulse-icon" aria-hidden="true"></span>
+              <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.2px;">Arena // Tactical Modules</span>
+            </div>
+            <span class="panel-badge">3 INTERACTIVE MODES</span>
+          </div>
+          <div class="arena-launch-grid">
+            <button type="button" class="arena-launch-tile" id="arena-launch-pack" title="Вскрыть фольгированный бустер-пак ARCHIVE PACK (Top 16 и все 9–10★)">
+              <span class="arena-tile-icon" aria-hidden="true">◈</span>
+              <span class="arena-tile-body">
+                <span class="arena-tile-title">Бустер-пак ARCHIVE PACK</span>
+                <span class="arena-tile-sub">Случайный тайтл 9–10★ или Top 16</span>
+              </span>
+              <span class="arena-tile-badge" data-pack-pool-count>16</span>
+            </button>
+            <button type="button" class="arena-launch-tile" id="arena-launch-tournament" title="Запустить мини-турнир 1v1 по Peak Fiction / Waifu / Literally Me">
+              <span class="arena-tile-icon" aria-hidden="true">⚔</span>
+              <span class="arena-tile-body">
+                <span class="arena-tile-title">Турнир 1v1</span>
+                <span class="arena-tile-sub">Peak Fiction · Waifu · Literally Me</span>
+              </span>
+              <span class="arena-tile-badge">DUEL</span>
+            </button>
+            <button type="button" class="arena-launch-tile is-cosmos" id="arena-launch-galaxy" title="Открыть 3D-Галактику всех 415+ тайтлов (WebGL / Three.js)">
+              <span class="arena-tile-icon" aria-hidden="true">✦</span>
+              <span class="arena-tile-body">
+                <span class="arena-tile-title">3D-Галактика архива</span>
+                <span class="arena-tile-sub">WebGL-космос всех тайтлов</span>
+              </span>
+              <span class="arena-tile-badge">3D</span>
+            </button>
           </div>
         </div>
       </section>
@@ -528,150 +767,66 @@
           </div>
         </div>
       </section>
+        </div>
 
-      <!-- ARCHIVE TROPHIES (3D METALLIC ACHIEVEMENT TOKENS) -->
-      <section id="trophies">
-        <div class="glass-card trophies-card">
-          <div class="trophies-head">
-            <div class="trophies-head-left">
+        <!-- =========================================================
+             SECTOR 04 // SIGNAL
+             ========================================================= -->
+        <div class="sector-panel" id="sector-signal" data-sector="signal" hidden>
+          <div class="sector-feed-divider" aria-hidden="true">
+            <span class="sector-feed-tag">SECTOR 04 // SIGNAL</span>
+            <span class="sector-feed-line"></span>
+          </div>
+
+      <!-- DIRECT CHANNELS & QUICK LINKS -->
+      <section id="signal-hub">
+        <div class="glass-card signal-card">
+          <div class="signal-head">
+            <div class="signal-head-left">
               <div class="ht-title-row">
                 <span class="dna-pulse-icon" aria-hidden="true"></span>
-                <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.4px;">Трофеи архива // 3D Medallions</span>
-              </div>
-              <h2 class="ht-heading">Коллекционные жетоны достижений</h2>
-              <p class="ht-subtitle">Автоматически чеканятся по реальному списку Shikimori — наведи на любой жетон для 3D-блика или кликни, чтобы открыть досье трофея.</p>
-            </div>
-            <div class="trophies-head-right">
-              <div class="trophies-rank-box">
-                <span class="trophies-rank-kicker">РАНГ КОЛЛЕКЦИИ</span>
-                <strong class="trophies-rank-val" id="trophies-rank-val">ARCHIVIST S</strong>
-              </div>
-              <span class="panel-badge" id="trophies-progress-badge">11 / 12 ОТКРЫТО</span>
-            </div>
-          </div>
-
-          <div class="trophies-toolbar">
-            <div class="trophies-filter-bar" role="tablist" aria-label="Фильтр трофеев">
-              <button type="button" class="trophy-filter-btn active" data-tfilter="all">Все (<span id="tf-cnt-all">12</span>)</button>
-              <button type="button" class="trophy-filter-btn" data-tfilter="unlocked">Открыто (<span id="tf-cnt-unlocked">11</span>)</button>
-              <button type="button" class="trophy-filter-btn" data-tfilter="platinum">Платина (<span id="tf-cnt-plat">3</span>)</button>
-              <button type="button" class="trophy-filter-btn" data-tfilter="locked">В процессе (<span id="tf-cnt-locked">1</span>)</button>
-            </div>
-            <div class="trophies-xp-wrap">
-              <div class="trophies-xp-meta">
-                <span id="trophies-source-note">SHIKIMORI AUTO-CHECK</span>
-                <strong id="trophies-pct-text">92%</strong>
-              </div>
-              <div class="trophies-xp-track">
-                <div class="trophies-xp-fill" id="trophies-xp-fill" style="width:92%"></div>
+                <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.2px;">Signal // Direct Channels</span>
               </div>
             </div>
+            <span class="panel-badge">53.9° N · MONOCHROME</span>
           </div>
-
-          <div class="trophies-grid" id="trophies-grid"></div>
-
-          <div class="trophies-footer">
-            <span class="ht-summary-note" id="trophies-summary-note">Нажми на любой жетон, чтобы рассмотреть его в 3D и увидеть подтверждающие тайтлы из списка.</span>
-            <button type="button" class="base-action-btn is-primary" id="trophies-download-png-btn">↓ Витрина трофеев (PNG)</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- HISTORY & ACTIVITY -->
-      <section id="activity">
-        <div class="section-head">
-          <h2 class="section-title">История и активность</h2>
-        </div>
-        <div class="activity-grid">
-          <div class="glass-card">
-            <div class="panel-header">
-              <span class="card-kicker">Последние обновления</span>
-              <span class="panel-badge" id="history-source-badge">SNAPSHOT</span>
-            </div>
-            <div class="history-list" id="history-list"></div>
-          </div>
-
-          <div class="glass-card graph-wrap">
-            <div class="panel-header">
-              <div>
-                <div class="card-kicker">График просмотров</div>
-                <div style="font-size: 11px; color: rgba(var(--light), 0.55); margin-top: 2px;">Наведите или нажмите на столбик для деталей</div>
-              </div>
-              <span class="panel-badge" id="graph-tooltip">Активность</span>
-            </div>
-            <div class="graph-bars" id="activity-graph"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- WATCHING NOW (SHIKIMORI LIVE SHELF) -->
-      <section id="watching">
-        <div class="watching-head-bar">
-          <h2 class="section-title">
-            <span class="watching-live-dot" aria-hidden="true"></span>
-            <a href="https://shikimori.one/undereror+nyashka/list/anime/mylist/watching" target="_blank" rel="noopener noreferrer">Сейчас смотрю →</a>
-          </h2>
-          <div class="watching-nav-controls">
-            <span class="waifu-counter" id="watching-counter">01–01 / 01</span>
-            <button type="button" class="carousel-arrow" id="watching-prev" aria-label="Прокрутить влево">‹</button>
-            <button type="button" class="carousel-arrow" id="watching-next" aria-label="Прокрутить вправо">›</button>
+          <div class="signal-links-grid">
+            <a class="signal-tile" id="signal-shiki-link" href="https://shikimori.one/undereror+nyashka" target="_blank" rel="noopener noreferrer">
+              <span class="signal-tile-glyph" aria-hidden="true">◈</span>
+              <span class="signal-tile-body">
+                <span class="signal-tile-name">Shikimori</span>
+                <span class="signal-tile-sub">undereror nyashka</span>
+              </span>
+              <span class="signal-tile-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="signal-tile" id="signal-tiktok-link" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">
+              <span class="signal-tile-glyph" aria-hidden="true">♪</span>
+              <span class="signal-tile-body">
+                <span class="signal-tile-name">TikTok</span>
+                <span class="signal-tile-sub">@undexeror</span>
+              </span>
+              <span class="signal-tile-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="signal-tile" id="signal-discord-link" href="https://discord.com/users/372112023087087617" target="_blank" rel="noopener noreferrer">
+              <span class="signal-tile-glyph" aria-hidden="true">
+                <span class="signal-discord-dot offline" id="signal-discord-dot"></span>
+              </span>
+              <span class="signal-tile-body">
+                <span class="signal-tile-name">Discord</span>
+                <span class="signal-tile-sub" id="signal-discord-sub">Discord Profile</span>
+              </span>
+              <span class="signal-tile-arrow" aria-hidden="true">↗</span>
+            </a>
+            <button type="button" class="signal-tile is-spotify" id="signal-spotify-btn" title="Открыть панель плейлистов Spotify">
+              <span class="signal-tile-glyph" aria-hidden="true">♫</span>
+              <span class="signal-tile-body">
+                <span class="signal-tile-name">Spotify</span>
+                <span class="signal-tile-sub">Открыть плейлисты</span>
+              </span>
+              <span class="signal-tile-arrow" aria-hidden="true">▸</span>
+            </button>
           </div>
         </div>
-        <div class="watching-shelf" id="watching-shelf"></div>
-      </section>
-
-      <!-- WAIFU CAROUSEL -->
-      <section id="waifu">
-        <div class="waifu-head-bar">
-          <div class="waifu-head-left">
-            <button type="button" class="arena-launch-btn" id="waifu-arena-btn" title="Мини-турнир 1v1 по WAIFU">⚔ Турнир 1v1</button>
-          </div>
-          <h2 class="section-title">
-            <a href="https://shikimori.one/undereror+nyashka/favorites" target="_blank" rel="noopener noreferrer">WAIFU →</a>
-          </h2>
-          <div class="waifu-nav-controls">
-            <span class="waifu-counter" id="waifu-counter">01–08 / 15</span>
-            <button type="button" class="carousel-arrow" id="waifu-prev" aria-label="Прокрутить влево">‹</button>
-            <button type="button" class="carousel-arrow" id="waifu-next" aria-label="Прокрутить вправо">›</button>
-          </div>
-        </div>
-        <div class="waifu-stage">
-          <div class="waifu-carousel" id="waifu-carousel"></div>
-        </div>
-      </section>
-
-      <!-- COLLECTION (PEAK FICTION / LITERALLY ME) -->
-      <section id="collection">
-        <div class="section-head">
-          <h2 class="section-title">Коллекция</h2>
-        </div>
-
-        <div class="tabs-bar" role="tablist">
-          <button type="button" class="tab-btn active" data-tab="peak" role="tab" aria-selected="true">peak fiction</button>
-          <button type="button" class="tab-btn" data-tab="literally" role="tab" aria-selected="false">literally me</button>
-        </div>
-
-        <div class="toolbar">
-          <div class="search-box">
-            <span class="search-icon" aria-hidden="true">⌕</span>
-            <input type="text" id="collection-search" placeholder="Поиск по названию или персонажу..." aria-label="Поиск по названию или персонажу" autocomplete="off" />
-          </div>
-          <div class="toolbar-right">
-            <div class="sort-group" id="sort-controls">
-              <button type="button" class="sort-btn active" data-sort="rank">По топу</button>
-              <button type="button" class="sort-btn" data-sort="score">По оценке</button>
-              <button type="button" class="sort-btn" data-sort="year">По году</button>
-            </div>
-            <div class="view-toggle-group" id="view-toggle-controls" role="tablist" aria-label="Вид коллекции">
-              <button type="button" class="view-toggle-btn active" data-cview="grid" role="tab" aria-selected="true" title="Компактная сетка карточек">⊞ Сетка</button>
-              <button type="button" class="view-toggle-btn" data-cview="showcase" role="tab" aria-selected="false" title="Журнальный режим «Витрина»">▤ Витрина</button>
-            </div>
-            <button type="button" class="randomizer-btn" id="randomizer-btn" title="Открыть фольгированный бустер-пак ARCHIVE PACK (Top 16 и все твои 9–10★ на Shikimori)">◈ Бустер-пак · Что посмотреть <span class="randomizer-count-badge" id="randomizer-count-badge">16</span></button>
-            <button type="button" class="arena-launch-btn" id="collection-arena-btn" title="Мини-турнир 1v1: выбери лучшего из моего топа за 15 секунд">⚔ Турнир 1v1</button>
-          </div>
-        </div>
-
-        <div class="cards-grid" id="collection-grid"></div>
       </section>
 
       <!-- GUESTBOOK (GITHUB DISCUSSIONS / GISCUS) -->
@@ -709,6 +864,8 @@
           </div>
         </div>
       </section>
+        </div>
+      </div>
     </main>
 
     <footer class="footer">
@@ -1007,29 +1164,29 @@
   </div>
 
   <!-- Mobile Bottom Navigation Dock -->
-  <nav class="mobile-dock" id="mobile-dock" aria-label="Мобильная навигация">
-    <a href="#profile" class="mdock-btn is-active" data-mdock-sec="profile">
-      <span class="mdock-icon" aria-hidden="true">◈</span>
-      <span>Профиль</span>
-    </a>
-    <a href="#compatibility" class="mdock-btn" data-mdock-sec="compatibility">
-      <span class="mdock-icon" aria-hidden="true">◎</span>
-      <span>База</span>
-    </a>
-    <button type="button" class="mdock-btn" id="mdock-arena-btn" aria-label="Открыть Турнир 1v1">
-      <span class="mdock-icon" aria-hidden="true">⚔</span>
-      <span>Турнир</span>
+  <nav class="mobile-dock" id="mobile-dock" aria-label="Мобильная навигация Archive OS">
+    <button type="button" class="mdock-btn is-active" data-sector-tab="dossier" data-mdock-sector="dossier" aria-label="Отсек 01: Dossier">
+      <span class="mdock-icon mdock-num" aria-hidden="true">01</span>
+      <span>DOSSIER</span>
     </button>
-    <button type="button" class="mdock-btn" id="mdock-random-btn" aria-label="Открыть бустер-пак ARCHIVE PACK">
-      <span class="mdock-icon" aria-hidden="true">✦</span>
-      <span>Пак</span>
+    <button type="button" class="mdock-btn" data-sector-tab="vault" data-mdock-sector="vault" aria-label="Отсек 02: Vault">
+      <span class="mdock-icon mdock-num" aria-hidden="true">02</span>
+      <span>VAULT</span>
+    </button>
+    <button type="button" class="mdock-btn" data-sector-tab="arena" data-mdock-sector="arena" aria-label="Отсек 03: Arena">
+      <span class="mdock-icon mdock-num" aria-hidden="true">03</span>
+      <span>ARENA</span>
+    </button>
+    <button type="button" class="mdock-btn" data-sector-tab="signal" data-mdock-sector="signal" aria-label="Отсек 04: Signal">
+      <span class="mdock-icon mdock-num" aria-hidden="true">04</span>
+      <span>SIGNAL</span>
     </button>
     <button type="button" class="mdock-btn mdock-music-btn" id="mdock-music-btn" aria-label="Открыть панель музыки" aria-expanded="false">
       <span class="mdock-icon" aria-hidden="true">
         <span class="mdock-music-glyph">♫</span>
         <span class="mdock-eq"><span></span><span></span><span></span></span>
       </span>
-      <span>Музыка</span>
+      <span>AUDIO</span>
     </button>
   </nav>
 
@@ -1485,6 +1642,6 @@
     </div>
   </div>
 
-  <script type="module" src="./assets/js/main.js?v=32"></script>
+  <script type="module" src="./assets/js/main.js?v=34"></script>
 </body>
 </html>

@@ -89,6 +89,7 @@ export const PLAYLIST = [
 ];
 
 export const VIEW_STORAGE_KEY = 'undexeror_archive_view_v1';
+export const NAV_MODE_STORAGE_KEY = 'undexeror_archive_nav_mode_v1';
 
 export function formatRank(n) {
   return String(n).padStart(2, '0');

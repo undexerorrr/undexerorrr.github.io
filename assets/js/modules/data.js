@@ -11,7 +11,8 @@ import {
   GALAXY_CACHE_KEY,
   COOP_HOST_CACHE_KEY,
   TROPHIES_CACHE_KEY,
-  VIEW_STORAGE_KEY
+  VIEW_STORAGE_KEY,
+  NAV_MODE_STORAGE_KEY
 } from './config.js';
 
 export const SNAPSHOT = {
@@ -146,6 +147,11 @@ export const appState = {
   liveBeatEnergy: 0,
   currentTab: 'peak',
   currentSort: 'rank',
+  activeSector: 'dossier',
+  navMode: (() => {
+    try { return localStorage.getItem(NAV_MODE_STORAGE_KEY) === 'all' ? 'all' : 'os'; }
+    catch (e) { return 'os'; }
+  })(),
   currentView: (() => {
     try { return localStorage.getItem(VIEW_STORAGE_KEY) === 'showcase' ? 'showcase' : 'grid'; }
     catch (e) { return 'grid'; }
@@ -454,6 +460,9 @@ export function updateRandomizerPoolCounts() {
   if (allCountEl) allCountEl.textContent = String(totalAll);
   const packCountEl = document.getElementById('pack-all-count');
   if (packCountEl) packCountEl.textContent = String(totalAll);
+  document.querySelectorAll('[data-pack-pool-count]').forEach((el) => {
+    el.textContent = String(totalAll);
+  });
 }
 
 export function loadCoverCache() {

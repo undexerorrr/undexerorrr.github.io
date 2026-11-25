@@ -15,6 +15,7 @@ import { initCinemaMode } from './modules/cinema.js';
 import { initTrophiesShowcase } from './modules/trophies.js';
 import { initGuestbook } from './modules/guestbook.js';
 import { initCommandPalette } from './modules/palette.js';
+import { initSectors } from './modules/sectors.js';
 import {
   initModalScrollLock,
   initIntroOverlay,
@@ -52,6 +53,7 @@ function safeInit(name, fn) {
 }
 
 safeInit('initModalScrollLock', () => initModalScrollLock());
+safeInit('initSectors', () => initSectors());
 const playerControls = safeInit('initMusicPlayer', () => initMusicPlayer());
 safeInit('initIntroOverlay', () => initIntroOverlay(playerControls));
 safeInit('initSpotifyDrawer', () => initSpotifyDrawer(playerControls));

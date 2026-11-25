@@ -158,16 +158,44 @@ export function initGuestbook() {
     mount.appendChild(script);
   };
 
+  let observer = null;
+
+  const maybeLoadIfVisible = () => {
+    if (loaded) return;
+    if (section.closest('[hidden]')) return;
+    const main = document.querySelector('main.container');
+    const isAllMode = main && main.dataset.navMode === 'all';
+    const rect = section.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) return;
+
+    if (!isAllMode || rect.top <= window.innerHeight + 420) {
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+      injectGiscus();
+    }
+  };
+
+  document.addEventListener('archive:sectorchange', () => {
+    if (loaded) return;
+    requestAnimationFrame(maybeLoadIfVisible);
+  });
+
   if (typeof IntersectionObserver !== 'function') {
-    injectGiscus();
+    requestAnimationFrame(maybeLoadIfVisible);
     return;
   }
 
-  const observer = new IntersectionObserver(
+  observer = new IntersectionObserver(
     (entries) => {
+      if (loaded || section.closest('[hidden]')) return;
       for (const entry of entries) {
-        if (entry.isIntersecting || entry.boundingClientRect.top <= window.innerHeight + 420) {
+        const rect = entry.boundingClientRect;
+        if (rect.width === 0 && rect.height === 0) continue;
+        if (entry.isIntersecting || rect.top <= window.innerHeight + 420) {
           observer.disconnect();
+          observer = null;
           injectGiscus();
           break;
         }
@@ -177,4 +205,5 @@ export function initGuestbook() {
   );
 
   observer.observe(section);
+  requestAnimationFrame(maybeLoadIfVisible);
 }

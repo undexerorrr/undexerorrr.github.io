@@ -1,6 +1,7 @@
 import { PLAYLIST, formatRank, escapeHtml } from './config.js';
 import { appState, PEAK_FICTION, WAIFU_LIST, LITERALLY_ME } from './data.js';
 import { openHoloDeck } from './ui.js';
+import { SECTORS, getSectorState, setSector, toggleNavMode, navigateToTarget } from './sectors.js';
 
 /* =========================================
    ARCHIVE COMMAND PALETTE (CTRL+K / ⌘K)
@@ -103,16 +104,9 @@ export function initCommandPalette(player) {
   }
 
   function goToSection(id, focusSelector) {
-    const target = document.getElementById(id);
-    if (!target) return;
-    const smooth = !prefersReducedMotion();
-    // Wait one frame so the unified scroll lock releases <body> first.
+    if (!document.getElementById(id)) return;
     requestAnimationFrame(() => {
-      target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
-      if (focusSelector && finePointerMq && finePointerMq.matches) {
-        const field = document.querySelector(focusSelector);
-        if (field) setTimeout(() => field.focus({ preventScroll: true }), smooth ? 520 : 0);
-      }
+      navigateToTarget(id, { focusSelector: focusSelector || null });
     });
   }
 
@@ -130,6 +124,34 @@ export function initCommandPalette(player) {
   function buildItems() {
     const out = [];
     const cinemaOn = isCinemaActive();
+    const { sector: activeSector, navMode } = getSectorState();
+
+    SECTORS.forEach((sec) => {
+      const isActive = sec.id === activeSector && navMode === 'os';
+      out.push({
+        group: 'Отсеки · Archive OS',
+        icon: sec.num,
+        label: `Отсек ${sec.title}`,
+        hint: sec.hint,
+        meta: isActive ? 'АКТИВЕН' : `KEY ${Number(sec.num)}`,
+        on: isActive,
+        kw: `сектор отсек sector os ${sec.kw}`,
+        page: true,
+        run: () => setSector(sec.id)
+      });
+    });
+
+    out.push({
+      group: 'Отсеки · Archive OS',
+      icon: '⊞',
+      label: navMode === 'os' ? 'Режим просмотра: Вся лента (ALL)' : 'Режим просмотра: Отсеки (OS)',
+      hint: navMode === 'os' ? 'Показать все 4 отсека одной лентой' : 'Переключиться в режим 4 отсеков Archive OS',
+      meta: navMode.toUpperCase(),
+      on: navMode === 'all',
+      kw: 'режим mode os all лента отсеки все секции',
+      page: true,
+      run: () => toggleNavMode()
+    });
 
     out.push(
       {

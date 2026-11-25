@@ -9,7 +9,7 @@
 - Статический сайт для GitHub Pages без сборщика и транспиляции:
   - `index.html` — разметка, мета-теги (`viewport-fit=cover`), шрифты Google Fonts и подключение ресурсов с версионированием.
   - `assets/css/archive.css` — единая таблица стилей (токены `:root` в начале файла, единая система модалок, `content-visibility`, capability- и responsive-медиазапросы в конце); `assets/css/giscus-noir.css` — кастомная нуар-тема для iframe Giscus.
-  - `assets/js/main.js` + `assets/js/modules/` — модульная ES-архитектура без сборщика (`config.js`, `data.js`, `shikimori.js`, `music.js`, `weather.js`, `galaxy.js`, `coop.js`, `trophies.js`, `cinema.js`, `guestbook.js`, `palette.js`, `ui.js`), где `main.js` выступает точкой входа и задаёт порядок инициализации, а `data.js` хранит общее состояние `appState`, локальные снапшоты (`SNAPSHOT`, `PEAK_FICTION`, `WAIFU_LIST`, `LITERALLY_ME`, `PLAYLIST`) и `localStorage`-кэши; сетевые интеграции — Shikimori, AniList GraphQL, Lanyard, Open-Meteo, Spotify Embed/oEmbed, Giscus / GitHub Discussions (ленивая загрузка) и локальный `assets/js/vendor/three.min.js` для 3D-Галактики.
+  - `assets/js/main.js` + `assets/js/modules/` — модульная ES-архитектура без сборщика (`config.js`, `data.js`, `sectors.js`, `shikimori.js`, `music.js`, `weather.js`, `galaxy.js`, `coop.js`, `trophies.js`, `cinema.js`, `guestbook.js`, `palette.js`, `ui.js`), где `main.js` выступает точкой входа и задаёт порядок инициализации (с ранним запуском `initSectors()` до модулей рендера/ленивой загрузки), а `data.js` хранит общее состояние `appState`, локальные снапшоты (`SNAPSHOT`, `PEAK_FICTION`, `WAIFU_LIST`, `LITERALLY_ME`, `PLAYLIST`) и `localStorage`-кэши; сетевые интеграции — Shikimori, AniList GraphQL, Lanyard, Open-Meteo, Spotify Embed/oEmbed, Giscus / GitHub Discussions (ленивая загрузка) и локальный `assets/js/vendor/three.min.js` для 3D-Галактики.
 - Сохранять существующий порядок CSS-каскада, ключи `localStorage` и работу в оффлайн/fallback-режиме (через `SNAPSHOT` и `fetchWithTimeout`).
 
 ---
@@ -67,7 +67,7 @@
   - `will-change: transform` допустим **только** в кратковременных активных состояниях взаимодействия или открытых 3D/drag-оверлеях (например, `.is-tilting`, `.is-open` на активной 3D-сцене/карте, как это сделано в `assets/css/archive.css`).
 - **Никаких `console.*` в `assets/js/main.js` и `assets/js/modules/*.js`**:
   - Запрещены `console.log`, `console.warn`, `console.error`, `console.info`, `console.debug` и любые другие вызовы `console.*` в продакшен-коде. Ошибки обрабатывать через fallback-данные и аккуратные UI-статусы.
-- Сохранять offscreen-оптимизацию (`content-visibility: auto` + `contain-intrinsic-size` для секций ниже первого экрана) и единую блокировку скролла (`initModalScrollLock()`).
+- Сохранять offscreen-оптимизацию (`content-visibility: auto` + `contain-intrinsic-size` для секций ниже первого экрана), единую блокировку скролла (`initModalScrollLock()`) и локализованные переходы между 4 отсеками `Archive OS` через `document.startViewTransition()` (класс `is-sector-transitioning` / `view-transition-name: sector-stage` снимается в `transition.finished.finally(...)`).
 
 ---
 

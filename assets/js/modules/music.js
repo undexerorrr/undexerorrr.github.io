@@ -539,6 +539,7 @@ export function initSpotifyDrawer(player) {
   document.getElementById('hero-spotify-btn')?.addEventListener('click', openDrawer);
   document.getElementById('discord-spotify-btn')?.addEventListener('click', openDrawer);
   document.getElementById('dock-spotify-btn')?.addEventListener('click', openDrawer);
+  document.getElementById('signal-spotify-btn')?.addEventListener('click', openDrawer);
   closeBtn?.addEventListener('click', closeDrawer);
   backdrop?.addEventListener('click', closeDrawer);
   window.addEventListener('keydown', (e) => {
@@ -575,6 +576,8 @@ export function initLanyardPresence() {
   const spCurEl = document.getElementById('sp-time-cur');
   const spEndEl = document.getElementById('sp-time-end');
   const spFillEl = document.getElementById('sp-bar-fill');
+  const signalDotEl = document.getElementById('signal-discord-dot');
+  const signalSubEl = document.getElementById('signal-discord-sub');
 
   if (!card) return;
 
@@ -628,8 +631,15 @@ export function initLanyardPresence() {
     if (dotEl) {
       dotEl.className = 'discord-status-badge ' + status;
     }
+    if (signalDotEl) {
+      signalDotEl.className = 'signal-discord-dot ' + status;
+    }
     if (userEl) {
       userEl.textContent = u.username ? `@${u.username}` : displayName;
+    }
+    if (signalSubEl) {
+      const tag = u.username ? `@${u.username}` : displayName;
+      signalSubEl.textContent = `${tag} · ${STATUS_MAP[status] || 'OFFLINE'}`;
     }
 
     // Priority 1: Spotify listening
@@ -717,9 +727,11 @@ export function initLanyardPresence() {
     card.classList.remove('is-spotify');
     spProgWrap?.classList.remove('is-visible');
     if (dotEl) dotEl.className = 'discord-status-badge offline';
+    if (signalDotEl) signalDotEl.className = 'signal-discord-dot offline';
     if (stateLabelEl) stateLabelEl.textContent = 'DISCORD · LANYARD';
     setTitleContent('Зайди на discord.gg/lanyard', 'https://discord.gg/lanyard');
     if (subEl) subEl.textContent = 'Один раз — чтобы API видел твой онлайн и Spotify';
+    if (signalSubEl) signalSubEl.textContent = 'Discord Profile';
   }
 
   function updateTimers() {
@@ -757,9 +769,11 @@ export function initLanyardPresence() {
     card.classList.remove('is-spotify');
     spProgWrap?.classList.remove('is-visible');
     if (dotEl) dotEl.className = 'discord-status-badge offline';
+    if (signalDotEl) signalDotEl.className = 'signal-discord-dot offline';
     if (stateLabelEl) stateLabelEl.textContent = 'DISCORD · OFFLINE';
     setTitleContent('undereror nyashka', '');
     if (subEl) subEl.textContent = 'Статус Discord временно недоступен · плейлисты активны';
+    if (signalSubEl) signalSubEl.textContent = 'Discord Profile';
   }
 
   async function fetchRest() {
