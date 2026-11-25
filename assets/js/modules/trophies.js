@@ -157,7 +157,7 @@ export function buildFallbackTrophiesState() {
   return { isLive: false, items, updatedAt: Date.now() };
 }
 
-export function computeTrophiesFromRates(allRates, userStats) {
+export function computeTrophiesFromRates(allRates, userStats, options) {
   if (!Array.isArray(allRates) || !allRates.length) return buildFallbackTrophiesState();
 
   const completedRates = allRates.filter((r) => r && r.anime && r.anime.id && r.status === 'completed');
@@ -395,7 +395,14 @@ export function computeTrophiesFromRates(allRates, userStats) {
     return { ...d, unlocked, pct };
   });
 
-  return { isLive: true, items, updatedAt: Date.now() };
+  const isSnapshot = Boolean(options && options.isSnapshot);
+  return {
+    isLive: !isSnapshot,
+    isSnapshot,
+    snapshotDate: (options && options.snapshotDate) || null,
+    items,
+    updatedAt: Date.now()
+  };
 }
 
 let openTrophyInspectHook = null;
@@ -421,7 +428,14 @@ export function renderTrophiesShowcase() {
 
   if (rankEl) rankEl.textContent = rankLabel;
   if (progBadge) progBadge.textContent = `${unlockedItems.length} / ${allItems.length} ОТКРЫТО`;
-  if (srcNote) srcNote.textContent = st.isLive ? 'SHIKIMORI LIVE · VERIFIED' : 'SNAPSHOT · SYNCING';
+  if (srcNote) {
+    srcNote.textContent = st.isLive
+      ? 'SHIKIMORI LIVE · VERIFIED'
+      : (st.isSnapshot ? 'SNAPSHOT · VERIFIED' : 'SNAPSHOT · SYNCING');
+    srcNote.title = st.isSnapshot && !st.isLive && st.snapshotDate
+      ? `Авто-снапшот от ${st.snapshotDate}`
+      : '';
+  }
   if (pctEl) pctEl.textContent = `${pctTotal}%`;
   if (xpFill) xpFill.style.width = `${pctTotal}%`;
 

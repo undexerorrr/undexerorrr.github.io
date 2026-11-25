@@ -72,7 +72,7 @@ export function renderStats(anime, manga, lifetimeText) {
     mangaCompleted: mDone,
     mangaReading: mRead
   };
-  if (!appState.trophiesState || !appState.trophiesState.isLive) {
+  if (!appState.trophiesState || (!appState.trophiesState.isLive && !appState.trophiesState.isSnapshot)) {
     appState.trophiesState = buildFallbackTrophiesState();
     renderTrophiesShowcase();
   }
@@ -88,7 +88,12 @@ export function renderHistory(items, isLive) {
   const list = document.getElementById('history-list');
   const badge = document.getElementById('history-source-badge');
   if (!list) return;
-  if (badge) badge.textContent = isLive ? 'SHIKIMORI LIVE' : 'SNAPSHOT';
+  if (badge) {
+    badge.textContent = isLive ? 'SHIKIMORI LIVE' : 'SNAPSHOT';
+    badge.title = !isLive && appState.snapshotMeta?.formattedDate
+      ? `Авто-снапшот от ${appState.snapshotMeta.formattedDate}`
+      : '';
+  }
 
   const seenHistoryKeys = new Set();
   const uniqueItems = [];
@@ -105,13 +110,14 @@ export function renderHistory(items, isLive) {
   list.innerHTML = uniqueItems.slice(0, 5).map((item) => {
     const cacheKey = item.id ? 'anime_' + item.id : '';
     const cachedImg = cacheKey && appState.coverCache[cacheKey] ? appState.coverCache[cacheKey] : '';
-    const imgSrc = item.image || cachedImg;
+    const imgSrc = cachedImg || item.image || '';
+    const fallbackSrc = cachedImg ? (item.image || '') : '';
     return `
       <a class="history-item" href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer">
         <div class="history-thumb">
           <img
             data-cover-key="${escapeHtml(cacheKey)}"
-            data-fallback-src="${escapeHtml(cachedImg)}"
+            data-fallback-src="${escapeHtml(fallbackSrc)}"
             src="${escapeHtml(imgSrc)}"
             alt="${escapeHtml(item.title)}"
             loading="lazy"
@@ -222,12 +228,19 @@ export function renderAnimeDna(dnaInput) {
   const formatRow = document.getElementById('dna-format-row');
 
   if (badge) {
-    badge.textContent = dna.isLive ? `LIVE · ${dna.totalAnalyzed} ТАЙТЛОВ` : 'SNAPSHOT';
+    badge.textContent = dna.isLive
+      ? `LIVE · ${dna.totalAnalyzed} ТАЙТЛОВ`
+      : (dna.isSnapshot ? `SNAPSHOT · ${dna.totalAnalyzed} ТАЙТЛОВ` : 'SNAPSHOT');
+    badge.title = dna.isSnapshot && !dna.isLive && dna.snapshotDate
+      ? `Авто-снапшот от ${dna.snapshotDate}`
+      : '';
   }
   if (subNote) {
     subNote.textContent = dna.isLive
       ? `Просканировано ${dna.totalAnalyzed} завершённых тайтлов с Shikimori`
-      : 'Синхронизация вкуса с Shikimori...';
+      : (dna.isSnapshot
+        ? `Данные авто-снапшота · ${dna.totalAnalyzed} завершённых тайтлов${dna.snapshotDate ? ' (' + dna.snapshotDate + ')' : ''}`
+        : 'Синхронизация вкуса с Shikimori...');
   }
   if (ratedPill) ratedPill.textContent = `ОЦЕНЕНО: ${dna.ratedCount || 0}`;
 
@@ -401,7 +414,12 @@ export function renderHotTakes(stateInput, loadFailed) {
     idxBadge.textContent = `ИНДЕКС ${avg >= 0 ? '+' : ''}${avg.toFixed(2)}`;
   }
   if (srcBadge) {
-    srcBadge.textContent = `LIVE · ${st.scannedCount || 0} ОЦЕНОК`;
+    srcBadge.textContent = st.isSnapshot && !st.isLive
+      ? `SNAPSHOT · ${st.scannedCount || 0} ОЦЕНОК`
+      : `LIVE · ${st.scannedCount || 0} ОЦЕНОК`;
+    srcBadge.title = st.isSnapshot && !st.isLive && st.snapshotDate
+      ? `Авто-снапшот от ${st.snapshotDate}`
+      : '';
   }
   if (gemsBadge && gemsSlice.length) {
     gemsBadge.textContent = `МАКС +${gemsSlice[0].delta.toFixed(2)}`;
