@@ -5891,6 +5891,24 @@
       box-shadow: 0 0 14px rgba(var(--bright), 0.26);
     }
 
+    .galaxy-hud-btn.is-tm-toggle.active {
+      color: #fff;
+      background: rgba(110, 231, 183, 0.14);
+      border-color: rgba(110, 231, 183, 0.72);
+      box-shadow: 0 0 16px rgba(110, 231, 183, 0.22);
+    }
+
+    .galaxy-hud-btn.is-tm-toggle.active .g-tm-ico {
+      color: #6ee7b7;
+    }
+
+    #galaxy-music-btn.is-playing {
+      color: #a7f3d0;
+      background: rgba(110, 231, 183, 0.12);
+      border-color: rgba(110, 231, 183, 0.65);
+      box-shadow: 0 0 14px rgba(110, 231, 183, 0.20);
+    }
+
     .galaxy-hud-btn.is-close {
       width: 34px;
       height: 34px;
@@ -6109,6 +6127,237 @@
       align-items: center;
       gap: 9px;
       pointer-events: none;
+    }
+
+    /* Galaxy Time Machine Chronology Bar */
+
+    .galaxy-tm-panel {
+      display: none;
+      pointer-events: none;
+      width: min(100%, 820px);
+      max-width: 100%;
+      padding: 8px 12px;
+      border-radius: var(--radius-lg);
+      background: var(--surface-3);
+      border: 1px solid var(--border-default);
+      box-shadow: var(--shadow-floating), var(--edge-specular);
+    }
+
+    .galaxy-overlay.is-open .galaxy-tm-panel.is-open {
+      display: block;
+      pointer-events: auto;
+    }
+
+    .galaxy-tm-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .galaxy-tm-play {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-strong);
+      background: rgba(8, 11, 19, 0.92);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: var(--edge-specular);
+      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease;
+    }
+
+    .galaxy-tm-play:hover {
+      border-color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 0 14px rgba(var(--bright), 0.30);
+    }
+
+    .galaxy-tm-play.is-playing {
+      color: #6ee7b7;
+      background: rgba(110, 231, 183, 0.14);
+      border-color: rgba(110, 231, 183, 0.72);
+      box-shadow: 0 0 14px rgba(110, 231, 183, 0.24);
+    }
+
+    .galaxy-tm-date {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      color: #fff;
+      min-width: 56px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .galaxy-tm-track-wrap {
+      flex: 1 1 160px;
+      min-width: 90px;
+      display: flex;
+      align-items: center;
+    }
+
+    .galaxy-tm-scrubber {
+      --tm-pct: 0%;
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 24px;
+      background: transparent;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .galaxy-tm-scrubber::-webkit-slider-runnable-track {
+      height: 4px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(90deg, rgba(110, 231, 183, 0.88) 0%, rgba(220, 236, 255, 0.94) var(--tm-pct), rgba(var(--bright), 0.20) var(--tm-pct), rgba(var(--bright), 0.20) 100%);
+      border: 1px solid rgba(var(--bright), 0.16);
+    }
+
+    .galaxy-tm-scrubber::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      margin-top: -6px;
+      border-radius: 50%;
+      background: #eef4ff;
+      border: 2px solid #090d16;
+      box-shadow: 0 0 10px rgba(220, 236, 255, 0.75);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .galaxy-tm-scrubber:hover::-webkit-slider-thumb {
+      transform: scale(1.15);
+      box-shadow: 0 0 14px rgba(110, 231, 183, 0.85);
+    }
+
+    .galaxy-tm-scrubber::-moz-range-track {
+      height: 4px;
+      border-radius: var(--radius-pill);
+      background: rgba(var(--bright), 0.20);
+      border: 1px solid rgba(var(--bright), 0.16);
+    }
+
+    .galaxy-tm-scrubber::-moz-range-progress {
+      height: 4px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(90deg, rgba(110, 231, 183, 0.88), rgba(220, 236, 255, 0.94));
+    }
+
+    .galaxy-tm-scrubber::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #eef4ff;
+      border: 2px solid #090d16;
+      box-shadow: 0 0 10px rgba(220, 236, 255, 0.75);
+    }
+
+    .galaxy-tm-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(var(--light), 0.84);
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .galaxy-tm-sep {
+      color: rgba(var(--muted), 0.55);
+    }
+
+    .galaxy-tm-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .galaxy-tm-chip,
+    .galaxy-tm-close {
+      height: 28px;
+      padding: 0 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-default);
+      background: rgba(6, 9, 16, 0.86);
+      color: rgba(var(--light), 0.88);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .galaxy-tm-close {
+      width: 28px;
+      padding: 0;
+      font-size: 15px;
+    }
+
+    .galaxy-tm-chip:hover,
+    .galaxy-tm-close:hover {
+      color: #fff;
+      border-color: var(--border-strong);
+      box-shadow: 0 0 12px rgba(var(--bright), 0.22);
+    }
+
+    .galaxy-tm-chip.active {
+      color: #fff;
+      background: rgba(var(--bright), 0.22);
+      border-color: rgba(var(--bright), 0.78);
+    }
+
+    .galaxy-tm-axis {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 2px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: rgba(5, 8, 14, 0.78);
+    }
+
+    .galaxy-tm-axis[hidden] {
+      display: none;
+    }
+
+    .galaxy-tm-axis-btn {
+      padding: 4px 8px;
+      border: 0;
+      border-radius: var(--radius-pill);
+      background: transparent;
+      color: rgba(var(--light), 0.66);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .galaxy-tm-axis-btn:hover {
+      color: #fff;
+    }
+
+    .galaxy-tm-axis-btn.active {
+      color: #fff;
+      background: rgba(var(--bright), 0.24);
     }
 
     .galaxy-dock-bar {
@@ -9134,6 +9383,10 @@
       .galaxy-nav-btn,
       .galaxy-hud-btn,
       .galaxy-seg-btn,
+      .galaxy-tm-play,
+      .galaxy-tm-chip,
+      .galaxy-tm-axis-btn,
+      .galaxy-tm-close,
       .station-tab,
       .coop-swap-btn,
       .coop-chip,
@@ -9303,6 +9556,35 @@
 
       .ht-columns {
         grid-template-columns: 1fr;
+      }
+
+      .galaxy-search-wrap {
+        width: 176px;
+      }
+
+      .galaxy-tm-panel {
+        width: 100%;
+      }
+
+      .galaxy-tm-row {
+        flex-wrap: wrap;
+        row-gap: 7px;
+      }
+
+      .galaxy-tm-track-wrap {
+        order: 10;
+        flex: 1 1 100%;
+        min-width: 0;
+      }
+
+      .galaxy-tm-meta {
+        margin-right: auto;
+      }
+    }
+
+    @media (max-width: 1180px) and (min-width: 721px) {
+      .galaxy-inspector {
+        top: 112px;
       }
     }
 
@@ -9483,9 +9765,10 @@
 
     @media (max-width: 720px) {
       .galaxy-hud-top {
-        top: 10px;
+        top: calc(10px + env(safe-area-inset-top, 0px));
         left: 10px;
         right: 10px;
+        gap: 8px;
       }
 
       .galaxy-brand-box {
@@ -9496,8 +9779,17 @@
         font-size: 10px;
       }
 
+      .galaxy-top-actions {
+        flex: 1 1 auto;
+        min-width: 0;
+        justify-content: flex-end;
+      }
+
       .galaxy-search-wrap {
-        width: 155px;
+        flex: 1 1 130px;
+        width: auto;
+        max-width: none;
+        min-width: 0;
       }
 
       .galaxy-hide-sm {
@@ -9515,6 +9807,31 @@
         max-height: calc(100dvh - 180px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
         overflow-y: auto;
         transform: translateY(20px);
+      }
+
+      .galaxy-overlay.is-tm-open .galaxy-inspector {
+        bottom: calc(222px + env(safe-area-inset-bottom, 0px));
+        max-height: calc(100vh - 300px);
+        max-height: calc(100dvh - 300px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+      }
+
+      .galaxy-tm-panel {
+        padding: 8px 10px;
+        border-radius: 14px;
+      }
+
+      .galaxy-tm-row {
+        gap: 6px;
+        row-gap: 6px;
+      }
+
+      .galaxy-tm-date {
+        min-width: 42px;
+        font-size: 10.5px;
+      }
+
+      .galaxy-tm-meta {
+        font-size: 9.5px;
       }
 
       .galaxy-hud-bottom {
@@ -10095,14 +10412,67 @@
         font-size: 14px;
       }
 
+      .galaxy-top-actions {
+        width: 100%;
+        gap: 6px;
+      }
+
       .galaxy-search-wrap {
-        width: 132px;
+        flex: 1 1 100px;
+        width: auto;
+        min-width: 0;
+      }
+
+      .galaxy-hud-btn.is-tm-toggle .g-tm-lbl {
+        display: none;
+      }
+
+      .galaxy-hud-btn {
+        min-height: 40px;
+        padding: 6px 10px;
+      }
+
+      .galaxy-hud-btn.is-tm-toggle,
+      .galaxy-hud-btn.is-close {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        padding: 0;
+      }
+
+      .galaxy-tm-play,
+      .galaxy-tm-chip,
+      .galaxy-tm-close {
+        min-height: 40px;
+        min-width: 40px;
+      }
+
+      .galaxy-tm-scrubber {
+        height: 32px;
+      }
+
+      .galaxy-tm-scrubber::-webkit-slider-thumb {
+        width: 18px;
+        height: 18px;
+        margin-top: -8px;
+      }
+
+      .galaxy-tm-scrubber::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
       }
 
       .galaxy-inspector {
         bottom: calc(162px + env(safe-area-inset-bottom, 0px));
         max-height: calc(100vh - 232px);
         max-height: calc(100dvh - 232px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+      }
+
+      .galaxy-overlay.is-tm-open .galaxy-inspector {
+        bottom: calc(272px + env(safe-area-inset-bottom, 0px));
+        max-height: calc(100vh - 376px);
+        max-height: calc(100dvh - 376px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
       }
 
       .galaxy-dock-bar {
@@ -11706,7 +12076,10 @@
       .os-tab:hover,
       .sector-tel-mode-btn:hover,
       .arena-launch-tile:hover,
-      .signal-tile:hover {
+      .signal-tile:hover,
+      .galaxy-tm-play:hover,
+      .galaxy-tm-chip:hover,
+      .galaxy-tm-close:hover {
         transform: none;
         box-shadow: var(--edge-specular);
       }

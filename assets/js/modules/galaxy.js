@@ -66,12 +66,24 @@ export function initArchiveGalaxy(player) {
   const loaderText = document.getElementById('galaxy-loader-text');
 
   const searchInput = document.getElementById('galaxy-search-input');
+  const tmToggleBtn = document.getElementById('galaxy-tm-btn');
   const warpBtn = document.getElementById('galaxy-warp-btn');
   const linesBtn = document.getElementById('galaxy-lines-btn');
   const orbitBtn = document.getElementById('galaxy-orbit-btn');
   const resetBtn = document.getElementById('galaxy-reset-btn');
   const musicBtn = document.getElementById('galaxy-music-btn');
   const closeBtn = document.getElementById('galaxy-close-btn');
+
+  const tmPanel = document.getElementById('galaxy-tm-panel');
+  const tmPlayBtn = document.getElementById('galaxy-tm-play-btn');
+  const tmDateEl = document.getElementById('galaxy-tm-date');
+  const tmScrubber = document.getElementById('galaxy-tm-scrubber');
+  const tmStarsEl = document.getElementById('galaxy-tm-stars');
+  const tmEpsEl = document.getElementById('galaxy-tm-eps');
+  const tmSpeedBtn = document.getElementById('galaxy-tm-speed-btn');
+  const tmAxisGroup = document.getElementById('galaxy-tm-axis-group');
+  const tmAxisBtns = Array.from(document.querySelectorAll('[data-tmaxis]'));
+  const tmCloseBtn = document.getElementById('galaxy-tm-close-btn');
 
   const inspector = document.getElementById('galaxy-inspector');
   const inspClose = document.getElementById('galaxy-insp-close');
@@ -89,9 +101,15 @@ export function initArchiveGalaxy(player) {
 
   if (!overlay || !canvasWrap) return;
 
+  const ZERO_SPECTRUM = { energy: 0, bass: 0, mid: 0, high: 0, isPlaying: false };
+  const TM_MONTHS_RU = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+  const ASTROLABE_BASE_OPACITY = [0.14, 0.085, 0.06];
+  const HIGHLIGHT_MAX_SEGS = 6;
+
   let isOpen = false;
   let isBooting = false;
   let rafId = null;
+  let lastFrameAt = 0;
 
   let THREE_LIB = null;
   let renderer = null;
@@ -101,11 +119,20 @@ export function initArchiveGalaxy(player) {
   let starGeom = null;
   let starMat = null;
   let dustPoints = null;
+  let dustGeom = null;
+  let dustMat = null;
   let astrolabeGroup = null;
+  const astrolabeMats = [];
   let linkLines = null;
   let linkGeom = null;
+  let linkMat = null;
+  let linkPairs = null;
   let highlightLine = null;
   let highlightGeom = null;
+  let highlightMat = null;
+  let highlightPosBuf = null;
+  let highlightProgBuf = null;
+  let highlightSeedBuf = null;
   let hopTrailLine = null;
   let hopTrailGeom = null;
   let hopTrailMat = null;
@@ -124,6 +151,45 @@ export function initArchiveGalaxy(player) {
     fading: false,
     focusIdx: -1,
     hidePillTimer: null
+  };
+
+  // Smooth Cubic Fly-To Camera State
+  const flyState = {
+    active: false,
+    startTime: 0,
+    duration: 780,
+    fromLook: { x: 0, y: 0, z: 0 },
+    toLook: { x: 0, y: 0, z: 0 },
+    fromRadius: 178,
+    toRadius: 56,
+    fromPhi: 1.12,
+    toPhi: 1.12,
+    fromTheta: 0.45,
+    toTheta: 0.45
+  };
+
+  // Chronological Time Machine State
+  const tmState = {
+    open: false,
+    playing: false,
+    progress: 0,
+    speed: 1,
+    durationMs: 14000,
+    axis: 'year',
+    hasWatchedDates: false,
+    userDraggedCamera: false,
+    hasActiveFlash: false,
+    order: [],
+    triggers: null,
+    cumEps: null,
+    dateLabels: [],
+    ignitedAt: null,
+    revealedCount: 0,
+    lastLinkRevealed: -1,
+    lastDateStr: '',
+    lastStarsStr: '',
+    lastEpsStr: '',
+    lastScrubVal: -1
   };
 
   let activeNodes = [];
@@ -187,35 +253,35 @@ export function initArchiveGalaxy(player) {
     const sh = Number(node.shikiScore) || 0;
     const delta = (s > 0 && sh > 0) ? (s - sh) : 0;
 
-    // Returns [r, g, b, size, spike]
+    // Returns [r, g, b, size, spike, tier]
     if (node.isPeak) {
-      return [1.0, 0.99, 1.0, node.peakRank <= 3 ? 21.0 : 16.5, 1.0];
+      return [1.0, 0.99, 1.0, node.peakRank <= 3 ? 19.5 : 15.8, 1.0, 1.0];
     }
     if (node.status === 'planned') {
-      if (sh >= 8.2) return [0.77, 0.71, 0.99, 13.8, 0.72];
-      if (sh >= 7.5) return [0.69, 0.66, 0.92, 10.2, 0.28];
-      return [0.58, 0.58, 0.78, 7.6, 0.0];
+      if (sh >= 8.2) return [0.79, 0.73, 1.0, 13.8, 0.85, 1.0];
+      if (sh >= 7.5) return [0.69, 0.66, 0.92, 10.2, 0.30, 0.35];
+      return [0.58, 0.58, 0.78, 7.6, 0.0, 0.0];
     }
     if (node.status === 'watching' || node.status === 'rewatching') {
-      return [0.43, 0.91, 0.72, 13.5, 0.75];
+      return [0.43, 0.91, 0.72, 13.2, 0.72, 0.60];
     }
     if (s >= 10) {
-      return [0.88, 0.95, 1.0, 14.5, 0.9];
+      return [0.88, 0.95, 1.0, 14.2, 0.95, 1.0];
     }
     if (s >= 9) {
-      return [0.72, 0.85, 1.0, 11.8, 0.55];
+      return [0.72, 0.85, 1.0, 11.4, 0.50, 0.55];
     }
     if (delta <= -1.8 && sh >= 7.3) {
       // Harsh Hot Take outlier: muted crimson dwarf
-      return [0.97, 0.48, 0.50, 10.5, 0.35];
+      return [0.97, 0.48, 0.50, 10.2, 0.32, 0.25];
     }
     if (s >= 7) {
-      return [0.58, 0.69, 0.86, 8.6, 0.0];
+      return [0.58, 0.69, 0.86, 8.4, 0.0, 0.0];
     }
     if (s > 0) {
-      return [0.44, 0.50, 0.62, 6.8, 0.0];
+      return [0.44, 0.50, 0.62, 6.8, 0.0, 0.0];
     }
-    return [0.48, 0.54, 0.66, 6.4, 0.0];
+    return [0.48, 0.54, 0.66, 6.4, 0.0, 0.0];
   }
 
   function computeLayoutPositions(nodes, layoutMode) {
@@ -389,6 +455,27 @@ export function initArchiveGalaxy(player) {
     const count = activeNodes.length;
     const lineVerts = [];
     const lineCols = [];
+    const segProgs = [];
+    const segPhases = [];
+    const segAlphas = [];
+    const pairIndices = [];
+
+    const revealAttr = starGeom?.getAttribute('aReveal');
+    const revealArr = tmState.open && revealAttr ? revealAttr.array : null;
+
+    function pushSegment(a, b, r1, g1, b1, r2, g2, b2) {
+      lineVerts.push(
+        positionsArr[a * 3], positionsArr[a * 3 + 1], positionsArr[a * 3 + 2],
+        positionsArr[b * 3], positionsArr[b * 3 + 1], positionsArr[b * 3 + 2]
+      );
+      lineCols.push(r1, g1, b1, r2, g2, b2);
+      segProgs.push(0.0, 1.0);
+      const phase = hash01(a * 3.17 + b * 1.93) * 6.2831853;
+      segPhases.push(phase, phase);
+      const vis = revealArr ? ((revealArr[a] > 0.5 && revealArr[b] > 0.5) ? 1.0 : 0.0) : 1.0;
+      segAlphas.push(vis, vis);
+      pairIndices.push(a, b);
+    }
 
     // 1. Peak 16 backbone ring in order (only when Peak stars match current filter)
     const peakIndices = [];
@@ -397,13 +484,7 @@ export function initArchiveGalaxy(player) {
     });
     peakIndices.sort((a, b) => a.rank - b.rank);
     for (let i = 0; i < peakIndices.length - 1; i++) {
-      const a = peakIndices[i].idx;
-      const b = peakIndices[i + 1].idx;
-      lineVerts.push(
-        positionsArr[a * 3], positionsArr[a * 3 + 1], positionsArr[a * 3 + 2],
-        positionsArr[b * 3], positionsArr[b * 3 + 1], positionsArr[b * 3 + 2]
-      );
-      lineCols.push(0.86, 0.92, 1.0, 0.72, 0.82, 0.96);
+      pushSegment(peakIndices[i].idx, peakIndices[i + 1].idx, 0.86, 0.92, 1.0, 0.72, 0.82, 0.96);
     }
 
     // 2. Nearest neighbor filaments within same score/era tier (max 1 link per star to stay airy & clean)
@@ -431,29 +512,39 @@ export function initArchiveGalaxy(player) {
         }
       }
       if (bestJ !== -1) {
-        lineVerts.push(
-          ix, iy, iz,
-          positionsArr[bestJ * 3], positionsArr[bestJ * 3 + 1], positionsArr[bestJ * 3 + 2]
-        );
         if (isPlannedMode) {
-          lineCols.push(0.62, 0.56, 0.84, 0.44, 0.40, 0.68);
+          pushSegment(i, bestJ, 0.62, 0.56, 0.84, 0.44, 0.40, 0.68);
         } else {
-          lineCols.push(0.54, 0.65, 0.82, 0.42, 0.52, 0.68);
+          pushSegment(i, bestJ, 0.54, 0.65, 0.82, 0.42, 0.52, 0.68);
         }
       }
     }
 
-    if (!linkGeom) return;
+    linkPairs = new Int32Array(pairIndices);
+    if (!linkLines || !THREE_LIB) return;
+    const prevGeom = linkGeom;
+    linkGeom = new THREE_LIB.BufferGeometry();
     linkGeom.setAttribute('position', new THREE_LIB.Float32BufferAttribute(lineVerts, 3));
-    linkGeom.setAttribute('color', new THREE_LIB.Float32BufferAttribute(lineCols, 3));
-    linkGeom.computeBoundingSphere();
+    linkGeom.setAttribute('aColor', new THREE_LIB.Float32BufferAttribute(lineCols, 3));
+    linkGeom.setAttribute('aSegProgress', new THREE_LIB.Float32BufferAttribute(segProgs, 1));
+    linkGeom.setAttribute('aSegPhase', new THREE_LIB.Float32BufferAttribute(segPhases, 1));
+    linkGeom.setAttribute('aSegAlpha', new THREE_LIB.Float32BufferAttribute(segAlphas, 1));
+    if (lineVerts.length > 0) linkGeom.computeBoundingSphere();
+    linkLines.geometry = linkGeom;
+    if (prevGeom) prevGeom.dispose();
   }
 
   function updateHighlightStarLinks(focusIdx) {
-    if (!highlightGeom || !currentPos || focusIdx < 0 || focusIdx >= activeNodes.length) {
+    if (!highlightGeom || !highlightPosBuf || !highlightProgBuf || !highlightSeedBuf || !currentPos || focusIdx < 0 || focusIdx >= activeNodes.length) {
       if (highlightLine) highlightLine.visible = false;
       return;
     }
+    const revealArr = tmState.open ? starGeom?.getAttribute('aReveal')?.array : null;
+    if (revealArr && revealArr[focusIdx] < 0.5) {
+      if (highlightLine) highlightLine.visible = false;
+      return;
+    }
+
     const fx = currentPos[focusIdx * 3];
     const fy = currentPos[focusIdx * 3 + 1];
     const fz = currentPos[focusIdx * 3 + 2];
@@ -461,6 +552,7 @@ export function initArchiveGalaxy(player) {
     const neighbors = [];
     for (let i = 0; i < activeNodes.length; i++) {
       if (i === focusIdx || !nodeMatchesFilter(activeNodes[i])) continue;
+      if (revealArr && revealArr[i] < 0.5) continue;
       const dx = currentPos[i * 3] - fx;
       const dy = currentPos[i * 3 + 1] - fy;
       const dz = currentPos[i * 3 + 2] - fz;
@@ -468,15 +560,41 @@ export function initArchiveGalaxy(player) {
       if (d2 < 44 * 44) neighbors.push({ i, d2 });
     }
     neighbors.sort((a, b) => a.d2 - b.d2);
-    const verts = [];
-    neighbors.slice(0, 6).forEach((nb) => {
-      verts.push(
-        fx, fy, fz,
-        currentPos[nb.i * 3], currentPos[nb.i * 3 + 1], currentPos[nb.i * 3 + 2]
-      );
-    });
-    highlightGeom.setAttribute('position', new THREE_LIB.Float32BufferAttribute(verts, 3));
-    if (highlightLine) highlightLine.visible = verts.length > 0;
+
+    const nCount = Math.min(HIGHLIGHT_MAX_SEGS, neighbors.length);
+    for (let k = 0; k < nCount; k++) {
+      const ni = neighbors[k].i;
+      const v0 = k * 2;
+      const v1 = v0 + 1;
+      highlightPosBuf[v0 * 3]     = fx;
+      highlightPosBuf[v0 * 3 + 1] = fy;
+      highlightPosBuf[v0 * 3 + 2] = fz;
+      highlightPosBuf[v1 * 3]     = currentPos[ni * 3];
+      highlightPosBuf[v1 * 3 + 1] = currentPos[ni * 3 + 1];
+      highlightPosBuf[v1 * 3 + 2] = currentPos[ni * 3 + 2];
+      highlightProgBuf[v0] = 0.0;
+      highlightProgBuf[v1] = 1.0;
+      const seed = (ni % 13) * 0.48;
+      highlightSeedBuf[v0] = seed;
+      highlightSeedBuf[v1] = seed;
+    }
+
+    highlightGeom.setDrawRange(0, nCount * 2);
+    highlightGeom.getAttribute('position').needsUpdate = true;
+    highlightGeom.getAttribute('aProgress').needsUpdate = true;
+    highlightGeom.getAttribute('aSeed').needsUpdate = true;
+
+    if (highlightMat) {
+      const focusNode = activeNodes[focusIdx];
+      if (activeFilter === 'planned' || focusNode?.status === 'planned') {
+        highlightMat.uniforms.uColor.value.setHex(0xc4b5fd);
+      } else if (focusNode?.status === 'watching' || focusNode?.status === 'rewatching') {
+        highlightMat.uniforms.uColor.value.setHex(0x6ee7b7);
+      } else {
+        highlightMat.uniforms.uColor.value.setHex(0xdcecff);
+      }
+    }
+    if (highlightLine) highlightLine.visible = nCount > 0;
   }
 
   function updateFilterAlphas() {
@@ -512,6 +630,8 @@ export function initArchiveGalaxy(player) {
 
   function populateGalaxyScene() {
     if (!scene || !THREE_LIB) return;
+    if (tmState.open) closeTimeMachine(false);
+
     activeNodes = appState.galaxyNodes.length ? appState.galaxyNodes : buildFallbackGalaxyNodes();
     const count = activeNodes.length;
 
@@ -531,9 +651,14 @@ export function initArchiveGalaxy(player) {
     const alphas = new Float32Array(count);
     const spikes = new Float32Array(count);
     const indices = new Float32Array(count);
+    const phases = new Float32Array(count);
+    const tiers = new Float32Array(count);
+    const reveals = new Float32Array(count);
+    const flashes = new Float32Array(count);
 
     for (let i = 0; i < count; i++) {
-      const [r, g, b, sz, sp] = computeStarVisuals(activeNodes[i]);
+      const node = activeNodes[i];
+      const [r, g, b, sz, sp, tier] = computeStarVisuals(node);
       colors[i * 3] = r;
       colors[i * 3 + 1] = g;
       colors[i * 3 + 2] = b;
@@ -541,6 +666,10 @@ export function initArchiveGalaxy(player) {
       alphas[i] = 1.0;
       spikes[i] = sp;
       indices[i] = i;
+      phases[i] = hash01((node.id || (i + 1)) * 5.17 + i * 0.37) * 6.2831853;
+      tiers[i] = tier;
+      reveals[i] = 1.0;
+      flashes[i] = 0.0;
     }
 
     starGeom = new THREE_LIB.BufferGeometry();
@@ -550,6 +679,10 @@ export function initArchiveGalaxy(player) {
     starGeom.setAttribute('aAlpha', new THREE_LIB.BufferAttribute(alphas, 1));
     starGeom.setAttribute('aSpike', new THREE_LIB.BufferAttribute(spikes, 1));
     starGeom.setAttribute('aIndex', new THREE_LIB.BufferAttribute(indices, 1));
+    starGeom.setAttribute('aPhase', new THREE_LIB.BufferAttribute(phases, 1));
+    starGeom.setAttribute('aTier', new THREE_LIB.BufferAttribute(tiers, 1));
+    starGeom.setAttribute('aReveal', new THREE_LIB.BufferAttribute(reveals, 1));
+    starGeom.setAttribute('aFlash', new THREE_LIB.BufferAttribute(flashes, 1));
 
     starMat = new THREE_LIB.ShaderMaterial({
       transparent: true,
@@ -558,8 +691,10 @@ export function initArchiveGalaxy(player) {
       uniforms: {
         uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 1.5) },
         uTime: { value: 0 },
-        uBeat: { value: 0 },
-        uFocusIdx: { value: -1 }
+        uFocusIdx: { value: -1 },
+        uBass: { value: 0 },
+        uMid: { value: 0 },
+        uHigh: { value: 0 }
       },
       vertexShader: `
         attribute vec3 aColor;
@@ -567,53 +702,92 @@ export function initArchiveGalaxy(player) {
         attribute float aAlpha;
         attribute float aSpike;
         attribute float aIndex;
+        attribute float aPhase;
+        attribute float aTier;
+        attribute float aReveal;
+        attribute float aFlash;
         uniform float uPixelRatio;
         uniform float uTime;
-        uniform float uBeat;
         uniform float uFocusIdx;
+        uniform float uBass;
+        uniform float uMid;
+        uniform float uHigh;
         varying vec3 vColor;
-        varying float vAlpha;
+        varying float vEffAlpha;
         varying float vSpike;
+        varying float vTier;
         varying float vFocus;
+        varying float vFlash;
+        varying float vZoomFade;
 
         void main() {
           vColor = aColor;
-          vAlpha = aAlpha;
           vSpike = aSpike;
+          vTier = aTier;
+          vFlash = aFlash;
           vFocus = (abs(aIndex - uFocusIdx) < 0.5) ? 1.0 : 0.0;
+          float effAlpha = aAlpha * aReveal;
+          vEffAlpha = effAlpha;
 
           vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-          float twinkle = 0.90 + 0.14 * sin(uTime * 1.9 + aIndex * 2.13);
-          float beatScale = 1.0 + uBeat * (0.28 + aSpike * 0.40);
-          float focusScale = 1.0 + vFocus * 0.72;
           float dist = max(18.0, -mvPosition.z);
-          gl_PointSize = (aAlpha <= 0.01)
+          vZoomFade = clamp(120.0 / dist, 0.42, 1.15);
+
+          float freq = 1.25 + fract(aPhase * 0.3183099) * 1.15;
+          float twWave = 0.5 + 0.5 * (0.65 * sin(uTime * freq + aPhase) + 0.35 * sin(uTime * freq * 2.13 + aPhase * 1.67));
+          float twinkle = 0.90 + twWave * (0.14 + uHigh * 0.22 + uMid * 0.08);
+          float bassScale = 1.0 + uBass * (0.10 + aTier * 0.36 + aSpike * 0.14);
+          float flashScale = 1.0 + aFlash * (0.85 + aTier * 0.30);
+          float revealScale = 0.42 + 0.58 * smoothstep(0.0, 1.0, aReveal);
+          float focusScale = 1.0 + vFocus * 0.64;
+          float maxPt = (aFlash > 0.05 || vFocus > 0.5) ? 66.0 : 54.0;
+
+          gl_PointSize = (effAlpha <= 0.01 || aAlpha <= 0.01 || aReveal <= 0.005)
             ? 0.0
-            : clamp((aSize * twinkle * beatScale * focusScale * uPixelRatio * 126.0) / dist, 2.4, 52.0);
+            : clamp((aSize * twinkle * bassScale * flashScale * revealScale * focusScale * uPixelRatio * 124.0) / dist, 2.3, maxPt);
           gl_Position = projectionMatrix * mvPosition;
         }
       `,
       fragmentShader: `
+        uniform float uBass;
+        uniform float uHigh;
         varying vec3 vColor;
-        varying float vAlpha;
+        varying float vEffAlpha;
         varying float vSpike;
+        varying float vTier;
         varying float vFocus;
+        varying float vFlash;
+        varying float vZoomFade;
 
         void main() {
-          if (vAlpha <= 0.01) discard;
+          if (vEffAlpha <= 0.01) discard;
           vec2 uv = gl_PointCoord - vec2(0.5);
           float d = length(uv);
           if (d > 0.5) discard;
 
-          float core = exp(-d * 10.5);
-          float halo = pow(max(0.0, 1.0 - d * 2.0), 2.4) * 0.78;
-          float flareH = exp(-abs(uv.y) * 32.0) * exp(-abs(uv.x) * 6.5);
-          float flareV = exp(-abs(uv.x) * 32.0) * exp(-abs(uv.y) * 6.5);
-          float spikes = (flareH + flareV) * (vSpike * 0.72 + vFocus * 0.55);
+          float core = exp(-d * d * 88.0) * 1.15 + exp(-d * 13.5) * 0.38;
+          float corona = exp(-d * d * 24.0) * (0.24 + uBass * vTier * 0.26 + vFlash * 0.46) * vZoomFade;
+          float outerGlow = pow(max(0.0, 1.0 - d * 2.0), 3.4) * (0.10 + vTier * 0.12 + vFlash * 0.34) * vZoomFade;
 
-          float intensity = core * 1.35 + halo + spikes;
-          vec3 col = mix(vColor, vec3(1.0), clamp(core * 0.85 + vFocus * 0.35, 0.0, 1.0));
-          float alpha = clamp(intensity * vAlpha, 0.0, 1.0);
+          float ax = abs(uv.x);
+          float ay = abs(uv.y);
+          float rayH = exp(-ay * 64.0) * exp(-ax * 5.6) * (1.0 - smoothstep(0.28, 0.50, ax));
+          float rayV = exp(-ax * 64.0) * exp(-ay * 5.6) * (1.0 - smoothstep(0.28, 0.50, ay));
+          float spikeAmt = vSpike * (0.48 + vTier * 0.24 + uBass * 0.26 + uHigh * 0.12) + vFocus * 0.52 + vFlash * 0.78;
+          float spikes = (rayH + rayV) * spikeAmt * clamp(vZoomFade * 1.08, 0.62, 1.15);
+
+          vec2 duv = vec2(uv.x + uv.y, uv.x - uv.y) * 0.70710678;
+          float diag = (exp(-abs(duv.y) * 70.0) * exp(-abs(duv.x) * 12.0) + exp(-abs(duv.x) * 70.0) * exp(-abs(duv.y) * 12.0))
+            * (vTier * 0.14 + vFocus * 0.18 + vFlash * 0.30);
+
+          float intensity = core * (0.84 + vTier * 0.20 + vFocus * 0.24) + corona + outerGlow + spikes + diag;
+          vec3 spikeTint = vec3(0.76, 0.88, 1.0);
+          vec3 flashTint = vec3(0.92, 0.97, 1.0);
+          vec3 col = mix(vColor, vec3(0.92, 0.96, 1.0), clamp(core * 0.44 + vFocus * 0.26, 0.0, 0.85));
+          col = mix(col, spikeTint, clamp((spikes + diag) * 0.55, 0.0, 0.65));
+          col = mix(col, flashTint, clamp(vFlash * 0.75, 0.0, 0.9));
+
+          float alpha = clamp(intensity * vEffAlpha, 0.0, 0.96);
           gl_FragColor = vec4(col, alpha);
         }
       `
@@ -632,9 +806,52 @@ export function initArchiveGalaxy(player) {
     }
   }
 
+  function startCameraFlyTo(tx, ty, tz, targetRadius, targetPhi, durationMs) {
+    if (appState.prefersReducedMotion) {
+      flyState.active = false;
+      camState.look.x = tx;
+      camState.look.y = ty;
+      camState.look.z = tz;
+      camState.targetLook.x = tx;
+      camState.targetLook.y = ty;
+      camState.targetLook.z = tz;
+      camState.radius = targetRadius;
+      camState.targetRadius = targetRadius;
+      if (typeof targetPhi === 'number') {
+        camState.phi = targetPhi;
+        camState.targetPhi = targetPhi;
+      }
+      return;
+    }
+
+    flyState.fromLook.x = camState.look.x;
+    flyState.fromLook.y = camState.look.y;
+    flyState.fromLook.z = camState.look.z;
+    flyState.toLook.x = tx;
+    flyState.toLook.y = ty;
+    flyState.toLook.z = tz;
+    flyState.fromRadius = camState.radius;
+    flyState.toRadius = targetRadius;
+    flyState.fromPhi = camState.phi;
+    flyState.toPhi = typeof targetPhi === 'number' ? targetPhi : camState.phi;
+    flyState.fromTheta = camState.theta;
+    flyState.toTheta = typeof targetPhi === 'number' ? camState.theta : (camState.theta + 0.14);
+    flyState.duration = durationMs || 780;
+    flyState.startTime = performance.now();
+    flyState.active = true;
+
+    camState.targetLook.x = tx;
+    camState.targetLook.y = ty;
+    camState.targetLook.z = tz;
+    camState.targetRadius = targetRadius;
+    camState.targetPhi = flyState.toPhi;
+    camState.targetTheta = flyState.toTheta;
+  }
+
   function switchGalaxyLayout(newMode) {
     if (!activeNodes.length || !currentPos) return;
     cancelStarHop(false);
+    flyState.active = false;
     activeLayout = newMode;
     layoutBtns.forEach((b) => b.classList.toggle('active', b.dataset.glayout === newMode));
 
@@ -674,6 +891,8 @@ export function initArchiveGalaxy(player) {
 
   function startStarHopRoulette() {
     if (!currentPos || !activeNodes.length) return;
+    if (tmState.open) closeTimeMachine(true);
+    flyState.active = false;
     const pool = [];
     for (let i = 0; i < activeNodes.length; i++) {
       if (nodeMatchesFilter(activeNodes[i])) pool.push(i);
@@ -883,12 +1102,17 @@ export function initArchiveGalaxy(player) {
     const sy = currentPos[idx * 3 + 1];
     const sz = currentPos[idx * 3 + 2];
 
-    camState.targetLook.x = sx;
-    camState.targetLook.y = sy;
-    camState.targetLook.z = sz;
-    camState.targetRadius = 56;
     autoOrbit = false;
     orbitBtn?.classList.remove('active');
+    if (hopState.active) {
+      flyState.active = false;
+      camState.targetLook.x = sx;
+      camState.targetLook.y = sy;
+      camState.targetLook.z = sz;
+      camState.targetRadius = 56;
+    } else {
+      startCameraFlyTo(sx, sy, sz, 56, null, 780);
+    }
 
     updateHighlightStarLinks(idx);
 
@@ -972,38 +1196,90 @@ export function initArchiveGalaxy(player) {
 
     camera = new T.PerspectiveCamera(56, window.innerWidth / window.innerHeight, 1, 1400);
 
-    // 1. Background cosmic dust cloud (1,700 subtle stars)
-    const dustCount = 900;
+    // 1. Multi-layer cold monochrome cosmic dust cloud (custom GLSL)
+    const dustCount = 1050;
     const dustPos = new Float32Array(dustCount * 3);
     const dustCol = new Float32Array(dustCount * 3);
+    const dustSizes = new Float32Array(dustCount);
+    const dustDepths = new Float32Array(dustCount);
+    const dustPhases = new Float32Array(dustCount);
     for (let i = 0; i < dustCount; i++) {
-      const r = 40 + Math.pow(Math.random(), 0.72) * 380;
+      const layerRand = Math.random();
+      const depth = layerRand < 0.34 ? 0.22 + Math.random() * 0.25 : (layerRand < 0.72 ? 0.52 + Math.random() * 0.25 : 0.80 + Math.random() * 0.20);
+      const r = 36 + Math.pow(Math.random(), 0.70) * (360 + depth * 90);
       const theta = Math.random() * Math.PI * 2;
       const phi = (Math.random() - 0.5) * Math.PI;
       dustPos[i * 3]     = Math.cos(theta) * Math.cos(phi) * r;
-      dustPos[i * 3 + 1] = Math.sin(phi) * r * (Math.random() < 0.6 ? 0.25 : 0.85);
+      dustPos[i * 3 + 1] = Math.sin(phi) * r * (depth < 0.45 ? 0.22 : (depth < 0.78 ? 0.52 : 0.88));
       dustPos[i * 3 + 2] = Math.sin(theta) * Math.cos(phi) * r;
-      const shade = 0.45 + Math.random() * 0.45;
-      dustCol[i * 3]     = shade * 0.78;
-      dustCol[i * 3 + 1] = shade * 0.86;
-      dustCol[i * 3 + 2] = shade;
+      const shade = 0.42 + (1.0 - depth * 0.45) * 0.42 + Math.random() * 0.14;
+      dustCol[i * 3]     = shade * 0.74;
+      dustCol[i * 3 + 1] = shade * 0.84;
+      dustCol[i * 3 + 2] = shade * 0.98;
+      dustSizes[i] = 2.4 + (1.0 - depth * 0.45) * 3.4 + Math.random() * 1.4;
+      dustDepths[i] = depth;
+      dustPhases[i] = Math.random() * 6.2831853;
     }
-    const dustGeom = new T.BufferGeometry();
+    dustGeom = new T.BufferGeometry();
     dustGeom.setAttribute('position', new T.BufferAttribute(dustPos, 3));
-    dustGeom.setAttribute('color', new T.BufferAttribute(dustCol, 3));
-    const dustMat = new T.PointsMaterial({
-      size: 1.35,
-      vertexColors: true,
+    dustGeom.setAttribute('aColor', new T.BufferAttribute(dustCol, 3));
+    dustGeom.setAttribute('aSize', new T.BufferAttribute(dustSizes, 1));
+    dustGeom.setAttribute('aDepth', new T.BufferAttribute(dustDepths, 1));
+    dustGeom.setAttribute('aPhase', new T.BufferAttribute(dustPhases, 1));
+    dustMat = new T.ShaderMaterial({
       transparent: true,
-      opacity: 0.42,
       depthWrite: false,
-      blending: T.AdditiveBlending
+      blending: T.AdditiveBlending,
+      uniforms: {
+        uPixelRatio: { value: dpr },
+        uTime: { value: 0 },
+        uBass: { value: 0 },
+        uHigh: { value: 0 }
+      },
+      vertexShader: `
+        attribute vec3 aColor;
+        attribute float aSize;
+        attribute float aDepth;
+        attribute float aPhase;
+        uniform float uPixelRatio;
+        uniform float uTime;
+        uniform float uBass;
+        uniform float uHigh;
+        varying vec3 vColor;
+        varying float vAlpha;
+
+        void main() {
+          vColor = aColor;
+          float breathe = 1.0 + uBass * (0.015 + aDepth * 0.032);
+          vec3 pos = position * breathe;
+          pos.y += sin(uTime * 0.28 + aPhase) * (0.45 + aDepth * 0.85);
+          vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+          float dist = max(24.0, -mvPosition.z);
+          float shimmer = 0.86 + 0.14 * sin(uTime * 0.95 + aPhase * 1.7) + uHigh * 0.16;
+          vAlpha = (0.14 + (1.0 - aDepth * 0.5) * 0.20 + uBass * 0.08) * shimmer;
+          gl_PointSize = clamp((aSize * (1.0 + uBass * 0.22) * uPixelRatio * 108.0) / dist, 1.4, 9.2);
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vColor;
+        varying float vAlpha;
+
+        void main() {
+          vec2 uv = gl_PointCoord - vec2(0.5);
+          float d = length(uv);
+          if (d > 0.5) discard;
+          float radial = exp(-d * d * 14.0) * (1.0 - smoothstep(0.16, 0.5, d));
+          gl_FragColor = vec4(vColor, clamp(radial * vAlpha, 0.0, 0.55));
+        }
+      `
     });
     dustPoints = new T.Points(dustGeom, dustMat);
     scene.add(dustPoints);
 
     // 2. Astrolabe equatorial coordinate rings
     astrolabeGroup = new T.Group();
+    astrolabeMats.length = 0;
     [38, 76, 118].forEach((rad, idx) => {
       const segs = 128;
       const ringVerts = [];
@@ -1016,36 +1292,117 @@ export function initArchiveGalaxy(player) {
       const rm = new T.LineBasicMaterial({
         color: 0xadbfde,
         transparent: true,
-        opacity: idx === 0 ? 0.14 : 0.075,
+        opacity: ASTROLABE_BASE_OPACITY[idx] || 0.07,
         depthWrite: false
       });
+      astrolabeMats.push(rm);
       astrolabeGroup.add(new T.Line(rg, rm));
     });
     scene.add(astrolabeGroup);
 
-    // 3. Constellation filament lines
+    // 3. Constellation filament lines (GLSL energy shimmer + Time Machine reveal mask)
     linkGeom = new T.BufferGeometry();
-    const linkMat = new T.LineBasicMaterial({
-      vertexColors: true,
+    linkMat = new T.ShaderMaterial({
       transparent: true,
-      opacity: 0.16,
       depthWrite: false,
-      blending: T.AdditiveBlending
+      blending: T.AdditiveBlending,
+      uniforms: {
+        uTime: { value: 0 },
+        uMid: { value: 0 },
+        uHigh: { value: 0 },
+        uBaseOpacity: { value: 0.18 }
+      },
+      vertexShader: `
+        attribute vec3 aColor;
+        attribute float aSegProgress;
+        attribute float aSegPhase;
+        attribute float aSegAlpha;
+        varying vec3 vColor;
+        varying float vProg;
+        varying float vPhase;
+        varying float vSegAlpha;
+
+        void main() {
+          vColor = aColor;
+          vProg = aSegProgress;
+          vPhase = aSegPhase;
+          vSegAlpha = aSegAlpha;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float uTime;
+        uniform float uMid;
+        uniform float uHigh;
+        uniform float uBaseOpacity;
+        varying vec3 vColor;
+        varying float vProg;
+        varying float vPhase;
+        varying float vSegAlpha;
+
+        void main() {
+          if (vSegAlpha <= 0.01) discard;
+          float wave = 0.72 + 0.28 * sin(vProg * 6.2831853 - uTime * 1.45 + vPhase);
+          float audioBoost = 1.0 + uMid * 0.85 + uHigh * 0.55;
+          float alpha = clamp(uBaseOpacity * wave * audioBoost * vSegAlpha, 0.0, 0.72);
+          vec3 col = mix(vColor, vec3(0.88, 0.94, 1.0), clamp(uHigh * 0.35 + (wave - 0.72) * 0.5, 0.0, 0.6));
+          gl_FragColor = vec4(col, alpha);
+        }
+      `
     });
     linkLines = new T.LineSegments(linkGeom, linkMat);
     linkLines.frustumCulled = false;
     scene.add(linkLines);
 
-    // 4. Focused star bright links
+    // 4. Focused star bright links (pre-allocated buffer + flowing energy pulse)
+    highlightPosBuf = new Float32Array(HIGHLIGHT_MAX_SEGS * 2 * 3);
+    highlightProgBuf = new Float32Array(HIGHLIGHT_MAX_SEGS * 2);
+    highlightSeedBuf = new Float32Array(HIGHLIGHT_MAX_SEGS * 2);
     highlightGeom = new T.BufferGeometry();
-    const hlMat = new T.LineBasicMaterial({
-      color: 0xdcecff,
+    highlightGeom.setAttribute('position', new T.BufferAttribute(highlightPosBuf, 3));
+    highlightGeom.setAttribute('aProgress', new T.BufferAttribute(highlightProgBuf, 1));
+    highlightGeom.setAttribute('aSeed', new T.BufferAttribute(highlightSeedBuf, 1));
+    highlightGeom.setDrawRange(0, 0);
+    highlightMat = new T.ShaderMaterial({
       transparent: true,
-      opacity: 0.62,
       depthWrite: false,
-      blending: T.AdditiveBlending
+      blending: T.AdditiveBlending,
+      uniforms: {
+        uTime: { value: 0 },
+        uBass: { value: 0 },
+        uMid: { value: 0 },
+        uColor: { value: new T.Color(0xdcecff) }
+      },
+      vertexShader: `
+        attribute float aProgress;
+        attribute float aSeed;
+        varying float vProgress;
+        varying float vSeed;
+
+        void main() {
+          vProgress = aProgress;
+          vSeed = aSeed;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float uTime;
+        uniform float uBass;
+        uniform float uMid;
+        uniform vec3 uColor;
+        varying float vProgress;
+        varying float vSeed;
+
+        void main() {
+          float pulse = pow(max(0.0, 0.5 + 0.5 * sin(vProgress * 9.424778 - uTime * 4.4 + vSeed)), 2.2);
+          float edgeTaper = (1.0 - smoothstep(0.68, 1.0, vProgress)) * 0.65 + 0.35;
+          float intensity = (0.34 + pulse * (0.48 + uMid * 0.36 + uBass * 0.20)) * edgeTaper;
+          vec3 col = mix(uColor, vec3(1.0), pulse * 0.45);
+          gl_FragColor = vec4(col, clamp(intensity, 0.0, 0.95));
+        }
+      `
     });
-    highlightLine = new T.LineSegments(highlightGeom, hlMat);
+    highlightLine = new T.LineSegments(highlightGeom, highlightMat);
     highlightLine.frustumCulled = false;
     highlightLine.visible = false;
     scene.add(highlightLine);
@@ -1082,11 +1439,13 @@ export function initArchiveGalaxy(player) {
     const h = galaxyViewH;
     if (!reusableProjVec) reusableProjVec = new THREE_LIB.Vector3();
     const v = reusableProjVec;
+    const revealArr = tmState.open ? starGeom?.getAttribute('aReveal')?.array : null;
     let bestIdx = -1;
     let bestDistSq = maxPx * maxPx;
 
     for (let i = 0; i < activeNodes.length; i++) {
       if (!nodeMatchesFilter(activeNodes[i])) continue;
+      if (revealArr && revealArr[i] < 0.5) continue;
       v.set(currentPos[i * 3], currentPos[i * 3 + 1], currentPos[i * 3 + 2]);
       v.project(camera);
       if (v.z < -1 || v.z > 1) continue;
@@ -1101,6 +1460,374 @@ export function initArchiveGalaxy(player) {
       }
     }
     return bestIdx;
+  }
+
+  /* =========================================
+     TIME MACHINE (CHRONOLOGICAL GALAXY PLAYBACK)
+     ========================================= */
+  function parseNodeUpdatedAt(node) {
+    if (!node) return 0;
+    const raw = node.updatedAt ?? node.updated_at;
+    if (!raw) return 0;
+    if (typeof raw === 'number') {
+      if (!isFinite(raw) || raw <= 0) return 0;
+      return raw < 1e11 ? raw * 1000 : raw;
+    }
+    const parsed = Date.parse(String(raw));
+    return isFinite(parsed) && parsed > 0 ? parsed : 0;
+  }
+
+  function detectWatchedAxisAvailable(indices) {
+    let validCount = 0;
+    let minTs = Infinity;
+    let maxTs = -Infinity;
+    for (let i = 0; i < indices.length; i++) {
+      const ts = parseNodeUpdatedAt(activeNodes[indices[i]]);
+      if (ts > 0) {
+        validCount++;
+        if (ts < minTs) minTs = ts;
+        if (ts > maxTs) maxTs = ts;
+      }
+    }
+    return validCount >= 2 && maxTs > minTs;
+  }
+
+  function formatTmDateLabel(node, axis) {
+    if (axis === 'watched') {
+      const ts = parseNodeUpdatedAt(node);
+      if (ts > 0) {
+        const d = new Date(ts);
+        return `${TM_MONTHS_RU[d.getMonth()]} ${d.getFullYear()}`;
+      }
+    }
+    const y = Number(node?.year);
+    return y > 1900 ? String(y) : '—';
+  }
+
+  function syncTimeMachineTelemetry(revealedCount, totalCount, epsSum, dateStr, progress) {
+    if (tmDateEl && dateStr !== tmState.lastDateStr) {
+      tmState.lastDateStr = dateStr;
+      tmDateEl.textContent = dateStr;
+    }
+    const starsStr = `${revealedCount} / ${totalCount}`;
+    if (tmStarsEl && starsStr !== tmState.lastStarsStr) {
+      tmState.lastStarsStr = starsStr;
+      tmStarsEl.textContent = starsStr;
+    }
+    const epsStr = `${epsSum.toLocaleString('ru-RU')} эп.`;
+    if (tmEpsEl && epsStr !== tmState.lastEpsStr) {
+      tmState.lastEpsStr = epsStr;
+      tmEpsEl.textContent = epsStr;
+    }
+    const scrubVal = Math.max(0, Math.min(1000, Math.round(progress * 1000)));
+    if (tmScrubber && scrubVal !== tmState.lastScrubVal) {
+      tmState.lastScrubVal = scrubVal;
+      tmScrubber.value = String(scrubVal);
+      tmScrubber.style.setProperty('--tm-pct', `${(scrubVal * 0.1).toFixed(1)}%`);
+    }
+  }
+
+  function updateLinkRevealMask(revealArr, revealedCount) {
+    if (revealedCount === tmState.lastLinkRevealed || !linkGeom || !linkPairs) return;
+    tmState.lastLinkRevealed = revealedCount;
+    const segAlphaAttr = linkGeom.getAttribute('aSegAlpha');
+    if (!segAlphaAttr) return;
+    const segArr = segAlphaAttr.array;
+    const segCount = linkPairs.length >> 1;
+    for (let s = 0; s < segCount; s++) {
+      const a = linkPairs[s * 2];
+      const b = linkPairs[s * 2 + 1];
+      const vis = (revealArr[a] > 0.5 && revealArr[b] > 0.5) ? 1.0 : 0.0;
+      segArr[s * 2] = vis;
+      segArr[s * 2 + 1] = vis;
+    }
+    segAlphaAttr.needsUpdate = true;
+  }
+
+  function buildTimeMachineSchedule(preferredAxis) {
+    const filtered = [];
+    for (let i = 0; i < activeNodes.length; i++) {
+      if (nodeMatchesFilter(activeNodes[i])) filtered.push(i);
+    }
+
+    tmState.hasWatchedDates = detectWatchedAxisAvailable(filtered);
+    if (tmAxisGroup) tmAxisGroup.hidden = !tmState.hasWatchedDates;
+
+    let axis = preferredAxis;
+    if (!tmState.hasWatchedDates) {
+      axis = 'year';
+    } else if (axis !== 'watched' && axis !== 'year') {
+      axis = 'watched';
+    }
+    tmState.axis = axis;
+    tmAxisBtns.forEach((btn) => {
+      const isAct = btn.dataset.tmaxis === axis;
+      btn.classList.toggle('active', isAct);
+      btn.setAttribute('aria-selected', isAct ? 'true' : 'false');
+    });
+
+    filtered.sort((ia, ib) => {
+      const na = activeNodes[ia];
+      const nb = activeNodes[ib];
+      if (axis === 'watched') {
+        const ta = parseNodeUpdatedAt(na);
+        const tb = parseNodeUpdatedAt(nb);
+        if (ta > 0 && tb > 0 && ta !== tb) return ta - tb;
+        if ((ta > 0) !== (tb > 0)) return ta > 0 ? -1 : 1;
+      }
+      const ya = Number(na.year) || 9999;
+      const yb = Number(nb.year) || 9999;
+      if (ya !== yb) return ya - yb;
+      const sa = Number(na.score) || Number(na.shikiScore) || 0;
+      const sb = Number(nb.score) || Number(nb.shikiScore) || 0;
+      if (sa !== sb) return sb - sa;
+      return (na.id || ia) - (nb.id || ib);
+    });
+
+    const m = filtered.length;
+    const triggers = new Float32Array(m);
+    const cumEps = new Int32Array(m);
+    const dateLabels = new Array(m);
+
+    let minChron = Infinity;
+    let maxChron = -Infinity;
+    for (let k = 0; k < m; k++) {
+      const n = activeNodes[filtered[k]];
+      const val = axis === 'watched' ? parseNodeUpdatedAt(n) : ((Number(n.year) > 1900) ? Number(n.year) : 0);
+      if (val > 0) {
+        if (val < minChron) minChron = val;
+        if (val > maxChron) maxChron = val;
+      }
+    }
+    const chronSpan = maxChron > minChron ? (maxChron - minChron) : 0;
+
+    let accEps = 0;
+    for (let k = 0; k < m; k++) {
+      const n = activeNodes[filtered[k]];
+      const rankFrac = m > 1 ? k / (m - 1) : 0;
+      const val = axis === 'watched' ? parseNodeUpdatedAt(n) : ((Number(n.year) > 1900) ? Number(n.year) : 0);
+      const chronFrac = (chronSpan > 0 && val > 0) ? Math.max(0, Math.min(1, (val - minChron) / chronSpan)) : rankFrac;
+      let trig = 0.02 + (rankFrac * 0.68 + chronFrac * 0.30) * 0.96;
+      if (k > 0 && trig < triggers[k - 1]) trig = triggers[k - 1];
+      triggers[k] = Math.min(0.985, trig);
+
+      accEps += Math.max(0, Number(n.episodes) || 0);
+      cumEps[k] = accEps;
+
+      const rawLbl = formatTmDateLabel(n, axis);
+      dateLabels[k] = (rawLbl === '—' && k > 0) ? dateLabels[k - 1] : rawLbl;
+    }
+
+    tmState.order = filtered;
+    tmState.triggers = triggers;
+    tmState.cumEps = cumEps;
+    tmState.dateLabels = dateLabels;
+    tmState.ignitedAt = new Float32Array(activeNodes.length);
+    tmState.ignitedAt.fill(-1);
+    tmState.revealedCount = 0;
+    tmState.lastLinkRevealed = -1;
+    tmState.lastDateStr = '';
+    tmState.lastStarsStr = '';
+    tmState.lastEpsStr = '';
+    tmState.lastScrubVal = -1;
+  }
+
+  function applyTimeMachineAt(progress, now, isManualScrub, prevProgress) {
+    if (!starGeom || !activeNodes.length || !tmState.triggers || !tmState.ignitedAt) return;
+    const revealAttr = starGeom.getAttribute('aReveal');
+    const flashAttr = starGeom.getAttribute('aFlash');
+    if (!revealAttr || !flashAttr) return;
+
+    const revealArr = revealAttr.array;
+    const flashArr = flashAttr.array;
+    const order = tmState.order;
+    const triggers = tmState.triggers;
+    const ignitedAt = tmState.ignitedAt;
+    const m = order.length;
+
+    let revealedCount = 0;
+    let lastIdx = -1;
+    let anyFlash = false;
+    let revealChanged = false;
+    let flashChanged = false;
+
+    for (let k = 0; k < m; k++) {
+      const idx = order[k];
+      const trig = triggers[k];
+      if (trig <= progress) {
+        revealedCount++;
+        lastIdx = k;
+        if (isManualScrub) {
+          if (revealArr[idx] !== 1.0) {
+            revealArr[idx] = 1.0;
+            revealChanged = true;
+          }
+          if (progress > prevProgress && trig > prevProgress) {
+            ignitedAt[idx] = now;
+            if (flashArr[idx] !== 1.0) {
+              flashArr[idx] = 1.0;
+              flashChanged = true;
+            }
+            anyFlash = true;
+          } else {
+            ignitedAt[idx] = now - 500;
+            if (flashArr[idx] !== 0.0) {
+              flashArr[idx] = 0.0;
+              flashChanged = true;
+            }
+          }
+        } else {
+          if (ignitedAt[idx] < 0) ignitedAt[idx] = now;
+          const age = Math.max(0, now - ignitedAt[idx]);
+          const nextRev = age >= 220 ? 1.0 : age / 220;
+          const nextFlash = age < 450 ? Math.pow(1 - age / 450, 1.55) : 0.0;
+          if (revealArr[idx] !== nextRev) {
+            revealArr[idx] = nextRev;
+            revealChanged = true;
+          }
+          if (flashArr[idx] !== nextFlash) {
+            flashArr[idx] = nextFlash;
+            flashChanged = true;
+          }
+          if (nextFlash > 0.001) anyFlash = true;
+        }
+      } else {
+        if (revealArr[idx] !== 0.0) {
+          revealArr[idx] = 0.0;
+          revealChanged = true;
+        }
+        if (flashArr[idx] !== 0.0) {
+          flashArr[idx] = 0.0;
+          flashChanged = true;
+        }
+        ignitedAt[idx] = -1;
+      }
+    }
+
+    tmState.hasActiveFlash = anyFlash;
+    tmState.revealedCount = revealedCount;
+    if (revealChanged) revealAttr.needsUpdate = true;
+    if (flashChanged) flashAttr.needsUpdate = true;
+
+    updateLinkRevealMask(revealArr, revealedCount);
+
+    if (selectedIdx >= 0 && revealArr[selectedIdx] < 0.5) {
+      selectedIdx = -1;
+      inspector?.classList.remove('is-open');
+      updateHighlightStarLinks(-1);
+    }
+
+    const epsSum = lastIdx >= 0 && tmState.cumEps ? tmState.cumEps[lastIdx] : 0;
+    const dateStr = lastIdx >= 0 ? tmState.dateLabels[lastIdx] : (m ? tmState.dateLabels[0] : '—');
+    syncTimeMachineTelemetry(revealedCount, m, epsSum, dateStr, progress);
+  }
+
+  function setTimeMachinePlaying(playing) {
+    tmState.playing = Boolean(playing);
+    tmPlayBtn?.classList.toggle('is-playing', tmState.playing);
+    if (tmPlayBtn) {
+      tmPlayBtn.textContent = tmState.playing ? '❚❚' : '▶';
+    }
+  }
+
+  function openTimeMachine(autoPlay = true) {
+    if (!starGeom || !activeNodes.length) return;
+    cancelStarHop(false);
+    flyState.active = false;
+    selectedIdx = -1;
+    inspector?.classList.remove('is-open');
+    updateHighlightStarLinks(-1);
+    hoveredIdx = -1;
+    updateHoverTooltip(-1, 0, 0);
+
+    tmState.open = true;
+    tmState.progress = 0;
+    tmState.userDraggedCamera = false;
+    overlay.classList.add('is-tm-open');
+    tmPanel?.classList.add('is-open');
+    tmPanel?.setAttribute('aria-hidden', 'false');
+    tmToggleBtn?.classList.add('active');
+    tmToggleBtn?.setAttribute('aria-pressed', 'true');
+
+    const revealAttr = starGeom.getAttribute('aReveal');
+    const flashAttr = starGeom.getAttribute('aFlash');
+    if (revealAttr) {
+      revealAttr.array.fill(0.0);
+      revealAttr.needsUpdate = true;
+    }
+    if (flashAttr) {
+      flashAttr.array.fill(0.0);
+      flashAttr.needsUpdate = true;
+    }
+
+    buildTimeMachineSchedule();
+    applyTimeMachineAt(0, performance.now(), true, 0);
+    setTimeMachinePlaying(Boolean(autoPlay));
+
+    const baseR = activeLayout === 'eras' ? 215 : 178;
+    camState.targetLook.x = 0;
+    camState.targetLook.y = 0;
+    camState.targetLook.z = 0;
+    camState.targetRadius = baseR * 0.88;
+    camState.targetPhi = 1.06;
+  }
+
+  function closeTimeMachine(restoreAll = true) {
+    if (!tmState.open && !restoreAll) return;
+    tmState.open = false;
+    tmState.hasActiveFlash = false;
+    setTimeMachinePlaying(false);
+    overlay.classList.remove('is-tm-open');
+    tmPanel?.classList.remove('is-open');
+    tmPanel?.setAttribute('aria-hidden', 'true');
+    tmToggleBtn?.classList.remove('active');
+    tmToggleBtn?.setAttribute('aria-pressed', 'false');
+
+    if (restoreAll && starGeom) {
+      const revealAttr = starGeom.getAttribute('aReveal');
+      const flashAttr = starGeom.getAttribute('aFlash');
+      if (revealAttr) {
+        revealAttr.array.fill(1.0);
+        revealAttr.needsUpdate = true;
+      }
+      if (flashAttr) {
+        flashAttr.array.fill(0.0);
+        flashAttr.needsUpdate = true;
+      }
+      const segAlphaAttr = linkGeom?.getAttribute('aSegAlpha');
+      if (segAlphaAttr) {
+        segAlphaAttr.array.fill(1.0);
+        segAlphaAttr.needsUpdate = true;
+      }
+      tmState.lastLinkRevealed = -1;
+      if (selectedIdx >= 0) updateHighlightStarLinks(selectedIdx);
+    }
+  }
+
+  function toggleTimeMachinePlay() {
+    if (!tmState.open) return;
+    if (tmState.playing) {
+      setTimeMachinePlaying(false);
+      return;
+    }
+    if (tmState.progress >= 0.999) {
+      tmState.progress = 0;
+      tmState.userDraggedCamera = false;
+      tmState.lastLinkRevealed = -1;
+      if (tmState.ignitedAt) tmState.ignitedAt.fill(-1);
+      const revealAttr = starGeom?.getAttribute('aReveal');
+      const flashAttr = starGeom?.getAttribute('aFlash');
+      if (revealAttr) {
+        revealAttr.array.fill(0.0);
+        revealAttr.needsUpdate = true;
+      }
+      if (flashAttr) {
+        flashAttr.array.fill(0.0);
+        flashAttr.needsUpdate = true;
+      }
+      applyTimeMachineAt(0, performance.now(), true, 0);
+    }
+    setTimeMachinePlaying(true);
   }
 
   function updateHoverTooltip(idx, clientX, clientY) {
@@ -1214,6 +1941,17 @@ export function initArchiveGalaxy(player) {
       return;
     }
 
+    const dtMs = lastFrameAt > 0 ? Math.min(50, Math.max(0, now - lastFrameAt)) : 16.67;
+    const dtScale = dtMs / 16.67;
+    lastFrameAt = now;
+
+    const spec = (player && typeof player.sampleSpectrum === 'function')
+      ? player.sampleSpectrum(now)
+      : ZERO_SPECTRUM;
+    const bass = spec.bass || 0;
+    const mid = spec.mid || 0;
+    const high = spec.high || 0;
+
     // 1. Morph star positions smoothly when changing formations
     if (isMorphing && startPos && targetPos && currentPos && starGeom) {
       const t = Math.min(1, (now - morphStart) / morphDuration);
@@ -1232,18 +1970,59 @@ export function initArchiveGalaxy(player) {
     // 1b. Star-Hopping Roulette frame step (100% rAF synced)
     updateStarHopFrame(now);
 
-    // 2. Smooth inertial camera orbit + zoom + fly-to
-    if (autoOrbit && !hopState.active) {
-      camState.targetTheta += 0.0014 + appState.liveBeatEnergy * 0.0018;
+    // 1c. Chronological Time Machine playback & flash decay
+    if (tmState.open) {
+      if (tmState.playing) {
+        const prevProg = tmState.progress;
+        const nextProg = Math.min(1, prevProg + (dtMs * tmState.speed) / tmState.durationMs);
+        tmState.progress = nextProg;
+        applyTimeMachineAt(nextProg, now, false, prevProg);
+        if (!tmState.userDraggedCamera && !hopState.active && !flyState.active) {
+          const baseR = activeLayout === 'eras' ? 215 : 178;
+          camState.targetTheta += (0.0022 + bass * 0.0014) * dtScale;
+          camState.targetPhi = 1.06 + Math.sin(nextProg * Math.PI) * 0.14;
+          camState.targetRadius = baseR * (0.86 + nextProg * 0.18);
+        }
+        if (nextProg >= 1) {
+          setTimeMachinePlaying(false);
+        }
+      } else if (tmState.hasActiveFlash) {
+        applyTimeMachineAt(tmState.progress, now, false, tmState.progress);
+      }
     }
-    const camLerp = hopState.active ? 0.14 : 0.085;
-    const lookLerp = hopState.active ? 0.16 : 0.08;
-    camState.theta += (camState.targetTheta - camState.theta) * camLerp;
-    camState.phi += (camState.targetPhi - camState.phi) * camLerp;
-    camState.radius += (camState.targetRadius - camState.radius) * camLerp;
-    camState.look.x += (camState.targetLook.x - camState.look.x) * lookLerp;
-    camState.look.y += (camState.targetLook.y - camState.look.y) * lookLerp;
-    camState.look.z += (camState.targetLook.z - camState.look.z) * lookLerp;
+
+    // 2. Smooth cubic fly-to OR inertial camera orbit + zoom
+    if (flyState.active) {
+      const rawT = Math.min(1, (now - flyState.startTime) / flyState.duration);
+      const eased = rawT < 0.5 ? 4 * rawT * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 3) / 2;
+      camState.look.x = flyState.fromLook.x + (flyState.toLook.x - flyState.fromLook.x) * eased;
+      camState.look.y = flyState.fromLook.y + (flyState.toLook.y - flyState.fromLook.y) * eased;
+      camState.look.z = flyState.fromLook.z + (flyState.toLook.z - flyState.fromLook.z) * eased;
+      camState.radius = flyState.fromRadius + (flyState.toRadius - flyState.fromRadius) * eased;
+      camState.phi = flyState.fromPhi + (flyState.toPhi - flyState.fromPhi) * eased;
+      camState.theta = flyState.fromTheta + (flyState.toTheta - flyState.fromTheta) * eased;
+      camState.targetLook.x = camState.look.x;
+      camState.targetLook.y = camState.look.y;
+      camState.targetLook.z = camState.look.z;
+      camState.targetRadius = camState.radius;
+      camState.targetPhi = camState.phi;
+      camState.targetTheta = camState.theta;
+      if (rawT >= 1) {
+        flyState.active = false;
+      }
+    } else {
+      if (autoOrbit && !hopState.active && !(tmState.open && tmState.playing)) {
+        camState.targetTheta += (0.0014 + bass * 0.0018) * dtScale;
+      }
+      const camLerp = 1 - Math.pow(1 - (hopState.active ? 0.14 : 0.085), dtScale);
+      const lookLerp = 1 - Math.pow(1 - (hopState.active ? 0.16 : 0.08), dtScale);
+      camState.theta += (camState.targetTheta - camState.theta) * camLerp;
+      camState.phi += (camState.targetPhi - camState.phi) * camLerp;
+      camState.radius += (camState.targetRadius - camState.radius) * camLerp;
+      camState.look.x += (camState.targetLook.x - camState.look.x) * lookLerp;
+      camState.look.y += (camState.targetLook.y - camState.look.y) * lookLerp;
+      camState.look.z += (camState.targetLook.z - camState.look.z) * lookLerp;
+    }
 
     const sinPhi = Math.sin(camState.phi);
     camera.position.set(
@@ -1253,21 +2032,42 @@ export function initArchiveGalaxy(player) {
     );
     camera.lookAt(camState.look.x, camState.look.y, camState.look.z);
 
-    // 3. Subtle cosmic motion & audio beat-sync
+    // 3. Subtle cosmic motion & deep audio spectrum reactivity
+    const timeSec = now * 0.001;
     if (dustPoints) {
-      dustPoints.rotation.y += 0.00028 + appState.liveBeatEnergy * 0.0005;
+      dustPoints.rotation.y += (0.00026 + bass * 0.00055) * dtScale;
+    }
+    if (dustMat) {
+      dustMat.uniforms.uTime.value = timeSec;
+      dustMat.uniforms.uBass.value = bass;
+      dustMat.uniforms.uHigh.value = high;
     }
     if (astrolabeGroup) {
-      astrolabeGroup.rotation.y -= 0.00045;
-      const ringScale = 1 + appState.liveBeatEnergy * 0.025;
+      astrolabeGroup.rotation.y -= (0.00042 + mid * 0.00025) * dtScale;
+      const ringScale = 1 + bass * 0.042;
       astrolabeGroup.scale.set(ringScale, 1, ringScale);
+      for (let i = 0; i < astrolabeMats.length; i++) {
+        astrolabeMats[i].opacity = (ASTROLABE_BASE_OPACITY[i] || 0.07) * (1 + bass * 0.65 + mid * 0.25);
+      }
     }
     if (linkLines) {
       linkLines.visible = showLinks && !isMorphing;
     }
+    if (linkMat) {
+      linkMat.uniforms.uTime.value = timeSec;
+      linkMat.uniforms.uMid.value = mid;
+      linkMat.uniforms.uHigh.value = high;
+    }
+    if (highlightMat) {
+      highlightMat.uniforms.uTime.value = timeSec;
+      highlightMat.uniforms.uBass.value = bass;
+      highlightMat.uniforms.uMid.value = mid;
+    }
     if (starMat) {
-      starMat.uniforms.uTime.value = now * 0.001;
-      starMat.uniforms.uBeat.value = appState.liveBeatEnergy;
+      starMat.uniforms.uTime.value = timeSec;
+      starMat.uniforms.uBass.value = bass;
+      starMat.uniforms.uMid.value = mid;
+      starMat.uniforms.uHigh.value = high;
       starMat.uniforms.uFocusIdx.value = hopState.active ? hopState.focusIdx : (hoveredIdx >= 0 ? hoveredIdx : selectedIdx);
     }
 
@@ -1284,6 +2084,7 @@ export function initArchiveGalaxy(player) {
   let lastPinchDist = 0;
 
   canvasWrap.addEventListener('pointerdown', (e) => {
+    flyState.active = false;
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     lastX = e.clientX;
     lastY = e.clientY;
@@ -1308,6 +2109,7 @@ export function initArchiveGalaxy(player) {
       }
       lastPinchDist = dist;
       dragMoved += 20;
+      if (tmState.open) tmState.userDraggedCamera = true;
       return;
     }
 
@@ -1319,9 +2121,12 @@ export function initArchiveGalaxy(player) {
       dragMoved += Math.hypot(dx, dy);
       camState.targetTheta -= dx * 0.0056;
       camState.targetPhi = Math.max(0.18, Math.min(Math.PI - 0.18, camState.targetPhi - dy * 0.0052));
-      if (dragMoved > 6 && autoOrbit) {
-        autoOrbit = false;
-        orbitBtn?.classList.remove('active');
+      if (dragMoved > 6) {
+        if (autoOrbit) {
+          autoOrbit = false;
+          orbitBtn?.classList.remove('active');
+        }
+        if (tmState.open) tmState.userDraggedCamera = true;
       }
       updateHoverTooltip(-1, 0, 0);
       return;
@@ -1366,6 +2171,8 @@ export function initArchiveGalaxy(player) {
 
   canvasWrap.addEventListener('wheel', (e) => {
     e.preventDefault();
+    flyState.active = false;
+    if (tmState.open) tmState.userDraggedCamera = true;
     camState.targetRadius = Math.max(26, Math.min(420, camState.targetRadius + e.deltaY * 0.14));
   }, { passive: false });
 
@@ -1381,25 +2188,36 @@ export function initArchiveGalaxy(player) {
       camera.aspect = galaxyViewW / galaxyViewH;
       camera.updateProjectionMatrix();
       renderer.setSize(galaxyViewW, galaxyViewH);
-      if (starMat) starMat.uniforms.uPixelRatio.value = Math.min(window.devicePixelRatio || 1, 1.5);
+      const nextDpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      if (starMat) starMat.uniforms.uPixelRatio.value = nextDpr;
+      if (dustMat) dustMat.uniforms.uPixelRatio.value = nextDpr;
     }, 90);
   }, { passive: true });
 
   document.addEventListener('visibilitychange', () => {
     if (!isOpen) return;
     if (document.hidden) {
+      lastFrameAt = 0;
       if (rafId) {
         cancelAnimationFrame(rafId);
         rafId = null;
       }
     } else if (renderer && !rafId) {
+      lastFrameAt = 0;
       rafId = requestAnimationFrame(renderLoop);
     }
   });
 
-  async function openGalaxy() {
-    if (isOpen) return;
+  async function openGalaxy(opts) {
+    const wantsTimeMachine = Boolean(opts && opts.startTimeMachine);
+    if (isOpen) {
+      if (wantsTimeMachine && renderer && !tmState.open) {
+        openTimeMachine(true);
+      }
+      return;
+    }
     isOpen = true;
+    lastFrameAt = 0;
     galaxyViewW = window.innerWidth;
     galaxyViewH = window.innerHeight;
     overlay.classList.add('is-open');
@@ -1431,6 +2249,10 @@ export function initArchiveGalaxy(player) {
       rafId = requestAnimationFrame(renderLoop);
     }
 
+    if (wantsTimeMachine && isOpen && renderer) {
+      openTimeMachine(true);
+    }
+
     // If visitor opened galaxy before live 415+ list finished downloading, or old cache lacks planned, pull it immediately
     if (appState.galaxyNodes.length < 30 || !appState.galaxyNodes.some((n) => n.status === 'planned')) {
       loadHostAnimeRates().then(() => {
@@ -1444,6 +2266,9 @@ export function initArchiveGalaxy(player) {
   function closeGalaxy() {
     if (!isOpen) return;
     cancelStarHop(false);
+    if (tmState.open) closeTimeMachine(true);
+    flyState.active = false;
+    lastFrameAt = 0;
     isOpen = false;
     overlay.classList.remove('is-open');
     overlay.setAttribute('aria-hidden', 'true');
@@ -1464,9 +2289,58 @@ export function initArchiveGalaxy(player) {
   };
 
   // HUD Controls Bindings
-  document.getElementById('open-galaxy-topbar-btn')?.addEventListener('click', openGalaxy);
-  document.getElementById('open-galaxy-dna-btn')?.addEventListener('click', openGalaxy);
+  document.getElementById('open-galaxy-topbar-btn')?.addEventListener('click', () => openGalaxy());
+  document.getElementById('open-galaxy-dna-btn')?.addEventListener('click', () => openGalaxy());
+  document.addEventListener('archive:galaxy-timemachine', () => openGalaxy({ startTimeMachine: true }));
   closeBtn?.addEventListener('click', closeGalaxy);
+
+  tmToggleBtn?.addEventListener('click', () => {
+    if (tmState.open) closeTimeMachine(true);
+    else openTimeMachine(true);
+  });
+
+  tmCloseBtn?.addEventListener('click', () => closeTimeMachine(true));
+  tmPlayBtn?.addEventListener('click', toggleTimeMachinePlay);
+
+  tmScrubber?.addEventListener('input', () => {
+    if (!tmState.open) return;
+    const prevProg = tmState.progress;
+    const nextProg = Math.max(0, Math.min(1, Number(tmScrubber.value) / 1000));
+    setTimeMachinePlaying(false);
+    tmState.progress = nextProg;
+    applyTimeMachineAt(nextProg, performance.now(), true, prevProg);
+  });
+
+  tmSpeedBtn?.addEventListener('click', () => {
+    tmState.speed = tmState.speed === 1 ? 2 : 1;
+    tmSpeedBtn.textContent = `${tmState.speed}×`;
+    tmSpeedBtn.classList.toggle('active', tmState.speed === 2);
+  });
+
+  tmAxisBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (!tmState.open) return;
+      const nextAxis = btn.dataset.tmaxis;
+      if (!nextAxis || nextAxis === tmState.axis) return;
+      const wasPlaying = tmState.playing;
+      const prevProg = tmState.progress;
+      const revealAttr = starGeom?.getAttribute('aReveal');
+      const flashAttr = starGeom?.getAttribute('aFlash');
+      if (revealAttr) {
+        revealAttr.array.fill(0.0);
+        revealAttr.needsUpdate = true;
+      }
+      if (flashAttr) {
+        flashAttr.array.fill(0.0);
+        flashAttr.needsUpdate = true;
+      }
+      buildTimeMachineSchedule(nextAxis);
+      const nextProg = wasPlaying ? 0 : prevProg;
+      tmState.progress = nextProg;
+      applyTimeMachineAt(nextProg, performance.now(), true, 0);
+      if (wasPlaying) setTimeMachinePlaying(true);
+    });
+  });
 
   inspClose?.addEventListener('click', () => {
     selectedIdx = -1;
@@ -1496,6 +2370,7 @@ export function initArchiveGalaxy(player) {
       const prevPlanned = activeFilter === 'planned';
       const nextPlanned = nextFilter === 'planned';
 
+      if (tmState.open) closeTimeMachine(true);
       activeFilter = nextFilter;
       filterBtns.forEach((b) => b.classList.toggle('active', b === btn));
       cancelStarHop(false);
@@ -1527,6 +2402,7 @@ export function initArchiveGalaxy(player) {
   });
 
   searchInput?.addEventListener('input', () => {
+    if (tmState.open) closeTimeMachine(true);
     activeSearch = searchInput.value || '';
     updateFilterAlphas();
   });
@@ -1556,16 +2432,13 @@ export function initArchiveGalaxy(player) {
 
   resetBtn?.addEventListener('click', () => {
     cancelStarHop(false);
-    camState.targetLook.x = 0;
-    camState.targetLook.y = 0;
-    camState.targetLook.z = 0;
-    camState.targetRadius = activeLayout === 'eras' ? 215 : 178;
-    camState.targetPhi = 1.12;
+    tmState.userDraggedCamera = false;
     selectedIdx = -1;
     inspector?.classList.remove('is-open');
     updateHighlightStarLinks(-1);
     autoOrbit = true;
     orbitBtn?.classList.add('active');
+    startCameraFlyTo(0, 0, 0, activeLayout === 'eras' ? 215 : 178, 1.12, 720);
   });
 
   musicBtn?.addEventListener('click', () => {
@@ -1574,14 +2447,42 @@ export function initArchiveGalaxy(player) {
     else player.play();
   });
 
+  player?.onState?.(({ playing }) => {
+    musicBtn?.classList.toggle('is-playing', Boolean(playing));
+  });
+
   window.addEventListener('keydown', (e) => {
     if (!isOpen) return;
-    // Do not intercept Escape if 3D Holo Card is currently open on top of Galaxy
+    // Capture phase ensures holo-modal / cmdk-modal checks see open state before bubble handlers close them
     const holoOpen = document.getElementById('holo-modal')?.classList.contains('is-open');
-    if (holoOpen) return;
+    const cmdkOpen = document.getElementById('cmdk-modal')?.classList.contains('is-open');
+    if (holoOpen || cmdkOpen) return;
+
+    if ((e.code === 'Space' || e.key === ' ') && tmState.open && !e.repeat && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const target = e.target;
+      const tag = target && target.tagName;
+      const isTextTyping = tag === 'TEXTAREA' || tag === 'SELECT' || (target && target.isContentEditable) || (tag === 'INPUT' && target.type !== 'range');
+      if (!isTextTyping) {
+        e.preventDefault();
+        toggleTimeMachinePlay();
+        return;
+      }
+    }
+
     if (e.key === 'Escape') {
+      e.preventDefault();
+      if (tmState.open) {
+        closeTimeMachine(true);
+        return;
+      }
+      if (inspector?.classList.contains('is-open')) {
+        selectedIdx = -1;
+        inspector.classList.remove('is-open');
+        updateHighlightStarLinks(-1);
+        return;
+      }
       closeGalaxy();
     }
-  });
+  }, true);
 }
 

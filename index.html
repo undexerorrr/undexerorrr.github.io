@@ -1224,6 +1224,9 @@
           <span class="search-icon" aria-hidden="true">⌕</span>
           <input type="text" class="galaxy-search-input" id="galaxy-search-input" placeholder="Найти звезду (тайтл)..." aria-label="Поиск тайтла в 3D-Галактике" autocomplete="off" />
         </div>
+        <button type="button" class="galaxy-hud-btn is-tm-toggle" id="galaxy-tm-btn" aria-pressed="false" aria-label="Машина времени · хронологическое зажигание космоса" title="Машина времени · хронологическое зажигание космоса">
+          <span class="g-tm-ico" aria-hidden="true">◷</span><span class="g-tm-lbl"> Хронология</span>
+        </button>
         <button type="button" class="galaxy-hud-btn" id="galaxy-warp-btn" title="Перелететь к случайной звезде">✦ Случайная</button>
         <button type="button" class="galaxy-hud-btn active galaxy-hide-sm" id="galaxy-lines-btn" title="Показать / скрыть линии созвездий">Связи</button>
         <button type="button" class="galaxy-hud-btn active galaxy-hide-sm" id="galaxy-orbit-btn" title="Автовращение камеры">Орбита</button>
@@ -1252,8 +1255,32 @@
       </div>
     </aside>
 
-    <!-- Bottom HUD: Formations & Filters -->
+    <!-- Bottom HUD: Time Machine, Formations & Filters -->
     <div class="galaxy-hud-bottom">
+      <!-- Time Machine Chronology HUD -->
+      <div class="galaxy-tm-panel" id="galaxy-tm-panel" role="region" aria-label="Машина времени 3D-Галактики" aria-hidden="true">
+        <div class="galaxy-tm-row">
+          <button type="button" class="galaxy-tm-play" id="galaxy-tm-play-btn" aria-label="Запустить или поставить на паузу хронологию" title="Play / Pause (Space)">▶</button>
+          <span class="galaxy-tm-date" id="galaxy-tm-date">—</span>
+          <div class="galaxy-tm-track-wrap">
+            <input type="range" class="galaxy-tm-scrubber" id="galaxy-tm-scrubber" min="0" max="1000" step="1" value="0" aria-label="Прогресс хронологии" />
+          </div>
+          <div class="galaxy-tm-meta" aria-live="polite">
+            <span class="galaxy-tm-stat" id="galaxy-tm-stars">0 / 0</span>
+            <span class="galaxy-tm-sep" aria-hidden="true">·</span>
+            <span class="galaxy-tm-stat" id="galaxy-tm-eps">0 эп.</span>
+          </div>
+          <div class="galaxy-tm-controls">
+            <button type="button" class="galaxy-tm-chip" id="galaxy-tm-speed-btn" title="Скорость воспроизведения">1×</button>
+            <div class="galaxy-tm-axis" id="galaxy-tm-axis-group" role="tablist" aria-label="Ось времени" hidden>
+              <button type="button" class="galaxy-tm-axis-btn active" data-tmaxis="watched" role="tab" aria-selected="true">По просмотрам</button>
+              <button type="button" class="galaxy-tm-axis-btn" data-tmaxis="year" role="tab" aria-selected="false">По эпохам</button>
+            </div>
+            <button type="button" class="galaxy-tm-close" id="galaxy-tm-close-btn" aria-label="Закрыть Машину времени" title="Выйти из хронологии (Esc)">×</button>
+          </div>
+        </div>
+      </div>
+
       <div class="galaxy-dock-bar">
         <div class="galaxy-seg-group" role="tablist" aria-label="Формация галактики">
           <button type="button" class="galaxy-seg-btn active" data-glayout="spiral">Спираль</button>

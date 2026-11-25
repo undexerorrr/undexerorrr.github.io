@@ -319,10 +319,109 @@ export function initMusicPlayer() {
 
   // Visualizer + Beat-Reactive Avatar Ring Loop (on-demand RAF — zero idle overhead)
   let smoothBeat = 0;
+  let smoothBass = 0;
+  let smoothMid = 0;
+  let smoothHigh = 0;
+  let lastSpectrumAt = 0;
   let lastWrittenBeat = -1;
   let fallbackPhase = 0;
   let visRafId = null;
   const avatarBeatHost = document.querySelector('.avatar-wrap');
+  const audioSpectrum = { energy: 0, bass: 0, mid: 0, high: 0, isPlaying: false };
+
+  function resetAudioSpectrum() {
+    smoothBeat = 0;
+    smoothBass = 0;
+    smoothMid = 0;
+    smoothHigh = 0;
+    lastSpectrumAt = 0;
+    audioSpectrum.energy = 0;
+    audioSpectrum.bass = 0;
+    audioSpectrum.mid = 0;
+    audioSpectrum.high = 0;
+    audioSpectrum.isPlaying = false;
+    appState.liveBeatEnergy = 0;
+  }
+
+  function updateSpectrumBands(now) {
+    const ts = now || performance.now();
+    const dtMs = lastSpectrumAt > 0 ? Math.min(50, Math.max(1, ts - lastSpectrumAt)) : 16.67;
+    lastSpectrumAt = ts;
+    const frameFactor = dtMs / 16.67;
+    const atk = 1 - Math.pow(1 - 0.38, frameFactor);
+    const rel = 1 - Math.pow(1 - 0.14, frameFactor);
+
+    let targetBass = 0;
+    let targetMid = 0;
+    let targetHigh = 0;
+    let targetEnergy = 0;
+
+    if (isPlaying && analyser && freqData) {
+      analyser.getByteFrequencyData(freqData);
+      let bassSum = 0;
+      for (let b = 0; b <= 4; b++) bassSum += freqData[b];
+      const bassNorm = bassSum / (5 * 255);
+      targetBass = Math.pow(Math.max(0, (bassNorm - 0.10) / 0.90), 1.3);
+
+      let midSum = 0;
+      for (let m = 5; m <= 18; m++) midSum += freqData[m];
+      const midNorm = midSum / (14 * 255);
+      targetMid = Math.pow(Math.max(0, (midNorm - 0.08) / 0.92), 1.15);
+
+      let highSum = 0;
+      const highEnd = Math.min(42, freqData.length - 1);
+      const highCount = Math.max(1, highEnd - 19 + 1);
+      for (let h = 19; h <= highEnd; h++) highSum += freqData[h];
+      const highNorm = highSum / (highCount * 255);
+      targetHigh = Math.min(1, Math.pow(Math.max(0, (highNorm - 0.05) / 0.95), 1.1) * 1.25);
+
+      targetEnergy = Math.min(1, targetBass * 0.62 + targetMid * 0.28 + targetHigh * 0.10);
+    } else if (isPlaying) {
+      fallbackPhase += 0.14 * frameFactor;
+      targetBass = 0.22 + 0.38 * Math.pow((Math.sin(fallbackPhase * 1.7) + 1) * 0.5, 2);
+      targetMid = 0.18 + 0.34 * Math.pow((Math.sin(fallbackPhase * 2.3 + 0.9) + 1) * 0.5, 1.6);
+      targetHigh = 0.14 + 0.30 * Math.pow((Math.sin(fallbackPhase * 3.1 + 1.8) + 1) * 0.5, 1.4);
+      targetEnergy = Math.min(1, targetBass * 0.62 + targetMid * 0.28 + targetHigh * 0.10);
+    }
+
+    smoothBass += (targetBass - smoothBass) * (targetBass > smoothBass ? atk : rel);
+    smoothMid += (targetMid - smoothMid) * (targetMid > smoothMid ? atk : rel);
+    smoothHigh += (targetHigh - smoothHigh) * (targetHigh > smoothHigh ? atk : rel);
+    smoothBeat += (targetEnergy - smoothBeat) * (targetEnergy > smoothBeat ? atk : rel);
+
+    if (!isPlaying) {
+      if (smoothBass < 0.002) smoothBass = 0;
+      if (smoothMid < 0.002) smoothMid = 0;
+      if (smoothHigh < 0.002) smoothHigh = 0;
+      if (smoothBeat < 0.002) smoothBeat = 0;
+      if (smoothBeat === 0 && smoothBass === 0 && smoothMid === 0 && smoothHigh === 0) {
+        lastSpectrumAt = 0;
+      }
+    }
+
+    audioSpectrum.energy = smoothBeat;
+    audioSpectrum.bass = smoothBass;
+    audioSpectrum.mid = smoothMid;
+    audioSpectrum.high = smoothHigh;
+    audioSpectrum.isPlaying = isPlaying;
+    appState.liveBeatEnergy = smoothBeat;
+  }
+
+  function sampleSpectrum(now) {
+    if (!isPlaying && smoothBeat === 0 && smoothBass === 0 && smoothMid === 0 && smoothHigh === 0) {
+      audioSpectrum.energy = 0;
+      audioSpectrum.bass = 0;
+      audioSpectrum.mid = 0;
+      audioSpectrum.high = 0;
+      audioSpectrum.isPlaying = false;
+      return audioSpectrum;
+    }
+    if (now && now === lastSpectrumAt) {
+      return audioSpectrum;
+    }
+    updateSpectrumBands(now || performance.now());
+    return audioSpectrum;
+  }
 
   function drawIdleBaseline() {
     if (!visCtx || !visCanvas) return;
@@ -366,28 +465,26 @@ export function initMusicPlayer() {
       }
     } else {
       stopVisualizerLoop();
-      if (!isPlaying) {
-        smoothBeat = 0;
-        appState.liveBeatEnergy = 0;
+      if (!isPlaying && !document.body.classList.contains('galaxy-active')) {
+        resetAudioSpectrum();
         writeBeatEnergy(0);
         drawIdleBaseline();
       }
     }
   }
 
-  function visualizerFrame() {
+  function visualizerFrame(now) {
     visRafId = null;
     if (!shouldRunVisualizer()) {
-      if (!isPlaying) {
-        smoothBeat = 0;
-        appState.liveBeatEnergy = 0;
+      if (!isPlaying && !document.body.classList.contains('galaxy-active')) {
+        resetAudioSpectrum();
         writeBeatEnergy(0);
         drawIdleBaseline();
       }
       return;
     }
 
-    let targetEnergy = 0;
+    updateSpectrumBands(now || performance.now());
     const barCount = 24;
 
     if (visCtx && visCanvas) {
@@ -396,12 +493,6 @@ export function initMusicPlayer() {
       visCtx.clearRect(0, 0, vw, vh);
 
       if (isPlaying && analyser && freqData) {
-        analyser.getByteFrequencyData(freqData);
-        let bassSum = 0;
-        for (let b = 0; b < 6; b++) bassSum += freqData[b];
-        const bassNorm = bassSum / (6 * 255);
-        targetEnergy = Math.pow(Math.max(0, (bassNorm - 0.12) / 0.88), 1.35);
-
         const gap = 3;
         const barW = (vw - gap * (barCount - 1)) / barCount;
         for (let i = 0; i < barCount; i++) {
@@ -417,8 +508,6 @@ export function initMusicPlayer() {
           visCtx.fillRect(x, y, barW, bh);
         }
       } else if (isPlaying) {
-        fallbackPhase += 0.14;
-        targetEnergy = 0.25 + 0.35 * Math.pow((Math.sin(fallbackPhase * 1.7) + 1) * 0.5, 2);
         const gap = 3;
         const barW = (vw - gap * (barCount - 1)) / barCount;
         for (let i = 0; i < barCount; i++) {
@@ -432,9 +521,6 @@ export function initMusicPlayer() {
       }
     }
 
-    smoothBeat += (targetEnergy - smoothBeat) * (targetEnergy > smoothBeat ? 0.38 : 0.16);
-    if (!isPlaying && smoothBeat < 0.004) smoothBeat = 0;
-    appState.liveBeatEnergy = smoothBeat;
     writeBeatEnergy(smoothBeat);
     if (frameListeners.length) {
       const liveFreq = isPlaying && analyser && freqData ? freqData : null;
@@ -444,6 +530,8 @@ export function initMusicPlayer() {
     if (shouldRunVisualizer()) {
       visRafId = requestAnimationFrame(visualizerFrame);
     } else if (!isPlaying) {
+      resetAudioSpectrum();
+      writeBeatEnergy(0);
       drawIdleBaseline();
     }
   }
@@ -475,6 +563,7 @@ export function initMusicPlayer() {
     onFrame(fn) {
       frameListeners.push(fn);
     },
+    sampleSpectrum,
     syncVisualizer
   };
 }

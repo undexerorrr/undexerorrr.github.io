@@ -160,6 +160,12 @@ export function initCommandPalette(player) {
         run: () => clickById('open-galaxy-topbar-btn')
       },
       {
+        group: 'Команды', icon: '◷', label: 'Галактика: Машина времени',
+        hint: 'Хронологическое зажигание 3D-космоса',
+        kw: 'галактика машина времени хронология time machine timeline galaxy космос история 3d', page: true,
+        run: () => document.dispatchEvent(new CustomEvent('archive:galaxy-timemachine'))
+      },
+      {
         group: 'Команды', icon: '▣', label: cinemaOn ? 'Выключить Cinema Mode' : 'Включить Cinema Mode',
         hint: 'Чистый экран для второго монитора', meta: 'C', kw: 'cinema кино синема режим экран монитор фокус',
         run: () => clickById('cinema-toggle-btn')
