@@ -39,39 +39,51 @@ import {
   renderCollection
 } from './modules/ui.js';
 
-initModalScrollLock();
-const playerControls = initMusicPlayer();
-initIntroOverlay(playerControls);
-initSpotifyDrawer(playerControls);
-initLanyardPresence();
-initTasteMatcher();
-initCoopPicker();
-initRandomizer();
-initTournamentArena();
-initHoloCardViewer();
-initMobileTikTokDock();
-initArchiveGalaxy(playerControls);
-initAtmosphereCanvas();
-initLiveWeather();
-initCinemaMode(playerControls);
-initCommandPalette(playerControls);
-initCollectionControls();
+function safeInit(name, fn) {
+  try {
+    return fn();
+  } catch (err) {
+    appState.initErrors.push({
+      name,
+      message: err && typeof err.message === 'string' ? err.message : String(err)
+    });
+    return undefined;
+  }
+}
+
+safeInit('initModalScrollLock', () => initModalScrollLock());
+const playerControls = safeInit('initMusicPlayer', () => initMusicPlayer());
+safeInit('initIntroOverlay', () => initIntroOverlay(playerControls));
+safeInit('initSpotifyDrawer', () => initSpotifyDrawer(playerControls));
+safeInit('initLanyardPresence', () => initLanyardPresence());
+safeInit('initTasteMatcher', () => initTasteMatcher());
+safeInit('initCoopPicker', () => initCoopPicker());
+safeInit('initRandomizer', () => initRandomizer());
+safeInit('initTournamentArena', () => initTournamentArena());
+safeInit('initHoloCardViewer', () => initHoloCardViewer());
+safeInit('initMobileTikTokDock', () => initMobileTikTokDock());
+safeInit('initArchiveGalaxy', () => initArchiveGalaxy(playerControls));
+safeInit('initAtmosphereCanvas', () => initAtmosphereCanvas());
+safeInit('initLiveWeather', () => initLiveWeather());
+safeInit('initCinemaMode', () => initCinemaMode(playerControls));
+safeInit('initCommandPalette', () => initCommandPalette(playerControls));
+safeInit('initCollectionControls', () => initCollectionControls());
 
 renderStats(SNAPSHOT.anime, SNAPSHOT.manga, SNAPSHOT.lifetimeText);
-initDnaControls();
+safeInit('initDnaControls', () => initDnaControls());
 renderAnimeDna(appState.animeDnaState || SNAPSHOT_DNA);
-initHotTakesControls();
+safeInit('initHotTakesControls', () => initHotTakesControls());
 renderHotTakes(appState.hotTakesState, false);
-initTrophiesShowcase();
+safeInit('initTrophiesShowcase', () => initTrophiesShowcase());
 renderHistory(SNAPSHOT.history, false);
 renderActivityGraph(SNAPSHOT.activity);
 renderWatchingShelf(appState.watchingList.length ? appState.watchingList : SNAPSHOT.watching);
-initWatchingControls();
-initGlassSpotlight();
+safeInit('initWatchingControls', () => initWatchingControls());
+safeInit('initGlassSpotlight', () => initGlassSpotlight());
 renderWaifu();
-initWaifuControls();
+safeInit('initWaifuControls', () => initWaifuControls());
 renderCollection();
-initGuestbook();
+safeInit('initGuestbook', () => initGuestbook());
 
 syncShikimoriLive();
 loadAnimeCoversBatch([

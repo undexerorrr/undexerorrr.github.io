@@ -113,19 +113,63 @@ export function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function createTimeoutSignal(externalSignal, timeoutMs) {
+  if (typeof AbortController === 'undefined') {
+    return { signal: externalSignal, cleanup: () => {} };
+  }
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  let onExternalAbort = null;
+
+  if (externalSignal) {
+    if (externalSignal.aborted) {
+      clearTimeout(timer);
+      ctrl.abort(externalSignal.reason);
+    } else {
+      onExternalAbort = () => {
+        clearTimeout(timer);
+        ctrl.abort(externalSignal.reason);
+      };
+      externalSignal.addEventListener('abort', onExternalAbort, { once: true });
+    }
+  }
+
+  const cleanup = () => {
+    clearTimeout(timer);
+    if (externalSignal && onExternalAbort) {
+      externalSignal.removeEventListener('abort', onExternalAbort);
+    }
+  };
+
+  return { signal: ctrl.signal, cleanup };
+}
+
 export async function fetchWithTimeout(url, options, timeoutMs) {
   const limit = typeof timeoutMs === 'number' && timeoutMs > 0 ? timeoutMs : 9000;
   const opts = Object.assign({}, options || {});
-  if (typeof AbortController === 'undefined') {
-    return fetch(url, opts);
-  }
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), limit);
-  opts.signal = ctrl.signal;
+  const { signal, cleanup } = createTimeoutSignal(opts.signal, limit);
+  if (signal) opts.signal = signal;
   try {
     return await fetch(url, opts);
   } finally {
-    clearTimeout(timer);
+    cleanup();
+  }
+}
+
+export async function fetchJsonWithTimeout(url, options, timeoutMs) {
+  const limit = typeof timeoutMs === 'number' && timeoutMs > 0 ? timeoutMs : 9000;
+  const opts = Object.assign({}, options || {});
+  const { signal, cleanup } = createTimeoutSignal(opts.signal, limit);
+  if (signal) opts.signal = signal;
+  try {
+    const res = await fetch(url, opts);
+    if (!res.ok) {
+      return { res, ok: false, status: res.status, data: null };
+    }
+    const data = await res.json();
+    return { res, ok: true, status: res.status, data };
+  } finally {
+    cleanup();
   }
 }
 

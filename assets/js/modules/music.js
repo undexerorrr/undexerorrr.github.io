@@ -7,7 +7,7 @@ import {
   formatRank,
   formatClock,
   escapeHtml,
-  fetchWithTimeout
+  fetchJsonWithTimeout
 } from './config.js';
 import { appState } from './data.js';
 
@@ -549,10 +549,9 @@ export function initSpotifyDrawer(player) {
 
   // Try fetching actual Spotify playlist titles via public oEmbed
   SPOTIFY_PLAYLISTS.forEach((pl, idx) => {
-    fetchWithTimeout(`https://open.spotify.com/oembed?url=${encodeURIComponent(pl.url)}`, {}, 6500)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data && data.title) {
+    fetchJsonWithTimeout(`https://open.spotify.com/oembed?url=${encodeURIComponent(pl.url)}`, {}, 6500)
+      .then(({ ok, data }) => {
+        if (ok && data && data.title) {
           SPOTIFY_PLAYLISTS[idx].label = `${formatRank(idx + 1)} · ${data.title}`;
           renderTabs();
         }
@@ -765,17 +764,16 @@ export function initLanyardPresence() {
 
   async function fetchRest() {
     try {
-      const res = await fetchWithTimeout(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`, {}, 8000);
-      if (res.status === 404) {
+      const { ok, status, data: json } = await fetchJsonWithTimeout(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`, {}, 8000);
+      if (status === 404) {
         hasRenderedPresence = true;
         renderNotMonitored();
         return false;
       }
-      if (!res.ok) {
+      if (!ok) {
         renderLanyardUnavailable();
         return false;
       }
-      const json = await res.json();
       if (json && json.success && json.data) {
         hasRenderedPresence = true;
         renderPresence(json.data);
@@ -827,7 +825,11 @@ export function initLanyardPresence() {
   fetchRest().then((ok) => {
     if (ok) connectWS();
   });
-  setInterval(() => { if (!document.hidden) fetchRest(); }, 45000);
+  setInterval(() => {
+    if (document.hidden) return;
+    if (ws && ws.readyState === WebSocket.OPEN) return;
+    fetchRest();
+  }, 45000);
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
       updateTimers();

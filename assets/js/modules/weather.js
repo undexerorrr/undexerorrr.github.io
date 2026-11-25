@@ -1,4 +1,4 @@
-import { fetchWithTimeout } from './config.js';
+import { fetchJsonWithTimeout } from './config.js';
 import { appState } from './data.js';
 
 /* =========================================
@@ -434,10 +434,9 @@ export function initLiveWeather() {
 
   async function fetchOpenMeteo() {
     try {
-      const url = 'https://api.open-meteo.com/v1/forecast?latitude=53.9006&longitude=27.5590&current=temperature_2m,weather_code,is_day,wind_speed_10m&timezone=Europe%2FMinsk';
-      const res = await fetchWithTimeout(url, {}, 8000);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const json = await res.json();
+      const url = 'https://api.open-meteo.com/v1/forecast?latitude=53.9&longitude=27.6&current=temperature_2m,weather_code,is_day,wind_speed_10m&timezone=Europe%2FMinsk';
+      const { ok, status, data: json } = await fetchJsonWithTimeout(url, {}, 8000);
+      if (!ok) throw new Error('HTTP ' + status);
       const cur = json?.current;
       if (!cur) return;
       weatherEngineState.temp = Number(cur.temperature_2m);

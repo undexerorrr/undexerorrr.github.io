@@ -40,6 +40,7 @@ export function initGuestbook() {
 
   let loaded = false;
   let hasGiscusError = false;
+  let hasSoftNotice = false;
   let loadTimer = null;
 
   const setStatus = (state, badgeText, noteText) => {
@@ -59,20 +60,32 @@ export function initGuestbook() {
     }
 
     if (payload.error) {
-      hasGiscusError = true;
       const isSetupMissing = String(payload.error).toLowerCase().includes('not installed');
       const iframePresent = Boolean(mount.querySelector('iframe.giscus-frame'));
+      if (isSetupMissing) {
+        hasGiscusError = true;
+        setStatus(
+          iframePresent ? 'loaded' : 'error',
+          'SETUP',
+          'Нужно установить GitHub App Giscus на репозиторий.'
+        );
+        return;
+      }
+      if (iframePresent) {
+        hasSoftNotice = true;
+        setStatus('loaded', 'READY');
+        return;
+      }
+      hasGiscusError = true;
       setStatus(
-        iframePresent ? 'loaded' : 'error',
-        isSetupMissing ? 'SETUP' : 'OFFLINE',
-        isSetupMissing
-          ? 'Нужно установить GitHub App Giscus на репозиторий.'
-          : 'Giscus временно недоступен — открой Discussions ↗'
+        'error',
+        'OFFLINE',
+        'Giscus временно недоступен — открой Discussions ↗'
       );
       return;
     }
 
-    if (!hasGiscusError) {
+    if (!hasGiscusError && !hasSoftNotice) {
       setStatus('loaded', 'LIVE');
     }
   };
@@ -95,7 +108,7 @@ export function initGuestbook() {
             clearTimeout(loadTimer);
             loadTimer = null;
           }
-          if (hasGiscusError) {
+          if (hasGiscusError || hasSoftNotice) {
             stage.dataset.state = 'loaded';
           } else {
             setStatus('loaded', 'LIVE');

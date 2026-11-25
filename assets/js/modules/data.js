@@ -174,7 +174,8 @@ export const appState = {
     mangaReading: SNAPSHOT.manga.reading
   },
   prefersReducedMotion: Boolean(reducedMotionMQ && reducedMotionMQ.matches),
-  holoGalaxyList: []
+  holoGalaxyList: [],
+  initErrors: []
 };
 
 if (reducedMotionMQ) {

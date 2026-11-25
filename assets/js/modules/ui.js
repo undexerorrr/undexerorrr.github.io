@@ -5,7 +5,7 @@ import {
   formatRank,
   escapeHtml,
   sleep,
-  fetchWithTimeout
+  fetchJsonWithTimeout
 } from './config.js';
 import {
   appState,
@@ -1935,18 +1935,17 @@ export function initTasteMatcher() {
     let lastStatus = 0;
     for (const origin of origins) {
       try {
-        const res = await fetchWithTimeout(`${origin}/api/users/${encodeURIComponent(nickname)}?is_nickname=1`, {
+        const { ok, status, data } = await fetchJsonWithTimeout(`${origin}/api/users/${encodeURIComponent(nickname)}?is_nickname=1`, {
           headers: { 'Accept': 'application/json' }
         }, 9000);
-        lastStatus = res.status;
-        if (res.ok) {
-          const data = await res.json();
+        lastStatus = status;
+        if (ok) {
           if (data && data.id) {
             setActiveShikiOrigin(origin);
             return { user: data, origin };
           }
         }
-        if (res.status === 404) return { user: null, status: 404 };
+        if (status === 404) return { user: null, status: 404 };
       } catch (e) {}
     }
     return { user: null, status: lastStatus };

@@ -7,7 +7,7 @@ import {
   SHIKI_KIND_LABELS,
   KIND_AVG_MINUTES,
   sleep,
-  fetchWithTimeout,
+  fetchJsonWithTimeout,
   formatRelativeTime,
   stripHtml
 } from './config.js';
@@ -402,14 +402,13 @@ export async function hydrateDnaFromShikiRates(rates, userStats, allRates) {
    COVER LOADING ENGINE (ANILIST BATCH + SEQUENTIAL JIKAN FALLBACK)
    ========================================= */
 export async function anilistQuery(query, variables) {
-  const res = await fetchWithTimeout(ANILIST_ENDPOINT, {
+  const { ok, status, data: json } = await fetchJsonWithTimeout(ANILIST_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify({ query, variables })
   });
-  if (!res.ok) throw new Error('AniList HTTP ' + res.status);
-  const json = await res.json();
-  return json.data || {};
+  if (!ok) throw new Error('AniList HTTP ' + status);
+  return json?.data || {};
 }
 
 export async function loadAnimeCoversBatch(malIds) {
@@ -444,9 +443,8 @@ export async function loadAnimeCoversBatch(malIds) {
   const stillMissing = missing.filter((id) => !appState.coverCache['anime_' + id]);
   if (stillMissing.length) {
     try {
-      const res = await fetchWithTimeout(`${appState.activeShikiOrigin}/api/animes?ids=${stillMissing.join(',')}&limit=50`, {}, 8500);
-      if (res.ok) {
-        const items = await res.json();
+      const { ok, data: items } = await fetchJsonWithTimeout(`${appState.activeShikiOrigin}/api/animes?ids=${stillMissing.join(',')}&limit=50`, {}, 8500);
+      if (ok && Array.isArray(items)) {
         items.forEach((a) => {
           const raw = a?.image?.original || a?.image?.preview;
           if (a.id && raw) {
@@ -495,13 +493,12 @@ export async function loadCharacterCoversBatch(charList) {
     while (attempts < 2) {
       attempts++;
       try {
-        const res = await fetchWithTimeout(`https://api.jikan.moe/v4/characters?q=${encodeURIComponent(c.search)}&limit=1&order_by=favorites&sort=desc`, {}, 8000);
-        if (res.status === 429) {
+        const { ok, status, data: json } = await fetchJsonWithTimeout(`https://api.jikan.moe/v4/characters?q=${encodeURIComponent(c.search)}&limit=1&order_by=favorites&sort=desc`, {}, 8000);
+        if (status === 429) {
           await sleep(1600);
           continue;
         }
-        if (res.ok) {
-          const json = await res.json();
+        if (ok) {
           const url = json?.data?.[0]?.images?.jpg?.image_url || json?.data?.[0]?.images?.webp?.image_url;
           if (url) {
             appState.coverCache['char_' + c.key] = url;
@@ -555,13 +552,12 @@ export async function fetchShikiWithRetry(url, opts) {
 
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const res = await fetchWithTimeout(url, { headers: { 'Accept': 'application/json' } }, 9500);
-      lastStatus = res.status;
-      if (res.ok) {
-        const data = await res.json();
-        return { ok: true, status: res.status, data };
+      const { res, ok, status, data } = await fetchJsonWithTimeout(url, { headers: { 'Accept': 'application/json' } }, 9500);
+      lastStatus = status;
+      if (ok) {
+        return { ok: true, status, data };
       }
-      if ((res.status === 429 || res.status >= 500) && attempt < retries) {
+      if ((status === 429 || status >= 500) && attempt < retries) {
         const retryAfter = Number(res.headers.get('Retry-After'));
         const waitMs = (isFinite(retryAfter) && retryAfter > 0)
           ? Math.min(6000, Math.max(450, retryAfter * 1000))
@@ -569,7 +565,7 @@ export async function fetchShikiWithRetry(url, opts) {
         await sleep(waitMs);
         continue;
       }
-      return { ok: false, status: res.status, data: null };
+      return { ok: false, status, data: null };
     } catch (e) {
       if (attempt < retries) {
         await sleep(baseDelay * (attempt + 1));
