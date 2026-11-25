@@ -1,0 +1,192 @@
+/* =========================================
+   05. PURE B&W EDITORIAL NOIR — FINAL OVERRIDE LAYER
+   ========================================= */
+
+/* =========================================
+   PURE B&W EDITORIAL NOIR — ACTIVE INVERT & SURFACE HIERARCHY
+   ========================================= */
+
+.glass-card,
+.bento-discord-slot .discord-card {
+  background: rgba(20, 20, 20, 0.95);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.glass-card:hover,
+.bento-discord-slot .discord-card:hover {
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+.dna-col,
+.dna-archetype-box,
+.dna-kpi,
+.mini-stat,
+.manga-stat-chip,
+.arena-launch-tile,
+.signal-tile,
+.base-subpanel,
+.ht-panel,
+.trophy-card {
+  background: #0e0e0e;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.os-tab.is-active,
+.os-mode-btn.is-active,
+.tab-btn.active,
+.sort-btn.active,
+.view-toggle-btn.active,
+.dna-tab-btn.active,
+.trophy-filter-btn.active,
+.station-tab.active,
+.station-tab.is-coop.active,
+.coop-chip.active,
+.coop-chip.is-fmt.active,
+.coop-match-alt-btn.active,
+.weather-chip.active,
+.weather-chip.is-live-chip.active,
+.arena-mode-btn.active,
+.galaxy-seg-btn.active,
+.galaxy-seg-btn[data-gfilter="planned"].active,
+.galaxy-hud-btn.active,
+.galaxy-hud-btn.is-tm-toggle.active,
+.galaxy-tm-chip.active,
+.galaxy-tm-axis-btn.active,
+.pack-mode-btn.active,
+.pack-hist-chip.active,
+.spotify-tab.active,
+.dock-icon-btn.active,
+.mode-chip.active,
+.cinema-nav-btn[aria-pressed="true"],
+.sector-tel-mode-btn[aria-pressed="true"],
+.audio-btn.is-playing,
+body.is-audio-playing .dock-play-btn,
+.base-action-btn.is-primary,
+.holo-ctrl-btn.is-pack-primary {
+  background: #f0f0f0;
+  color: #080808;
+  border-color: #f0f0f0;
+  box-shadow: none;
+}
+
+.os-tab.is-active .os-tab-num,
+.os-tab.is-active:hover,
+.os-tab.is-active:hover .os-tab-num,
+.os-mode-btn.is-active:hover,
+.tab-btn.active:hover,
+.sort-btn.active:hover,
+.view-toggle-btn.active:hover,
+.dna-tab-btn.active:hover,
+.trophy-filter-btn.active:hover,
+.station-tab.active:hover,
+.coop-chip.active:hover,
+.coop-match-alt-btn.active:hover,
+.weather-chip.active:hover,
+.arena-mode-btn.active:hover,
+.galaxy-seg-btn.active:hover,
+.galaxy-hud-btn.active:hover,
+.galaxy-hud-btn.is-tm-toggle.active .g-tm-ico,
+.galaxy-tm-chip.active:hover,
+.galaxy-tm-axis-btn.active:hover,
+.pack-mode-btn.active:hover,
+.pack-hist-chip.active:hover,
+.pack-hist-chip.active span,
+.spotify-tab.active:hover,
+.dock-icon-btn.active:hover,
+.mode-chip.active:hover,
+.cinema-nav-btn[aria-pressed="true"]:hover,
+.cinema-nav-btn[aria-pressed="true"] span,
+.sector-tel-mode-btn[aria-pressed="true"]:hover,
+.sector-tel-mode-btn[aria-pressed="true"] span,
+.audio-btn.is-playing:hover,
+.audio-btn.is-playing span,
+body.is-audio-playing .dock-play-btn:hover,
+.base-action-btn.is-primary:hover,
+.holo-ctrl-btn.is-pack-primary:hover {
+  color: #080808;
+  background: #f0f0f0;
+  border-color: #f0f0f0;
+}
+
+.sector-tel-mode-btn[aria-pressed="true"] .sector-tel-mode-dot,
+.audio-btn.is-playing .eq-bars span {
+  background: #080808;
+}
+
+.cmdk-item.is-active {
+  background: #1b1b1b;
+  border-color: #ededed;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.cmdk-meta.is-on {
+  background: #f0f0f0;
+  color: #080808;
+  border-color: #f0f0f0;
+}
+
+.rank-badge,
+.randomizer-btn,
+.arena-launch-btn,
+.base-submit-btn,
+.galaxy-nav-btn,
+.cinema-nav-btn {
+  background: #141414;
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #f0f0f0;
+  box-shadow: none;
+}
+
+.rank-badge:hover,
+.randomizer-btn:hover,
+.arena-launch-btn:hover,
+.base-submit-btn:hover,
+.galaxy-nav-btn:hover,
+.cinema-nav-btn:hover {
+  background: #1b1b1b;
+  border-color: #ededed;
+  color: #ffffff;
+}
+
+.randomizer-count-badge {
+  background: #242424;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* Posters & covers: subtle desaturation at rest, pure 100% color on hover/focus */
+.poster-box img,
+.waifu-card img,
+.watching-poster img,
+.history-thumb img,
+.base-row-thumb img,
+.ht-thumb img,
+.coop-thumb img,
+.galaxy-insp-poster img,
+.coop-ticket-poster img,
+.arena-poster img,
+.modal-poster img {
+  filter: grayscale(0.28) saturate(0.75) contrast(1.04) brightness(0.95);
+  transition: filter 0.3s ease, transform 0.35s ease, opacity 0.4s ease;
+}
+
+.catalog-card:hover .poster-box img,
+.catalog-card:focus-visible .poster-box img,
+.waifu-card:hover img,
+.waifu-card:focus-visible img,
+.watching-card:hover .watching-poster img,
+.history-item:hover .history-thumb img,
+.history-row:hover .history-thumb img,
+.base-row:hover .base-row-thumb img,
+.base-anime-row:hover .base-row-thumb img,
+.ht-row:hover .ht-thumb img,
+.ht-card:hover .ht-thumb img,
+.coop-card:hover .coop-thumb img,
+.arena-contender:hover .arena-poster img,
+.arena-champ-poster img,
+.coop-ticket-poster:hover img,
+.modal-poster:hover img,
+.holo-art {
+  filter: grayscale(0) saturate(1.08) contrast(1.03) brightness(1.04);
+}

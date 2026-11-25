@@ -8,7 +8,14 @@
 
 - Статический сайт для GitHub Pages без сборщика и транспиляции:
   - `index.html` — разметка, мета-теги (`viewport-fit=cover`), шрифты Google Fonts и подключение ресурсов с версионированием.
-  - `assets/css/archive.css` — единая таблица стилей (токены `:root` в начале файла, единая система модалок, `content-visibility`, capability- и responsive-медиазапросы в конце); `assets/css/giscus-noir.css` — кастомная нуар-тема для iframe Giscus.
+  - `assets/css/` — 6 логических таблиц стилей, подключаемых в `index.html` строго в порядке каскада `1 → 6` (без CSS `@import`):
+    1. `assets/css/tokens.css` — `:root` переменные, сбросы, шрифты, скроллбар, базовый фон, `#atmosphere-canvas`, `.film-grain`.
+    2. `assets/css/layout.css` — `.topbar`, `.os-nav-cluster`, `.sector-telemetry`, `.sector-stage`, View Transitions, `.music-dock`, `.weather-hud`, `.mobile-dock`, `.footer`, `.intro-overlay`.
+    3. `assets/css/sections.css` — стили всех 4 секторов Archive OS (Bento/Hero, Discord/Lanyard, Аниме-ДНК, Сейчас смотрю, История/График, Коллекция/Витрина, WAIFU, Трофеи, База/Кооп, Hot Takes, Arena Launchpad, Signal Hub, Гостевая) и `content-visibility`.
+    4. `assets/css/overlays.css` — полноэкранные режимы и модалки (3D-Галактика + Time Machine, 3D-Голокарты, Бустер-пак, Турнир 1v1, Кооп-свайп, Трофей-инспектор, Spotify Drawer, Cinema Mode, Command Palette ⌘K, единая система модалок).
+    5. `assets/css/editorial-bw.css` — финальный слой Pure B&W Editorial Noir (перебивающие ЧБ-правила, 3-уровневый контраст поверхностей, инверты активных состояний, цветной hover постеров).
+    6. `assets/css/responsive.css` — все capability-запросы (`hover`/`pointer`), `@media`-брейкпоинты строго по убыванию ширин (`1280/1160/1080/860/720/480/420px`) и `prefers-reduced-motion`.
+    - Дополнительно: `assets/css/giscus-noir.css` — кастомная нуар-тема для iframe Giscus.
   - `assets/js/main.js` + `assets/js/modules/` — модульная ES-архитектура без сборщика (`config.js`, `data.js`, `sectors.js`, `shikimori.js`, `music.js`, `weather.js`, `galaxy.js`, `coop.js`, `trophies.js`, `cinema.js`, `guestbook.js`, `palette.js`, `ui.js`), где `main.js` выступает точкой входа и задаёт порядок инициализации (с ранним запуском `initSectors()` до модулей рендера/ленивой загрузки), а `data.js` хранит общее состояние `appState`, локальные снапшоты (`SNAPSHOT`, `PEAK_FICTION`, `WAIFU_LIST`, `LITERALLY_ME`, `PLAYLIST`) и `localStorage`-кэши; сетевые интеграции — Shikimori, AniList GraphQL, Lanyard, Open-Meteo, Spotify Embed/oEmbed, Giscus / GitHub Discussions (ленивая загрузка) и локальный `assets/js/vendor/three.min.js` для 3D-Галактики (`Galaxy 2.0`: кастомные GLSL-шейдеры звёзд, пыли и созвездий `starMat`/`dustMat`/`linkMat`/`highlightMat`, интерактивная «Машина времени» с осями `updatedAt`/`year`, скраббингом и импульсами `aReveal`/`aFlash`, плюс zero-alloc спектр Web Audio через `player.sampleSpectrum(now)` из `music.js`).
   - `assets/data/snapshot.json` + `scripts/sync-snapshot.mjs` + `.github/workflows/sync-snapshot.yml` — система ежедневного авто-снапшота данных Shikimori + AniList (чистый Node.js 20+, 0 внешних зависимостей; запуск по `schedule` в `03:15 UTC` и `workflow_dispatch` с защитой от порчи данных и проверкой диффа). При старте сайта `bootstrapShikimoriSync()` мгновенно гидрирует все блоки и HD-обложки (`dnaMeta.covers`) из `assets/data/snapshot.json`, после чего тихо запускает фоновый `syncShikimoriLive()` (при недоступности API сохраняется статус `SNAPSHOT`).
 - Сохранять существующий порядок CSS-каскада, ключи `localStorage` и работу в оффлайн/fallback-режиме (через `SNAPSHOT`, `assets/data/snapshot.json` и `fetchWithTimeout`).
@@ -37,14 +44,14 @@
 
 ## 3. Матовые обсидиановые поверхности и запрет `backdrop-filter`
 
-- **Строгий запрет на `backdrop-filter` и `-webkit-backdrop-filter`**: в `assets/css/archive.css` их должно быть **ноль**.
+- **Строгий запрет на `backdrop-filter` и `-webkit-backdrop-filter`**: во всех файлах `assets/css/*.css` их должно быть **ноль**.
 - Вместо тяжёлого blur использовать матовые обсидиановые поверхности (`--surface-*`), внутренний верхний блик (`--edge-specular`, `--edge-specular-hover`) и многослойные тени (`--shadow-card`, `--shadow-card-hover`, `--shadow-floating`, `--modal-shadow`).
 
 ---
 
 ## 4. Только токены `:root`
 
-Для поверхностей, границ, слоёв и модальных окон обязательно использовать централизованные переменные из `:root` в `assets/css/archive.css` — не хардкодить дублирующие цвета, радиусы и произвольные `z-index`:
+Для поверхностей, границ, слоёв и модальных окон обязательно использовать централизованные переменные из `:root` в `assets/css/tokens.css` — не хардкодить дублирующие цвета, радиусы и произвольные `z-index`:
 
 - **Поверхности (`--surface-*`)**: `--surface-1`, `--surface-2`, `--surface-3`, `--surface-modal`, `--surface-overlay` (и алиас `--glass-bg`).
 - **Границы и глубина (`--border-*`)**: `--border-subtle`, `--border-default`, `--border-strong` (и алиас `--glass-border`), `--edge-specular`, `--edge-specular-hover`, `--shadow-card`, `--shadow-card-hover`, `--shadow-floating`.
@@ -73,7 +80,7 @@
 
 - **Никаких постоянных `will-change`**:
   - Запрещено вешать `will-change` на статичные или неактивные элементы (карточки, сетки, фоны, доки).
-  - `will-change: transform` допустим **только** в кратковременных активных состояниях взаимодействия или открытых 3D/drag-оверлеях (например, `.is-tilting`, `.is-open` на активной 3D-сцене/карте, как это сделано в `assets/css/archive.css`).
+  - `will-change: transform` допустим **только** в кратковременных активных состояниях взаимодействия или открытых 3D/drag-оверлеях (например, `.is-tilting`, `.is-open` на активной 3D-сцене/карте, как это сделано в `assets/css/overlays.css` и `assets/css/responsive.css`).
 - **Никаких `console.*` в `assets/js/main.js` и `assets/js/modules/*.js`**:
   - Запрещены `console.log`, `console.warn`, `console.error`, `console.info`, `console.debug` и любые другие вызовы `console.*` в продакшен-коде. Ошибки обрабатывать через fallback-данные и аккуратные UI-статусы.
 - Сохранять offscreen-оптимизацию (`content-visibility: auto` + `contain-intrinsic-size` для секций ниже первого экрана), единую блокировку скролла (`initModalScrollLock()`) и локализованные переходы между 4 отсеками `Archive OS` через `document.startViewTransition()` (класс `is-sector-transitioning` / `view-transition-name: sector-stage` снимается в `transition.finished.finally(...)`).
@@ -87,8 +94,8 @@
   - `bg.jpg` (фоновый арт)
   - `music/` (локальные аудиофайлы плейлиста и саму папку)
 - **Обязательный кэш-бастинг `?v=...` в `index.html`**:
-  - После **любого** изменения `assets/css/archive.css`, `assets/js/main.js` или модулей `assets/js/modules/*.js` обязательно увеличивать числовой параметр `?v=...` в `index.html`:
-    - `<link rel="stylesheet" href="./assets/css/archive.css?v=..." />`
+  - После **любого** изменения файлов `assets/css/*.css`, `assets/js/main.js` или модулей `assets/js/modules/*.js` обязательно увеличивать числовой параметр `?v=...` в `index.html`:
+    - `<link rel="stylesheet" href="./assets/css/{tokens,layout,sections,overlays,editorial-bw,responsive}.css?v=..." />`
     - `<script type="module" src="./assets/js/main.js?v=..."></script>`
   - Текущие ссылки в `index.html` должны оставаться синхронизированы с актуальной версией (повышать номер при правках CSS/JS; при правке только документации/мета-файлов не менять).
 

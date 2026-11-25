@@ -1,0 +1,185 @@
+/* =========================================
+   01. TOKENS, RESETS, BACKGROUND & FILM GRAIN
+   ========================================= */
+
+:root {
+  /* === Color Palette (Pure B&W Editorial Noir) === */
+  --bg-base: #080808;
+  --white: 255, 255, 255;
+  --light: 214, 214, 214;
+  --muted: 132, 132, 132;
+  --bright: 235, 235, 235;
+  --accent-dark: 42, 42, 42;
+
+  /* === Surface Hierarchy (Matte Obsidian Monochrome — Zero Blur) === */
+  --surface-1: #0e0e0e;
+  --surface-2: #141414;
+  --surface-3: #1b1b1b;
+  --surface-modal: #141414;
+  --surface-overlay: rgba(8, 8, 8, 0.90);
+  --glass-bg: var(--surface-2);
+
+  /* === Border & Specular Edge Hierarchy === */
+  --border-subtle: rgba(255, 255, 255, 0.10);
+  --border-default: rgba(255, 255, 255, 0.16);
+  --border-strong: rgba(255, 255, 255, 0.24);
+  --glass-border: var(--border-default);
+  --edge-specular: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --edge-specular-hover: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.56), var(--edge-specular);
+  --shadow-card-hover: 0 16px 38px rgba(0, 0, 0, 0.68), var(--edge-specular-hover);
+  --shadow-floating: 0 16px 42px rgba(0, 0, 0, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  /* === Radii & Layout Rhythm (Strict Editorial Geometry) === */
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 5px;
+  --radius-xl: 6px;
+  --radius-pill: 3px;
+  --container-max: 1160px;
+  --section-gap: 48px;
+  --section-gap-mobile: 34px;
+
+  /* === Typography === */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --font-display: 'Unbounded', var(--font-sans);
+
+  /* === Centralized Z-Index Scale === */
+  --z-bg: 0;
+  --z-canvas: 1;
+  --z-shell: 2;
+  --z-grain: 50;
+  --z-topbar: 100;
+  --z-hud: 315;
+  --z-dock: 320;
+  --z-mobile-music: 455;
+  --z-mobile-dock: 460;
+  --z-modal: 500;
+  --z-arena: 560;
+  --z-coop: 570;
+  --z-galaxy: 580;
+  --z-spotify-bg: 600;
+  --z-spotify: 610;
+  --z-trophy: 640;
+  --z-pack: 645;
+  --z-holo: 650;
+  --z-holo-close: 660;
+  --z-palette: 670;
+  --z-intro: 9999;
+
+  /* === Unified Modal System Tokens === */
+  --modal-radius: 6px;
+  --modal-border: rgba(255, 255, 255, 0.24);
+  --modal-backdrop: rgba(8, 8, 8, 0.88);
+  --modal-backdrop-deep: rgba(8, 8, 8, 0.94);
+  --modal-shadow: 0 24px 64px rgba(0, 0, 0, 0.86), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --modal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* === Dynamic Runtime State === */
+  --beat-energy: 0;
+  --scrollbar-comp: 0px;
+
+  /* === Cinema Mode Tokens === */
+  --cinema-idle-opacity: 0.28;
+  --cinema-fade: 0.55s;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--bright), 0.55) #080808;
+  background-color: var(--bg-base);
+  color: rgb(var(--light));
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-x: clip;
+  background-color: var(--bg-base);
+  position: relative;
+  line-height: 1.5;
+}
+
+::selection {
+  background: rgba(var(--bright), 0.32);
+  color: #fff;
+}
+
+:is(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid rgba(var(--bright), 0.88);
+  outline-offset: 2px;
+}
+
+/* =========================================
+   BACKGROUND ART + VIGNETTE + CANVAS
+   ========================================= */
+
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-bg);
+  pointer-events: none;
+  overflow: hidden;
+  background: #080808;
+}
+
+.bg-photo {
+  position: absolute;
+  inset: -3%;
+  width: 106%;
+  height: 106%;
+  object-fit: cover;
+  object-position: center 22%;
+  opacity: 0.72;
+  transform-origin: center;
+  animation: bg-breathe 40s ease-in-out infinite alternate;
+}
+
+.bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 28%, rgba(8, 8, 8, 0.78) 100%),
+    linear-gradient(180deg, rgba(8, 8, 8, 0.42) 0%, rgba(8, 8, 8, 0.54) 55%, rgba(8, 8, 8, 0.74) 100%);
+}
+
+@keyframes bg-breathe {
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
+}
+
+#atmosphere-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--z-canvas);
+  pointer-events: none;
+}
+
+/* =========================================
+   FILM GRAIN + DISPLAY FONTS + NOIR POSTER FILTER + HOT TAKES
+   ========================================= */
+
+.film-grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: 0.026;
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%3Cfilter%20id%3D%27n%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.82%27%20numOctaves%3D%272%27%20stitchTiles%3D%27stitch%27/%3E%3C/filter%3E%3Crect%20width%3D%27200%27%20height%3D%27200%27%20filter%3D%27url(%23n)%27%20opacity%3D%271%27/%3E%3C/svg%3E");
+}
