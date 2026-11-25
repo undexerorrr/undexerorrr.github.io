@@ -4,6 +4,7 @@
 export const SHIKI_NICKNAME = 'undereror nyashka';
 export const SHIKI_ORIGINS = ['https://shikimori.io', 'https://shikimori.one'];
 export const SHIKI_ORIGIN_STORAGE_KEY = 'undexeror_shiki_origin_v1';
+export const STATIC_SNAPSHOT_URL = './assets/data/snapshot.json';
 export const ANILIST_ENDPOINT = 'https://graphql.anilist.co';
 export const COVER_CACHE_KEY = 'undexeror_archive_covers_v4';
 export const RATED_POOL_CACHE_KEY = 'undexeror_archive_rated910_v1';
@@ -13,7 +14,7 @@ export const MY_RATES_CACHE_KEY = 'undexeror_archive_my_rates_v1';
 export const VOLUME_STORAGE_KEY = 'undexeror_archive_volume_v1';
 export const DEFAULT_VOLUME = 0.18;
 export const HOT_TAKES_CACHE_KEY = 'undexeror_archive_hottakes_v1';
-export const GALAXY_CACHE_KEY = 'undexeror_archive_galaxy_v2';
+export const GALAXY_CACHE_KEY = 'undexeror_archive_galaxy_v3';
 export const COOP_HOST_CACHE_KEY = 'undexeror_archive_coop_host_v1';
 export const TROPHIES_CACHE_KEY = 'undexeror_archive_trophies_v2';
 export const GENRE_RU = {
@@ -195,6 +196,23 @@ export function formatRelativeTime(iso) {
   if (days < 30) return `${days} дн. назад`;
   const months = Math.floor(days / 30);
   return `${months} мес. назад`;
+}
+
+export function formatSnapshotDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '';
+  try {
+    return d.toLocaleString('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  } catch (e) {
+    return d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
+  }
 }
 
 export function stripHtml(html) {

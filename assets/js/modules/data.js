@@ -181,6 +181,7 @@ export const appState = {
   },
   prefersReducedMotion: Boolean(reducedMotionMQ && reducedMotionMQ.matches),
   holoGalaxyList: [],
+  snapshotMeta: null,
   initErrors: []
 };
 
@@ -278,6 +279,7 @@ export function buildFallbackGalaxyNodes() {
       shikiScore: a.score,
       episodes: 0,
       status: 'completed',
+      updatedAt: null,
       isPeak: true,
       peakRank: a.rank,
       img: appState.coverCache['anime_' + a.malId] || '',
@@ -298,6 +300,7 @@ export function buildFallbackGalaxyNodes() {
       shikiScore: r.score || 8.0,
       episodes: 0,
       status: 'completed',
+      updatedAt: r.updatedAt || null,
       isPeak: false,
       peakRank: null,
       img: appState.coverCache['anime_' + r.malId] || r.shikiImg || '',
@@ -320,6 +323,7 @@ export function buildFallbackGalaxyNodes() {
       shikiScore: Number((Number(r.g) || 0).toFixed(2)),
       episodes: Number(r.ep) || 0,
       status: 'planned',
+      updatedAt: r.ua || null,
       isPeak: false,
       peakRank: null,
       img: appState.coverCache['anime_' + id] || r.img || '',

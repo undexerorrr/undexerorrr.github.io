@@ -8,7 +8,7 @@ import {
 } from './modules/data.js';
 import { initMusicPlayer, initSpotifyDrawer, initLanyardPresence } from './modules/music.js';
 import { initAtmosphereCanvas, initLiveWeather } from './modules/weather.js';
-import { syncShikimoriLive, loadAnimeCoversBatch, loadCharacterCoversBatch } from './modules/shikimori.js';
+import { bootstrapShikimoriSync } from './modules/shikimori.js';
 import { initArchiveGalaxy } from './modules/galaxy.js';
 import { initCoopPicker } from './modules/coop.js';
 import { initCinemaMode } from './modules/cinema.js';
@@ -87,10 +87,7 @@ safeInit('initWaifuControls', () => initWaifuControls());
 renderCollection();
 safeInit('initGuestbook', () => initGuestbook());
 
-syncShikimoriLive();
-loadAnimeCoversBatch([
-  ...PEAK_FICTION.map((a) => a.malId),
-  ...SNAPSHOT.history.map((h) => h.id),
-  ...(appState.watchingList.length ? appState.watchingList : SNAPSHOT.watching).map((w) => w.malId)
-]);
-loadCharacterCoversBatch([...WAIFU_LIST, ...LITERALLY_ME]);
+bootstrapShikimoriSync(
+  PEAK_FICTION.map((a) => a.malId),
+  [...WAIFU_LIST, ...LITERALLY_ME]
+);

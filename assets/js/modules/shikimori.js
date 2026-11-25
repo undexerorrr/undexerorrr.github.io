@@ -1,6 +1,7 @@
 import {
   SHIKI_NICKNAME,
   SHIKI_ORIGINS,
+  STATIC_SNAPSHOT_URL,
   ANILIST_ENDPOINT,
   MY_RATES_CACHE_KEY,
   GENRE_RU,
@@ -9,6 +10,7 @@ import {
   sleep,
   fetchJsonWithTimeout,
   formatRelativeTime,
+  formatSnapshotDate,
   stripHtml
 } from './config.js';
 import {
@@ -43,9 +45,12 @@ import {
 /* =========================================
    HOT TAKES ENGINE (CONTROVERSIAL RATINGS + PNG CARD)
    ========================================= */
-export function computeHotTakesFromRates(allRates) {
+export function computeHotTakesFromRates(allRates, options) {
   if (!Array.isArray(allRates) || !allRates.length) return null;
 
+  const isSnapshot = Boolean(options && options.isSnapshot);
+  const origin = (options && options.origin) || appState.activeShikiOrigin;
+  const snapshotDate = (options && options.snapshotDate) || null;
   const allowedKinds = new Set(['tv', 'movie', 'ona', 'ova']);
   const seen = new Set();
   const candidates = [];
@@ -74,8 +79,8 @@ export function computeHotTakesFromRates(allRates) {
       userScore,
       shikiScore: Number(shikiScore.toFixed(2)),
       delta,
-      shikiImg: rawImg ? normalizeShikiUrl(rawImg, appState.activeShikiOrigin) : '',
-      url: a.url ? normalizeShikiUrl(a.url, appState.activeShikiOrigin) : `${appState.activeShikiOrigin}/animes/${a.id}`,
+      shikiImg: rawImg ? normalizeShikiUrl(rawImg, origin) : '',
+      url: a.url ? normalizeShikiUrl(a.url, origin) : `${origin}/animes/${a.id}`,
       comment: stripHtml(r.text || '').trim()
     });
   });
@@ -119,7 +124,9 @@ export function computeHotTakesFromRates(allRates) {
   );
 
   return {
-    isLive: true,
+    isLive: !isSnapshot,
+    isSnapshot,
+    snapshotDate,
     scannedCount: candidates.length,
     avgDelta,
     gems,
@@ -192,8 +199,17 @@ export function computeWatchedStats(allRates) {
   };
 }
 
-export async function hydrateDnaFromShikiRates(rates, userStats, allRates) {
+export async function hydrateDnaFromShikiRates(rates, userStats, allRates, options) {
   if (!Array.isArray(rates) || !rates.length) return;
+
+  const isSnapshot = Boolean(options && options.isSnapshot);
+  const isLive = !isSnapshot;
+  const origin = (options && options.origin) || appState.activeShikiOrigin;
+  const snapshotDate = (options && options.snapshotDate) || null;
+  const preloadedMeta = (options && options.dnaMeta) || null;
+  const metaTs = (options && typeof options.generatedAtMs === 'number' && isFinite(options.generatedAtMs))
+    ? options.generatedAtMs
+    : Date.now();
 
   // Cache compact rates map for Taste Match ("Проверка на базу")
   try {
@@ -206,7 +222,7 @@ export async function hydrateDnaFromShikiRates(rates, userStats, allRates) {
           s: Number(r.score) || 0,
           g: Number(r.anime.score) || 0,
           t: r.anime.russian || r.anime.name || '',
-          img: rawImg ? normalizeShikiUrl(rawImg, appState.activeShikiOrigin) : ''
+          img: rawImg ? normalizeShikiUrl(rawImg, origin) : ''
         };
       });
     appState.myRatesIndex = new Map(compactRates.map((x) => [x.id, x]));
@@ -280,8 +296,12 @@ export async function hydrateDnaFromShikiRates(rates, userStats, allRates) {
   const totalWatchedEpisodes = watchedTotals.totalEps > 0 ? watchedTotals.totalEps : totalEpisodes;
 
   const prev = appState.animeDnaState || SNAPSHOT_DNA;
+  const hasPreloadedGenres = Array.isArray(preloadedMeta?.genres) && preloadedMeta.genres.length > 0;
+  const hasPreloadedStudios = Array.isArray(preloadedMeta?.studios) && preloadedMeta.studios.length > 0;
   const baseDna = {
-    isLive: true,
+    isLive,
+    isSnapshot,
+    snapshotDate,
     totalAnalyzed: rates.length,
     ratedCount,
     meanScore: ratedCount ? scoreSum / ratedCount : prev.meanScore,
@@ -293,18 +313,26 @@ export async function hydrateDnaFromShikiRates(rates, userStats, allRates) {
     scores: scoreCounts,
     eras,
     formats,
-    genres: prev.genres || SNAPSHOT_DNA.genres,
-    studios: prev.studios || SNAPSHOT_DNA.studios,
+    genres: hasPreloadedGenres ? preloadedMeta.genres : (prev.genres || SNAPSHOT_DNA.genres),
+    studios: hasPreloadedStudios ? preloadedMeta.studios : (prev.studios || SNAPSHOT_DNA.studios),
     updatedAt: Date.now()
   };
+
+  if (hasPreloadedGenres && hasPreloadedStudios) {
+    baseDna.metaUpdatedAt = metaTs;
+  }
 
   appState.animeDnaState = baseDna;
   renderAnimeDna(appState.animeDnaState);
   saveDnaCache(appState.animeDnaState);
 
+  if (isSnapshot && hasPreloadedGenres && hasPreloadedStudios) {
+    return;
+  }
+
   // Hydrate real Top Genres & Top Studios from AniList (top 100 highest-rated completed titles)
-  // Skip re-fetching AniList if cached live genres/studios are fresh (< 12h)
-  const hasFreshMeta = prev && prev.isLive && prev.metaUpdatedAt && (Date.now() - prev.metaUpdatedAt < 12 * 3600 * 1000) && prev.genres?.length && prev.studios?.length;
+  // Skip re-fetching AniList if cached live/snapshot genres/studios are fresh (< 12h)
+  const hasFreshMeta = prev && (prev.isLive || prev.isSnapshot) && prev.metaUpdatedAt && (Date.now() - prev.metaUpdatedAt < 12 * 3600 * 1000) && prev.genres?.length && prev.studios?.length;
   if (hasFreshMeta) {
     appState.animeDnaState.metaUpdatedAt = prev.metaUpdatedAt;
     saveDnaCache(appState.animeDnaState);
@@ -594,10 +622,17 @@ export async function resolveHostUser() {
   return null;
 }
 
-export function processHostAnimeRates(allRates, userStats) {
+export function processHostAnimeRates(allRates, userStats, options) {
   if (!Array.isArray(allRates) || !allRates.length) return false;
 
-  // 1. Live "Watching Now" shelf (watching + rewatching)
+  const isSnapshot = Boolean(options && options.isSnapshot);
+  const origin = (options && options.origin) || appState.activeShikiOrigin;
+  const snapshotDate = (options && options.snapshotDate) || null;
+  const dnaMeta = (options && options.dnaMeta) || null;
+  const generatedAtMs = options && options.generatedAtMs;
+  const skipCoverFetch = Boolean(options && options.skipCoverFetch);
+
+  // 1. Live / Snapshot "Watching Now" shelf (watching + rewatching)
   const watchingRaw = allRates.filter(
     (r) => r && r.anime && r.anime.id && (r.status === 'watching' || r.status === 'rewatching')
   );
@@ -623,8 +658,8 @@ export function processHostAnimeRates(allRates, userStats) {
         score: Number(a.score) || 0,
         userScore: Number(r.score) || 0,
         status: r.status || 'watching',
-        url: a.url ? normalizeShikiUrl(a.url, appState.activeShikiOrigin) : `${appState.activeShikiOrigin}/animes/${a.id}`,
-        shikiImg: rawImg ? normalizeShikiUrl(rawImg, appState.activeShikiOrigin) : '',
+        url: a.url ? normalizeShikiUrl(a.url, origin) : `${origin}/animes/${a.id}`,
+        shikiImg: rawImg ? normalizeShikiUrl(rawImg, origin) : '',
         comment: stripHtml(r.text || '').trim()
       });
     });
@@ -633,7 +668,9 @@ export function processHostAnimeRates(allRates, userStats) {
       appState.watchingList = parsedWatching;
       saveWatchingCache();
       renderWatchingShelf(appState.watchingList);
-      loadAnimeCoversBatch(parsedWatching.map((x) => x.malId));
+      if (!skipCoverFetch) {
+        loadAnimeCoversBatch(parsedWatching.map((x) => x.malId));
+      }
     }
   }
 
@@ -642,10 +679,17 @@ export function processHostAnimeRates(allRates, userStats) {
     (r) => r && r.anime && r.anime.id && r.status === 'completed'
   );
   if (completedRates.length) {
-    hydrateDnaFromShikiRates(completedRates, userStats, allRates);
+    hydrateDnaFromShikiRates(completedRates, userStats, allRates, {
+      isSnapshot,
+      origin,
+      snapshotDate,
+      dnaMeta,
+      generatedAtMs
+    });
   }
 
   // Also index any non-completed rated entries into appState.myRatesIndex for Taste Match
+  let extraRatesIndexed = false;
   allRates.forEach((r) => {
     const a = r && r.anime;
     if (!a || !a.id) return;
@@ -657,10 +701,19 @@ export function processHostAnimeRates(allRates, userStats) {
         s: Number(r.score) || 0,
         g: Number(a.score) || 0,
         t: a.russian || a.name || '',
-        img: rawImg ? normalizeShikiUrl(rawImg, appState.activeShikiOrigin) : ''
+        img: rawImg ? normalizeShikiUrl(rawImg, origin) : ''
       });
+      extraRatesIndexed = true;
     }
   });
+  if (extraRatesIndexed) {
+    try {
+      const allIndexed = Array.from(appState.myRatesIndex.values());
+      localStorage.setItem(MY_RATES_CACHE_KEY, JSON.stringify({ ts: Date.now(), rates: allIndexed }));
+      const readyBadge = document.getElementById('base-host-ready-badge');
+      if (readyBadge) readyBadge.textContent = `БАЗА ГОТОВА · ${allIndexed.length} ТАЙТЛОВ`;
+    } catch (e) {}
+  }
 
   // 3. Expanded Randomizer pool (all 9-10★ completed/rewatching titles)
   const allowedKinds = new Set(['tv', 'movie', 'ona', 'ova']);
@@ -686,7 +739,7 @@ export function processHostAnimeRates(allRates, userStats) {
     seenPoolIds.add(a.id);
 
     const rawImg = a.image?.original || a.image?.preview || '';
-    const shikiImg = rawImg ? normalizeShikiUrl(rawImg, appState.activeShikiOrigin) : '';
+    const shikiImg = rawImg ? normalizeShikiUrl(rawImg, origin) : '';
     const year = a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || null : null;
     const shikiScore = Number(a.score) || 0;
     const comment = stripHtml(r.text || '').trim();
@@ -703,8 +756,9 @@ export function processHostAnimeRates(allRates, userStats) {
       year,
       score: shikiScore,
       userScore,
+      updatedAt: r.updated_at || null,
       shikiImg,
-      url: a.url ? normalizeShikiUrl(a.url, appState.activeShikiOrigin) : `${appState.activeShikiOrigin}/animes/${a.id}`,
+      url: a.url ? normalizeShikiUrl(a.url, origin) : `${origin}/animes/${a.id}`,
       vibes,
       note: comment || (
         userScore === 10
@@ -721,8 +775,12 @@ export function processHostAnimeRates(allRates, userStats) {
     updateRandomizerPoolCounts();
   }
 
-  // 4. Live Hot Takes (Underrated Gems & Overrated Hits vs Shikimori crowd)
-  const computedTakes = computeHotTakesFromRates(allRates);
+  // 4. Live / Snapshot Hot Takes (Underrated Gems & Overrated Hits vs Shikimori crowd)
+  const computedTakes = computeHotTakesFromRates(allRates, {
+    isSnapshot,
+    origin,
+    snapshotDate
+  });
   if (computedTakes) {
     appState.hotTakesState = computedTakes;
     saveHotTakesCache(appState.hotTakesState);
@@ -762,10 +820,11 @@ export function processHostAnimeRates(allRates, userStats) {
       shikiScore: Number(sScore.toFixed(2)),
       episodes: epsCount,
       status: r.status || 'completed',
+      updatedAt: r.updated_at || null,
       isPeak: Boolean(peak),
       peakRank: peak ? peak.rank : null,
-      img: rawImg ? normalizeShikiUrl(rawImg, appState.activeShikiOrigin) : '',
-      url: a.url ? normalizeShikiUrl(a.url, appState.activeShikiOrigin) : `${appState.activeShikiOrigin}/animes/${id}`,
+      img: rawImg ? normalizeShikiUrl(rawImg, origin) : '',
+      url: a.url ? normalizeShikiUrl(a.url, origin) : `${origin}/animes/${id}`,
       comment: stripHtml(r.text || '').trim() || (peak ? peak.note : ''),
       vibes: peak ? peak.vibes : []
     });
@@ -783,10 +842,11 @@ export function processHostAnimeRates(allRates, userStats) {
       shikiScore: p.score,
       episodes: 0,
       status: 'completed',
+      updatedAt: null,
       isPeak: true,
       peakRank: p.rank,
       img: appState.coverCache['anime_' + p.malId] || '',
-      url: `${appState.activeShikiOrigin}/animes/${p.malId}`,
+      url: `${origin}/animes/${p.malId}`,
       comment: p.note,
       vibes: p.vibes
     });
@@ -818,8 +878,9 @@ export function processHostAnimeRates(allRates, userStats) {
         k: String(a.kind || 'tv').toLowerCase(),
         y: a.aired_on ? Number(String(a.aired_on).slice(0, 4)) || null : null,
         ep: Number(a.episodes) || Number(a.episodes_aired) || 0,
-        img: rawImg ? normalizeShikiUrl(rawImg, appState.activeShikiOrigin) : '',
-        url: a.url ? normalizeShikiUrl(a.url, appState.activeShikiOrigin) : `${appState.activeShikiOrigin}/animes/${id}`
+        ua: r.updated_at || null,
+        img: rawImg ? normalizeShikiUrl(rawImg, origin) : '',
+        url: a.url ? normalizeShikiUrl(a.url, origin) : `${origin}/animes/${id}`
       });
     });
     if (compactAll.length) {
@@ -828,9 +889,12 @@ export function processHostAnimeRates(allRates, userStats) {
     }
   } catch (e) {}
 
-  // 7. Live Archive Trophies auto-computation from full Shikimori list
+  // 7. Live / Snapshot Archive Trophies auto-computation from full Shikimori list
   try {
-    const computedTrophies = computeTrophiesFromRates(allRates, userStats);
+    const computedTrophies = computeTrophiesFromRates(allRates, userStats, {
+      isSnapshot,
+      snapshotDate
+    });
     if (computedTrophies && computedTrophies.items.length) {
       appState.trophiesState = computedTrophies;
       saveTrophiesCache(appState.trophiesState);
@@ -877,24 +941,236 @@ export async function loadHostAnimeRates(userObj) {
   return hostRatesPromise;
 }
 
-export async function syncShikimoriLive() {
+function setApiStatusPill(mode, snapshotMeta) {
   const pill = document.getElementById('api-status-pill');
   const pillText = document.getElementById('api-status-text');
+  const formattedDate = snapshotMeta && snapshotMeta.formattedDate ? snapshotMeta.formattedDate : '';
 
-  const user = await resolveHostUser();
-  if (!user || !user.id) {
-    if (pillText) pillText.textContent = 'SNAPSHOT';
-    if (!appState.hotTakesState) renderHotTakes(null, true);
+  if (mode === 'live') {
+    if (pill) {
+      pill.classList.add('is-live');
+      pill.title = 'Синхронизировано с Shikimori API в реальном времени';
+    }
+    if (pillText) pillText.textContent = 'API · LIVE';
     return;
   }
 
-  if (pill) pill.classList.add('is-live');
-  if (pillText) pillText.textContent = 'API · LIVE';
+  if (pill) {
+    pill.classList.remove('is-live');
+    if (mode === 'snapshot-checking') {
+      pill.title = formattedDate
+        ? `Авто-снапшот от ${formattedDate} · фоновая проверка Shikimori API...`
+        : 'Авто-снапшот загружен · фоновая проверка Shikimori API...';
+    } else if (formattedDate) {
+      pill.title = `Авто-снапшот от ${formattedDate} (Shikimori API недоступен)`;
+    } else {
+      pill.title = 'Локальный fallback-снапшот (Shikimori API недоступен)';
+    }
+  }
+  if (pillText) pillText.textContent = 'SNAPSHOT';
+}
+
+function applyWaifuFavourites(characters, origin) {
+  if (!Array.isArray(characters) || !characters.length) return;
+  characters.forEach((fc) => {
+    if (!fc) return;
+    const ru = (fc.russian || '').toLowerCase();
+    const en = (fc.name || '').toLowerCase();
+    const match = WAIFU_LIST.find((w) =>
+      w.name.toLowerCase() === ru ||
+      w.search.toLowerCase() === en ||
+      en.includes(w.search.toLowerCase())
+    );
+    if (match) {
+      if (fc.url) match.url = normalizeShikiUrl(fc.url, origin);
+      const rawCharImg = fc.image || fc.img || '';
+      if (rawCharImg && !appState.coverCache['char_' + match.key]) {
+        const shikiCharImg = normalizeShikiUrl(rawCharImg, origin);
+        match.shikiImg = shikiCharImg;
+        applyCoverToDOM('char_' + match.key, shikiCharImg);
+      }
+    }
+  });
+}
+
+function adaptSnapshotRatesToShiki(rates, origin, durationsMap) {
+  return (Array.isArray(rates) ? rates : [])
+    .filter((r) => r && r.id)
+    .map((r) => {
+      const id = Number(r.id);
+      const imgUrl = r.img ? normalizeShikiUrl(r.img, origin) : '';
+      const animeUrl = r.url ? normalizeShikiUrl(r.url, origin) : `${origin}/animes/${id}`;
+      const duration = durationsMap && durationsMap[String(id)] ? Number(durationsMap[String(id)]) || 0 : 0;
+      return {
+        status: r.status || 'completed',
+        score: Number(r.score) || 0,
+        episodes: Number(r.episodes) || 0,
+        rewatches: Number(r.rewatches) || 0,
+        text: r.comment || '',
+        updated_at: r.updatedAt || null,
+        anime: {
+          id,
+          russian: r.title || '',
+          name: r.title || '',
+          kind: r.kind || 'tv',
+          aired_on: r.year ? `${r.year}-01-01` : null,
+          score: Number(r.shikiScore) || 0,
+          episodes: Number(r.totalEpisodes) || 0,
+          episodes_aired: Number(r.totalEpisodes) || 0,
+          status: r.ongoing ? 'ongoing' : 'released',
+          duration,
+          image: {
+            original: imgUrl,
+            preview: imgUrl
+          },
+          url: animeUrl
+        }
+      };
+    });
+}
+
+export async function hydrateFromStaticSnapshot() {
+  try {
+    const { ok, data } = await fetchJsonWithTimeout(
+      STATIC_SNAPSHOT_URL,
+      { cache: 'no-cache', headers: { Accept: 'application/json' } },
+      5500
+    );
+    if (!ok || !data || !data.profile || !Array.isArray(data.rates) || !data.rates.length) {
+      return null;
+    }
+
+    const snapOrigin = (data.meta?.origin && SHIKI_ORIGINS.includes(data.meta.origin))
+      ? data.meta.origin
+      : appState.activeShikiOrigin;
+    const generatedAt = data.meta?.generatedAt || null;
+    const formattedDate = formatSnapshotDate(generatedAt);
+    const generatedAtMs = generatedAt ? new Date(generatedAt).getTime() : Date.now();
+
+    appState.snapshotMeta = {
+      generatedAt,
+      formattedDate,
+      origin: snapOrigin,
+      version: Number(data.meta?.version) || 1
+    };
+
+    // 1. Preload HD AniList covers before rendering cards so images appear immediately even if Shikimori is blocked
+    const coversObj = data.dnaMeta && data.dnaMeta.covers;
+    if (coversObj && typeof coversObj === 'object') {
+      let coversChanged = false;
+      Object.entries(coversObj).forEach(([id, url]) => {
+        if (!id || !url) return;
+        const key = 'anime_' + id;
+        const existing = appState.coverCache[key];
+        if (!existing || /shikimori\.(one|io)/i.test(existing)) {
+          appState.coverCache[key] = url;
+          applyCoverToDOM(key, url);
+          coversChanged = true;
+        }
+      });
+      if (coversChanged) saveCoverCache();
+    }
+
+    // 2. Profile avatar, links, stats & activity graph
+    const profile = data.profile;
+    const avatarEl = document.getElementById('profile-avatar');
+    if (avatarEl && profile.avatar) {
+      const resolvedAvatar = normalizeShikiUrl(profile.avatar, snapOrigin);
+      if (avatarEl.src !== resolvedAvatar) avatarEl.src = resolvedAvatar;
+    }
+    if (profile.url) {
+      const resolvedProfileUrl = normalizeShikiUrl(profile.url, snapOrigin);
+      const shikiLink = document.getElementById('shiki-profile-link');
+      const signalShikiLink = document.getElementById('signal-shiki-link');
+      if (shikiLink) shikiLink.href = resolvedProfileUrl;
+      if (signalShikiLink) signalShikiLink.href = resolvedProfileUrl;
+    }
+    if (profile.animeStats && profile.mangaStats) {
+      renderStats(profile.animeStats, profile.mangaStats, SNAPSHOT.lifetimeText);
+    }
+    if (Array.isArray(profile.activityGraph) && profile.activityGraph.length >= 4) {
+      renderActivityGraph(profile.activityGraph);
+    }
+
+    // 3. History with dynamic relative timestamps
+    const historyIds = [];
+    if (Array.isArray(data.history) && data.history.length) {
+      const parsedHistory = data.history.slice(0, 5).map((h) => {
+        if (h.id) historyIds.push(Number(h.id));
+        return {
+          id: h.id ? Number(h.id) : null,
+          title: h.title || '',
+          action: h.action || 'Обновление списка',
+          dateText: h.createdAt ? formatRelativeTime(h.createdAt) : (h.dateText || ''),
+          url: h.url ? normalizeShikiUrl(h.url, snapOrigin) : `${snapOrigin}/animes/${h.id}`,
+          image: h.img ? normalizeShikiUrl(h.img, snapOrigin) : ''
+        };
+      });
+      renderHistory(parsedHistory, false);
+    }
+
+    // 4. Favourites for WAIFU matching
+    if (Array.isArray(data.favourites) && data.favourites.length) {
+      applyWaifuFavourites(data.favourites, snapOrigin);
+    }
+
+    // 5. Hydrate Watching, Anime-DNA (with AniList genres/studios), Hot Takes, Trophies, Taste Match, Co-op, 9-10★ Pool & 3D Galaxy
+    const adaptedRates = adaptSnapshotRatesToShiki(data.rates, snapOrigin, data.dnaMeta?.durations);
+    if (adaptedRates.length) {
+      processHostAnimeRates(adaptedRates, null, {
+        isSnapshot: true,
+        origin: snapOrigin,
+        snapshotDate: formattedDate,
+        generatedAtMs,
+        dnaMeta: data.dnaMeta || null,
+        skipCoverFetch: true
+      });
+    }
+
+    setApiStatusPill('snapshot-checking', appState.snapshotMeta);
+    return { snapshot: data, historyIds };
+  } catch (e) {
+    return null;
+  }
+}
+
+export async function bootstrapShikimoriSync(peakIds, characterList) {
+  const snapResult = await hydrateFromStaticSnapshot();
+
+  const historyCoverIds = snapResult
+    ? snapResult.historyIds
+    : SNAPSHOT.history.map((h) => h.id);
+  const watchingCoverIds = (appState.watchingList.length ? appState.watchingList : SNAPSHOT.watching)
+    .map((w) => w.malId);
+
+  loadAnimeCoversBatch([
+    ...(Array.isArray(peakIds) ? peakIds : []),
+    ...historyCoverIds,
+    ...watchingCoverIds
+  ]);
+
+  if (Array.isArray(characterList) && characterList.length) {
+    loadCharacterCoversBatch(characterList);
+  }
+
+  await syncShikimoriLive();
+}
+
+export async function syncShikimoriLive() {
+  const user = await resolveHostUser();
+  if (!user || !user.id) {
+    setApiStatusPill('snapshot', appState.snapshotMeta);
+    if (!appState.hotTakesState) renderHotTakes(null, true);
+    return false;
+  }
+
+  setApiStatusPill('live', appState.snapshotMeta);
 
   const avatarEl = document.getElementById('profile-avatar');
   const liveAvatar = user.image?.x160 || user.image?.x148 || user.avatar;
   if (avatarEl && liveAvatar) {
-    avatarEl.src = normalizeShikiUrl(liveAvatar, appState.activeShikiOrigin);
+    const resolvedAvatar = normalizeShikiUrl(liveAvatar, appState.activeShikiOrigin);
+    if (avatarEl.src !== resolvedAvatar) avatarEl.src = resolvedAvatar;
   }
   const shikiLink = document.getElementById('shiki-profile-link');
   const signalShikiLink = document.getElementById('signal-shiki-link');
@@ -989,27 +1265,10 @@ export async function syncShikimoriLive() {
       `${appState.activeShikiOrigin}/api/users/${user.id}/favourites`,
       { retries: 2, baseDelay: 700 }
     );
-    if (fRes.ok && fRes.data) {
-      const favs = fRes.data;
-      if (Array.isArray(favs.characters) && favs.characters.length) {
-        favs.characters.forEach((fc) => {
-          const ru = (fc.russian || '').toLowerCase();
-          const en = (fc.name || '').toLowerCase();
-          const match = WAIFU_LIST.find((w) =>
-            w.name.toLowerCase() === ru ||
-            w.search.toLowerCase() === en ||
-            en.includes(w.search.toLowerCase())
-          );
-          if (match) {
-            if (fc.url) match.url = normalizeShikiUrl(fc.url, appState.activeShikiOrigin);
-            if (fc.image && !appState.coverCache['char_' + match.key]) {
-              const shikiCharImg = normalizeShikiUrl(fc.image, appState.activeShikiOrigin);
-              match.shikiImg = shikiCharImg;
-              applyCoverToDOM('char_' + match.key, shikiCharImg);
-            }
-          }
-        });
-      }
+    if (fRes.ok && fRes.data && Array.isArray(fRes.data.characters)) {
+      applyWaifuFavourites(fRes.data.characters, appState.activeShikiOrigin);
     }
   } catch (e) {}
+
+  return true;
 }
