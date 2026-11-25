@@ -715,7 +715,7 @@ export function processHostAnimeRates(allRates, userStats, options) {
     } catch (e) {}
   }
 
-  // 3. Expanded Randomizer pool (all 9-10★ completed/rewatching titles)
+  // 3. Expanded Randomizer pool (all 9-10 completed/rewatching titles)
   const allowedKinds = new Set(['tv', 'movie', 'ona', 'ova']);
   const peakById = new Map(PEAK_FICTION.map((p) => [p.malId, p]));
   const seenPoolIds = new Set();
@@ -1123,7 +1123,7 @@ export async function hydrateFromStaticSnapshot() {
       applyWaifuFavourites(data.favourites, snapOrigin);
     }
 
-    // 5. Hydrate Watching, Anime-DNA (with AniList genres/studios), Hot Takes, Trophies, Taste Match, Co-op, 9-10★ Pool & 3D Galaxy
+    // 5. Hydrate Watching, Anime-DNA (with AniList genres/studios), Hot Takes, Trophies, Taste Match, Co-op, 9-10 Pool & 3D Galaxy
     const adaptedRates = adaptSnapshotRatesToShiki(data.rates, snapOrigin, data.dnaMeta?.durations);
     if (adaptedRates.length) {
       processHostAnimeRates(adaptedRates, null, {
@@ -1223,7 +1223,7 @@ export async function syncShikimoriLive() {
     renderActivityGraph(liveGraph);
   }
 
-  // Priority 1: ONE merged anime_rates request (Watching + DNA + Taste Match + 9-10★ Randomizer + Hot Takes)
+  // Priority 1: ONE merged anime_rates request (Watching + DNA + Taste Match + 9-10 Randomizer + Hot Takes)
   await sleep(160);
   const ratesLoaded = await loadHostAnimeRates(user);
   if (!ratesLoaded && !appState.hotTakesState) {

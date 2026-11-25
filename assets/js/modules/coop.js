@@ -271,7 +271,7 @@ export function initCoopPicker() {
           ...baseObj,
           isBothPlanned: true,
           priority: (baseObj.shikiScore || 7) * 10 + 40,
-          reason: '🔥 Оба в планах',
+          reason: 'Оба в планах',
           reasonGold: true
         };
         bothPlanned.push(item);
@@ -299,8 +299,8 @@ export function initCoopPicker() {
           isBothPlanned: inP2Plan,
           priority: r1.s * 12 + (inP2Plan ? 30 : 0) + (baseObj.shikiScore || 7),
           reason: inP2Plan
-            ? `★ ${r1.s}/10 у ${p1.nick} · в планах у ${p2.nick}`
-            : `★ ${r1.s}/10 от ${p1.nick}`,
+            ? `${r1.s}/10 у ${p1.nick} · в планах у ${p2.nick}`
+            : `${r1.s}/10 от ${p1.nick}`,
           reasonGold: r1.s >= 9 || inP2Plan
         });
       }
@@ -313,8 +313,8 @@ export function initCoopPicker() {
           isBothPlanned: inP1Plan,
           priority: r2.s * 12 + (inP1Plan ? 30 : 0) + (baseObj.shikiScore || 7),
           reason: inP1Plan
-            ? `★ ${r2.s}/10 у ${p2.nick} · в планах у ${p1.nick}`
-            : `★ ${r2.s}/10 от ${p2.nick}`,
+            ? `${r2.s}/10 у ${p2.nick} · в планах у ${p1.nick}`
+            : `${r2.s}/10 от ${p2.nick}`,
           reasonGold: r2.s >= 9 || inP1Plan
         });
       }
@@ -367,7 +367,7 @@ export function initCoopPicker() {
     if (randomPickBtn) randomPickBtn.disabled = pool.length === 0;
 
     if (!pool.length) {
-      gridEl.innerHTML = `<div class="base-empty-note" style="grid-column:1 / -1;padding:26px 12px;">В этой категории и формате пока пусто — переключи фильтр сверху (например, «✨ Новое для обоих» или «Все»).</div>`;
+      gridEl.innerHTML = `<div class="base-empty-note" style="grid-column:1 / -1;padding:26px 12px;">В этой категории и формате пока пусто — переключи фильтр сверху (например, «Новое для обоих» или «Все»).</div>`;
       if (showMoreBtn) showMoreBtn.style.display = 'none';
       return;
     }
@@ -380,7 +380,7 @@ export function initCoopPicker() {
         ? 'Фильм'
         : (item.episodes ? `${item.episodes} эп.` : item.kindLabel);
       const metaLine = [
-        item.shikiScore ? `★ ${item.shikiScore.toFixed(2)}` : null,
+        item.shikiScore ? `Шики ${item.shikiScore.toFixed(2)}` : null,
         epStr,
         item.year ? String(item.year) : null
       ].filter(Boolean).join(' · ');
@@ -404,7 +404,7 @@ export function initCoopPicker() {
             </div>
           </div>
           <div class="coop-card-foot">
-            <button type="button" class="coop-pick-btn" data-pick-id="${item.id}">🎟 Смотрим это</button>
+            <button type="button" class="coop-pick-btn" data-pick-id="${item.id}">Смотрим это</button>
             <a class="coop-ext-btn" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" title="Открыть на Shikimori">↗</a>
           </div>
         </article>
@@ -544,7 +544,7 @@ export function initCoopPicker() {
     if (swipeTitle) swipeTitle.textContent = item.title;
     const epStr = item.kind === 'movie' ? 'Фильм' : (item.episodes ? `${item.episodes} эп.` : item.kindLabel);
     if (swipeSub) {
-      swipeSub.textContent = [item.shikiScore ? `★ ${item.shikiScore.toFixed(2)}` : null, epStr, item.year].filter(Boolean).join(' · ');
+      swipeSub.textContent = [item.shikiScore ? `Шики ${item.shikiScore.toFixed(2)}` : null, epStr, item.year].filter(Boolean).join(' · ');
     }
     if (swipeReason) swipeReason.textContent = item.reason || 'Кандидат на вечер';
     if (swipeImg) {
@@ -596,24 +596,24 @@ export function initCoopPicker() {
 
     // Compute final match list
     let matched = [];
-    let headerText = "🎟 IT'S A MATCH · ВЫБОР НА ВЕЧЕР";
+    let headerText = "IT'S A MATCH · ВЫБОР НА ВЕЧЕР";
 
     if (swipeMode === 'together') {
       matched = swipeDeck.filter((x) => p1Likes.has(x.id));
       headerText = matched.length
-        ? `🎟 ВЫБРАНО ВМЕСТЕ (${matched.length} В ШОРТЛИСТЕ)`
-        : '🎲 ШОРТЛИСТ ПУСТ — ЗАПАСНОЙ ВАРИАНТ';
+        ? `ВЫБРАНО ВМЕСТЕ (${matched.length} В ШОРТЛИСТЕ)`
+        : 'ШОРТЛИСТ ПУСТ — ЗАПАСНОЙ ВАРИАНТ';
     } else {
       const mutual = swipeDeck.filter((x) => p1Likes.has(x.id) && p2Likes.has(x.id));
       if (mutual.length) {
         matched = mutual;
-        headerText = `🎟 IT'S A MATCH · ${mutual.length} ОБЩИХ ЛАЙКА!`;
+        headerText = `IT'S A MATCH · ${mutual.length} ОБЩИХ ЛАЙКА!`;
       } else {
         const anyLiked = swipeDeck.filter((x) => p1Likes.has(x.id) || p2Likes.has(x.id));
         matched = anyLiked.length ? anyLiked : swipeDeck.slice(0, 4);
         headerText = anyLiked.length
-          ? '✦ КОМПРОМИСС · ЛУЧШЕЕ ИЗ ВАШИХ ЛАЙКОВ'
-          : '🎲 НИКТО НЕ ЛАЙКНУЛ — ВЫБОР СУДЬБЫ';
+          ? 'КОМПРОМИСС · ЛУЧШЕЕ ИЗ ВАШИХ ЛАЙКОВ'
+          : 'НИКТО НЕ ЛАЙКНУЛ — ВЫБОР СУДЬБЫ';
       }
     }
 
@@ -640,7 +640,7 @@ export function initCoopPicker() {
     p2Likes = new Set();
     isSwipingAnim = false;
 
-    if (modalKicker) modalKicker.textContent = '⚡ КООП-СВАЙП // ВЕЧЕРНИЙ ПОДБОР';
+    if (modalKicker) modalKicker.textContent = 'КООП-СВАЙП // ВЕЧЕРНИЙ ПОДБОР';
     showCoopModalStage('swipe');
     renderSwipeCard();
     modal?.classList.add('is-open');
@@ -656,8 +656,8 @@ export function initCoopPicker() {
     const p1Name = coopData?.p1?.nick || cleanNick(input1.value) || 'Игрок 1';
     const p2Name = coopData?.p2?.nick || cleanNick(input2.value) || 'Игрок 2';
 
-    if (modalKicker) modalKicker.textContent = '🎟 БИЛЕТ НА ВЕЧЕР // SCREENING PASS';
-    if (ticketKicker) ticketKicker.textContent = kickerText || "🎟 IT'S A MATCH · СЕАНС НА ВЕЧЕР";
+    if (modalKicker) modalKicker.textContent = 'БИЛЕТ НА ВЕЧЕР // SCREENING PASS';
+    if (ticketKicker) ticketKicker.textContent = kickerText || "IT'S A MATCH · СЕАНС НА ВЕЧЕР";
     if (ticketTitle) ticketTitle.textContent = item.title;
     if (ticketPair) ticketPair.innerHTML = `<strong>${escapeHtml(p1Name)}</strong> × <strong>${escapeHtml(p2Name)}</strong>`;
     if (ticketReason) ticketReason.textContent = item.reason || 'Идеально на вечер';
@@ -665,7 +665,7 @@ export function initCoopPicker() {
 
     const epStr = item.kind === 'movie' ? 'Полнометражный фильм' : (item.episodes ? `${item.episodes} эп.` : item.kindLabel);
     const pills = [
-      item.shikiScore ? `★ ${item.shikiScore.toFixed(2)}` : null,
+      item.shikiScore ? `Шики ${item.shikiScore.toFixed(2)}` : null,
       epStr,
       item.year ? String(item.year) : null
     ].filter(Boolean);
@@ -738,29 +738,23 @@ export function initCoopPicker() {
       return s + '…';
     }
 
-    // Background
+    // Background (Pure B&W Editorial Noir)
     const bg = ctx.createLinearGradient(0, 0, W, H);
-    bg.addColorStop(0, '#060910');
-    bg.addColorStop(0.55, '#0b1220');
-    bg.addColorStop(1, '#06080e');
+    bg.addColorStop(0, '#080808');
+    bg.addColorStop(0.55, '#121212');
+    bg.addColorStop(1, '#080808');
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
-    const halo = ctx.createRadialGradient(260, 220, 20, 260, 220, 480);
-    halo.addColorStop(0, 'rgba(110, 231, 183, 0.16)');
-    halo.addColorStop(1, 'transparent');
-    ctx.fillStyle = halo;
-    ctx.fillRect(0, 0, W, H);
-
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.045)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
     for (let x = 40; x < W; x += 48) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
     for (let y = 40; y < H; y += 48) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
 
     // Cinema Ticket Outer Shell
-    rRect(46, 54, W - 92, H - 108, 26);
-    ctx.fillStyle = 'rgba(9, 13, 22, 0.88)';
+    rRect(46, 54, W - 92, H - 108, 6);
+    ctx.fillStyle = '#0e0e0e';
     ctx.fill();
-    ctx.strokeStyle = 'rgba(110, 231, 183, 0.48)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
     ctx.lineWidth = 2;
     ctx.stroke();
 
@@ -768,7 +762,7 @@ export function initCoopPicker() {
     const stubX = W - 320;
     ctx.save();
     ctx.setLineDash([8, 10]);
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.34)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(stubX, 72);
@@ -777,29 +771,29 @@ export function initCoopPicker() {
     ctx.restore();
 
     // Semicircle ticket notches top & bottom
-    ctx.fillStyle = '#070a11';
+    ctx.fillStyle = '#080808';
     [54, H - 54].forEach((ny) => {
       ctx.beginPath();
       ctx.arc(stubX, ny, 20, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = 'rgba(110, 231, 183, 0.45)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
       ctx.lineWidth = 2;
       ctx.stroke();
     });
 
     // Left Main Ticket Body
-    ctx.fillStyle = '#6ee7b7';
+    ctx.fillStyle = '#ffffff';
     ctx.font = '600 15px "JetBrains Mono", monospace';
-    ctx.fillText('🎟  ADMIT TWO  ·  CO-OP EVENING SCREENING PASS', 94, 120);
+    ctx.fillText('ADMIT TWO  ·  CO-OP EVENING SCREENING PASS', 94, 120);
 
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.78)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.80)';
     ctx.font = '600 19px "JetBrains Mono", monospace';
     ctx.fillText(clipText(`${p1Name}  ×  ${p2Name}`, stubX - 140), 94, 166);
 
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.16)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
     ctx.beginPath(); ctx.moveTo(94, 194); ctx.lineTo(stubX - 44, 194); ctx.stroke();
 
-    ctx.fillStyle = 'rgba(173, 191, 222, 0.72)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.72)';
     ctx.font = '600 13px "JetBrains Mono", monospace';
     ctx.fillText('СЕГОДНЯ ВЕЧЕРОМ СМОТРИМ:', 94, 238);
 
@@ -809,60 +803,60 @@ export function initCoopPicker() {
 
     const epStr = item.kind === 'movie' ? 'ФИЛЬМ' : (item.episodes ? `${item.episodes} ЭП.` : item.kindLabel.toUpperCase());
     const metaLine = [
-      item.shikiScore ? `SHIKIMORI ★ ${item.shikiScore.toFixed(2)}` : null,
+      item.shikiScore ? `SHIKIMORI ${item.shikiScore.toFixed(2)}` : null,
       epStr,
       item.year ? String(item.year) : null
     ].filter(Boolean).join('   ·   ');
 
-    ctx.fillStyle = '#dce8ff';
+    ctx.fillStyle = '#ebebeb';
     ctx.font = '600 17px "JetBrains Mono", monospace';
     ctx.fillText(clipText(metaLine, stubX - 140), 94, 354);
 
     // Match reason pill
-    rRect(94, 394, Math.min(stubX - 144, 520), 54, 14);
-    ctx.fillStyle = 'rgba(110, 231, 183, 0.12)';
+    rRect(94, 394, Math.min(stubX - 144, 520), 54, 4);
+    ctx.fillStyle = '#1b1b1b';
     ctx.fill();
-    ctx.strokeStyle = 'rgba(110, 231, 183, 0.42)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
     ctx.lineWidth = 1.4;
     ctx.stroke();
 
-    ctx.fillStyle = '#a7f3d0';
+    ctx.fillStyle = '#ffffff';
     ctx.font = '600 16px "JetBrains Mono", monospace';
-    ctx.fillText(clipText(`◈  ${item.reason || 'Идеальное совпадение на вечер'}`, stubX - 180), 118, 427);
+    ctx.fillText(clipText(item.reason || 'Идеальное совпадение на вечер', stubX - 180), 118, 427);
 
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.56)';
     ctx.font = '500 14px "JetBrains Mono", monospace';
     ctx.fillText('ПОДОБРАНО В КООПЕ  →  https://undexerorrr.github.io/', 94, H - 96);
 
     // Right Stub
     ctx.textAlign = 'center';
     const sx = stubX + 137;
-    ctx.fillStyle = '#adbfde';
+    ctx.fillStyle = '#d6d6d6';
     ctx.font = '600 13px "JetBrains Mono", monospace';
     ctx.fillText('UNDEXEROR', sx, 134);
     ctx.fillText('// ARCHIVE', sx, 156);
 
-    ctx.fillStyle = '#6ee7b7';
+    ctx.fillStyle = '#ffffff';
     ctx.font = '700 44px "Unbounded", "JetBrains Mono", monospace';
-    ctx.fillText(item.shikiScore ? item.shikiScore.toFixed(1) : '★', sx, 268);
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.62)';
+    ctx.fillText(item.shikiScore ? item.shikiScore.toFixed(1) : '—', sx, 268);
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.62)';
     ctx.font = '600 11px "JetBrains Mono", monospace';
     ctx.fillText('SHIKIMORI SCORE', sx, 296);
 
     ctx.fillStyle = '#ffffff';
     ctx.font = '600 16px "JetBrains Mono", monospace';
     ctx.fillText(new Date().toLocaleDateString('ru-RU'), sx, 382);
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.56)';
     ctx.font = '500 11px "JetBrains Mono", monospace';
     ctx.fillText('TONIGHT · 20:00+', sx, 406);
 
     // Decorative barcode at bottom of stub
-    ctx.fillStyle = 'rgba(210, 224, 248, 0.72)';
+    ctx.fillStyle = 'rgba(235, 235, 235, 0.72)';
     for (let bx = stubX + 46; bx < W - 92; bx += 7) {
       const bw = ((bx * 13 + item.id) % 4) + 1.5;
       ctx.fillRect(bx, H - 180, bw, 62);
     }
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.55)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.55)';
     ctx.font = '500 11px "JetBrains Mono", monospace';
     ctx.fillText(`MAL-${item.id}`, sx, H - 96);
 
@@ -957,7 +951,7 @@ export function initCoopPicker() {
     if (!pool.length) return;
     const topPool = pool.slice(0, Math.min(20, pool.length));
     const pick = topPool[Math.floor(Math.random() * topPool.length)];
-    openEveningTicket(pick, topPool.slice(0, 6), '🎲 СЛУЧАЙНЫЙ ВЫБОР НА ВЕЧЕР');
+    openEveningTicket(pick, topPool.slice(0, 6), 'СЛУЧАЙНЫЙ ВЫБОР НА ВЕЧЕР');
   });
 
   modeBtns.forEach((btn) => {
@@ -968,7 +962,7 @@ export function initCoopPicker() {
   btnLike?.addEventListener('click', () => triggerSwipeChoice(true));
   btnInstant?.addEventListener('click', () => {
     if (!swipeDeck[swipeIdx]) return;
-    openEveningTicket(swipeDeck[swipeIdx], swipeDeck.slice(0, 6), '⚡ МГНОВЕННЫЙ ВЫБОР НА ВЕЧЕР');
+    openEveningTicket(swipeDeck[swipeIdx], swipeDeck.slice(0, 6), 'МГНОВЕННЫЙ ВЫБОР НА ВЕЧЕР');
   });
 
   handoffStartBtn?.addEventListener('click', () => {
@@ -986,11 +980,11 @@ export function initCoopPicker() {
     const p2Name = coopData?.p2?.nick || cleanNick(input2.value) || 'Игрок 2';
     const it = activeTicketItem;
     const epStr = it.kind === 'movie' ? 'Фильм' : (it.episodes ? `${it.episodes} эп.` : it.kindLabel);
-    const txt = `🎟 Кооп на вечер (${p1Name} × ${p2Name}) → смотрим «${it.title}» (${epStr}${it.shikiScore ? ` · ★ ${it.shikiScore.toFixed(2)}` : ''}) · ${it.url} · Подобрано на https://undexerorrr.github.io/`;
+    const txt = `Кооп на вечер (${p1Name} × ${p2Name}) → смотрим «${it.title}» (${epStr}${it.shikiScore ? ` · Шики ${it.shikiScore.toFixed(2)}` : ''}) · ${it.url} · Подобрано на https://undexerorrr.github.io/`;
     try {
       await navigator.clipboard.writeText(txt);
       const orig = copyInviteBtn.textContent;
-      copyInviteBtn.textContent = '✓ Скопировано!';
+      copyInviteBtn.textContent = 'Скопировано!';
       setTimeout(() => { copyInviteBtn.textContent = orig; }, 1800);
     } catch (e) {}
   });
@@ -1000,7 +994,7 @@ export function initCoopPicker() {
     const list = pool.length > 1 ? pool.slice(0, 20) : activeTicketAlts;
     const filtered = list.filter((x) => !activeTicketItem || x.id !== activeTicketItem.id);
     const pick = (filtered.length ? filtered : list)[Math.floor(Math.random() * (filtered.length || list.length))];
-    if (pick) openEveningTicket(pick, list.slice(0, 6), '🎲 НОВЫЙ ВАРИАНТ НА ВЕЧЕР');
+    if (pick) openEveningTicket(pick, list.slice(0, 6), 'НОВЫЙ ВАРИАНТ НА ВЕЧЕР');
   });
 
   modalClose?.addEventListener('click', closeCoopModal);
@@ -1023,7 +1017,7 @@ export function initCoopPicker() {
     }
   });
 
-  // External handoff from Taste Match result ("🎬 Подобрать аниме вдвоём")
+  // External handoff from Taste Match result ("Подобрать аниме вдвоём")
   appState.coopOpenWithGuestHook = (guestNick) => {
     switchStationTab('coop');
     input1.value = SHIKI_NICKNAME;

@@ -80,7 +80,7 @@ export function renderStats(anime, manga, lifetimeText) {
   const badge = document.getElementById('rank-badge');
   if (badge && completed >= 400) {
     const milestone = Math.floor(completed / 50) * 50;
-    badge.textContent = `★ ${milestone}+ ТАЙТЛОВ · АНИМЕ ПСИХ`;
+    badge.textContent = `${milestone}+ ТАЙТЛОВ · АНИМЕ ПСИХ`;
   }
 }
 
@@ -203,7 +203,7 @@ export function computeViewerArchetype(dna) {
   }
   return {
     title: 'Ночной марафонец · Архив 400+',
-    desc: `Собранный вкус вокруг «${topGenre}» и «${secondGenre}» со средней оценкой ${mean.toFixed(2)} и ${dna.eliteCount} тайтлами на 9–10★.`
+    desc: `Собранный вкус вокруг «${topGenre}» и «${secondGenre}» со средней оценкой ${mean.toFixed(2)} и ${dna.eliteCount} тайтлами на 9–10.`
   };
 }
 
@@ -250,7 +250,7 @@ export function renderAnimeDna(dnaInput) {
 
   if (meanEl) meanEl.textContent = Number(dna.meanScore || 0).toFixed(2);
   if (eliteEl) eliteEl.textContent = `${Math.round(dna.eliteShare || 0)}%`;
-  if (eliteSub) eliteSub.textContent = `${dna.eliteCount || 0} тайтлов на 9–10★`;
+  if (eliteSub) eliteSub.textContent = `${dna.eliteCount || 0} тайтлов на 9–10`;
   if (epsEl) epsEl.textContent = Number(dna.totalEpisodes || 0).toLocaleString('ru-RU');
 
   const dVal = Number(dna.crowdDelta || 0);
@@ -272,7 +272,7 @@ export function renderAnimeDna(dnaInput) {
     const totalRated = Math.max(1, counts.reduce((acc, x) => acc + x.count, 0));
     const peakObj = [...counts].sort((a, b) => b.count - a.count || b.score - a.score)[0];
 
-    if (peakScoreEl && peakObj) peakScoreEl.textContent = `${peakObj.score}★ (${peakObj.count})`;
+    if (peakScoreEl && peakObj) peakScoreEl.textContent = `${peakObj.score}/10 (${peakObj.count})`;
     if (tensCountEl) tensCountEl.textContent = `${scoreMap[10] || 0} шт.`;
 
     scoresWrap.innerHTML = counts.map((item) => {
@@ -296,7 +296,7 @@ export function renderAnimeDna(dnaInput) {
     function selectScoreCol(col) {
       cols.forEach((c) => c.classList.toggle('is-active', c === col));
       if (scoreTooltip && col) {
-        scoreTooltip.textContent = `${col.dataset.score}★ · ${col.dataset.count} шт. (${col.dataset.share}%)`;
+        scoreTooltip.textContent = `${col.dataset.score}/10 · ${col.dataset.count} шт. (${col.dataset.share}%)`;
       }
     }
     cols.forEach((col) => {
@@ -437,8 +437,8 @@ export function renderHotTakes(stateInput, loadFailed) {
     const caption = item.comment
       ? `«${item.comment}»`
       : (isGem
-        ? `Оценил на ${item.userScore}★ при рейтинге Шики ${item.shikiScore.toFixed(2)}`
-        : `Хит на ${item.shikiScore.toFixed(2)}★, но моя оценка — ${item.userScore}/10`);
+        ? `Оценил на ${item.userScore}/10 при рейтинге Шики ${item.shikiScore.toFixed(2)}`
+        : `Хит на ${item.shikiScore.toFixed(2)}, но моя оценка — ${item.userScore}/10`);
 
     return `
       <button type="button" class="ht-card" data-ht-id="${item.malId}" data-ht-type="${isGem ? 'gem' : 'over'}">
@@ -454,8 +454,8 @@ export function renderHotTakes(stateInput, loadFailed) {
         <div class="ht-body">
           <div class="ht-anime-title">${escapeHtml(item.title)}</div>
           <div class="ht-scores-row">
-            <span class="ht-chip-me">Я: ${item.userScore}★</span>
-            <span class="ht-chip-shiki">Шики: ${item.shikiScore.toFixed(2)}★</span>
+            <span class="ht-chip-me">Я: ${item.userScore}/10</span>
+            <span class="ht-chip-shiki">Шики: ${item.shikiScore.toFixed(2)}</span>
             <span class="ht-chip-meta">${escapeHtml(item.kind)}${item.year ? ' · ' + item.year : ''}</span>
           </div>
           <div class="ht-meter" title="Полоска: моя оценка (${item.userScore}) · белая риска: рейтинг Шикимори (${item.shikiScore.toFixed(2)})">
@@ -501,7 +501,7 @@ export function renderHotTakes(stateInput, loadFailed) {
           sub: [item.kind, item.year].filter(Boolean).join(' · '),
           pills: [
             `Моя оценка ${item.userScore}/10`,
-            `Шикимори ★ ${item.shikiScore.toFixed(2)}`,
+            `Шикимори ${item.shikiScore.toFixed(2)}`,
             `Разрыв ${deltaStr}`
           ],
           vibes: isGem
@@ -571,43 +571,31 @@ export function initHotTakesControls() {
       return s + '…';
     }
 
-    // Noir cinema background
+    // Pure B&W Editorial Noir background
     const bg = ctx.createLinearGradient(0, 0, W, H);
-    bg.addColorStop(0, '#07090f');
-    bg.addColorStop(0.5, '#0b101b');
-    bg.addColorStop(1, '#06080d');
+    bg.addColorStop(0, '#080808');
+    bg.addColorStop(0.5, '#121212');
+    bg.addColorStop(1, '#080808');
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
-    const gLeft = ctx.createRadialGradient(250, 220, 20, 250, 220, 420);
-    gLeft.addColorStop(0, 'rgba(110, 231, 183, 0.13)');
-    gLeft.addColorStop(1, 'transparent');
-    ctx.fillStyle = gLeft;
-    ctx.fillRect(0, 0, W, H);
-
-    const gRight = ctx.createRadialGradient(950, 450, 20, 950, 450, 420);
-    gRight.addColorStop(0, 'rgba(248, 113, 113, 0.13)');
-    gRight.addColorStop(1, 'transparent');
-    ctx.fillStyle = gRight;
-    ctx.fillRect(0, 0, W, H);
-
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.045)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
     for (let x = 40; x < W; x += 48) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
     for (let y = 40; y < H; y += 48) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
 
-    rRect(26, 26, W - 52, H - 52, 22);
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.24)';
+    rRect(26, 26, W - 52, H - 52, 6);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.24)';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
     // Header
-    ctx.fillStyle = '#adbfde';
+    ctx.fillStyle = '#d6d6d6';
     ctx.font = '600 14px "JetBrains Mono", monospace';
-    ctx.fillText('◈  UNDEXEROR // ARCHIVE   ·   HOT TAKES ПРОТИВ ШИКИМОРИ', 62, 72);
+    ctx.fillText('UNDEXEROR // ARCHIVE   ·   HOT TAKES ПРОТИВ ШИКИМОРИ', 62, 72);
 
     const avg = Number(st.avgDelta || 0);
     ctx.textAlign = 'right';
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.62)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.62)';
     ctx.fillText(`ИНДЕКС ${avg >= 0 ? '+' : ''}${avg.toFixed(2)}  ·  ${st.scannedCount || 0} ОЦЕНОК`, W - 62, 72);
     ctx.textAlign = 'left';
 
@@ -615,7 +603,7 @@ export function initHotTakesControls() {
     ctx.font = '600 28px "Unbounded", "Inter", sans-serif';
     ctx.fillText('Главные несогласия с толпой', 62, 122);
 
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.16)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
     ctx.beginPath(); ctx.moveTo(62, 144); ctx.lineTo(W - 62, 144); ctx.stroke();
 
     // Two Columns
@@ -624,7 +612,7 @@ export function initHotTakesControls() {
     const colW = (W - 124 - 24) / 2;
 
     function drawCol(x, title, accent, borderCol, fillTop, items, isGem) {
-      rRect(x, colY, colW, colH, 16);
+      rRect(x, colY, colW, colH, 4);
       ctx.fillStyle = fillTop;
       ctx.fill();
       ctx.strokeStyle = borderCol;
@@ -638,30 +626,30 @@ export function initHotTakesControls() {
       const slice = (items || []).slice(0, 3);
       slice.forEach((item, idx) => {
         const ry = colY + 60 + idx * 112;
-        rRect(x + 20, ry, colW - 40, 96, 12);
-        ctx.fillStyle = 'rgba(9, 12, 20, 0.86)';
+        rRect(x + 20, ry, colW - 40, 96, 4);
+        ctx.fillStyle = '#0e0e0e';
         ctx.fill();
-        ctx.strokeStyle = 'rgba(173, 191, 222, 0.16)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
         ctx.stroke();
 
         ctx.fillStyle = '#ffffff';
         ctx.font = '600 17px "Inter", sans-serif';
         ctx.fillText(clipText(item.title, colW - 175), x + 38, ry + 36);
 
-        ctx.fillStyle = 'rgba(205, 212, 224, 0.72)';
+        ctx.fillStyle = 'rgba(214, 214, 214, 0.72)';
         ctx.font = '500 13px "JetBrains Mono", monospace';
-        ctx.fillText(`Я: ${item.userScore}★   ·   Шики: ${item.shikiScore.toFixed(2)}★`, x + 38, ry + 66);
+        ctx.fillText(`Я: ${item.userScore}/10   ·   Шики: ${item.shikiScore.toFixed(2)}`, x + 38, ry + 66);
 
         // Delta pill
         const dx = x + colW - 118;
-        rRect(dx, ry + 20, 82, 56, 10);
-        ctx.fillStyle = isGem ? 'rgba(110, 231, 183, 0.14)' : 'rgba(248, 113, 113, 0.15)';
+        rRect(dx, ry + 20, 82, 56, 3);
+        ctx.fillStyle = isGem ? '#f0f0f0' : '#1b1b1b';
         ctx.fill();
         ctx.strokeStyle = borderCol;
         ctx.stroke();
 
         ctx.textAlign = 'center';
-        ctx.fillStyle = accent;
+        ctx.fillStyle = isGem ? '#080808' : '#ffffff';
         ctx.font = '600 17px "Unbounded", "JetBrains Mono", monospace';
         ctx.fillText(`${item.delta > 0 ? '+' : ''}${item.delta.toFixed(2)}`, dx + 41, ry + 54);
         ctx.textAlign = 'left';
@@ -670,30 +658,30 @@ export function initHotTakesControls() {
 
     drawCol(
       62,
-      '▲  НЕДООЦЕНЁННЫЕ ГЕМЫ  ·  ВЫШЕ ТОЛПЫ',
-      '#a7f3d0',
-      'rgba(110, 231, 183, 0.38)',
-      'rgba(10, 24, 22, 0.65)',
+      'НЕДООЦЕНЁННЫЕ ГЕМЫ  ·  ВЫШЕ ТОЛПЫ',
+      '#ffffff',
+      'rgba(255, 255, 255, 0.34)',
+      '#141414',
       st.gems,
       true
     );
 
     drawCol(
       62 + colW + 24,
-      '▼  ПЕРЕОЦЕНЁННЫЕ ХИТЫ  ·  НИЖЕ ТОЛПЫ',
-      '#fecaca',
-      'rgba(248, 113, 113, 0.38)',
-      'rgba(28, 11, 17, 0.65)',
+      'ПЕРЕОЦЕНЁННЫЕ ХИТЫ  ·  НИЖЕ ТОЛПЫ',
+      '#d6d6d6',
+      'rgba(255, 255, 255, 0.22)',
+      '#141414',
       st.overrated,
       false
     );
 
     // Footer
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.56)';
     ctx.font = '500 13px "JetBrains Mono", monospace';
     ctx.fillText('ПРОВЕРЬ СВОЮ БАЗУ  →  https://undexerorrr.github.io/', 62, H - 46);
     ctx.textAlign = 'right';
-    ctx.fillStyle = 'rgba(173, 191, 222, 0.65)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.65)';
     ctx.fillText('undereror nyashka · undexeror // archive', W - 62, H - 46);
 
     const link = document.createElement('a');
@@ -775,7 +763,7 @@ export function renderWatchingShelf(items) {
       const pills = [
         epText,
         item.userScore ? `Моя оценка ${item.userScore}/10` : null,
-        item.score ? `★ ${Number(item.score).toFixed(2)}` : null,
+        item.score ? `${Number(item.score).toFixed(2)}` : null,
         item.year ? String(item.year) : null
       ].filter(Boolean);
 
@@ -1006,7 +994,7 @@ export function renderWaifu() {
           alt="${escapeHtml(ch.name)}"
           loading="lazy"
         />
-        <div class="poster-fallback"><span>✦</span>${escapeHtml(ch.name)}</div>
+        <div class="poster-fallback"><span>//</span>${escapeHtml(ch.name)}</div>
         <div class="waifu-name">${escapeHtml(ch.name)}</div>
       </article>
     `;
@@ -1163,13 +1151,13 @@ export function renderCollection() {
         <article class="${classes.join(' ')}" data-type="peak" data-id="${a.malId}" data-rarity="${rarity.key}" style="animation-delay:${(idx * 0.03).toFixed(3)}s">
           <div class="card-serial-bar">
             <span class="card-serial-num">NO.${formatRank(a.rank)}</span>
-            <span class="card-rarity-tag">// ${rarity.short}</span>
+            <span class="card-rarity-tag">${rarity.short}</span>
           </div>
           <div class="poster-box">
-            <span class="score-pill">★ ${a.score.toFixed(2)}</span>
+            <span class="score-pill">${a.score.toFixed(2)}</span>
             <img data-cover-key="${coverKey}" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(a.title)}" loading="lazy" />
             <div class="poster-glare" aria-hidden="true"></div>
-            <div class="poster-fallback"><span>◈</span>${escapeHtml(a.title)}</div>
+            <div class="poster-fallback"><span>//</span>${escapeHtml(a.title)}</div>
           </div>
           <div class="card-grid-footer">
             <div class="card-title">${escapeHtml(a.title)}</div>
@@ -1187,8 +1175,8 @@ export function renderCollection() {
             <p class="sc-note">«${escapeHtml(a.note)}»</p>
             <div class="sc-vibes">${vibesHtml}</div>
             <div class="sc-foot-row">
-              <span>${escapeHtml(userScoreNote)}Шики ★ ${a.score.toFixed(2)}</span>
-              <span class="sc-cta">◈ 3D-карта →</span>
+              <span>${escapeHtml(userScoreNote)}Шики ${a.score.toFixed(2)}</span>
+              <span class="sc-cta">3D-карта →</span>
             </div>
           </div>
         </article>
@@ -1208,12 +1196,12 @@ export function renderCollection() {
         <article class="${classes.join(' ')}" data-type="literally" data-id="${c.key}" data-rarity="${rarity.key}" style="animation-delay:${(idx * 0.03).toFixed(3)}s">
           <div class="card-serial-bar">
             <span class="card-serial-num">NO.${formatRank(c.rank)}</span>
-            <span class="card-rarity-tag">// ${rarity.short}</span>
+            <span class="card-rarity-tag">${rarity.short}</span>
           </div>
           <div class="poster-box">
             <img data-cover-key="${coverKey}" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(c.name)}" loading="lazy" />
             <div class="poster-glare" aria-hidden="true"></div>
-            <div class="poster-fallback"><span>✦</span>${escapeHtml(c.name)}</div>
+            <div class="poster-fallback"><span>//</span>${escapeHtml(c.name)}</div>
           </div>
           <div class="card-grid-footer">
             <div class="card-title">${escapeHtml(c.name)}</div>
@@ -1234,7 +1222,7 @@ export function renderCollection() {
             </div>
             <div class="sc-foot-row">
               <span>${escapeHtml(c.anime)}</span>
-              <span class="sc-cta">◈ 3D-карта →</span>
+              <span class="sc-cta">3D-карта →</span>
             </div>
           </div>
         </article>
@@ -1402,9 +1390,9 @@ let holoDeckIdx = 0;
 let holoIsFlipped = false;
 
 export function getHoloRarity(rank) {
-  if (rank <= 3) return { key: 'mythic', label: '★ MYTHIC', short: 'MYTHIC' };
-  if (rank <= 10) return { key: 'ssr', label: '◈ SSR', short: 'SSR' };
-  return { key: 'sr', label: '◇ SR', short: 'SR' };
+  if (rank <= 3) return { key: 'mythic', label: 'MYTHIC', short: 'MYTHIC' };
+  if (rank <= 10) return { key: 'ssr', label: 'SSR', short: 'SSR' };
+  return { key: 'sr', label: 'SR', short: 'SR' };
 }
 
 export function buildHoloDeckItems(type) {
@@ -1431,7 +1419,7 @@ export function buildHoloDeckItems(type) {
         cat: g.isPeak
           ? 'PEAK FICTION · GALAXY'
           : isPlanned
-            ? '◈ В ПЛАНАХ · BACKLOG'
+            ? 'В ПЛАНАХ · BACKLOG'
             : (g.status === 'watching' ? 'СЕЙЧАС СМОТРЮ · GALAXY' : 'ARCHIVE STAR · GALAXY'),
         rank: rankNum,
         displayIdx: idx + 1,
@@ -1442,19 +1430,19 @@ export function buildHoloDeckItems(type) {
           ? [g.kind, g.year, g.episodes ? `${g.episodes} эп.` : null].filter(Boolean).join(' · ')
           : [g.kind, g.year].filter(Boolean).join(' · '),
         frontScore: isPlanned
-          ? (g.shikiScore ? `★ ${g.shikiScore.toFixed(2)}` : 'BACKLOG')
-          : (g.score ? `Я ${g.score}/10 · ★${(g.shikiScore || 0).toFixed(2)}` : (g.shikiScore ? `★ ${g.shikiScore.toFixed(2)}` : 'ARCHIVE')),
+          ? (g.shikiScore ? `${g.shikiScore.toFixed(2)}` : 'BACKLOG')
+          : (g.score ? `Я ${g.score}/10 · ${(g.shikiScore || 0).toFixed(2)}` : (g.shikiScore ? `${g.shikiScore.toFixed(2)}` : 'ARCHIVE')),
         pills: isPlanned
           ? [
               'В планах',
-              g.shikiScore ? `Шики ★ ${g.shikiScore.toFixed(2)}` : null,
+              g.shikiScore ? `Шики ${g.shikiScore.toFixed(2)}` : null,
               g.episodes ? `${g.episodes} эп.` : null,
               g.year ? String(g.year) : null
             ].filter(Boolean)
           : [
               g.peakRank ? `Peak #${formatRank(g.peakRank)}` : null,
               g.score ? `Моя оценка ${g.score}/10` : 'Без оценки',
-              g.shikiScore ? `Шики ★ ${g.shikiScore.toFixed(2)}` : null,
+              g.shikiScore ? `Шики ${g.shikiScore.toFixed(2)}` : null,
               g.episodes ? `${g.episodes} эп.` : null,
               g.year ? String(g.year) : null
             ].filter(Boolean),
@@ -1509,11 +1497,11 @@ export function buildHoloDeckItems(type) {
     total: PEAK_FICTION.length,
     title: a.title,
     sub: `${a.kind} · ${a.year}`,
-    frontScore: a.userScore ? `${a.userScore}/10 · ★${a.score.toFixed(2)}` : `★ ${a.score.toFixed(2)}`,
+    frontScore: a.userScore ? `${a.userScore}/10 · ${a.score.toFixed(2)}` : `${a.score.toFixed(2)}`,
     pills: [
       `Топ #${formatRank(a.rank)}`,
       a.userScore ? `Моя оценка ${a.userScore}/10` : null,
-      `Шики ★ ${a.score.toFixed(2)}`,
+      `Шики ${a.score.toFixed(2)}`,
       String(a.year)
     ].filter(Boolean),
     vibes: a.vibes || ['#peak-fiction'],
@@ -1984,7 +1972,7 @@ export function initTasteMatcher() {
     if (isSelf) {
       return {
         tier: 'high',
-        color: '#6ee7b7',
+        color: '#ffffff',
         title: '100% · ЗЕРКАЛО // ЭТО ТЫ САМ',
         desc: 'Сравнивать undereror с undereror — идеальная база без единого спора.'
       };
@@ -1992,7 +1980,7 @@ export function initTasteMatcher() {
     if (sharedCount === 0) {
       return {
         tier: 'low',
-        color: '#f87171',
+        color: '#848484',
         title: 'ПАРАЛЛЕЛЬНЫЕ ВСЕЛЕННЫЕ',
         desc: 'У нас вообще ноль общих тайтлов. Крутани рандомайзер «Что посмотреть от меня» — пора это исправлять.'
       };
@@ -2000,7 +1988,7 @@ export function initTasteMatcher() {
     if (pct >= 88) {
       return {
         tier: 'high',
-        color: '#6ee7b7',
+        color: '#ffffff',
         title: 'АБСОЛЮТНАЯ БАЗА · ПОЧТИ КЛОН',
         desc: ratedSharedCount >= 3
           ? 'Наши списки будто с одной мировой линии — почти полное совпадение по оценкам и топам.'
@@ -2010,7 +1998,7 @@ export function initTasteMatcher() {
     if (pct >= 74) {
       return {
         tier: 'high',
-        color: '#a7f3d0',
+        color: '#ebebeb',
         title: 'СЕРТИФИЦИРОВАННАЯ БАЗА',
         desc: 'Крепкий вкус — по большинству тайтлов мы бы сошлись с полуслова, респект.'
       };
@@ -2018,7 +2006,7 @@ export function initTasteMatcher() {
     if (pct >= 58) {
       return {
         tier: 'mid',
-        color: '#dce8ff',
+        color: '#d6d6d6',
         title: 'БАЗА ЕСТЬ, НО ЕСТЬ ВОПРОСЫ',
         desc: 'Общий вайб точно имеется, но в паре споров из правого блока мы бы жёстко зарубились.'
       };
@@ -2026,14 +2014,14 @@ export function initTasteMatcher() {
     if (pct >= 42) {
       return {
         tier: 'mid',
-        color: '#cbd5e1',
+        color: '#a8a8a8',
         title: 'ПОГРАНИЧНАЯ ЗОНА',
         desc: 'Смотрим разное или оцениваем слишком по-своему. Есть что пообсуждать.'
       };
     }
     return {
       tier: 'low',
-      color: '#f87171',
+      color: '#848484',
       title: 'ВРАГИ ПО ВКУСУ',
       desc: 'Мы явно с разных мировых линий. Похоже, наши 10/10 и проходные тайтлы поменялись местами.'
     };
@@ -2058,8 +2046,8 @@ export function initTasteMatcher() {
         <div class="base-row-info">
           <div class="base-row-title">${escapeHtml(item.title)}</div>
           <div class="base-row-scores">
-            <span class="score-tag is-guest">Ты: ${item.guestScore || '✓'}${item.guestScore ? '★' : ''}</span>
-            <span class="score-tag">Я: ${item.myScore || '✓'}${item.myScore ? '★' : ''}</span>
+            <span class="score-tag is-guest">Ты: ${item.guestScore ? `${item.guestScore}/10` : 'да'}</span>
+            <span class="score-tag">Я: ${item.myScore ? `${item.myScore}/10` : 'да'}</span>
             ${diffBadge}
           </div>
         </div>
@@ -2110,7 +2098,7 @@ export function initTasteMatcher() {
 
     if (sharedKickerEl) {
       sharedKickerEl.textContent = v.hasEliteMatches
-        ? 'Общие 9–10★ · Точка резонанса'
+        ? 'Общие 9–10 · Точка резонанса'
         : 'Общие любимые тайтлы';
     }
     if (sharedBadgeEl) sharedBadgeEl.textContent = `${v.sharedFavoritesCount} ШТ.`;
@@ -2189,28 +2177,16 @@ export function initTasteMatcher() {
     c.height = H;
     const ctx = c.getContext('2d');
 
-    // 1. Dark noir backdrop + subtle glow + grid
+    // 1. Pure B&W Editorial Noir backdrop + grid
     const bgGrad = ctx.createLinearGradient(0, 0, W, H);
-    bgGrad.addColorStop(0, '#07090f');
-    bgGrad.addColorStop(0.55, '#0b101b');
-    bgGrad.addColorStop(1, '#06080d');
+    bgGrad.addColorStop(0, '#080808');
+    bgGrad.addColorStop(0.55, '#121212');
+    bgGrad.addColorStop(1, '#080808');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, W, H);
 
-    const orb1 = ctx.createRadialGradient(200, 140, 10, 200, 140, 420);
-    orb1.addColorStop(0, v.tier === 'high' ? 'rgba(110, 231, 183, 0.16)' : v.tier === 'low' ? 'rgba(248, 113, 113, 0.15)' : 'rgba(173, 191, 222, 0.18)');
-    orb1.addColorStop(1, 'transparent');
-    ctx.fillStyle = orb1;
-    ctx.fillRect(0, 0, W, H);
-
-    const orb2 = ctx.createRadialGradient(1020, 560, 10, 1020, 560, 380);
-    orb2.addColorStop(0, 'rgba(173, 191, 222, 0.12)');
-    orb2.addColorStop(1, 'transparent');
-    ctx.fillStyle = orb2;
-    ctx.fillRect(0, 0, W, H);
-
     // Subtle grid lines
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.045)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
     ctx.lineWidth = 1;
     for (let x = 40; x < W; x += 48) {
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
@@ -2220,30 +2196,30 @@ export function initTasteMatcher() {
     }
 
     // Outer frame
-    drawRoundRect(ctx, 26, 26, W - 52, H - 52, 22);
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.24)';
+    drawRoundRect(ctx, 26, 26, W - 52, H - 52, 6);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.24)';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
     // 2. Top HUD header
-    ctx.fillStyle = '#adbfde';
+    ctx.fillStyle = '#d6d6d6';
     ctx.font = '600 15px "JetBrains Mono", monospace';
-    ctx.fillText('◈  UNDEXEROR // ARCHIVE   ·   ПРОВЕРКА НА БАЗУ', 62, 74);
+    ctx.fillText('UNDEXEROR // ARCHIVE   ·   ПРОВЕРКА НА БАЗУ', 62, 74);
 
     const dateStr = new Date().toLocaleDateString('ru-RU');
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.55)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.55)';
     ctx.textAlign = 'right';
     ctx.fillText(`SHIKIMORI TASTE MATCH  ·  ${dateStr}`, W - 62, 74);
     ctx.textAlign = 'left';
 
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.16)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
     ctx.beginPath(); ctx.moveTo(62, 94); ctx.lineTo(W - 62, 94); ctx.stroke();
 
     // 3. Verdict Hero Box
-    drawRoundRect(ctx, 62, 118, W - 124, 200, 18);
-    ctx.fillStyle = 'rgba(10, 14, 24, 0.78)';
+    drawRoundRect(ctx, 62, 118, W - 124, 200, 4);
+    ctx.fillStyle = '#141414';
     ctx.fill();
-    ctx.strokeStyle = v.tier === 'high' ? 'rgba(110, 231, 183, 0.42)' : v.tier === 'low' ? 'rgba(248, 113, 113, 0.42)' : 'rgba(173, 191, 222, 0.30)';
+    ctx.strokeStyle = v.tier === 'high' ? 'rgba(255, 255, 255, 0.42)' : 'rgba(255, 255, 255, 0.24)';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
@@ -2261,7 +2237,7 @@ export function initTasteMatcher() {
     const endAng = startAng + (Math.PI * 2 * Math.max(0, Math.min(100, v.pct))) / 100;
     ctx.beginPath();
     ctx.arc(cx, cy, rad, startAng, endAng);
-    ctx.strokeStyle = v.color || '#dce8ff';
+    ctx.strokeStyle = v.color || '#ebebeb';
     ctx.lineCap = 'round';
     ctx.lineWidth = 10;
     ctx.stroke();
@@ -2270,13 +2246,13 @@ export function initTasteMatcher() {
     ctx.textAlign = 'center';
     ctx.font = '700 38px "JetBrains Mono", monospace';
     ctx.fillText(`${v.pct}%`, cx, cy + 8);
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.60)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.60)';
     ctx.font = '600 11px "JetBrains Mono", monospace';
     ctx.fillText('MATCH', cx, cy + 29);
     ctx.textAlign = 'left';
 
     // Verdict Text
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.72)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.72)';
     ctx.font = '500 15px "JetBrains Mono", monospace';
     ctx.fillText(fitText(ctx, `${v.guestNick}  ×  undereror nyashka`, 540), 266, 162);
 
@@ -2284,7 +2260,7 @@ export function initTasteMatcher() {
     ctx.font = '700 30px "Inter", sans-serif';
     ctx.fillText(fitText(ctx, v.title, 540), 266, 206);
 
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.80)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.80)';
     ctx.font = '400 16px "Inter", sans-serif';
     const descLines = wrapLines(ctx, v.desc, 520, 2);
     descLines.forEach((line, i) => {
@@ -2299,10 +2275,10 @@ export function initTasteMatcher() {
     ];
     kpis.forEach((k, idx) => {
       const bx = 832 + idx * 98;
-      drawRoundRect(ctx, bx, 168, 88, 98, 12);
-      ctx.fillStyle = 'rgba(6, 9, 16, 0.85)';
+      drawRoundRect(ctx, bx, 168, 88, 98, 4);
+      ctx.fillStyle = '#0e0e0e';
       ctx.fill();
-      ctx.strokeStyle = 'rgba(173, 191, 222, 0.22)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
       ctx.lineWidth = 1;
       ctx.stroke();
 
@@ -2310,7 +2286,7 @@ export function initTasteMatcher() {
       ctx.fillStyle = '#ffffff';
       ctx.font = '700 22px "JetBrains Mono", monospace';
       ctx.fillText(k.val, bx + 44, 214);
-      ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+      ctx.fillStyle = 'rgba(214, 214, 214, 0.56)';
       ctx.font = '600 10px "JetBrains Mono", monospace';
       ctx.fillText(k.lbl, bx + 44, 242);
     });
@@ -2322,29 +2298,29 @@ export function initTasteMatcher() {
     const panelW = (W - 124 - 22) / 2;
 
     // Left Panel: Shared Favorites
-    drawRoundRect(ctx, 62, panelY, panelW, panelH, 16);
-    ctx.fillStyle = 'rgba(9, 12, 20, 0.78)';
+    drawRoundRect(ctx, 62, panelY, panelW, panelH, 4);
+    ctx.fillStyle = '#141414';
     ctx.fill();
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.22)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
     ctx.lineWidth = 1.2;
     ctx.stroke();
 
-    ctx.fillStyle = '#adbfde';
+    ctx.fillStyle = '#ffffff';
     ctx.font = '600 13px "JetBrains Mono", monospace';
-    ctx.fillText(v.hasEliteMatches ? 'ОБЩАЯ БАЗА · 9–10★' : 'ОБЩИЕ ЛЮБИМЫЕ ТАЙТЛЫ', 86, panelY + 34);
+    ctx.fillText(v.hasEliteMatches ? 'ОБЩАЯ БАЗА · 9–10' : 'ОБЩИЕ ЛЮБИМЫЕ ТАЙТЛЫ', 86, panelY + 34);
 
     const sharedSlice = v.topShared.slice(0, 3);
     if (!sharedSlice.length) {
-      ctx.fillStyle = 'rgba(205, 212, 224, 0.52)';
+      ctx.fillStyle = 'rgba(214, 214, 214, 0.52)';
       ctx.font = '400 14px "JetBrains Mono", monospace';
       ctx.fillText('Общих высоких оценок пока нет', 86, panelY + 126);
     } else {
       sharedSlice.forEach((item, idx) => {
         const ry = panelY + 54 + idx * 58;
-        drawRoundRect(ctx, 84, ry, panelW - 44, 48, 10);
-        ctx.fillStyle = 'rgba(15, 20, 32, 0.85)';
+        drawRoundRect(ctx, 84, ry, panelW - 44, 48, 3);
+        ctx.fillStyle = '#0e0e0e';
         ctx.fill();
-        ctx.strokeStyle = 'rgba(173, 191, 222, 0.16)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
         ctx.stroke();
 
         ctx.fillStyle = '#ffffff';
@@ -2352,38 +2328,38 @@ export function initTasteMatcher() {
         ctx.fillText(fitText(ctx, item.title, panelW - 210), 100, ry + 30);
 
         ctx.textAlign = 'right';
-        ctx.fillStyle = '#a7f3d0';
+        ctx.fillStyle = '#ebebeb';
         ctx.font = '600 13px "JetBrains Mono", monospace';
-        ctx.fillText(`Ты ${item.guestScore || '✓'}★ · Я ${item.myScore || '✓'}★`, 84 + panelW - 58, ry + 30);
+        ctx.fillText(`Ты ${item.guestScore ? `${item.guestScore}/10` : 'да'} · Я ${item.myScore ? `${item.myScore}/10` : 'да'}`, 84 + panelW - 58, ry + 30);
         ctx.textAlign = 'left';
       });
     }
 
     // Right Panel: Main Conflict
     const rx = 62 + panelW + 22;
-    drawRoundRect(ctx, rx, panelY, panelW, panelH, 16);
-    ctx.fillStyle = 'rgba(24, 11, 16, 0.68)';
+    drawRoundRect(ctx, rx, panelY, panelW, panelH, 4);
+    ctx.fillStyle = '#141414';
     ctx.fill();
-    ctx.strokeStyle = 'rgba(248, 113, 113, 0.34)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
     ctx.lineWidth = 1.2;
     ctx.stroke();
 
-    ctx.fillStyle = '#fca5a5';
+    ctx.fillStyle = '#d6d6d6';
     ctx.font = '600 13px "JetBrains Mono", monospace';
     ctx.fillText('ГЛАВНЫЙ КОНФЛИКТ ПО ОЦЕНКАМ', rx + 24, panelY + 34);
 
     const confSlice = v.conflicts.slice(0, 3);
     if (!confSlice.length) {
-      ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+      ctx.fillStyle = 'rgba(214, 214, 214, 0.56)';
       ctx.font = '400 14px "JetBrains Mono", monospace';
       ctx.fillText('Серьёзных споров не найдено — мир и согласие', rx + 24, panelY + 126);
     } else {
       confSlice.forEach((item, idx) => {
         const ry = panelY + 54 + idx * 58;
-        drawRoundRect(ctx, rx + 22, ry, panelW - 44, 48, 10);
-        ctx.fillStyle = 'rgba(18, 12, 20, 0.85)';
+        drawRoundRect(ctx, rx + 22, ry, panelW - 44, 48, 3);
+        ctx.fillStyle = '#0e0e0e';
         ctx.fill();
-        ctx.strokeStyle = 'rgba(248, 113, 113, 0.24)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
         ctx.stroke();
 
         ctx.fillStyle = '#ffffff';
@@ -2391,20 +2367,20 @@ export function initTasteMatcher() {
         ctx.fillText(fitText(ctx, item.title, panelW - 225), rx + 38, ry + 30);
 
         ctx.textAlign = 'right';
-        ctx.fillStyle = '#fecaca';
+        ctx.fillStyle = '#d6d6d6';
         ctx.font = '600 13px "JetBrains Mono", monospace';
-        ctx.fillText(`Ты ${item.guestScore}★ vs Я ${item.myScore}★ (Δ${item.diff})`, rx + panelW - 36, ry + 30);
+        ctx.fillText(`Ты ${item.guestScore}/10 vs Я ${item.myScore}/10 (Δ${item.diff})`, rx + panelW - 36, ry + 30);
         ctx.textAlign = 'left';
       });
     }
 
     // 5. Footer
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.56)';
     ctx.font = '500 13px "JetBrains Mono", monospace';
     ctx.fillText('ПРОВЕРЬ СВОЙ НИК  →  https://undexerorrr.github.io/', 62, H - 46);
 
     ctx.textAlign = 'right';
-    ctx.fillStyle = 'rgba(173, 191, 222, 0.65)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.65)';
     ctx.fillText('undexeror // archive', W - 62, H - 46);
     ctx.textAlign = 'left';
 
@@ -2588,9 +2564,9 @@ export function initTasteMatcher() {
     if (!appState.lastMatchVerdict) return;
     const v = appState.lastMatchVerdict;
     const topConf = v.conflicts[0]
-      ? ` · Главный конфликт: ${v.conflicts[0].title} (я ${v.conflicts[0].guestScore}★ vs он ${v.conflicts[0].myScore}★)`
+      ? ` · Главный конфликт: ${v.conflicts[0].title} (я ${v.conflicts[0].guestScore}/10 vs он ${v.conflicts[0].myScore}/10)`
       : '';
-    const txt = `◈ undexeror // archive — Проверка на базу: ${v.pct}% (${v.title}) · Общих тайтлов: ${v.sharedCount}${topConf} → https://undexerorrr.github.io/`;
+    const txt = `undexeror // archive — Проверка на базу: ${v.pct}% (${v.title}) · Общих тайтлов: ${v.sharedCount}${topConf} → https://undexerorrr.github.io/`;
     try {
       await navigator.clipboard.writeText(txt);
       const orig = copyTextBtn.textContent;
@@ -2706,7 +2682,7 @@ export function initTournamentArena() {
       id: String(a.malId),
       rank: a.rank,
       name: a.title,
-      sub: `${a.kind} · ${a.year} · ★ ${a.score.toFixed(2)}`,
+      sub: `${a.kind} · ${a.year} · ${a.score.toFixed(2)}`,
       img: appState.coverCache['anime_' + a.malId] || '',
       url: `${appState.activeShikiOrigin}/animes/${a.malId}`
     }));
@@ -2789,7 +2765,7 @@ export function initTournamentArena() {
     if (roundLabel) {
       roundLabel.textContent = roundTotalMatches > 1
         ? `${rTitle} · ${roundMatchIdx} / ${roundTotalMatches}`
-        : '★ ФИНАЛ ТУРНИРА';
+        : 'ФИНАЛ ТУРНИРА';
     }
     if (stepCounter) {
       stepCounter.textContent = `МАТЧ ${completedMatches + 1} ИЗ ${totalMatchesTarget}`;
@@ -2859,7 +2835,7 @@ export function initTournamentArena() {
     const totalInCat = getCategoryItems(activeCat).length;
     const catTitle = CAT_LABELS[activeCat] || 'PEAK FICTION';
 
-    if (champKicker) champKicker.textContent = `★ ТВОЙ #1 ЧЕМПИОН · ${catTitle}`;
+    if (champKicker) champKicker.textContent = `ТВОЙ #1 ЧЕМПИОН · ${catTitle}`;
     if (champImg) { champImg.src = winner.img || ''; champImg.alt = winner.name; }
     if (champName) champName.textContent = winner.name;
     if (champSub) champSub.textContent = winner.sub;
@@ -2921,78 +2897,72 @@ export function initTournamentArena() {
       return s + '…';
     }
 
-    // Background
+    // Background (Pure B&W Editorial Noir)
     const g = ctx.createLinearGradient(0, 0, W, H);
-    g.addColorStop(0, '#07090f');
-    g.addColorStop(0.5, '#0c111e');
-    g.addColorStop(1, '#06080d');
+    g.addColorStop(0, '#080808');
+    g.addColorStop(0.5, '#121212');
+    g.addColorStop(1, '#080808');
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, W, H);
 
-    const halo = ctx.createRadialGradient(320, 250, 20, 320, 250, 440);
-    halo.addColorStop(0, res.winner.rank <= 3 ? 'rgba(110, 231, 183, 0.16)' : 'rgba(173, 191, 222, 0.18)');
-    halo.addColorStop(1, 'transparent');
-    ctx.fillStyle = halo;
-    ctx.fillRect(0, 0, W, H);
-
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.045)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
     for (let x = 40; x < W; x += 48) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
     for (let y = 40; y < H; y += 48) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
 
-    rRect(26, 26, W - 52, H - 52, 22);
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.25)';
+    rRect(26, 26, W - 52, H - 52, 6);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.24)';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
     // Header
-    ctx.fillStyle = '#adbfde';
+    ctx.fillStyle = '#d6d6d6';
     ctx.font = '600 15px "JetBrains Mono", monospace';
-    ctx.fillText(`⚔  UNDEXEROR // ARCHIVE   ·   ТУРНИР 1v1 (${res.catTitle})`, 62, 74);
+    ctx.fillText(`UNDEXEROR // ARCHIVE   ·   ТУРНИР 1v1 (${res.catTitle})`, 62, 74);
 
     ctx.textAlign = 'right';
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.56)';
     ctx.fillText(new Date().toLocaleDateString('ru-RU'), W - 62, 74);
     ctx.textAlign = 'left';
 
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.16)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
     ctx.beginPath(); ctx.moveTo(62, 94); ctx.lineTo(W - 62, 94); ctx.stroke();
 
     // Champion Main Card
-    rRect(62, 122, W - 124, 250, 18);
-    ctx.fillStyle = 'rgba(10, 14, 24, 0.82)';
+    rRect(62, 122, W - 124, 250, 4);
+    ctx.fillStyle = '#141414';
     ctx.fill();
-    ctx.strokeStyle = res.winner.rank <= 3 ? 'rgba(110, 231, 183, 0.48)' : 'rgba(173, 191, 222, 0.36)';
+    ctx.strokeStyle = res.winner.rank <= 3 ? 'rgba(255, 255, 255, 0.45)' : 'rgba(255, 255, 255, 0.28)';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
     // Left rank emblem
-    rRect(96, 162, 170, 170, 20);
-    ctx.fillStyle = 'rgba(7, 10, 17, 0.90)';
+    rRect(96, 162, 170, 170, 4);
+    ctx.fillStyle = '#0e0e0e';
     ctx.fill();
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.35)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
     ctx.stroke();
 
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#6ee7b7';
+    ctx.fillStyle = '#ffffff';
     ctx.font = '600 13px "JetBrains Mono", monospace';
     ctx.fillText('ТВОЙ ВЫБОР', 181, 204);
     ctx.fillStyle = '#ffffff';
     ctx.font = '700 58px "JetBrains Mono", monospace';
     ctx.fillText('#01', 181, 270);
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.65)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.65)';
     ctx.font = '600 12px "JetBrains Mono", monospace';
     ctx.fillText(`У UNDEREROR: #${formatRank(res.winner.rank)}`, 181, 308);
     ctx.textAlign = 'left';
 
-    ctx.fillStyle = '#6ee7b7';
+    ctx.fillStyle = '#ffffff';
     ctx.font = '600 14px "JetBrains Mono", monospace';
-    ctx.fillText(`★ ЧЕМПИОН ТУРНИРА · ${res.catTitle}`, 300, 186);
+    ctx.fillText(`ЧЕМПИОН ТУРНИРА · ${res.catTitle}`, 300, 186);
 
     ctx.fillStyle = '#ffffff';
     ctx.font = '700 38px "Inter", sans-serif';
     ctx.fillText(clipText(res.winner.name, 790), 300, 238);
 
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.72)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.72)';
     ctx.font = '500 17px "JetBrains Mono", monospace';
     ctx.fillText(clipText(res.winner.sub, 790), 300, 274);
 
@@ -3001,7 +2971,7 @@ export function initTournamentArena() {
       : res.winner.rank <= 3
         ? `Почти в яблочко — у undereror это в святой тройке (#${formatRank(res.winner.rank)}).`
         : `У undereror в личном топе это стоит на #${formatRank(res.winner.rank)} месте из ${res.totalInCat}.`;
-    ctx.fillStyle = '#dce8ff';
+    ctx.fillStyle = '#ebebeb';
     ctx.font = '500 18px "Inter", sans-serif';
     ctx.fillText(clipText(plainCompare, 790), 300, 326);
 
@@ -3014,13 +2984,13 @@ export function initTournamentArena() {
     slots.slice(0, 3).forEach((s, idx) => {
       const sx = 62 + idx * (slotW + 18);
       const sy = 402;
-      rRect(sx, sy, slotW, 174, 16);
-      ctx.fillStyle = 'rgba(9, 12, 20, 0.80)';
+      rRect(sx, sy, slotW, 174, 4);
+      ctx.fillStyle = '#141414';
       ctx.fill();
-      ctx.strokeStyle = 'rgba(173, 191, 222, 0.22)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
       ctx.stroke();
 
-      ctx.fillStyle = '#adbfde';
+      ctx.fillStyle = '#d6d6d6';
       ctx.font = '600 12px "JetBrains Mono", monospace';
       ctx.fillText(s.tag, sx + 22, sy + 38);
 
@@ -3028,20 +2998,20 @@ export function initTournamentArena() {
       ctx.font = '700 21px "Inter", sans-serif';
       ctx.fillText(clipText(s.item.name, slotW - 44), sx + 22, sy + 84);
 
-      ctx.fillStyle = 'rgba(205, 212, 224, 0.65)';
+      ctx.fillStyle = 'rgba(214, 214, 214, 0.65)';
       ctx.font = '500 13px "JetBrains Mono", monospace';
       ctx.fillText(clipText(s.item.sub, slotW - 44), sx + 22, sy + 114);
 
-      ctx.fillStyle = '#cbd5e1';
+      ctx.fillStyle = '#d6d6d6';
       ctx.fillText(`У undereror: #${formatRank(s.item.rank)}`, sx + 22, sy + 148);
     });
 
     // Footer
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.56)';
     ctx.font = '500 13px "JetBrains Mono", monospace';
     ctx.fillText('СЫГРАЙ В ТУРНИР 1v1  →  https://undexerorrr.github.io/', 62, H - 46);
     ctx.textAlign = 'right';
-    ctx.fillStyle = 'rgba(173, 191, 222, 0.65)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.65)';
     ctx.fillText('undexeror // archive', W - 62, H - 46);
 
     const link = document.createElement('a');
@@ -3100,7 +3070,7 @@ export function initTournamentArena() {
 }
 
 /* =========================================
-   RANDOMIZER («ЧТО ПОСМОТРЕТЬ ОТ МЕНЯ» — TOP 16 + 9–10★ SHIKIMORI)
+   RANDOMIZER («ЧТО ПОСМОТРЕТЬ ОТ МЕНЯ» — TOP 16 + 9–10 SHIKIMORI)
    ========================================= */
 export function initRandomizer() {
   const triggerBtn = document.getElementById('randomizer-btn');
@@ -3171,12 +3141,12 @@ export function initRandomizer() {
     const uScore = Number(a.userScore) || 0;
     const sScore = Number(a.score) || 0;
     if ((isPeak && a.rank <= 3) || uScore >= 10) {
-      return { key: 'mythic', label: '★ MYTHIC', short: 'MYTHIC' };
+      return { key: 'mythic', label: 'MYTHIC', short: 'MYTHIC' };
     }
     if ((isPeak && a.rank <= 10) || (uScore >= 9 && sScore >= 8.2)) {
-      return { key: 'ssr', label: '◈ SSR', short: 'SSR' };
+      return { key: 'ssr', label: 'SSR', short: 'SSR' };
     }
-    return { key: 'sr', label: '◇ SR', short: 'SR' };
+    return { key: 'sr', label: 'SR', short: 'SR' };
   }
 
   function updateModeButtons() {
@@ -3184,7 +3154,7 @@ export function initRandomizer() {
     if (brandSub) {
       brandSub.textContent = appState.randomizerMode === 'peak'
         ? 'TOP 16 PEAK EDITION'
-        : 'CURATED 9–10★ EDITION';
+        : 'CURATED 9–10 EDITION';
     }
   }
 
@@ -3257,7 +3227,7 @@ export function initRandomizer() {
 
     if (sealedActions) sealedActions.style.display = 'flex';
     if (revealedActions) revealedActions.style.display = 'none';
-    if (tearLabel) tearLabel.textContent = '✂ ТЯНИ ВПРАВО ИЛИ КЛИКНИ ▸▸▸';
+    if (tearLabel) tearLabel.textContent = 'ТЯНИ ВПРАВО ИЛИ КЛИКНИ';
     if (dropCounterEl) {
       dropCounterEl.textContent = `ARCHIVE PACK · #${formatRank(dropNumber + 1)}`;
     }
@@ -3273,7 +3243,7 @@ export function initRandomizer() {
     preloadWinnerArt(pendingWinner);
 
     if (appState.randomizerMode === 'all' && appState.ratedAnimePool.length === 0) {
-      if (syncBadge) syncBadge.textContent = 'SYNC 9–10★...';
+      if (syncBadge) syncBadge.textContent = 'SYNC 9–10...';
       loadHostAnimeRates().then(() => {
         updateRandomizerPoolCounts();
         if (packState === 'sealed') {
@@ -3309,17 +3279,17 @@ export function initRandomizer() {
     if (rarityChip) rarityChip.textContent = rarity.label;
     if (serialEl) serialEl.textContent = serialStr;
     if (catLabel) {
-      catLabel.textContent = isPeak ? 'PEAK FICTION · PACK DROP' : '9–10★ ARCHIVE · PACK DROP';
+      catLabel.textContent = isPeak ? 'PEAK FICTION · PACK DROP' : '9–10 ARCHIVE · PACK DROP';
     }
     if (frontTitle) frontTitle.textContent = a.title;
     if (frontSub) frontSub.textContent = [a.kind, a.year].filter(Boolean).join(' · ');
     if (frontScore) {
       if (a.userScore && a.score) {
-        frontScore.textContent = `Я ${a.userScore}/10 · ★${Number(a.score).toFixed(2)}`;
+        frontScore.textContent = `Я ${a.userScore}/10 · ${Number(a.score).toFixed(2)}`;
       } else if (a.userScore) {
         frontScore.textContent = `Я ${a.userScore}/10`;
       } else if (a.score) {
-        frontScore.textContent = `★ ${Number(a.score).toFixed(2)}`;
+        frontScore.textContent = `${Number(a.score).toFixed(2)}`;
       } else {
         frontScore.textContent = 'ARCHIVE';
       }
@@ -3335,7 +3305,7 @@ export function initRandomizer() {
     const pills = [];
     if (isPeak && a.rank) pills.push(`Топ #${formatRank(a.rank)}`);
     if (a.userScore) pills.push(`Моя оценка ${a.userScore}/10`);
-    if (a.score) pills.push(`Шики ★ ${Number(a.score).toFixed(2)}`);
+    if (a.score) pills.push(`Шики ${Number(a.score).toFixed(2)}`);
     if (a.year) pills.push(String(a.year));
     if (backPills) {
       backPills.innerHTML = pills.map((p) => `<span class="modal-pill">${escapeHtml(p)}</span>`).join('');
@@ -3349,7 +3319,7 @@ export function initRandomizer() {
 
     const vibes = (a.vibes && a.vibes.length)
       ? a.vibes
-      : [isPeak ? '#peak-fiction' : '#9-10★', a.userScore ? `#${a.userScore}/10` : '#archive'];
+      : [isPeak ? '#peak-fiction' : '#9-10', a.userScore ? `#${a.userScore}/10` : '#archive'];
     if (backVibes) {
       backVibes.innerHTML = vibes.map((v) => `<span class="vibe-tag">${escapeHtml(v)}</span>`).join('');
     }
@@ -3406,7 +3376,7 @@ export function initRandomizer() {
     const myToken = ++ripSeqToken;
     packState = 'ripping';
     stage.dataset.state = 'ripping';
-    if (tearLabel) tearLabel.textContent = '✦ ВСКРЫТИЕ...';
+    if (tearLabel) tearLabel.textContent = 'ВСКРЫТИЕ...';
 
     // Wait briefly if first-time visitor is still pulling the 9-10 pool
     if (appState.randomizerMode === 'all' && appState.ratedAnimePool.length === 0) {

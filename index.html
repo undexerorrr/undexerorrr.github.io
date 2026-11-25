@@ -12,19 +12,19 @@
   <meta property="og:description" content="415+ тайтлов · Аниме-ДНК · Live Discord/Spotify · Проверь свой ник на базу по Shikimori." />
   <meta property="og:image" content="https://undexerorrr.github.io/bg.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="theme-color" content="#07090d" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%278%27%20fill%3D%27%2307090d%27/%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%2716%27%20r%3D%2711%27%20fill%3D%27none%27%20stroke%3D%27%23adbfde%27%20stroke-width%3D%271.6%27%20stroke-dasharray%3D%2748%2016%27/%3E%3Cpath%20d%3D%27M16%209%20L21.5%2016%20L16%2023%20L10.5%2016%20Z%27%20fill%3D%27%23eef4ff%27/%3E%3C/svg%3E" />
+  <meta name="theme-color" content="#080808" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%274%27%20fill%3D%27%23080808%27/%3E%3Crect%20x%3D%275%27%20y%3D%275%27%20width%3D%2722%27%20height%3D%2722%27%20fill%3D%27none%27%20stroke%3D%27%23d6d6d6%27%20stroke-width%3D%271.5%27/%3E%3Cpath%20d%3D%27M16%209%20L21.5%2016%20L16%2023%20L10.5%2016%20Z%27%20fill%3D%27%23ffffff%27/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/css/archive.css?v=36" />
+  <link rel="stylesheet" href="./assets/css/archive.css?v=37" />
 </head>
 <body>
 
   <!-- Intro Screen ([ CLICK TO ENTER ]) -->
   <div class="intro-overlay" id="intro-overlay" role="dialog" aria-label="Экран входа">
     <div class="intro-core">
-      <div class="intro-orb" aria-hidden="true"><span>◈</span></div>
+      <div class="intro-orb" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="10" height="10" transform="rotate(45 8 8)"/></svg></div>
       <div class="intro-title">undexeror // archive</div>
       <div class="intro-sub">undereror · 53.9° N · monochrome worldline</div>
       <button type="button" class="intro-enter-btn" id="intro-enter-btn">[ CLICK TO ENTER ]</button>
@@ -84,15 +84,14 @@
             <span class="cmdk-nav-kbd">⌘K</span>
           </button>
           <button type="button" class="galaxy-nav-btn" id="open-galaxy-topbar-btn" aria-label="Открыть 3D-Галактику архива" title="Открыть 3D-Галактику всех 415+ тайтлов (WebGL / Three.js)">
-            <span class="g-star" aria-hidden="true">✦</span>
             <span>3D<span class="g-text-full"> Космос</span></span>
           </button>
           <button type="button" class="cinema-nav-btn" id="cinema-toggle-btn" aria-label="Включить Cinema Mode (клавиша C)" aria-pressed="false" title="Cinema Mode · клавиша C">
-            <svg class="cinema-nav-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" rx="1.6"></rect><path d="M5.5 14h5M8 11.5V14"></path></svg>
+            <svg class="cinema-nav-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" rx="1.6"></rect><path d="M5.5 14h5M8 11.5V14"></path></svg>
             <span class="cinema-btn-label">Cinema</span>
           </button>
           <button type="button" class="audio-btn" id="audio-toggle-btn" aria-label="Воспроизвести или поставить на паузу музыку" title="Play / Pause плейлист">
-            <span id="audio-icon" aria-hidden="true">▶</span>
+            <span id="audio-icon" aria-hidden="true"><svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><polygon points="3,2 10,6 3,10"/></svg></span>
             <span class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
             <span class="audio-btn-label" id="topbar-track-label">PLAYLIST</span>
           </button>
@@ -153,15 +152,15 @@
             </div>
 
             <div class="hero-badges">
-              <span class="rank-badge" id="rank-badge">★ 400+ ТАЙТЛОВ · АНИМЕ ПСИХ</span>
+              <span class="rank-badge" id="rank-badge">400+ ТАЙТЛОВ · АНИМЕ ПСИХ</span>
               <span class="solo-badge">SOLO PLAYER · ВНЕ ГИЛЬДИЙ</span>
             </div>
 
             <div class="pilot-socials">
-              <a class="social-pill" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">♪ TikTok</a>
-              <a class="social-pill" id="shiki-profile-link" href="https://shikimori.one/undereror+nyashka" target="_blank" rel="noopener noreferrer">◈ Shikimori</a>
-              <a class="social-pill" href="https://github.com/undexerorrr" target="_blank" rel="noopener noreferrer">⌘ GitHub</a>
-              <button type="button" class="social-pill" id="hero-spotify-btn" style="font-family:inherit;">♫ Spotify</button>
+              <a class="social-pill" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">TikTok</a>
+              <a class="social-pill" id="shiki-profile-link" href="https://shikimori.one/undereror+nyashka" target="_blank" rel="noopener noreferrer">Shikimori</a>
+              <a class="social-pill" href="https://github.com/undexerorrr" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <button type="button" class="social-pill" id="hero-spotify-btn" style="font-family:inherit;">Spotify</button>
             </div>
           </div>
 
@@ -186,7 +185,7 @@
                 </div>
               </div>
               <div class="discord-actions">
-                <button type="button" class="spotify-open-pill" id="discord-spotify-btn">♫ Плейлисты</button>
+                <button type="button" class="spotify-open-pill" id="discord-spotify-btn">Плейлисты</button>
               </div>
             </div>
           </div>
@@ -232,11 +231,11 @@
                   <span class="lifetime-val" id="lifetime-text">5 месяцев и 3 недели</span>
                 </div>
                 <div class="milestones" id="milestones-row">
-                  <div class="milestone checked"><span class="ms-dot">✓</span><span>1н</span></div>
-                  <div class="milestone checked"><span class="ms-dot">✓</span><span>1м</span></div>
-                  <div class="milestone checked"><span class="ms-dot">✓</span><span>3м</span></div>
-                  <div class="milestone next"><span class="ms-dot">○</span><span>6м</span></div>
-                  <div class="milestone"><span class="ms-dot">○</span><span>1г</span></div>
+                  <div class="milestone checked"><span class="ms-dot" aria-hidden="true"></span><span>1н</span></div>
+                  <div class="milestone checked"><span class="ms-dot" aria-hidden="true"></span><span>1м</span></div>
+                  <div class="milestone checked"><span class="ms-dot" aria-hidden="true"></span><span>3м</span></div>
+                  <div class="milestone next"><span class="ms-dot" aria-hidden="true"></span><span>6м</span></div>
+                  <div class="milestone"><span class="ms-dot" aria-hidden="true"></span><span>1г</span></div>
                 </div>
               </div>
             </div>
@@ -247,12 +246,11 @@
             <div class="dna-header">
               <div class="dna-title-wrap">
                 <span class="dna-pulse-icon" aria-hidden="true"></span>
-                <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.4px;">Аниме-ДНК // Рентген вкуса</span>
+                <span class="card-kicker" style="color: rgb(235, 235, 235); letter-spacing: 2.4px;">Аниме-ДНК // Рентген вкуса</span>
                 <span class="dna-sub-note" id="dna-sub-note">Автоанализ всех просмотренных тайтлов</span>
               </div>
               <div class="dna-head-right">
                 <button type="button" class="galaxy-nav-btn" id="open-galaxy-dna-btn" title="Исследовать весь архив в 3D WebGL-космосе">
-                  <span class="g-star" aria-hidden="true">✦</span>
                   <span>3D-Галактика архива</span>
                 </button>
                 <span class="panel-badge" id="dna-source-badge">SNAPSHOT</span>
@@ -277,7 +275,7 @@
                     <span class="dna-kpi-sub" id="dna-mean-sub">по всем оценённым</span>
                   </div>
                   <div class="dna-kpi">
-                    <span class="dna-kpi-lbl">Доля 9–10★</span>
+                    <span class="dna-kpi-lbl">Доля 9–10</span>
                     <span class="dna-kpi-val" id="dna-elite-share">24%</span>
                     <span class="dna-kpi-sub" id="dna-elite-sub">избранная база</span>
                   </div>
@@ -302,7 +300,7 @@
                 </div>
                 <div class="dna-scores-chart" id="dna-scores-chart"></div>
                 <div class="dna-score-foot">
-                  <span>Пик: <strong id="dna-peak-score">8★</strong></span>
+                  <span>Пик: <strong id="dna-peak-score">8/10</strong></span>
                   <span>Десяток: <strong id="dna-tens-count">—</strong></span>
                 </div>
               </div>
@@ -391,7 +389,7 @@
 
         <div class="toolbar">
           <div class="search-box">
-            <span class="search-icon" aria-hidden="true">⌕</span>
+            <span class="search-icon" aria-hidden="true"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5L14 14"></path></svg></span>
             <input type="text" id="collection-search" placeholder="Поиск по названию или персонажу..." aria-label="Поиск по названию или персонажу" autocomplete="off" />
           </div>
           <div class="toolbar-right">
@@ -401,11 +399,11 @@
               <button type="button" class="sort-btn" data-sort="year">По году</button>
             </div>
             <div class="view-toggle-group" id="view-toggle-controls" role="tablist" aria-label="Вид коллекции">
-              <button type="button" class="view-toggle-btn active" data-cview="grid" role="tab" aria-selected="true" title="Компактная сетка карточек">⊞ Сетка</button>
-              <button type="button" class="view-toggle-btn" data-cview="showcase" role="tab" aria-selected="false" title="Журнальный режим «Витрина»">▤ Витрина</button>
+              <button type="button" class="view-toggle-btn active" data-cview="grid" role="tab" aria-selected="true" title="Компактная сетка карточек">Сетка</button>
+              <button type="button" class="view-toggle-btn" data-cview="showcase" role="tab" aria-selected="false" title="Журнальный режим «Витрина»">Витрина</button>
             </div>
-            <button type="button" class="randomizer-btn" id="randomizer-btn" title="Открыть фольгированный бустер-пак ARCHIVE PACK (Top 16 и все твои 9–10★ на Shikimori)">◈ Бустер-пак · Что посмотреть <span class="randomizer-count-badge" id="randomizer-count-badge">16</span></button>
-            <button type="button" class="arena-launch-btn" id="collection-arena-btn" title="Мини-турнир 1v1: выбери лучшего из моего топа за 15 секунд">⚔ Турнир 1v1</button>
+            <button type="button" class="randomizer-btn" id="randomizer-btn" title="Открыть фольгированный бустер-пак ARCHIVE PACK (Top 16 и все твои 9–10 на Shikimori)">Бустер-пак · Что посмотреть <span class="randomizer-count-badge" id="randomizer-count-badge">16</span></button>
+            <button type="button" class="arena-launch-btn" id="collection-arena-btn" title="Мини-турнир 1v1: выбери лучшего из моего топа за 15 секунд">Турнир 1v1</button>
           </div>
         </div>
 
@@ -416,7 +414,7 @@
       <section id="waifu">
         <div class="waifu-head-bar">
           <div class="waifu-head-left">
-            <button type="button" class="arena-launch-btn" id="waifu-arena-btn" title="Мини-турнир 1v1 по WAIFU">⚔ Турнир 1v1</button>
+            <button type="button" class="arena-launch-btn" id="waifu-arena-btn" title="Мини-турнир 1v1 по WAIFU">Турнир 1v1</button>
           </div>
           <h2 class="section-title">
             <a href="https://shikimori.one/undereror+nyashka/favorites" target="_blank" rel="noopener noreferrer">WAIFU →</a>
@@ -439,7 +437,7 @@
             <div class="trophies-head-left">
               <div class="ht-title-row">
                 <span class="dna-pulse-icon" aria-hidden="true"></span>
-                <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.4px;">Трофеи архива // 3D Medallions</span>
+                <span class="card-kicker" style="color: rgb(235, 235, 235); letter-spacing: 2.4px;">Трофеи архива // 3D Medallions</span>
               </div>
               <h2 class="ht-heading">Коллекционные жетоны достижений</h2>
               <p class="ht-subtitle">Автоматически чеканятся по реальному списку Shikimori — наведи на любой жетон для 3D-блика или кликни, чтобы открыть досье трофея.</p>
@@ -496,21 +494,21 @@
           <div class="arena-launch-head">
             <div class="arena-launch-title-wrap">
               <span class="dna-pulse-icon" aria-hidden="true"></span>
-              <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.2px;">Arena // Tactical Modules</span>
+              <span class="card-kicker" style="color: rgb(235, 235, 235); letter-spacing: 2.2px;">Arena // Tactical Modules</span>
             </div>
             <span class="panel-badge">3 INTERACTIVE MODES</span>
           </div>
           <div class="arena-launch-grid">
-            <button type="button" class="arena-launch-tile" id="arena-launch-pack" title="Вскрыть фольгированный бустер-пак ARCHIVE PACK (Top 16 и все 9–10★)">
-              <span class="arena-tile-icon" aria-hidden="true">◈</span>
+            <button type="button" class="arena-launch-tile" id="arena-launch-pack" title="Вскрыть фольгированный бустер-пак ARCHIVE PACK (Top 16 и все 9–10)">
+              <span class="arena-tile-icon" aria-hidden="true">01</span>
               <span class="arena-tile-body">
                 <span class="arena-tile-title">Бустер-пак ARCHIVE PACK</span>
-                <span class="arena-tile-sub">Случайный тайтл 9–10★ или Top 16</span>
+                <span class="arena-tile-sub">Случайный тайтл 9–10 или Top 16</span>
               </span>
               <span class="arena-tile-badge" data-pack-pool-count>16</span>
             </button>
             <button type="button" class="arena-launch-tile" id="arena-launch-tournament" title="Запустить мини-турнир 1v1 по Peak Fiction / Waifu / Literally Me">
-              <span class="arena-tile-icon" aria-hidden="true">⚔</span>
+              <span class="arena-tile-icon" aria-hidden="true">02</span>
               <span class="arena-tile-body">
                 <span class="arena-tile-title">Турнир 1v1</span>
                 <span class="arena-tile-sub">Peak Fiction · Waifu · Literally Me</span>
@@ -518,7 +516,7 @@
               <span class="arena-tile-badge">DUEL</span>
             </button>
             <button type="button" class="arena-launch-tile is-cosmos" id="arena-launch-galaxy" title="Открыть 3D-Галактику всех 415+ тайтлов (WebGL / Three.js)">
-              <span class="arena-tile-icon" aria-hidden="true">✦</span>
+              <span class="arena-tile-icon" aria-hidden="true">03</span>
               <span class="arena-tile-body">
                 <span class="arena-tile-title">3D-Галактика архива</span>
                 <span class="arena-tile-sub">WebGL-космос всех тайтлов</span>
@@ -534,8 +532,8 @@
         <div class="glass-card base-check-card">
           <div class="base-head">
             <div class="station-switcher" role="tablist" aria-label="Режим сканера Shikimori">
-              <button type="button" class="station-tab active" data-station-tab="base" role="tab" aria-selected="true">◈ Проверка на базу</button>
-              <button type="button" class="station-tab is-coop" data-station-tab="coop" role="tab" aria-selected="false">🎬 Кооп на вечер</button>
+              <button type="button" class="station-tab active" data-station-tab="base" role="tab" aria-selected="true">Проверка на базу</button>
+              <button type="button" class="station-tab is-coop" data-station-tab="coop" role="tab" aria-selected="false">Кооп на вечер</button>
             </div>
             <span class="panel-badge" id="base-host-ready-badge">SHIKIMORI SCANNER</span>
           </div>
@@ -545,7 +543,7 @@
             <div class="base-head-left">
               <div class="base-title-row">
                 <span class="dna-pulse-icon" aria-hidden="true"></span>
-                <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.4px;">Проверка на базу // Taste Match</span>
+                <span class="card-kicker" style="color: rgb(235, 235, 235); letter-spacing: 2.4px;">Проверка на базу // Taste Match</span>
               </div>
               <h2 class="base-heading">Насколько наши вкусы совпадают?</h2>
               <p class="base-subtitle">Вбей свой ник или ссылку на профиль Shikimori — сравню твой список со всеми моими тайтлами и выдам вердикт.</p>
@@ -553,7 +551,7 @@
 
           <form class="base-form" id="base-check-form" autocomplete="off">
             <div class="base-input-wrap">
-              <span class="base-input-icon" aria-hidden="true">◈</span>
+              <span class="base-input-icon" aria-hidden="true"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5L14 14"></path></svg></span>
               <input
                 type="text"
                 class="base-input"
@@ -562,7 +560,7 @@
                 aria-label="Ник на Shikimori"
               />
             </div>
-            <button type="submit" class="base-submit-btn" id="base-submit-btn">◈ Проверить вкус</button>
+            <button type="submit" class="base-submit-btn" id="base-submit-btn">Проверить вкус</button>
           </form>
 
           <div class="base-status-line" id="base-status-line" role="status" aria-live="polite">
@@ -609,7 +607,7 @@
             <div class="base-details-grid">
               <div class="base-subpanel">
                 <div class="base-subpanel-head">
-                  <span class="card-kicker" id="base-shared-kicker">Общие 9–10★ · Точка резонанса</span>
+                  <span class="card-kicker" id="base-shared-kicker">Общие 9–10 · Точка резонанса</span>
                   <span class="panel-badge" id="base-shared-badge">0 ШТ.</span>
                 </div>
                 <div class="base-list" id="base-shared-list"></div>
@@ -617,8 +615,8 @@
 
               <div class="base-subpanel is-conflict-panel">
                 <div class="base-subpanel-head">
-                  <span class="card-kicker" style="color: #fca5a5;">Главный конфликт</span>
-                  <span class="panel-badge" id="base-conflict-badge" style="border-color: rgba(248, 113, 113, 0.36); color: #fecaca;">СПОР</span>
+                  <span class="card-kicker">Главный конфликт</span>
+                  <span class="panel-badge" id="base-conflict-badge">СПОР</span>
                 </div>
                 <div class="base-list" id="base-conflict-list"></div>
               </div>
@@ -627,10 +625,10 @@
             <div class="base-actions">
               <div class="base-actions-group">
                 <button type="button" class="base-action-btn is-primary" id="base-download-png-btn">↓ Скачать карточку (PNG)</button>
-                <button type="button" class="base-action-btn" id="base-copy-text-btn">⎘ Скопировать вердикт</button>
-                <button type="button" class="base-action-btn" id="base-to-coop-btn">🎬 Подобрать аниме вдвоём</button>
+                <button type="button" class="base-action-btn" id="base-copy-text-btn">Скопировать вердикт</button>
+                <button type="button" class="base-action-btn" id="base-to-coop-btn">Подобрать аниме вдвоём</button>
               </div>
-              <button type="button" class="base-action-btn" id="base-reset-btn">↻ Проверить другой ник</button>
+              <button type="button" class="base-action-btn" id="base-reset-btn">Проверить другой ник</button>
             </div>
           </div>
           </div>
@@ -639,8 +637,8 @@
           <div class="station-pane is-hidden" id="station-pane-coop">
             <div class="base-head-left">
               <div class="base-title-row">
-                <span class="dna-pulse-icon" style="background:#6ee7b7;box-shadow:0 0 12px rgba(110,231,183,0.9);" aria-hidden="true"></span>
-                <span class="card-kicker" style="color: #a7f3d0; letter-spacing: 2.4px;">Co-op Matchmaker // Что посмотреть вдвоём?</span>
+                <span class="dna-pulse-icon" aria-hidden="true"></span>
+                <span class="card-kicker" style="color: rgb(235, 235, 235); letter-spacing: 2.4px;">Co-op Matchmaker // Что посмотреть вдвоём?</span>
               </div>
               <h2 class="base-heading">Кооп-подборщик тайтла на вечер</h2>
               <p class="base-subtitle">Скрещу два списка с Shikimori: найду общие планы, фильмы и короткие сериалы, которые никто из вас не видел — плюс быстрый Кооп-Свайп (Tinder) и билет на просмотр.</p>
@@ -660,7 +658,7 @@
               </div>
               <button type="button" class="coop-swap-btn" id="coop-swap-btn" aria-label="Поменять игроков местами" title="Поменять игроков местами">⇄</button>
               <div class="base-input-wrap" style="min-width:0;">
-                <span class="base-input-icon" style="color:#6ee7b7;" aria-hidden="true">02</span>
+                <span class="base-input-icon" aria-hidden="true">02</span>
                 <input
                   type="text"
                   class="base-input"
@@ -669,7 +667,7 @@
                   aria-label="Игрок 2 на Shikimori"
                 />
               </div>
-              <button type="submit" class="base-submit-btn" id="coop-submit-btn" style="border-color:rgba(110,231,183,0.65);">🎬 Подобрать</button>
+              <button type="submit" class="base-submit-btn" id="coop-submit-btn">Подобрать</button>
             </form>
 
             <div class="base-status-line" id="coop-status-line" role="status" aria-live="polite">
@@ -690,23 +688,23 @@
                   </div>
                 </div>
                 <div class="coop-hero-actions">
-                  <button type="button" class="base-action-btn is-primary" id="coop-launch-swipe-btn">⚡ Кооп-Свайп</button>
-                  <button type="button" class="base-action-btn" id="coop-random-pick-btn">🎲 Случайный на вечер</button>
+                  <button type="button" class="base-action-btn is-primary" id="coop-launch-swipe-btn">Кооп-Свайп</button>
+                  <button type="button" class="base-action-btn" id="coop-random-pick-btn">Случайный на вечер</button>
                 </div>
               </div>
 
               <div class="coop-controls-row">
                 <div class="coop-cat-tabs" id="coop-cat-tabs">
-                  <button type="button" class="coop-chip active" data-ccat="both_planned">🔥 Оба в планах (<span id="cc-cnt-both">0</span>)</button>
-                  <button type="button" class="coop-chip" data-ccat="fresh_mix">✨ Новое для обоих (<span id="cc-cnt-fresh">0</span>)</button>
-                  <button type="button" class="coop-chip" data-ccat="rec_1_to_2">★ От 1-го (<span id="cc-cnt-r1">0</span>)</button>
-                  <button type="button" class="coop-chip" data-ccat="rec_2_to_1">★ От 2-го (<span id="cc-cnt-r2">0</span>)</button>
+                  <button type="button" class="coop-chip active" data-ccat="both_planned">Оба в планах (<span id="cc-cnt-both">0</span>)</button>
+                  <button type="button" class="coop-chip" data-ccat="fresh_mix">Новое для обоих (<span id="cc-cnt-fresh">0</span>)</button>
+                  <button type="button" class="coop-chip" data-ccat="rec_1_to_2">От 1-го (<span id="cc-cnt-r1">0</span>)</button>
+                  <button type="button" class="coop-chip" data-ccat="rec_2_to_1">От 2-го (<span id="cc-cnt-r2">0</span>)</button>
                 </div>
                 <div class="coop-fmt-tabs" id="coop-fmt-tabs">
                   <button type="button" class="coop-chip is-fmt active" data-cfmt="all">Все</button>
-                  <button type="button" class="coop-chip is-fmt" data-cfmt="movie">🎬 Фильм</button>
-                  <button type="button" class="coop-chip is-fmt" data-cfmt="short">⚡ ≤13 эп.</button>
-                  <button type="button" class="coop-chip is-fmt" data-cfmt="series">📺 14+ эп.</button>
+                  <button type="button" class="coop-chip is-fmt" data-cfmt="movie">Фильм</button>
+                  <button type="button" class="coop-chip is-fmt" data-cfmt="short">≤13 эп.</button>
+                  <button type="button" class="coop-chip is-fmt" data-cfmt="series">14+ эп.</button>
                 </div>
               </div>
 
@@ -727,7 +725,7 @@
             <div class="ht-head-left">
               <div class="ht-title-row">
                 <span class="dna-pulse-icon" aria-hidden="true"></span>
-                <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.4px;">Hot Takes // Против толпы</span>
+                <span class="card-kicker" style="color: rgb(235, 235, 235); letter-spacing: 2.4px;">Hot Takes // Против толпы</span>
               </div>
               <h2 class="ht-heading">Главные несогласия с рейтингом Шикимори</h2>
               <p class="ht-subtitle">Автоматическая выборка по всем моим оценкам: где я пошёл против комьюнити сильнее всего — недооценённые гемы и переоценённые хиты.</p>
@@ -742,8 +740,8 @@
             <!-- Left: Underrated Gems -->
             <div class="ht-panel is-gems">
               <div class="ht-panel-head">
-                <span class="ht-panel-title">▲ Недооценённые гемы</span>
-                <span class="panel-badge" id="ht-gems-badge" style="border-color: rgba(110, 231, 183, 0.34); color: #a7f3d0;">ВЫШЕ ТОЛПЫ</span>
+                <span class="ht-panel-title">Недооценённые гемы</span>
+                <span class="panel-badge" id="ht-gems-badge">ВЫШЕ ТОЛПЫ</span>
               </div>
               <div class="ht-list" id="ht-gems-list"></div>
             </div>
@@ -751,8 +749,8 @@
             <!-- Right: Overrated Hits -->
             <div class="ht-panel is-overrated">
               <div class="ht-panel-head">
-                <span class="ht-panel-title">▼ Переоценённые хиты</span>
-                <span class="panel-badge" id="ht-over-badge" style="border-color: rgba(248, 113, 113, 0.36); color: #fecaca;">НИЖЕ ТОЛПЫ</span>
+                <span class="ht-panel-title">Переоценённые хиты</span>
+                <span class="panel-badge" id="ht-over-badge">НИЖЕ ТОЛПЫ</span>
               </div>
               <div class="ht-list" id="ht-over-list"></div>
             </div>
@@ -785,14 +783,14 @@
             <div class="signal-head-left">
               <div class="ht-title-row">
                 <span class="dna-pulse-icon" aria-hidden="true"></span>
-                <span class="card-kicker" style="color: rgb(232, 238, 248); letter-spacing: 2.2px;">Signal // Direct Channels</span>
+                <span class="card-kicker" style="color: rgb(235, 235, 235); letter-spacing: 2.2px;">Signal // Direct Channels</span>
               </div>
             </div>
             <span class="panel-badge">53.9° N · MONOCHROME</span>
           </div>
           <div class="signal-links-grid">
             <a class="signal-tile" id="signal-shiki-link" href="https://shikimori.one/undereror+nyashka" target="_blank" rel="noopener noreferrer">
-              <span class="signal-tile-glyph" aria-hidden="true">◈</span>
+              <span class="signal-tile-glyph" aria-hidden="true">01</span>
               <span class="signal-tile-body">
                 <span class="signal-tile-name">Shikimori</span>
                 <span class="signal-tile-sub">undereror nyashka</span>
@@ -800,7 +798,7 @@
               <span class="signal-tile-arrow" aria-hidden="true">↗</span>
             </a>
             <a class="signal-tile" id="signal-tiktok-link" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">
-              <span class="signal-tile-glyph" aria-hidden="true">♪</span>
+              <span class="signal-tile-glyph" aria-hidden="true">02</span>
               <span class="signal-tile-body">
                 <span class="signal-tile-name">TikTok</span>
                 <span class="signal-tile-sub">@undexeror</span>
@@ -818,12 +816,12 @@
               <span class="signal-tile-arrow" aria-hidden="true">↗</span>
             </a>
             <button type="button" class="signal-tile is-spotify" id="signal-spotify-btn" title="Открыть панель плейлистов Spotify">
-              <span class="signal-tile-glyph" aria-hidden="true">♫</span>
+              <span class="signal-tile-glyph" aria-hidden="true">04</span>
               <span class="signal-tile-body">
                 <span class="signal-tile-name">Spotify</span>
                 <span class="signal-tile-sub">Открыть плейлисты</span>
               </span>
-              <span class="signal-tile-arrow" aria-hidden="true">▸</span>
+              <span class="signal-tile-arrow" aria-hidden="true">→</span>
             </button>
           </div>
         </div>
@@ -876,16 +874,16 @@
   <!-- Floating Music Player Dock -->
   <aside class="music-dock" id="music-dock" aria-label="Аудиоплеер">
     <div class="dock-top">
-      <button type="button" class="dock-play-btn" id="dock-play-btn" aria-label="Воспроизвести или поставить на паузу" title="Play / Pause">▶</button>
+      <button type="button" class="dock-play-btn" id="dock-play-btn" aria-label="Воспроизвести или поставить на паузу" title="Play / Pause"><svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><polygon points="3,2 10,6 3,10"/></svg></button>
       <div class="dock-meta">
         <div class="dock-title" id="dock-title">Тени</div>
         <div class="dock-artist" id="dock-artist">Валентин Стрыкало</div>
       </div>
       <div class="dock-mini-actions">
-        <button type="button" class="dock-icon-btn" id="dock-prev-btn" aria-label="Предыдущий трек" title="Предыдущий трек">⏮</button>
-        <button type="button" class="dock-icon-btn" id="dock-next-btn" aria-label="Следующий трек" title="Следующий трек">⏭</button>
-        <button type="button" class="dock-icon-btn" id="dock-list-btn" aria-label="Список треков" title="Список треков">☰</button>
-        <button type="button" class="dock-icon-btn" id="dock-spotify-btn" aria-label="Плейлисты Spotify" title="Плейлисты Spotify">♫</button>
+        <button type="button" class="dock-icon-btn" id="dock-prev-btn" aria-label="Предыдущий трек" title="Предыдущий трек"><svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="3" x2="3" y2="11"/><polyline points="11,3 5,7 11,11"/></svg></button>
+        <button type="button" class="dock-icon-btn" id="dock-next-btn" aria-label="Следующий трек" title="Следующий трек"><svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="11" y1="3" x2="11" y2="11"/><polyline points="3,3 9,7 3,11"/></svg></button>
+        <button type="button" class="dock-icon-btn" id="dock-list-btn" aria-label="Список треков" title="Список треков"><svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><line x1="2" y1="4" x2="12" y2="4"/><line x1="2" y1="7" x2="12" y2="7"/><line x1="2" y1="10" x2="12" y2="10"/></svg></button>
+        <button type="button" class="dock-icon-btn" id="dock-spotify-btn" aria-label="Плейлисты Spotify" title="Плейлисты Spotify"><svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="5"/><circle cx="7" cy="7" r="1.5"/></svg></button>
         <button type="button" class="dock-icon-btn" id="dock-min-btn" aria-label="Свернуть или развернуть плеер" title="Свернуть / развернуть">–</button>
       </div>
     </div>
@@ -900,7 +898,7 @@
       <div class="dock-bottom-row">
         <span class="dock-status-note" id="dock-status-note">BEAT-SYNC · 4 TRACKS</span>
         <div class="dock-vol-wrap">
-          <span>♪</span>
+          <span aria-hidden="true"><svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="2,5.2 4.8,5.2 8,2.6 8,11.4 4.8,8.8 2,8.8"/><path d="M10.2 4.8a3.2 3.2 0 0 1 0 4.4"/></svg></span>
           <input type="range" class="dock-slider" id="dock-volume" min="0" max="1" step="0.01" value="0.18" aria-label="Громкость" />
         </div>
       </div>
@@ -947,16 +945,16 @@
         <span id="weather-pop-wind">— м/с</span>
       </div>
       <div class="weather-chips-grid" id="weather-chips-grid">
-        <button type="button" class="weather-chip is-live-chip active" data-wmode="live">● LIVE</button>
-        <button type="button" class="weather-chip" data-wmode="clear">✦ Ясно</button>
-        <button type="button" class="weather-chip" data-wmode="rain">☂ Дождь</button>
-        <button type="button" class="weather-chip" data-wmode="snow">❄ Снег</button>
-        <button type="button" class="weather-chip" data-wmode="fog">≋ Туман</button>
-        <button type="button" class="weather-chip" data-wmode="storm">⚡ Гроза</button>
+        <button type="button" class="weather-chip is-live-chip active" data-wmode="live">LIVE</button>
+        <button type="button" class="weather-chip" data-wmode="clear">Ясно</button>
+        <button type="button" class="weather-chip" data-wmode="rain">Дождь</button>
+        <button type="button" class="weather-chip" data-wmode="snow">Снег</button>
+        <button type="button" class="weather-chip" data-wmode="fog">Туман</button>
+        <button type="button" class="weather-chip" data-wmode="storm">Гроза</button>
       </div>
     </div>
     <button type="button" class="weather-hud-pill" id="weather-hud-btn" aria-label="Панель живой погоды 53.9° N" title="Живая погода 53.9° N · нажми для переключения эффектов">
-      <span class="weather-hud-icon" id="weather-hud-icon" aria-hidden="true">✦</span>
+      <span class="weather-hud-icon" id="weather-hud-icon" aria-hidden="true"></span>
       <span>53.9° N</span>
       <span class="weather-hud-sep">·</span>
       <span id="weather-hud-clock">--:--</span>
@@ -970,7 +968,7 @@
   <!-- Cinema Mode HUD (second monitor / clean vibe) -->
   <div class="cinema-hud" id="cinema-hud" role="region" aria-label="Cinema Mode" aria-hidden="true" inert>
     <button type="button" class="cinema-weather" id="cinema-weather-btn" aria-label="Сменить режим погоды" title="Погода 53.9° N · нажми, чтобы сменить эффект">
-      <span class="cinema-weather-icon" id="cinema-weather-icon" aria-hidden="true">✦</span>
+      <span class="cinema-weather-icon" id="cinema-weather-icon" aria-hidden="true"></span>
       <span class="cinema-weather-text"><span>53.9° N</span><span class="cinema-sep">·</span><span id="cinema-weather-clock">--:--</span><span class="cinema-sep">·</span><span id="cinema-weather-temp">--°C</span></span>
     </button>
     <div class="cinema-track" aria-live="off">
@@ -979,9 +977,9 @@
     </div>
     <canvas class="cinema-vis" id="cinema-vis" aria-hidden="true"></canvas>
     <div class="cinema-controls">
-      <button type="button" class="cinema-ctl" id="cinema-prev-btn" aria-label="Предыдущий трек"><svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M3 3h1.6v10H3zM13 3v10L5.6 8z"></path></svg></button>
-      <button type="button" class="cinema-ctl cinema-ctl-play" id="cinema-play-btn" aria-label="Воспроизвести">▶</button>
-      <button type="button" class="cinema-ctl" id="cinema-next-btn" aria-label="Следующий трек"><svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M11.4 3H13v10h-1.6zM3 3l7.4 5L3 13z"></path></svg></button>
+      <button type="button" class="cinema-ctl" id="cinema-prev-btn" aria-label="Предыдущий трек"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3.5" y1="3.5" x2="3.5" y2="12.5"/><polygon points="12.5,3.5 6,8 12.5,12.5"/></svg></button>
+      <button type="button" class="cinema-ctl cinema-ctl-play" id="cinema-play-btn" aria-label="Воспроизвести"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><polygon points="3,2 10,6 3,10"/></svg></button>
+      <button type="button" class="cinema-ctl" id="cinema-next-btn" aria-label="Следующий трек"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12.5" y1="3.5" x2="12.5" y2="12.5"/><polygon points="3.5,3.5 10,8 3.5,12.5"/></svg></button>
     </div>
     <button type="button" class="cinema-exit" id="cinema-exit-btn" aria-label="Выйти из Cinema Mode (Esc)" title="Выйти · Esc / C">Выйти</button>
   </div>
@@ -994,7 +992,7 @@
       <div class="arena-topbar">
         <div class="arena-title-group">
           <span class="dna-pulse-icon" aria-hidden="true"></span>
-          <span class="arena-kicker">⚔ ТУРНИР 1v1 // КТО ЛУЧШИЙ ИЗ МОЕГО ТОПА?</span>
+          <span class="arena-kicker">ТУРНИР 1v1 // КТО ЛУЧШИЙ ИЗ МОЕГО ТОПА?</span>
         </div>
       </div>
 
@@ -1052,7 +1050,7 @@
             <img id="arena-champ-img" src="" alt="" />
           </div>
           <div class="arena-champ-info">
-            <span class="arena-champ-kicker" id="arena-champ-kicker">★ ТВОЙ #1 ЧЕМПИОН · PEAK FICTION</span>
+            <span class="arena-champ-kicker" id="arena-champ-kicker">ТВОЙ #1 ЧЕМПИОН · PEAK FICTION</span>
             <h3 class="arena-champ-name" id="arena-champ-name"></h3>
             <div class="modal-sub" id="arena-champ-sub"></div>
             <div class="arena-champ-compare" id="arena-champ-compare"></div>
@@ -1079,15 +1077,15 @@
 
       <div class="arena-topbar">
         <div class="arena-title-group">
-          <span class="dna-pulse-icon" style="background:#6ee7b7;box-shadow:0 0 12px rgba(110,231,183,0.9);" aria-hidden="true"></span>
-          <span class="arena-kicker" id="coop-modal-kicker">⚡ КООП-СВАЙП // ВЕЧЕРНИЙ ПОДБОР</span>
+          <span class="dna-pulse-icon" aria-hidden="true"></span>
+          <span class="arena-kicker" id="coop-modal-kicker">КООП-СВАЙП // ВЕЧЕРНИЙ ПОДБОР</span>
         </div>
       </div>
 
       <div class="arena-controls-bar" id="coop-swipe-modebar">
         <div class="arena-mode-tabs" role="tablist">
-          <button type="button" class="arena-mode-btn active" data-csmode="turns">👥 По очереди (2 раунда)</button>
-          <button type="button" class="arena-mode-btn" data-csmode="together">🖥 Вместе (1 экран)</button>
+          <button type="button" class="arena-mode-btn active" data-csmode="turns">По очереди (2 раунда)</button>
+          <button type="button" class="arena-mode-btn" data-csmode="together">Вместе (1 экран)</button>
         </div>
         <span class="panel-badge" id="coop-swipe-progress-pill">1 / 10</span>
       </div>
@@ -1099,14 +1097,14 @@
           <span id="coop-likes-counter">ЛАЙКОВ: 0</span>
         </div>
         <div class="arena-progress-track">
-          <div class="arena-progress-fill" id="coop-swipe-bar" style="background:linear-gradient(90deg, rgba(110,231,183,0.75), #ffffff);"></div>
+          <div class="arena-progress-fill" id="coop-swipe-bar"></div>
         </div>
 
         <div class="coop-deck-viewport">
           <div class="coop-swipe-card" id="coop-swipe-card">
             <img class="coop-swipe-art" id="coop-swipe-img" src="" alt="" />
-            <div class="coop-swipe-stamp is-like" id="coop-stamp-like">♥ ХОЧУ</div>
-            <div class="coop-swipe-stamp is-pass" id="coop-stamp-pass">✕ СКИП</div>
+            <div class="coop-swipe-stamp is-like" id="coop-stamp-like">ХОЧУ</div>
+            <div class="coop-swipe-stamp is-pass" id="coop-stamp-pass">СКИП</div>
             <div class="coop-swipe-overlay">
               <span class="coop-reason-pill is-gold" id="coop-swipe-reason">Оба в планах</span>
               <h3 class="coop-swipe-title" id="coop-swipe-title"></h3>
@@ -1116,9 +1114,9 @@
         </div>
 
         <div class="coop-swipe-actions">
-          <button type="button" class="coop-circle-btn is-pass" id="coop-btn-pass" aria-label="Пропустить тайтл" title="Скип (←)">✕</button>
-          <button type="button" class="coop-instant-btn" id="coop-btn-instant" style="display:none;">⚡ Смотрим это!</button>
-          <button type="button" class="coop-circle-btn is-like" id="coop-btn-like" aria-label="Добавить тайтл в понравившиеся" title="Хочу смотреть (→)">♥</button>
+          <button type="button" class="coop-circle-btn is-pass" id="coop-btn-pass" aria-label="Пропустить тайтл" title="Скип (←)">×</button>
+          <button type="button" class="coop-instant-btn" id="coop-btn-instant" style="display:none;">Смотрим это!</button>
+          <button type="button" class="coop-circle-btn is-like" id="coop-btn-like" aria-label="Добавить тайтл в понравившиеся" title="Хочу смотреть (→)">+</button>
         </div>
         <div class="arena-hint-row">Свайпай карточку влево/вправо или жми ← / → на клавиатуре</div>
       </div>
@@ -1128,7 +1126,7 @@
         <div class="intro-orb" style="width:56px;height:56px;margin-bottom:0;" aria-hidden="true"><span>⇄</span></div>
         <h3 class="coop-handoff-title" id="coop-handoff-title">Очередь Игрока 2!</h3>
         <p class="coop-handoff-sub" id="coop-handoff-sub">Игрок 1 завершил выбор вслепую. Передай экран второму игроку — он пройдёт ту же колоду, и мы покажем общие совпадения.</p>
-        <button type="button" class="base-action-btn is-primary" id="coop-handoff-start-btn" style="padding:11px 24px;">▶ Начать ход Игрока 2</button>
+        <button type="button" class="base-action-btn is-primary" id="coop-handoff-start-btn" style="padding:11px 24px;">Начать ход Игрока 2</button>
       </div>
 
       <!-- Final Evening Ticket View -->
@@ -1138,7 +1136,7 @@
             <img id="coop-ticket-img" src="" alt="" />
           </div>
           <div class="coop-ticket-body">
-            <span class="coop-ticket-kicker" id="coop-ticket-kicker">🎟 IT'S A MATCH · СЕАНС НА ВЕЧЕР</span>
+            <span class="coop-ticket-kicker" id="coop-ticket-kicker">IT'S A MATCH · СЕАНС НА ВЕЧЕР</span>
             <h3 class="coop-ticket-title" id="coop-ticket-title"></h3>
             <div class="coop-ticket-pair" id="coop-ticket-pair"></div>
             <div class="modal-pills" id="coop-ticket-pills" style="margin-top:0;"></div>
@@ -1154,8 +1152,8 @@
         <div class="base-actions">
           <div class="base-actions-group">
             <button type="button" class="base-action-btn is-primary" id="coop-dl-ticket-btn">↓ Билет (PNG)</button>
-            <button type="button" class="base-action-btn" id="coop-copy-invite-btn">⎘ В Discord</button>
-            <button type="button" class="base-action-btn" id="coop-reroll-ticket-btn">🎲 Другой</button>
+            <button type="button" class="base-action-btn" id="coop-copy-invite-btn">В Discord</button>
+            <button type="button" class="base-action-btn" id="coop-reroll-ticket-btn">Другой</button>
           </div>
           <a class="modal-link" id="coop-ticket-link" href="#" target="_blank" rel="noopener noreferrer" style="margin-top:0;">Shikimori →</a>
         </div>
@@ -1183,7 +1181,7 @@
     </button>
     <button type="button" class="mdock-btn mdock-music-btn" id="mdock-music-btn" aria-label="Открыть панель музыки" aria-expanded="false">
       <span class="mdock-icon" aria-hidden="true">
-        <span class="mdock-music-glyph">♫</span>
+        <span class="mdock-music-glyph"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="6" x2="3" y2="10"/><line x1="6.5" y1="3" x2="6.5" y2="13"/><line x1="10" y1="5" x2="10" y2="11"/><line x1="13.5" y1="6.5" x2="13.5" y2="9.5"/></svg></span>
         <span class="mdock-eq"><span></span><span></span><span></span></span>
       </span>
       <span>AUDIO</span>
@@ -1199,7 +1197,7 @@
 
     <!-- Star-Hopping Roulette HUD Pill -->
     <div class="galaxy-hop-pill" id="galaxy-hop-pill" aria-hidden="true">
-      <span class="galaxy-hop-step" id="galaxy-hop-step">✦ ПРЫЖОК 1/8</span>
+      <span class="galaxy-hop-step" id="galaxy-hop-step">ПРЫЖОК 1/8</span>
       <span class="galaxy-hop-title" id="galaxy-hop-title"></span>
     </div>
 
@@ -1215,23 +1213,23 @@
     <!-- Top HUD -->
     <div class="galaxy-hud-top">
       <div class="galaxy-brand-box">
-        <span class="galaxy-brand-title"><span style="color:#6ee7b7;">✦</span> 3D-Галактика</span>
+        <span class="galaxy-brand-title">3D-Галактика</span>
         <span class="galaxy-count-pill" id="galaxy-count-pill">SYNC...</span>
       </div>
 
       <div class="galaxy-top-actions">
         <div class="galaxy-search-wrap">
-          <span class="search-icon" aria-hidden="true">⌕</span>
+          <span class="search-icon" aria-hidden="true"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5L14 14"></path></svg></span>
           <input type="text" class="galaxy-search-input" id="galaxy-search-input" placeholder="Найти звезду (тайтл)..." aria-label="Поиск тайтла в 3D-Галактике" autocomplete="off" />
         </div>
         <button type="button" class="galaxy-hud-btn is-tm-toggle" id="galaxy-tm-btn" aria-pressed="false" aria-label="Машина времени · хронологическое зажигание космоса" title="Машина времени · хронологическое зажигание космоса">
-          <span class="g-tm-ico" aria-hidden="true">◷</span><span class="g-tm-lbl"> Хронология</span>
+          <span class="g-tm-lbl">Хронология</span>
         </button>
-        <button type="button" class="galaxy-hud-btn" id="galaxy-warp-btn" title="Перелететь к случайной звезде">✦ Случайная</button>
+        <button type="button" class="galaxy-hud-btn" id="galaxy-warp-btn" title="Перелететь к случайной звезде">Случайная</button>
         <button type="button" class="galaxy-hud-btn active galaxy-hide-sm" id="galaxy-lines-btn" title="Показать / скрыть линии созвездий">Связи</button>
         <button type="button" class="galaxy-hud-btn active galaxy-hide-sm" id="galaxy-orbit-btn" title="Автовращение камеры">Орбита</button>
         <button type="button" class="galaxy-hud-btn galaxy-hide-sm" id="galaxy-reset-btn" aria-label="Сбросить камеру 3D-Галактики" title="Сбросить камеру">↺</button>
-        <button type="button" class="galaxy-hud-btn galaxy-hide-sm" id="galaxy-music-btn" aria-label="Воспроизвести или поставить на паузу музыку" title="Play / Pause музыка">♫</button>
+        <button type="button" class="galaxy-hud-btn galaxy-hide-sm" id="galaxy-music-btn" aria-label="Воспроизвести или поставить на паузу музыку" title="Play / Pause музыка"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="3" y2="10"/><line x1="6.5" y1="3" x2="6.5" y2="13"/><line x1="10" y1="5" x2="10" y2="11"/><line x1="13.5" y1="6.5" x2="13.5" y2="9.5"/></svg></button>
         <button type="button" class="galaxy-hud-btn is-close" id="galaxy-close-btn" aria-label="Закрыть 3D-Галактику">×</button>
       </div>
     </div>
@@ -1250,7 +1248,7 @@
       </div>
       <div class="galaxy-insp-note" id="galaxy-insp-note"></div>
       <div class="galaxy-insp-actions">
-        <button type="button" class="base-action-btn is-primary" id="galaxy-insp-holo-btn">◈ 3D-карта</button>
+        <button type="button" class="base-action-btn is-primary" id="galaxy-insp-holo-btn">3D-карта</button>
         <a class="modal-link" id="galaxy-insp-link" href="#" target="_blank" rel="noopener noreferrer">Shikimori →</a>
       </div>
     </aside>
@@ -1260,7 +1258,7 @@
       <!-- Time Machine Chronology HUD -->
       <div class="galaxy-tm-panel" id="galaxy-tm-panel" role="region" aria-label="Машина времени 3D-Галактики" aria-hidden="true">
         <div class="galaxy-tm-row">
-          <button type="button" class="galaxy-tm-play" id="galaxy-tm-play-btn" aria-label="Запустить или поставить на паузу хронологию" title="Play / Pause (Space)">▶</button>
+          <button type="button" class="galaxy-tm-play" id="galaxy-tm-play-btn" aria-label="Запустить или поставить на паузу хронологию" title="Play / Pause (Space)"><svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><polygon points="3,2 10,6 3,10"/></svg></button>
           <span class="galaxy-tm-date" id="galaxy-tm-date">—</span>
           <div class="galaxy-tm-track-wrap">
             <input type="range" class="galaxy-tm-scrubber" id="galaxy-tm-scrubber" min="0" max="1000" step="1" value="0" aria-label="Прогресс хронологии" />
@@ -1291,7 +1289,7 @@
         <div class="galaxy-seg-group" role="tablist" aria-label="Фильтр звёзд">
           <button type="button" class="galaxy-seg-btn active" data-gfilter="all">Все</button>
           <button type="button" class="galaxy-seg-btn" data-gfilter="peak">Peak 16</button>
-          <button type="button" class="galaxy-seg-btn" data-gfilter="elite">9–10★</button>
+          <button type="button" class="galaxy-seg-btn" data-gfilter="elite">9–10</button>
           <button type="button" class="galaxy-seg-btn" data-gfilter="watching">Смотрю</button>
           <button type="button" class="galaxy-seg-btn" data-gfilter="hottakes">Hot Takes</button>
           <button type="button" class="galaxy-seg-btn" data-gfilter="planned">В планах</button>
@@ -1299,11 +1297,11 @@
       </div>
 
       <div class="galaxy-legend-hint">
-        <span><i class="galaxy-legend-dot" style="background:#ffffff;box-shadow:0 0 8px #fff;"></i>Peak 16</span>
-        <span><i class="galaxy-legend-dot" style="background:#b7d4ff;"></i>9–10★</span>
-        <span><i class="galaxy-legend-dot" style="background:#6ee7b7;"></i>Смотрю</span>
-        <span><i class="galaxy-legend-dot" style="background:#f87171;"></i>Спор с Шики</span>
-        <span><i class="galaxy-legend-dot" style="background:#c4b5fd;"></i>В планах</span>
+        <span><i class="galaxy-legend-dot" style="background:#ffffff;"></i>Peak 16</span>
+        <span><i class="galaxy-legend-dot" style="background:#d6d6d6;"></i>9–10</span>
+        <span><i class="galaxy-legend-dot" style="background:#b0b0b0;"></i>Смотрю</span>
+        <span><i class="galaxy-legend-dot" style="background:#8a8a8a;"></i>Спор с Шики</span>
+        <span><i class="galaxy-legend-dot" style="background:#666666;"></i>В планах</span>
         <span>· ЛКМ — вращение · Колесо — зум · Клик по звезде — перелёт</span>
       </div>
     </div>
@@ -1331,7 +1329,7 @@
             <div class="holo-bezel" aria-hidden="true"></div>
 
             <div class="holo-front-top">
-              <span class="holo-rarity-chip" id="holo-rarity-chip">★ MYTHIC</span>
+              <span class="holo-rarity-chip" id="holo-rarity-chip">MYTHIC</span>
               <span class="holo-serial" id="holo-serial">#01 / 16</span>
             </div>
 
@@ -1344,7 +1342,7 @@
               </div>
               <div class="holo-flip-hint">
                 <span>undexeror // holo</span>
-                <span>↻ клик — оборот</span>
+                <span>клик — оборот</span>
               </div>
             </div>
           </div>
@@ -1367,7 +1365,7 @@
               <div class="holo-back-pills" id="holo-back-pills"></div>
 
               <div class="holo-back-note">
-                <span class="holo-back-quote-lbl">◈ Заметка архива</span>
+                <span class="holo-back-quote-lbl">Заметка архива</span>
                 <div id="holo-back-note-text"></div>
               </div>
 
@@ -1384,7 +1382,7 @@
 
     <div class="holo-controls">
       <button type="button" class="holo-ctrl-btn is-icon" id="holo-prev-btn" aria-label="Предыдущая карта">‹</button>
-      <button type="button" class="holo-ctrl-btn" id="holo-flip-btn">↻ Перевернуть</button>
+      <button type="button" class="holo-ctrl-btn" id="holo-flip-btn">Перевернуть</button>
       <button type="button" class="holo-ctrl-btn is-icon" id="holo-next-btn" aria-label="Следующая карта">›</button>
     </div>
     <div class="holo-kbd-hint">Двигай мышкой для 3D-голограммы · Клик / Пробел — переворот · ← / → — листать колоду</div>
@@ -1396,7 +1394,7 @@
 
     <div class="pack-topbar">
       <div class="pack-mode-bar" role="tablist" aria-label="Пул бустер-пака">
-        <button type="button" class="pack-mode-btn active" data-pmode="all" id="pack-mode-all">Все 9–10★ (<span id="pack-all-count">16</span>)</button>
+        <button type="button" class="pack-mode-btn active" data-pmode="all" id="pack-mode-all">Все 9–10 (<span id="pack-all-count">16</span>)</button>
         <button type="button" class="pack-mode-btn" data-pmode="peak" id="pack-mode-peak">Только Top 16</button>
       </div>
       <span class="panel-badge" id="pack-drop-counter">ARCHIVE PACK · #01</span>
@@ -1428,7 +1426,7 @@
             <div class="pack-crimp pack-crimp-top" aria-hidden="true"></div>
             <div class="pack-tear-zone">
               <span class="pack-tear-notch" aria-hidden="true"></span>
-              <span class="pack-tear-label" id="pack-tear-label">✂ ТЯНИ ВПРАВО ИЛИ КЛИКНИ ▸▸▸</span>
+              <span class="pack-tear-label" id="pack-tear-label">ТЯНИ ВПРАВО ИЛИ КЛИКНИ</span>
             </div>
             <div class="pack-tear-seam" aria-hidden="true">
               <div class="pack-tear-glow" id="pack-tear-glow"></div>
@@ -1446,15 +1444,15 @@
             </div>
 
             <div class="pack-emblem">
-              <div class="pack-sigil-ring" aria-hidden="true"><span>◈</span></div>
+              <div class="pack-sigil-ring" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="10" height="10" transform="rotate(45 8 8)"/></svg></div>
               <div class="pack-brand-title">ARCHIVE<span>PACK</span></div>
-              <div class="pack-brand-sub" id="pack-brand-sub">CURATED 9–10★ EDITION</div>
+              <div class="pack-brand-sub" id="pack-brand-sub">CURATED 9–10 EDITION</div>
             </div>
 
             <div class="pack-odds-row">
-              <span>★ MYTHIC</span>
-              <span>◈ SSR</span>
-              <span>◇ SR</span>
+              <span>MYTHIC</span>
+              <span>SSR</span>
+              <span>SR</span>
             </div>
 
             <div class="pack-body-foot">
@@ -1483,7 +1481,7 @@
               <div class="holo-bezel" aria-hidden="true"></div>
 
               <div class="holo-front-top">
-                <span class="holo-rarity-chip" id="pack-rarity-chip">★ MYTHIC</span>
+                <span class="holo-rarity-chip" id="pack-rarity-chip">MYTHIC</span>
                 <span class="holo-serial" id="pack-serial">DROP #01</span>
               </div>
 
@@ -1496,7 +1494,7 @@
                 </div>
                 <div class="holo-flip-hint">
                   <span>undexeror // pack</span>
-                  <span>↻ клик — оборот</span>
+                  <span>клик — оборот</span>
                 </div>
               </div>
             </div>
@@ -1519,7 +1517,7 @@
                 <div class="holo-back-pills" id="pack-back-pills"></div>
 
                 <div class="holo-back-note">
-                  <span class="holo-back-quote-lbl">◈ Рекомендация архива</span>
+                  <span class="holo-back-quote-lbl">Рекомендация архива</span>
                   <div id="pack-back-note-text"></div>
                 </div>
 
@@ -1537,11 +1535,11 @@
 
     <div class="pack-controls" id="pack-controls">
       <div class="pack-ctrl-group" id="pack-sealed-actions">
-        <button type="button" class="holo-ctrl-btn is-pack-primary" id="pack-quick-rip-btn">✦ Вскрыть ARCHIVE PACK</button>
+        <button type="button" class="holo-ctrl-btn is-pack-primary" id="pack-quick-rip-btn">Вскрыть ARCHIVE PACK</button>
       </div>
       <div class="pack-ctrl-group" id="pack-revealed-actions" style="display:none;">
-        <button type="button" class="holo-ctrl-btn" id="pack-flip-btn">↻ Перевернуть</button>
-        <button type="button" class="holo-ctrl-btn is-pack-primary" id="pack-again-btn">✦ Открыть ещё пак</button>
+        <button type="button" class="holo-ctrl-btn" id="pack-flip-btn">Перевернуть</button>
+        <button type="button" class="holo-ctrl-btn is-pack-primary" id="pack-again-btn">Открыть ещё пак</button>
         <a class="holo-ctrl-btn" id="pack-shiki-quick-btn" href="#" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Shikimori ↗</a>
       </div>
     </div>
@@ -1561,7 +1559,7 @@
           <div class="trophy-coin-notches" aria-hidden="true"></div>
           <div class="trophy-coin-core">
             <span class="trophy-coin-code-top" id="tm-coin-code">TR-01</span>
-            <span class="trophy-coin-glyph" id="tm-coin-glyph">★</span>
+            <span class="trophy-coin-glyph" id="tm-coin-glyph">400</span>
             <span class="trophy-coin-tier-lbl" id="tm-coin-tier">PLATINUM</span>
           </div>
           <div class="trophy-coin-sheen" aria-hidden="true"></div>
@@ -1572,7 +1570,7 @@
 
       <div class="trophy-inspect-right">
         <div class="trophy-insp-head">
-          <span class="trophy-tier-pill" id="tm-tier-pill">★ PLATINUM</span>
+          <span class="trophy-tier-pill" id="tm-tier-pill">PLATINUM</span>
           <span class="panel-badge" id="tm-status-badge">ОТКРЫТ</span>
         </div>
         <h3 class="trophy-insp-title" id="tm-title">400+ CLUB</h3>
@@ -1613,7 +1611,7 @@
       <div class="modal-body">
         <div class="modal-tag" id="modal-tag">PEAK FICTION</div>
         <div class="modal-mode-bar" id="modal-mode-bar">
-          <button type="button" class="mode-chip active" data-rmode="all" id="rmode-all-btn">Все 9–10★ (<span id="rmode-all-count">16</span>)</button>
+          <button type="button" class="mode-chip active" data-rmode="all" id="rmode-all-btn">Все 9–10 (<span id="rmode-all-count">16</span>)</button>
           <button type="button" class="mode-chip" data-rmode="peak" id="rmode-peak-btn">Только Top 16</button>
         </div>
         <h3 class="modal-title" id="modal-title"></h3>
@@ -1622,7 +1620,7 @@
         <div class="vibe-tags" id="modal-vibes"></div>
         <p class="modal-note" id="modal-note"></p>
         <div class="modal-actions-row">
-          <button type="button" class="modal-reroll-btn" id="modal-reroll-btn" style="display:none;">↻ Крутануть ещё</button>
+          <button type="button" class="modal-reroll-btn" id="modal-reroll-btn" style="display:none;">Крутануть ещё</button>
           <a class="modal-link" id="modal-link" href="#" target="_blank" rel="noopener noreferrer">Открыть на Shikimori →</a>
         </div>
       </div>
@@ -1669,6 +1667,6 @@
     </div>
   </div>
 
-  <script type="module" src="./assets/js/main.js?v=36"></script>
+  <script type="module" src="./assets/js/main.js?v=37"></script>
 </body>
 </html>

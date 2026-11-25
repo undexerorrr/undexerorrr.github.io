@@ -116,9 +116,11 @@ export function initMusicPlayer() {
   }
 
   function updatePlayUI() {
-    const symbol = isPlaying ? '❚❚' : '▶';
-    if (dockPlayBtn) dockPlayBtn.textContent = symbol;
-    if (topIcon) topIcon.textContent = symbol;
+    const svg = isPlaying
+      ? '<svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="2.5" x2="4" y2="9.5"/><line x1="8" y1="2.5" x2="8" y2="9.5"/></svg>'
+      : '<svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><polygon points="3,2 10,6 3,10"/></svg>';
+    if (dockPlayBtn) dockPlayBtn.innerHTML = svg;
+    if (topIcon) topIcon.innerHTML = svg;
     if (topBtn) topBtn.classList.toggle('is-playing', isPlaying);
     document.body.classList.toggle('is-audio-playing', isPlaying);
     if (typeof syncVisualizer === 'function') syncVisualizer();
@@ -431,7 +433,7 @@ export function initMusicPlayer() {
     const gap = 3;
     const barW = (vw - gap * (barCount - 1)) / barCount;
     visCtx.clearRect(0, 0, vw, vh);
-    visCtx.fillStyle = 'rgba(173, 191, 222, 0.22)';
+    visCtx.fillStyle = 'rgba(235, 235, 235, 0.22)';
     for (let i = 0; i < barCount; i++) {
       visCtx.fillRect(i * (barW + gap), vh - 2, barW, 2);
     }
@@ -502,8 +504,8 @@ export function initMusicPlayer() {
           const x = i * (barW + gap);
           const y = vh - bh;
           const grad = visCtx.createLinearGradient(0, vh, 0, y);
-          grad.addColorStop(0, 'rgba(173, 191, 222, 0.45)');
-          grad.addColorStop(1, 'rgba(245, 248, 255, 0.95)');
+          grad.addColorStop(0, 'rgba(214, 214, 214, 0.45)');
+          grad.addColorStop(1, 'rgba(255, 255, 255, 0.95)');
           visCtx.fillStyle = grad;
           visCtx.fillRect(x, y, barW, bh);
         }
@@ -513,7 +515,7 @@ export function initMusicPlayer() {
         for (let i = 0; i < barCount; i++) {
           const v = 0.18 + 0.65 * Math.abs(Math.sin(fallbackPhase + i * 0.45));
           const bh = Math.max(2, v * (vh - 4));
-          visCtx.fillStyle = 'rgba(195, 210, 235, 0.72)';
+          visCtx.fillStyle = 'rgba(235, 235, 235, 0.72)';
           visCtx.fillRect(i * (barW + gap), vh - bh, barW, bh);
         }
       } else {
@@ -742,7 +744,7 @@ export function initLanyardPresence() {
         artEl.classList.remove('is-round');
       }
       if (stateLabelEl) {
-        stateLabelEl.innerHTML = '<span class="live-tag">● SPOTIFY</span> · СЛУШАЮ';
+        stateLabelEl.innerHTML = '<span class="live-tag">SPOTIFY</span> · СЛУШАЮ';
       }
       const trackUrl = sp.track_id ? `https://open.spotify.com/track/${sp.track_id}` : '';
       setTitleContent(sp.song || 'Spotify Track', trackUrl);
@@ -771,7 +773,7 @@ export function initLanyardPresence() {
       }
       const verb = gameAct.type === 2 ? 'СЛУШАЮ' : gameAct.type === 3 ? 'СМОТРЮ' : 'ИГРАЮ';
       if (stateLabelEl) {
-        stateLabelEl.innerHTML = `<span class="live-tag">● ${verb}</span> · DISCORD`;
+        stateLabelEl.innerHTML = `<span class="live-tag">${verb}</span> · DISCORD`;
       }
       setTitleContent(gameAct.name || 'Активность', '');
       currentActivityStart = gameAct.timestamps?.start || null;
@@ -791,7 +793,7 @@ export function initLanyardPresence() {
       artEl.classList.add('is-round');
     }
     if (stateLabelEl) {
-      const livePrefix = status === 'online' ? '<span class="live-tag">● ONLINE</span>' : STATUS_MAP[status];
+      const livePrefix = status === 'online' ? '<span class="live-tag">ONLINE</span>' : STATUS_MAP[status];
       stateLabelEl.innerHTML = `DISCORD · ${livePrefix}`;
     }
     setTitleContent(displayName, '');

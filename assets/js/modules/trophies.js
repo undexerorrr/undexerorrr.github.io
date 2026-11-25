@@ -27,25 +27,25 @@ export function buildFallbackTrophiesState() {
   }));
   const goldenEv = PEAK_FICTION.filter((p) => p.year >= 2005 && p.year <= 2012).slice(0, 4).map((p) => ({
     title: p.title,
-    meta: `${p.year} · ★ ${p.score.toFixed(2)}`,
+    meta: `${p.year} · ${p.score.toFixed(2)}`,
     url: `${appState.activeShikiOrigin}/animes/${p.malId}`
   }));
   const classicEv = PEAK_FICTION.filter((p) => p.year < 2005).slice(0, 4).map((p) => ({
     title: p.title,
-    meta: `${p.year} · ★ ${p.score.toFixed(2)}`,
+    meta: `${p.year} · ${p.score.toFixed(2)}`,
     url: `${appState.activeShikiOrigin}/animes/${p.malId}`
   }));
 
   const defs = [
     {
-      id: 'club400', code: 'TR-01', tier: 'platinum', glyph: '★',
+      id: 'club400', code: 'TR-01', tier: 'platinum', glyph: '400',
       name: '400+ CLUB', sub: 'Верифицированный ветеран',
       desc: 'Пройдена отметка в 400 завершённых аниме в профиле Shikimori — элитный клуб архивариусов.',
       current: completed, target: 400, metric: `${completed} / 400 тайтлов`,
       evidence: peakEv
     },
     {
-      id: 'timelord', code: 'TR-02', tier: 'platinum', glyph: '⧗',
+      id: 'timelord', code: 'TR-02', tier: 'platinum', glyph: '7K+',
       name: 'TIME LORD', sub: 'Повелитель хронометража',
       desc: 'Более 7 500 просмотренных эпизодов — месяцы непрерывного погружения в аниме-миры.',
       current: totalEps, target: 7500, metric: `${totalEps.toLocaleString('ru-RU')} эп. · ~${estDays} дн.`,
@@ -56,28 +56,28 @@ export function buildFallbackTrophiesState() {
       ]
     },
     {
-      id: 'peakhunter', code: 'TR-03', tier: 'platinum', glyph: '◈',
+      id: 'peakhunter', code: 'TR-03', tier: 'platinum', glyph: '10',
       name: 'PEAK HUNTER', sub: 'Коллекционер десяток',
       desc: 'Найдено и отмечено не менее 20 абсолютных шедевров с высшей личной оценкой 10/10.',
-      current: tensCount, target: 20, metric: `${tensCount} тайтлов на 10★`,
+      current: tensCount, target: 20, metric: `${tensCount} тайтлов на 10/10`,
       evidence: peakEv
     },
     {
-      id: 'ironcritic', code: 'TR-04', tier: 'gold', glyph: '⚖',
+      id: 'ironcritic', code: 'TR-04', tier: 'gold', glyph: '250',
       name: 'IRON CRITIC', sub: 'Холодный вердикт',
       desc: 'Выставлено свыше 250 осознанных оценок — сформирован собственный критический стандарт.',
-      current: ratedCount, target: 250, metric: `${ratedCount} оценок · ср. ${meanScore.toFixed(2)}★`,
+      current: ratedCount, target: 250, metric: `${ratedCount} оценок · ср. ${meanScore.toFixed(2)}`,
       evidence: peakEv.slice(0, 3)
     },
     {
-      id: 'goldenera', code: 'TR-05', tier: 'gold', glyph: '✦',
+      id: 'goldenera', code: 'TR-05', tier: 'gold', glyph: '05',
       name: 'GOLDEN ERA', sub: 'Эпоха легенд 2005–2012',
       desc: 'Пройдено не менее 60 тайтлов из золотой эпохи индустрии (2005–2012 годы).',
       current: goldenCount, target: 60, metric: `${goldenCount} / 60 тайтлов`,
       evidence: goldenEv
     },
     {
-      id: 'marathon', code: 'TR-06', tier: 'gold', glyph: '∞',
+      id: 'marathon', code: 'TR-06', tier: 'gold', glyph: '50+',
       name: 'MARATHON RUNNER', sub: 'Покоритель длинных саг',
       desc: 'Завершены как минимум 8 масштабных сериалов длиной от 50 эпизодов и выше.',
       current: 10, target: 8, metric: '10+ длинных саг (50+ эп.)',
@@ -89,18 +89,18 @@ export function buildFallbackTrophiesState() {
       ]
     },
     {
-      id: 'hottaker', code: 'TR-07', tier: 'gold', glyph: '⚡',
+      id: 'hottaker', code: 'TR-07', tier: 'gold', glyph: 'Δ',
       name: 'HOT TAKE REBEL', sub: 'Против мнения толпы',
       desc: 'Не менее 10 тайтлов, где личная оценка разошлась с рейтингом Шикимори минимум на 1.8 балла.',
       current: 14, target: 10, metric: '14+ споров (|Δ| ≥ 1.8)',
       evidence: (appState.hotTakesState?.gems || []).slice(0, 2).concat((appState.hotTakesState?.overrated || []).slice(0, 2)).map((x) => ({
         title: x.title,
-        meta: `Я ${x.userScore}★ vs Шики ${x.shikiScore.toFixed(2)}`,
+        meta: `Я ${x.userScore}/10 vs Шики ${x.shikiScore.toFixed(2)}`,
         url: x.url || `${appState.activeShikiOrigin}/animes/${x.malId}`
       }))
     },
     {
-      id: 'cinema', code: 'TR-08', tier: 'silver', glyph: '▣',
+      id: 'cinema', code: 'TR-08', tier: 'silver', glyph: 'MOV',
       name: 'CINEMA ARCHIVIST', sub: 'Кинозал полнометражек',
       desc: 'Просмотрено от 30 полнометражных аниме-фильмов в личной коллекции.',
       current: moviesCount, target: 30, metric: `${moviesCount} / 30 фильмов`,
@@ -111,14 +111,14 @@ export function buildFallbackTrophiesState() {
       }))
     },
     {
-      id: 'oldschool', code: 'TR-09', tier: 'silver', glyph: '⏣',
+      id: 'oldschool', code: 'TR-09', tier: 'silver', glyph: 'OLD',
       name: 'OLD SCHOOL', sub: 'Классика до 2005 года',
       desc: 'Пройдено не менее 15 культовых тайтлов старой школы, вышедших до 2005 года.',
       current: classicCount, target: 15, metric: `${classicCount} / 15 тайтлов`,
       evidence: classicEv
     },
     {
-      id: 'multitask', code: 'TR-10', tier: 'silver', glyph: '◉',
+      id: 'multitask', code: 'TR-10', tier: 'silver', glyph: '10+',
       name: 'MULTITASKER', sub: 'Десять миров сразу',
       desc: 'Одновременно открыто 10 и более тайтлов в активном списке «Смотрю».',
       current: watching, target: 10, metric: `${watching} / 10 в «Смотрю»`,
@@ -129,7 +129,7 @@ export function buildFallbackTrophiesState() {
       }))
     },
     {
-      id: 'manga', code: 'TR-11', tier: 'silver', glyph: '▤',
+      id: 'manga', code: 'TR-11', tier: 'silver', glyph: 'MNG',
       name: 'MANGA READER', sub: 'Чёрно-белые тома',
       desc: 'Прочитано полностью не менее 10 тайтлов манги помимо аниме-архива.',
       current: mangaDone, target: 10, metric: `${mangaDone} заверш. · ${mangaRead} читаю`,
@@ -138,7 +138,7 @@ export function buildFallbackTrophiesState() {
       ]
     },
     {
-      id: 'legend500', code: 'TR-12', tier: 'platinum', glyph: '♛',
+      id: 'legend500', code: 'TR-12', tier: 'platinum', glyph: '500',
       name: '500 LEGEND', sub: 'Следующий рубеж архива',
       desc: 'Финальный легендарный жетон за 500 завершённых аниме в архиве Shikimori.',
       current: completed, target: 500, metric: `${completed} / 500 (${Math.min(100, Math.round((completed / 500) * 100))}%)`,
@@ -248,7 +248,7 @@ export function computeTrophiesFromRates(allRates, userStats, options) {
     if (x.status === 'watching') parts.push('Смотрю');
     else if (x.status === 'rewatching') parts.push('Пересмотр');
     else if (x.rewatches > 0) parts.push(`×${x.rewatches + 1}`);
-    if (x.score) parts.push(`${x.score}★`);
+    if (x.score) parts.push(`${x.score}/10`);
     return parts.join(' · ');
   };
 
@@ -256,18 +256,18 @@ export function computeTrophiesFromRates(allRates, userStats, options) {
 
   const defs = [
     {
-      id: 'club400', code: 'TR-01', tier: 'platinum', glyph: '★',
+      id: 'club400', code: 'TR-01', tier: 'platinum', glyph: '400',
       name: '400+ CLUB', sub: 'Верифицированный ветеран',
       desc: 'Пройдена отметка в 400 завершённых аниме в профиле Shikimori — элитный клуб архивариусов.',
       current: completedCount, target: 400, metric: `${completedCount} / 400 тайтлов`,
       evidence: tensList.slice(0, 4).map((x) => ({
         title: x.title,
-        meta: `10★${x.year ? ' · ' + x.year : ''}`,
+        meta: `10/10${x.year ? ' · ' + x.year : ''}`,
         url: x.url
       }))
     },
     {
-      id: 'timelord', code: 'TR-02', tier: 'platinum', glyph: '⧗',
+      id: 'timelord', code: 'TR-02', tier: 'platinum', glyph: '7K+',
       name: 'TIME LORD', sub: 'Повелитель хронометража',
       desc: 'Более 7 500 просмотренных эпизодов по всему списку (включая «Смотрю», онгоинги и пересмотры).',
       current: totalEps, target: 7500, metric: `${totalEps.toLocaleString('ru-RU')} эп. · ~${estDays} дн.`,
@@ -278,40 +278,40 @@ export function computeTrophiesFromRates(allRates, userStats, options) {
       }))
     },
     {
-      id: 'peakhunter', code: 'TR-03', tier: 'platinum', glyph: '◈',
+      id: 'peakhunter', code: 'TR-03', tier: 'platinum', glyph: '10',
       name: 'PEAK HUNTER', sub: 'Коллекционер десяток',
       desc: 'Найдено и отмечено не менее 20 абсолютных шедевров с высшей личной оценкой 10/10.',
-      current: tensList.length, target: 20, metric: `${tensList.length} тайтлов на 10★`,
+      current: tensList.length, target: 20, metric: `${tensList.length} тайтлов на 10/10`,
       evidence: tensList.slice(0, 4).map((x) => ({
         title: x.title,
-        meta: `10★ · Шики ${x.shiki ? x.shiki.toFixed(2) : '—'}`,
+        meta: `10/10 · Шики ${x.shiki ? x.shiki.toFixed(2) : '—'}`,
         url: x.url
       }))
     },
     {
-      id: 'ironcritic', code: 'TR-04', tier: 'gold', glyph: '⚖',
+      id: 'ironcritic', code: 'TR-04', tier: 'gold', glyph: '250',
       name: 'IRON CRITIC', sub: 'Холодный вердикт',
       desc: 'Выставлено свыше 250 осознанных оценок — сформирован собственный критический стандарт.',
-      current: ratedCount, target: 250, metric: `${ratedCount} оценок · ср. ${meanScore.toFixed(2)}★`,
+      current: ratedCount, target: 250, metric: `${ratedCount} оценок · ср. ${meanScore.toFixed(2)}`,
       evidence: (criticalLowList.length ? criticalLowList : tensList).slice(0, 4).map((x) => ({
         title: x.title,
-        meta: `Я ${x.score}★ · Шики ${x.shiki ? x.shiki.toFixed(2) : '—'}`,
+        meta: `Я ${x.score}/10 · Шики ${x.shiki ? x.shiki.toFixed(2) : '—'}`,
         url: x.url
       }))
     },
     {
-      id: 'goldenera', code: 'TR-05', tier: 'gold', glyph: '✦',
+      id: 'goldenera', code: 'TR-05', tier: 'gold', glyph: '05',
       name: 'GOLDEN ERA', sub: 'Эпоха легенд 2005–2012',
       desc: 'Пройдено не менее 60 тайтлов из золотой эпохи индустрии (2005–2012 годы).',
       current: goldenList.length, target: 60, metric: `${goldenList.length} / 60 тайтлов`,
       evidence: goldenList.slice(0, 4).map((x) => ({
         title: x.title,
-        meta: `${x.year}${x.score ? ' · ' + x.score + '★' : ''}`,
+        meta: `${x.year}${x.score ? ' · ' + x.score + '/10' : ''}`,
         url: x.url
       }))
     },
     {
-      id: 'marathon', code: 'TR-06', tier: 'gold', glyph: '∞',
+      id: 'marathon', code: 'TR-06', tier: 'gold', glyph: '50+',
       name: 'MARATHON RUNNER', sub: 'Покоритель длинных саг',
       desc: 'Пройдено от 50 эпизодов как минимум в 8 масштабных сериалах (включая длинные онгоинги).',
       current: marathonList.length, target: 8, metric: `${marathonList.length} саг по 50+ эп.`,
@@ -322,40 +322,40 @@ export function computeTrophiesFromRates(allRates, userStats, options) {
       }))
     },
     {
-      id: 'hottaker', code: 'TR-07', tier: 'gold', glyph: '⚡',
+      id: 'hottaker', code: 'TR-07', tier: 'gold', glyph: 'Δ',
       name: 'HOT TAKE REBEL', sub: 'Против мнения толпы',
       desc: 'Не менее 10 тайтлов, где личная оценка разошлась с рейтингом Шикимори минимум на 1.8 балла.',
       current: clashesList.length, target: 10, metric: `${clashesList.length} споров (|Δ| ≥ 1.8)`,
       evidence: clashesList.slice(0, 4).map((x) => ({
         title: x.title,
-        meta: `Я ${x.score}★ vs ${x.shiki.toFixed(2)} (${x.delta > 0 ? '+' : ''}${x.delta.toFixed(1)})`,
+        meta: `Я ${x.score}/10 vs ${x.shiki.toFixed(2)} (${x.delta > 0 ? '+' : ''}${x.delta.toFixed(1)})`,
         url: x.url
       }))
     },
     {
-      id: 'cinema', code: 'TR-08', tier: 'silver', glyph: '▣',
+      id: 'cinema', code: 'TR-08', tier: 'silver', glyph: 'MOV',
       name: 'CINEMA ARCHIVIST', sub: 'Кинозал полнометражек',
       desc: 'Просмотрено от 30 полнометражных аниме-фильмов в личной коллекции.',
       current: moviesList.length, target: 30, metric: `${moviesList.length} / 30 фильмов`,
       evidence: moviesList.slice(0, 4).map((x) => ({
         title: x.title,
-        meta: `${x.year || 'Фильм'}${x.score ? ' · ' + x.score + '★' : ''}`,
+        meta: `${x.year || 'Фильм'}${x.score ? ' · ' + x.score + '/10' : ''}`,
         url: x.url
       }))
     },
     {
-      id: 'oldschool', code: 'TR-09', tier: 'silver', glyph: '⏣',
+      id: 'oldschool', code: 'TR-09', tier: 'silver', glyph: 'OLD',
       name: 'OLD SCHOOL', sub: 'Классика до 2005 года',
       desc: 'Пройдено не менее 15 культовых тайтлов старой школы, вышедших до 2005 года.',
       current: classicList.length, target: 15, metric: `${classicList.length} / 15 тайтлов`,
       evidence: classicList.slice(0, 4).map((x) => ({
         title: x.title,
-        meta: `${x.year}${x.score ? ' · ' + x.score + '★' : ''}`,
+        meta: `${x.year}${x.score ? ' · ' + x.score + '/10' : ''}`,
         url: x.url
       }))
     },
     {
-      id: 'multitask', code: 'TR-10', tier: 'silver', glyph: '◉',
+      id: 'multitask', code: 'TR-10', tier: 'silver', glyph: '10+',
       name: 'MULTITASKER', sub: 'Десять миров сразу',
       desc: 'Одновременно открыто 10 и более тайтлов в активном списке «Смотрю».',
       current: watchingCount, target: 10, metric: `${watchingCount} / 10 в «Смотрю»`,
@@ -366,7 +366,7 @@ export function computeTrophiesFromRates(allRates, userStats, options) {
       }))
     },
     {
-      id: 'manga', code: 'TR-11', tier: 'silver', glyph: '▤',
+      id: 'manga', code: 'TR-11', tier: 'silver', glyph: 'MNG',
       name: 'MANGA READER', sub: 'Чёрно-белые тома',
       desc: 'Прочитано полностью не менее 10 тайтлов манги помимо аниме-архива.',
       current: mangaDone, target: 10, metric: `${mangaDone} заверш. · ${mangaRead} читаю`,
@@ -375,7 +375,7 @@ export function computeTrophiesFromRates(allRates, userStats, options) {
       ]
     },
     {
-      id: 'legend500', code: 'TR-12', tier: 'platinum', glyph: '♛',
+      id: 'legend500', code: 'TR-12', tier: 'platinum', glyph: '500',
       name: '500 LEGEND', sub: 'Следующий рубеж архива',
       desc: 'Финальный легендарный жетон за 500 завершённых аниме в архиве Shikimori.',
       current: completedCount, target: 500, metric: `${completedCount} / 500 (${Math.min(100, Math.round((completedCount / 500) * 100))}%)`,
@@ -474,7 +474,7 @@ export function renderTrophiesShowcase() {
           <div class="trophy-coin-ring" aria-hidden="true"></div>
           <div class="trophy-coin-core">
             <span class="trophy-coin-code-top">${escapeHtml(t.code)}</span>
-            <span class="trophy-coin-glyph" aria-hidden="true">${t.unlocked ? t.glyph : '🔒'}</span>
+            <span class="trophy-coin-glyph" aria-hidden="true">${t.unlocked ? escapeHtml(t.glyph) : '<svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7.5" width="9" height="6.5" rx="1"/><path d="M5.5 7.5V5a2.5 2.5 0 0 1 5 0v2.5"/></svg>'}</span>
             <span class="trophy-coin-tier-lbl">${escapeHtml(t.unlocked ? tierTextMap[t.tier] : 'IN PROG')}</span>
           </div>
           <div class="trophy-coin-sheen" aria-hidden="true"></div>
@@ -583,7 +583,7 @@ export function initTrophiesShowcase() {
     activeIdx = (idx + items.length) % items.length;
     const t = items[activeIdx];
     const effTier = t.unlocked ? t.tier : 'locked';
-    const tierNames = { platinum: '★ PLATINUM', gold: '◈ GOLD', silver: '◇ SILVER', locked: '🔒 IN PROGRESS' };
+    const tierNames = { platinum: 'PLATINUM', gold: 'GOLD', silver: 'SILVER', locked: 'IN PROGRESS' };
     const tierShort = { platinum: 'PLATINUM', gold: 'GOLD', silver: 'SILVER', locked: 'LOCKED' };
 
     if (modalCoin) {
@@ -597,7 +597,11 @@ export function initTrophiesShowcase() {
       modalCoin.style.setProperty('--top', '0.32');
     }
     if (coinCode) coinCode.textContent = t.code;
-    if (coinGlyph) coinGlyph.textContent = t.unlocked ? t.glyph : '🔒';
+    if (coinGlyph) {
+      coinGlyph.innerHTML = t.unlocked
+        ? escapeHtml(t.glyph)
+        : '<svg viewBox="0 0 16 16" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="7.5" width="9" height="6.5" rx="1"/><path d="M5.5 7.5V5a2.5 2.5 0 0 1 5 0v2.5"/></svg>';
+    }
     if (coinTier) coinTier.textContent = tierShort[effTier] || 'MEDAL';
 
     if (tierPill) {
@@ -605,9 +609,9 @@ export function initTrophiesShowcase() {
       tierPill.className = `trophy-tier-pill tier-${effTier}`;
     }
     if (statusBadge) {
-      statusBadge.textContent = t.unlocked ? '✓ ОТКРЫТ В АРХИВЕ' : `В ПРОЦЕССЕ · ${t.pct}%`;
-      statusBadge.style.borderColor = t.unlocked ? 'rgba(110, 231, 183, 0.45)' : 'rgba(var(--bright), 0.24)';
-      statusBadge.style.color = t.unlocked ? '#a7f3d0' : 'rgba(var(--light), 0.72)';
+      statusBadge.textContent = t.unlocked ? 'ОТКРЫТ В АРХИВЕ' : `В ПРОЦЕССЕ · ${t.pct}%`;
+      statusBadge.style.borderColor = t.unlocked ? 'rgba(255, 255, 255, 0.45)' : 'rgba(255, 255, 255, 0.16)';
+      statusBadge.style.color = t.unlocked ? '#ffffff' : 'rgba(214, 214, 214, 0.72)';
     }
     if (titleEl) titleEl.textContent = t.name;
     if (subEl) subEl.textContent = `${t.code} · ${t.sub}`;
@@ -729,33 +733,27 @@ export function initTrophiesShowcase() {
     }
 
     const bg = ctx.createLinearGradient(0, 0, W, H);
-    bg.addColorStop(0, '#06080e');
-    bg.addColorStop(0.5, '#0b101c');
-    bg.addColorStop(1, '#05070c');
+    bg.addColorStop(0, '#080808');
+    bg.addColorStop(0.5, '#121212');
+    bg.addColorStop(1, '#080808');
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
-    const halo = ctx.createRadialGradient(600, 140, 20, 600, 140, 520);
-    halo.addColorStop(0, 'rgba(173, 196, 232, 0.14)');
-    halo.addColorStop(1, 'transparent');
-    ctx.fillStyle = halo;
-    ctx.fillRect(0, 0, W, H);
-
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.04)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
     for (let x = 40; x < W; x += 48) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
     for (let y = 40; y < H; y += 48) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
 
-    rRect(24, 24, W - 48, H - 48, 22);
-    ctx.strokeStyle = 'rgba(173, 191, 222, 0.24)';
+    rRect(24, 24, W - 48, H - 48, 6);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.24)';
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    ctx.fillStyle = '#adbfde';
+    ctx.fillStyle = '#d6d6d6';
     ctx.font = '600 14px "JetBrains Mono", monospace';
-    ctx.fillText('◈  UNDEXEROR // ARCHIVE   ·   ТРОФЕИ АРХИВА', 58, 68);
+    ctx.fillText('UNDEXEROR // ARCHIVE   ·   ТРОФЕИ АРХИВА', 58, 68);
 
     ctx.textAlign = 'right';
-    ctx.fillStyle = '#6ee7b7';
+    ctx.fillStyle = '#ffffff';
     ctx.fillText(`${unlocked.length} / ${items.length} ОТКРЫТО  ·  ${pct}%`, W - 58, 68);
     ctx.textAlign = 'left';
 
@@ -773,10 +771,10 @@ export function initTrophiesShowcase() {
     const cardH = 148;
 
     const tierAccent = {
-      platinum: '#eef5ff',
-      gold: '#e8d5ad',
-      silver: '#adbfde',
-      locked: '#4d586c'
+      platinum: '#ffffff',
+      gold: '#d6d6d6',
+      silver: '#a8a8a8',
+      locked: '#555555'
     };
 
     items.slice(0, 12).forEach((t, i) => {
@@ -785,12 +783,12 @@ export function initTrophiesShowcase() {
       const x = startX + col * (cardW + gapX);
       const y = startY + row * (cardH + gapY);
       const eff = t.unlocked ? t.tier : 'locked';
-      const acc = tierAccent[eff] || '#adbfde';
+      const acc = tierAccent[eff] || '#d6d6d6';
 
-      rRect(x, y, cardW, cardH, 14);
-      ctx.fillStyle = t.unlocked ? 'rgba(11, 15, 24, 0.90)' : 'rgba(8, 10, 16, 0.65)';
+      rRect(x, y, cardW, cardH, 4);
+      ctx.fillStyle = t.unlocked ? '#141414' : '#0e0e0e';
       ctx.fill();
-      ctx.strokeStyle = t.unlocked ? (eff === 'platinum' ? 'rgba(232, 242, 255, 0.45)' : eff === 'gold' ? 'rgba(226, 202, 152, 0.38)' : 'rgba(173, 191, 222, 0.28)') : 'rgba(145, 155, 170, 0.16)';
+      ctx.strokeStyle = t.unlocked ? (eff === 'platinum' ? 'rgba(255, 255, 255, 0.45)' : eff === 'gold' ? 'rgba(255, 255, 255, 0.30)' : 'rgba(255, 255, 255, 0.22)') : 'rgba(255, 255, 255, 0.10)';
       ctx.lineWidth = 1.2;
       ctx.stroke();
 
@@ -799,7 +797,7 @@ export function initTrophiesShowcase() {
       const cy = y + cardH / 2;
       ctx.beginPath();
       ctx.arc(cx, cy, 28, 0, Math.PI * 2);
-      ctx.fillStyle = '#090d16';
+      ctx.fillStyle = '#080808';
       ctx.fill();
       ctx.strokeStyle = acc;
       ctx.lineWidth = 3;
@@ -807,8 +805,8 @@ export function initTrophiesShowcase() {
 
       ctx.textAlign = 'center';
       ctx.fillStyle = acc;
-      ctx.font = '600 22px "Inter", sans-serif';
-      ctx.fillText(t.unlocked ? t.glyph : '○', cx, cy + 8);
+      ctx.font = '600 15px "JetBrains Mono", monospace';
+      ctx.fillText(t.unlocked ? t.glyph : 'LOCK', cx, cy + 5);
 
       // Text right of coin
       ctx.textAlign = 'left';
@@ -816,28 +814,28 @@ export function initTrophiesShowcase() {
       ctx.font = '600 10px "JetBrains Mono", monospace';
       ctx.fillText(`${t.code} · ${t.unlocked ? t.tier.toUpperCase() : 'LOCKED'}`, x + 88, y + 46);
 
-      ctx.fillStyle = t.unlocked ? '#ffffff' : 'rgba(205, 212, 224, 0.60)';
+      ctx.fillStyle = t.unlocked ? '#ffffff' : 'rgba(214, 214, 214, 0.60)';
       ctx.font = '600 14px "Unbounded", "Inter", sans-serif';
       ctx.fillText(t.name, x + 88, y + 74);
 
-      ctx.fillStyle = 'rgba(205, 212, 224, 0.72)';
+      ctx.fillStyle = 'rgba(214, 214, 214, 0.72)';
       ctx.font = '500 11.5px "JetBrains Mono", monospace';
       ctx.fillText(t.metric, x + 88, y + 102);
 
       // Progress bar
-      rRect(x + 88, y + 116, cardW - 106, 5, 3);
+      rRect(x + 88, y + 116, cardW - 106, 5, 2);
       ctx.fillStyle = 'rgba(255, 255, 255, 0.09)';
       ctx.fill();
-      rRect(x + 88, y + 116, Math.max(6, ((cardW - 106) * t.pct) / 100), 5, 3);
-      ctx.fillStyle = t.unlocked ? acc : '#6ee7b7';
+      rRect(x + 88, y + 116, Math.max(6, ((cardW - 106) * t.pct) / 100), 5, 2);
+      ctx.fillStyle = t.unlocked ? acc : '#b0b0b0';
       ctx.fill();
     });
 
-    ctx.fillStyle = 'rgba(205, 212, 224, 0.56)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.56)';
     ctx.font = '500 13px "JetBrains Mono", monospace';
     ctx.fillText('https://undexerorrr.github.io/  ·  undereror nyashka', 58, H - 38);
     ctx.textAlign = 'right';
-    ctx.fillStyle = 'rgba(173, 191, 222, 0.65)';
+    ctx.fillStyle = 'rgba(214, 214, 214, 0.65)';
     ctx.fillText('undexeror // archive', W - 58, H - 38);
 
     const link = document.createElement('a');

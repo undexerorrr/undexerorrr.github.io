@@ -253,35 +253,34 @@ export function initArchiveGalaxy(player) {
     const sh = Number(node.shikiScore) || 0;
     const delta = (s > 0 && sh > 0) ? (s - sh) : 0;
 
-    // Returns [r, g, b, size, spike, tier]
+    // Returns [r, g, b, size, spike, tier] — Strict Pure B&W Monochrome
     if (node.isPeak) {
-      return [1.0, 0.99, 1.0, node.peakRank <= 3 ? 19.5 : 15.8, 1.0, 1.0];
+      return [1.0, 1.0, 1.0, node.peakRank <= 3 ? 19.5 : 15.8, 1.0, 1.0];
     }
     if (node.status === 'planned') {
-      if (sh >= 8.2) return [0.79, 0.73, 1.0, 13.8, 0.85, 1.0];
-      if (sh >= 7.5) return [0.69, 0.66, 0.92, 10.2, 0.30, 0.35];
-      return [0.58, 0.58, 0.78, 7.6, 0.0, 0.0];
+      if (sh >= 8.2) return [0.92, 0.92, 0.92, 13.8, 0.85, 1.0];
+      if (sh >= 7.5) return [0.76, 0.76, 0.76, 10.2, 0.30, 0.35];
+      return [0.54, 0.54, 0.54, 7.6, 0.0, 0.0];
     }
     if (node.status === 'watching' || node.status === 'rewatching') {
-      return [0.43, 0.91, 0.72, 13.2, 0.72, 0.60];
+      return [0.94, 0.94, 0.94, 13.2, 0.72, 0.60];
     }
     if (s >= 10) {
-      return [0.88, 0.95, 1.0, 14.2, 0.95, 1.0];
+      return [0.95, 0.95, 0.95, 14.2, 0.95, 1.0];
     }
     if (s >= 9) {
-      return [0.72, 0.85, 1.0, 11.4, 0.50, 0.55];
+      return [0.82, 0.82, 0.82, 11.4, 0.50, 0.55];
     }
     if (delta <= -1.8 && sh >= 7.3) {
-      // Harsh Hot Take outlier: muted crimson dwarf
-      return [0.97, 0.48, 0.50, 10.2, 0.32, 0.25];
+      return [0.72, 0.72, 0.72, 10.2, 0.32, 0.25];
     }
     if (s >= 7) {
-      return [0.58, 0.69, 0.86, 8.4, 0.0, 0.0];
+      return [0.64, 0.64, 0.64, 8.4, 0.0, 0.0];
     }
     if (s > 0) {
-      return [0.44, 0.50, 0.62, 6.8, 0.0, 0.0];
+      return [0.50, 0.50, 0.50, 6.8, 0.0, 0.0];
     }
-    return [0.48, 0.54, 0.66, 6.4, 0.0, 0.0];
+    return [0.50, 0.50, 0.50, 6.4, 0.0, 0.0];
   }
 
   function computeLayoutPositions(nodes, layoutMode) {
@@ -336,15 +335,15 @@ export function initArchiveGalaxy(player) {
       // 3D Score Stratification Cylinder/Sphere: Y = user score (or Shiki score in planned mode)
       if (isPlannedMode) {
         clusterAnchors.push(
-          { x: 0, y:  56, z: 0, label: '★ 8.5+ · ТОП ШИКИМОРИ' },
+          { x: 0, y:  56, z: 0, label: '8.5+ · ТОП ШИКИМОРИ' },
           { x: 0, y:  18, z: 0, label: '7.5–8.4 · ОСНОВНОЙ СЛОЙ' },
           { x: 0, y: -28, z: 0, label: '< 7.5 · НИЖНЯЯ ОРБИТА' }
         );
       } else {
         clusterAnchors.push(
-          { x: 0, y:  62, z: 0, label: '★ 10/10 · ЗЕНИТ БАЗЫ' },
-          { x: 0, y:  24, z: 0, label: '8–9★ · ЗОЛОТОЙ СЛОЙ' },
-          { x: 0, y: -26, z: 0, label: '≤ 6★ · НИЖНЯЯ ОРБИТА' }
+          { x: 0, y:  62, z: 0, label: '10/10 · ЗЕНИТ БАЗЫ' },
+          { x: 0, y:  24, z: 0, label: '8–9 · ОСНОВНОЙ СЛОЙ' },
+          { x: 0, y: -26, z: 0, label: '≤ 6 · НИЖНЯЯ ОРБИТА' }
         );
       }
       nodes.forEach((n, idx) => {
@@ -379,7 +378,7 @@ export function initArchiveGalaxy(player) {
 
     // Default: Logarithmic 4-Arm Spiral Galaxy (Peak 16 or Planned Shiki core -> outer rim)
     clusterAnchors.push(
-      { x: 0, y: 16, z: 0, label: isPlannedMode ? '◈ В ПЛАНАХ · К ПРОСМОТРУ' : '◈ ЯДРО · PEAK 16' }
+      { x: 0, y: 16, z: 0, label: isPlannedMode ? 'В ПЛАНАХ · К ПРОСМОТРУ' : 'ЯДРО · PEAK 16' }
     );
     const arms = 4;
     nodes.forEach((n, idx) => {
@@ -484,7 +483,7 @@ export function initArchiveGalaxy(player) {
     });
     peakIndices.sort((a, b) => a.rank - b.rank);
     for (let i = 0; i < peakIndices.length - 1; i++) {
-      pushSegment(peakIndices[i].idx, peakIndices[i + 1].idx, 0.86, 0.92, 1.0, 0.72, 0.82, 0.96);
+      pushSegment(peakIndices[i].idx, peakIndices[i + 1].idx, 0.90, 0.90, 0.90, 0.72, 0.72, 0.72);
     }
 
     // 2. Nearest neighbor filaments within same score/era tier (max 1 link per star to stay airy & clean)
@@ -513,9 +512,9 @@ export function initArchiveGalaxy(player) {
       }
       if (bestJ !== -1) {
         if (isPlannedMode) {
-          pushSegment(i, bestJ, 0.62, 0.56, 0.84, 0.44, 0.40, 0.68);
+          pushSegment(i, bestJ, 0.62, 0.62, 0.62, 0.44, 0.44, 0.44);
         } else {
-          pushSegment(i, bestJ, 0.54, 0.65, 0.82, 0.42, 0.52, 0.68);
+          pushSegment(i, bestJ, 0.58, 0.58, 0.58, 0.42, 0.42, 0.42);
         }
       }
     }
@@ -587,11 +586,11 @@ export function initArchiveGalaxy(player) {
     if (highlightMat) {
       const focusNode = activeNodes[focusIdx];
       if (activeFilter === 'planned' || focusNode?.status === 'planned') {
-        highlightMat.uniforms.uColor.value.setHex(0xc4b5fd);
+        highlightMat.uniforms.uColor.value.setHex(0xcccccc);
       } else if (focusNode?.status === 'watching' || focusNode?.status === 'rewatching') {
-        highlightMat.uniforms.uColor.value.setHex(0x6ee7b7);
+        highlightMat.uniforms.uColor.value.setHex(0xffffff);
       } else {
-        highlightMat.uniforms.uColor.value.setHex(0xdcecff);
+        highlightMat.uniforms.uColor.value.setHex(0xe5e5e5);
       }
     }
     if (highlightLine) highlightLine.visible = nCount > 0;
@@ -781,9 +780,9 @@ export function initArchiveGalaxy(player) {
             * (vTier * 0.14 + vFocus * 0.18 + vFlash * 0.30);
 
           float intensity = core * (0.84 + vTier * 0.20 + vFocus * 0.24) + corona + outerGlow + spikes + diag;
-          vec3 spikeTint = vec3(0.76, 0.88, 1.0);
-          vec3 flashTint = vec3(0.92, 0.97, 1.0);
-          vec3 col = mix(vColor, vec3(0.92, 0.96, 1.0), clamp(core * 0.44 + vFocus * 0.26, 0.0, 0.85));
+          vec3 spikeTint = vec3(0.92, 0.92, 0.92);
+          vec3 flashTint = vec3(1.0, 1.0, 1.0);
+          vec3 col = mix(vColor, vec3(0.96, 0.96, 0.96), clamp(core * 0.44 + vFocus * 0.26, 0.0, 0.85));
           col = mix(col, spikeTint, clamp((spikes + diag) * 0.55, 0.0, 0.65));
           col = mix(col, flashTint, clamp(vFlash * 0.75, 0.0, 0.9));
 
@@ -999,7 +998,7 @@ export function initArchiveGalaxy(player) {
     camState.targetRadius = 114;
     camState.targetTheta += 0.18;
 
-    setHopHud(`✦ ПРЫЖОК 1 / ${segCount}`, activeNodes[targetIdx].title, false);
+    setHopHud(`ПРЫЖОК 1 / ${segCount}`, activeNodes[targetIdx].title, false);
   }
 
   function updateStarHopFrame(now) {
@@ -1024,9 +1023,10 @@ export function initArchiveGalaxy(player) {
         hopTrailPosBuf[k * 3 + 2] = currentPos[ni * 3 + 2];
 
         const ageFade = (k + 1) / vertCount;
-        hopTrailColBuf[k * 3]     = 0.24 + ageFade * 0.45;
-        hopTrailColBuf[k * 3 + 1] = 0.42 + ageFade * 0.52;
-        hopTrailColBuf[k * 3 + 2] = 0.62 + ageFade * 0.34;
+        const lum = 0.32 + ageFade * 0.52;
+        hopTrailColBuf[k * 3]     = lum;
+        hopTrailColBuf[k * 3 + 1] = lum;
+        hopTrailColBuf[k * 3 + 2] = lum;
       }
 
       const tipSlot = vertCount - 1;
@@ -1042,10 +1042,10 @@ export function initArchiveGalaxy(player) {
       hopTrailPosBuf[tipSlot * 3 + 1] = fy + (ty - fy) * eased + arcLift;
       hopTrailPosBuf[tipSlot * 3 + 2] = fz + (tz - fz) * eased;
 
-      // Blazing mint-white head of the star-hop beam
-      hopTrailColBuf[tipSlot * 3]     = 0.72;
+      // Crisp pure white head of the star-hop beam
+      hopTrailColBuf[tipSlot * 3]     = 1.00;
       hopTrailColBuf[tipSlot * 3 + 1] = 1.00;
-      hopTrailColBuf[tipSlot * 3 + 2] = 0.88;
+      hopTrailColBuf[tipSlot * 3 + 2] = 1.00;
 
       hopTrailGeom.setDrawRange(0, vertCount);
       hopTrailGeom.getAttribute('position').needsUpdate = true;
@@ -1065,7 +1065,7 @@ export function initArchiveGalaxy(player) {
           camState.targetRadius = s + 2 >= segCount ? 84 : 112;
           camState.targetTheta += 0.16;
 
-          setHopHud(`✦ ПРЫЖОК ${s + 2} / ${segCount}`, activeNodes[nextTarget].title, false);
+          setHopHud(`ПРЫЖОК ${s + 2} / ${segCount}`, activeNodes[nextTarget].title, false);
         } else {
           // Final landing on winning star!
           const winnerIdx = toIdx;
@@ -1075,7 +1075,7 @@ export function initArchiveGalaxy(player) {
           hopState.fadeStart = now;
           reticle?.classList.remove('is-hopping');
 
-          setHopHud('★ ВЫБРАНО', activeNodes[winnerIdx].title, true);
+          setHopHud('ВЫБРАНО', activeNodes[winnerIdx].title, true);
           clearTimeout(hopState.hidePillTimer);
           hopState.hidePillTimer = setTimeout(() => {
             hopPill?.classList.remove('is-visible', 'is-locked');
@@ -1129,14 +1129,14 @@ export function initArchiveGalaxy(player) {
     const delta = (!isPlanned && node.score > 0 && node.shikiScore > 0) ? (node.score - node.shikiScore) : 0;
     if (inspTag) {
       inspTag.textContent = node.isPeak
-        ? `★ PEAK FICTION · #${formatRank(node.peakRank)}`
+        ? `PEAK FICTION · #${formatRank(node.peakRank)}`
         : isPlanned
-          ? '◈ В ПЛАНАХ · BACKLOG'
+          ? 'В ПЛАНАХ · BACKLOG'
           : node.status === 'watching'
-            ? '● СЕЙЧАС СМОТРЮ · LIVE'
+            ? 'СЕЙЧАС СМОТРЮ · LIVE'
             : node.score >= 9
-              ? `◈ ИЗБРАННАЯ ЗВЕЗДА · ${node.score}/10`
-              : '◇ ЗВЕЗДА АРХИВА';
+              ? `ИЗБРАННАЯ ЗВЕЗДА · ${node.score}/10`
+              : 'ЗВЕЗДА АРХИВА';
     }
     if (inspTitle) inspTitle.textContent = node.title;
     if (inspSub) inspSub.textContent = [node.kind, node.year, node.episodes ? `${node.episodes} эп.` : null].filter(Boolean).join(' · ');
@@ -1144,12 +1144,12 @@ export function initArchiveGalaxy(player) {
     const pills = isPlanned
       ? [
           'В планах',
-          node.shikiScore ? `Шики: ${node.shikiScore.toFixed(2)}★` : null,
+          node.shikiScore ? `Шики: ${node.shikiScore.toFixed(2)}` : null,
           node.episodes ? `${node.episodes} эп.` : null
         ].filter(Boolean)
       : [
-          node.score ? `Я: ${node.score}★` : 'Без оценки',
-          node.shikiScore ? `Шики: ${node.shikiScore.toFixed(2)}★` : null,
+          node.score ? `Я: ${node.score}/10` : 'Без оценки',
+          node.shikiScore ? `Шики: ${node.shikiScore.toFixed(2)}` : null,
           Math.abs(delta) >= 0.8 ? `Δ ${delta > 0 ? '+' : ''}${delta.toFixed(2)}` : null
         ].filter(Boolean);
     if (inspPills) {
@@ -1187,12 +1187,12 @@ export function initArchiveGalaxy(player) {
     renderer = new T.WebGLRenderer({ antialias: dpr <= 1.25, alpha: false, powerPreference: 'high-performance' });
     renderer.setPixelRatio(dpr);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x04060c, 1);
+    renderer.setClearColor(0x080808, 1);
     canvasWrap.innerHTML = '';
     canvasWrap.appendChild(renderer.domElement);
 
     scene = new T.Scene();
-    scene.fog = new T.FogExp2(0x05070d, 0.0018);
+    scene.fog = new T.FogExp2(0x080808, 0.0018);
 
     camera = new T.PerspectiveCamera(56, window.innerWidth / window.innerHeight, 1, 1400);
 
@@ -1213,9 +1213,9 @@ export function initArchiveGalaxy(player) {
       dustPos[i * 3 + 1] = Math.sin(phi) * r * (depth < 0.45 ? 0.22 : (depth < 0.78 ? 0.52 : 0.88));
       dustPos[i * 3 + 2] = Math.sin(theta) * Math.cos(phi) * r;
       const shade = 0.42 + (1.0 - depth * 0.45) * 0.42 + Math.random() * 0.14;
-      dustCol[i * 3]     = shade * 0.74;
-      dustCol[i * 3 + 1] = shade * 0.84;
-      dustCol[i * 3 + 2] = shade * 0.98;
+      dustCol[i * 3]     = shade * 0.85;
+      dustCol[i * 3 + 1] = shade * 0.85;
+      dustCol[i * 3 + 2] = shade * 0.85;
       dustSizes[i] = 2.4 + (1.0 - depth * 0.45) * 3.4 + Math.random() * 1.4;
       dustDepths[i] = depth;
       dustPhases[i] = Math.random() * 6.2831853;
@@ -1290,7 +1290,7 @@ export function initArchiveGalaxy(player) {
       const rg = new T.BufferGeometry();
       rg.setAttribute('position', new T.Float32BufferAttribute(ringVerts, 3));
       const rm = new T.LineBasicMaterial({
-        color: 0xadbfde,
+        color: 0xb0b0b0,
         transparent: true,
         opacity: ASTROLABE_BASE_OPACITY[idx] || 0.07,
         depthWrite: false
@@ -1345,7 +1345,7 @@ export function initArchiveGalaxy(player) {
           float wave = 0.72 + 0.28 * sin(vProg * 6.2831853 - uTime * 1.45 + vPhase);
           float audioBoost = 1.0 + uMid * 0.85 + uHigh * 0.55;
           float alpha = clamp(uBaseOpacity * wave * audioBoost * vSegAlpha, 0.0, 0.72);
-          vec3 col = mix(vColor, vec3(0.88, 0.94, 1.0), clamp(uHigh * 0.35 + (wave - 0.72) * 0.5, 0.0, 0.6));
+          vec3 col = mix(vColor, vec3(0.94, 0.94, 0.94), clamp(uHigh * 0.35 + (wave - 0.72) * 0.5, 0.0, 0.6));
           gl_FragColor = vec4(col, alpha);
         }
       `
@@ -1371,7 +1371,7 @@ export function initArchiveGalaxy(player) {
         uTime: { value: 0 },
         uBass: { value: 0 },
         uMid: { value: 0 },
-        uColor: { value: new T.Color(0xdcecff) }
+        uColor: { value: new T.Color(0xe5e5e5) }
       },
       vertexShader: `
         attribute float aProgress;
@@ -1726,7 +1726,9 @@ export function initArchiveGalaxy(player) {
     tmState.playing = Boolean(playing);
     tmPlayBtn?.classList.toggle('is-playing', tmState.playing);
     if (tmPlayBtn) {
-      tmPlayBtn.textContent = tmState.playing ? '❚❚' : '▶';
+      tmPlayBtn.innerHTML = tmState.playing
+        ? '<svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="2.5" x2="4" y2="9.5"/><line x1="8" y1="2.5" x2="8" y2="9.5"/></svg>'
+        : '<svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><polygon points="3,2 10,6 3,10"/></svg>';
     }
   }
 
@@ -1842,7 +1844,7 @@ export function initArchiveGalaxy(player) {
       const parts = [
         node.isPeak ? `<b>Peak #${formatRank(node.peakRank)}</b>` : null,
         node.status === 'planned' ? '<b>В планах</b>' : null,
-        node.score ? `Я: <b>${node.score}★</b>` : null,
+        node.score ? `Я: <b>${node.score}/10</b>` : null,
         node.shikiScore ? `Шики: ${node.shikiScore.toFixed(2)}` : null,
         node.year ? String(node.year) : null
       ].filter(Boolean);

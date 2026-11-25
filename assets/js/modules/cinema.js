@@ -107,7 +107,9 @@ export function initCinemaMode(player) {
       if (artistEl) artistEl.textContent = snap.track.artist;
     }
     if (playBtn) {
-      playBtn.textContent = playing ? '❚❚' : '▶';
+      playBtn.innerHTML = playing
+        ? '<svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><line x1="4" y1="2.5" x2="4" y2="9.5"/><line x1="8" y1="2.5" x2="8" y2="9.5"/></svg>'
+        : '<svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><polygon points="3,2 10,6 3,10"/></svg>';
       playBtn.setAttribute('aria-label', playing ? 'Поставить на паузу' : 'Воспроизвести');
     }
     hud.classList.toggle('is-playing', playing);
@@ -136,7 +138,7 @@ export function initCinemaMode(player) {
     const minH = Math.max(2, Math.round(canvasH * 0.08));
 
     if (!playing) {
-      ctx.fillStyle = 'rgba(173, 191, 222, 0.24)';
+      ctx.fillStyle = 'rgba(214, 214, 214, 0.24)';
       for (let i = 0; i < BAR_COUNT; i++) ctx.fillRect(i * (barW + gap), canvasH - minH, barW, minH);
       return;
     }
@@ -151,7 +153,8 @@ export function initCinemaMode(player) {
         v = (0.18 + 0.65 * Math.abs(Math.sin(fallbackPhase + i * 0.45))) * (0.6 + energy);
       }
       const bh = Math.max(minH, v * (canvasH - 2));
-      ctx.fillStyle = `rgba(${Math.round(173 + 72 * v)}, ${Math.round(191 + 57 * v)}, ${Math.round(222 + 33 * v)}, ${(0.45 + 0.5 * v).toFixed(2)})`;
+      const lum = Math.round(180 + 75 * v);
+      ctx.fillStyle = `rgba(${lum}, ${lum}, ${lum}, ${(0.45 + 0.5 * v).toFixed(2)})`;
       ctx.fillRect(i * (barW + gap), canvasH - bh, barW, bh);
     }
   }

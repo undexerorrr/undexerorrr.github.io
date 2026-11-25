@@ -17,12 +17,12 @@ const weatherEngineState = {
 };
 
 const WEATHER_PRESETS = {
-  clear:  { icon: '✦', short: 'CLEAR', ru: 'Ясно / звёздное небо', wind: 6 },
-  clouds: { icon: '☁', short: 'CLOUDS', ru: 'Облачно', wind: 10 },
-  fog:    { icon: '≋', short: 'FOG', ru: 'Туман / дымка', wind: 4 },
-  rain:   { icon: '☂', short: 'RAIN', ru: 'Дождь', wind: 16 },
-  storm:  { icon: '⚡', short: 'STORM', ru: 'Гроза', wind: 26 },
-  snow:   { icon: '❄', short: 'SNOW', ru: 'Снег', wind: 11 }
+  clear:  { icon: '', short: 'CLEAR', ru: 'Ясно / звёздное небо', wind: 6 },
+  clouds: { icon: '', short: 'CLOUDS', ru: 'Облачно', wind: 10 },
+  fog:    { icon: '', short: 'FOG', ru: 'Туман / дымка', wind: 4 },
+  rain:   { icon: '', short: 'RAIN', ru: 'Дождь', wind: 16 },
+  storm:  { icon: '', short: 'STORM', ru: 'Гроза', wind: 26 },
+  snow:   { icon: '', short: 'SNOW', ru: 'Снег', wind: 11 }
 };
 
 function mapWmoToWeather(code) {
@@ -205,7 +205,7 @@ export function initAtmosphereCanvas() {
       const py = mouse.y > -1000 ? (mouse.y / h - 0.5) * 10 * s.depth : 0;
       ctx.beginPath();
       ctx.arc(s.x - px, s.y - py, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(220, 230, 245, ${alpha.toFixed(3)})`;
+      ctx.fillStyle = `rgba(235, 235, 235, ${alpha.toFixed(3)})`;
       ctx.fill();
     }
 
@@ -219,8 +219,8 @@ export function initAtmosphereCanvas() {
         if (fb.x + fb.r < -80) fb.x = w + fb.r + 60;
 
         const g = ctx.createRadialGradient(fb.x, fb.y, 10, fb.x, fb.y, fb.r);
-        g.addColorStop(0, `rgba(195, 210, 234, ${(fb.alpha * fogScale).toFixed(3)})`);
-        g.addColorStop(0.55, `rgba(145, 162, 188, ${(fb.alpha * fogScale * 0.45).toFixed(3)})`);
+        g.addColorStop(0, `rgba(214, 214, 214, ${(fb.alpha * fogScale).toFixed(3)})`);
+        g.addColorStop(0.55, `rgba(165, 165, 165, ${(fb.alpha * fogScale * 0.45).toFixed(3)})`);
         g.addColorStop(1, 'transparent');
         ctx.fillStyle = g;
         ctx.beginPath();
@@ -259,7 +259,7 @@ export function initAtmosphereCanvas() {
         ctx.beginPath();
         ctx.moveTo(d.x, d.y);
         ctx.lineTo(d.x + windSlant * 1.45, d.y + d.len * (isStorm ? 1.25 : 1));
-        ctx.strokeStyle = `rgba(198, 214, 240, ${(d.alpha * (isStorm ? 1.22 : 1)).toFixed(3)})`;
+        ctx.strokeStyle = `rgba(214, 214, 214, ${(d.alpha * (isStorm ? 1.22 : 1)).toFixed(3)})`;
         ctx.lineWidth = d.width;
         ctx.stroke();
       }
@@ -275,7 +275,7 @@ export function initAtmosphereCanvas() {
         }
         ctx.beginPath();
         ctx.ellipse(sp.x, sp.y, sp.r * 1.6, sp.r * 0.42, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(210, 224, 246, ${sp.alpha.toFixed(3)})`;
+        ctx.strokeStyle = `rgba(224, 224, 224, ${sp.alpha.toFixed(3)})`;
         ctx.lineWidth = 0.8;
         ctx.stroke();
       }
@@ -287,7 +287,7 @@ export function initAtmosphereCanvas() {
           nextLightningAt = now + 3800 + Math.random() * 6800;
         }
         if (lightningAlpha > 0.004) {
-          ctx.fillStyle = `rgba(215, 228, 250, ${lightningAlpha.toFixed(3)})`;
+          ctx.fillStyle = `rgba(235, 235, 235, ${lightningAlpha.toFixed(3)})`;
           ctx.fillRect(0, 0, w, h);
           lightningAlpha *= 0.86;
         }
@@ -318,7 +318,7 @@ export function initAtmosphereCanvas() {
 
         ctx.beginPath();
         ctx.arc(sf.x, sf.y, sf.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(232, 240, 255, ${sf.alpha.toFixed(3)})`;
+        ctx.fillStyle = `rgba(240, 240, 240, ${sf.alpha.toFixed(3)})`;
         ctx.fill();
       }
     } else {
@@ -350,7 +350,7 @@ export function initAtmosphereCanvas() {
         ctx.rotate(p.rot);
         ctx.beginPath();
         ctx.ellipse(0, 0, p.rx, p.ry, 0, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(218, 228, 244, ${(p.alpha * petalAlphaMul).toFixed(3)})`;
+        ctx.fillStyle = `rgba(225, 225, 225, ${(p.alpha * petalAlphaMul).toFixed(3)})`;
         ctx.fill();
         ctx.restore();
       }
@@ -411,17 +411,17 @@ export function initLiveWeather() {
       ? `${Math.round(weatherEngineState.windSpeed)} км/ч`
       : '—';
 
-    if (hudIcon) hudIcon.textContent = preset.icon;
+    if (hudIcon) hudIcon.textContent = '';
     if (hudClock) hudClock.textContent = clock;
     if (hudTemp) hudTemp.textContent = tempStr;
     if (hudCond) hudCond.textContent = weatherEngineState.override ? `${preset.short}*` : preset.short;
 
     if (popMode) popMode.textContent = weatherEngineState.override ? `PREVIEW · ${preset.short}` : 'LIVE · OPEN-METEO';
-    if (popDesc) popDesc.textContent = `${preset.icon} ${preset.ru} · ${tempStr}`;
+    if (popDesc) popDesc.textContent = `${preset.ru} · ${tempStr}`;
     if (popWind) popWind.textContent = `Ветер ${windStr}`;
 
     if (pilotChip) {
-      pilotChip.textContent = `53.9° N · ${clock} · ${tempStr} ${preset.icon}`;
+      pilotChip.textContent = `53.9° N · ${clock} · ${tempStr} · ${preset.short}`;
     }
 
     document.body.classList.toggle('weather-night', weatherEngineState.isDay === 0);
@@ -447,7 +447,7 @@ export function initLiveWeather() {
       updateWeatherUI();
     } catch (e) {
       if (weatherEngineState.temp === null && popDesc) {
-        popDesc.textContent = '✦ Погода офлайн · режим по умолчанию';
+        popDesc.textContent = 'Погода офлайн · режим по умолчанию';
       }
     }
   }

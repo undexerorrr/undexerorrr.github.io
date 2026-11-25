@@ -29,12 +29,12 @@ const NAV_SECTIONS = [
 ];
 
 const WEATHER_ITEMS = [
-  { mode: 'live', icon: '●', label: 'LIVE', hint: 'Реальная погода 53.9° N · Open-Meteo', kw: 'live лайв реальная авто сейчас' },
-  { mode: 'rain', icon: '☂', label: 'Дождь', hint: 'Косые капли и мокрый нуар', kw: 'rain дождь ливень капли' },
-  { mode: 'snow', icon: '❄', label: 'Снег', hint: 'Медленный снегопад', kw: 'snow снег зима снегопад' },
-  { mode: 'fog', icon: '≋', label: 'Туман', hint: 'Дымка и приглушённый свет', kw: 'fog mist туман дымка' },
-  { mode: 'storm', icon: '⚡', label: 'Гроза', hint: 'Ливень и вспышки молний', kw: 'storm thunder гроза молния шторм' },
-  { mode: 'clear', icon: '✦', label: 'Ясно', hint: 'Звёздное небо', kw: 'clear sun ясно звёзды солнце небо' }
+  { mode: 'live', icon: 'LV', label: 'LIVE', hint: 'Реальная погода 53.9° N · Open-Meteo', kw: 'live лайв реальная авто сейчас' },
+  { mode: 'rain', icon: 'RN', label: 'Дождь', hint: 'Косые капли и мокрый нуар', kw: 'rain дождь ливень капли' },
+  { mode: 'snow', icon: 'SN', label: 'Снег', hint: 'Медленный снегопад', kw: 'snow снег зима снегопад' },
+  { mode: 'fog', icon: 'FG', label: 'Туман', hint: 'Дымка и приглушённый свет', kw: 'fog mist туман дымка' },
+  { mode: 'storm', icon: 'ST', label: 'Гроза', hint: 'Ливень и вспышки молний', kw: 'storm thunder гроза молния шторм' },
+  { mode: 'clear', icon: 'CL', label: 'Ясно', hint: 'Звёздное небо', kw: 'clear sun ясно звёзды солнце небо' }
 ];
 
 const EN_KEYS = 'qwertyuiop[]asdfghjkl;\'zxcvbnm,.`';
@@ -228,7 +228,7 @@ export function initCommandPalette(player) {
 
     out.push({
       group: 'Отсеки · Archive OS',
-      icon: '⊞',
+      icon: 'OS',
       label: navMode === 'os' ? 'Режим просмотра: Вся лента (ALL)' : 'Режим просмотра: Отсеки (OS)',
       hint: navMode === 'os' ? 'Показать все 4 отсека одной лентой' : 'Переключиться в режим 4 отсеков Archive OS',
       meta: navMode.toUpperCase(),
@@ -240,48 +240,48 @@ export function initCommandPalette(player) {
 
     out.push(
       {
-        group: 'Команды', icon: '✦', label: 'Открыть 3D-Галактику', hint: 'WebGL-космос всех тайтлов архива',
+        group: 'Команды', icon: '3D', label: 'Открыть 3D-Галактику', hint: 'WebGL-космос всех тайтлов архива',
         kw: 'галактика galaxy космос 3d вселенная звезды webgl three', page: true,
         run: () => clickById('open-galaxy-topbar-btn')
       },
       {
-        group: 'Команды', icon: '◷', label: 'Галактика: Машина времени',
+        group: 'Команды', icon: 'TM', label: 'Галактика: Машина времени',
         hint: 'Хронологическое зажигание 3D-космоса',
         kw: 'галактика машина времени хронология time machine timeline galaxy космос история 3d', page: true,
         run: () => document.dispatchEvent(new CustomEvent('archive:galaxy-timemachine'))
       },
       {
-        group: 'Команды', icon: '▣', label: cinemaOn ? 'Выключить Cinema Mode' : 'Включить Cinema Mode',
+        group: 'Команды', icon: 'CN', label: cinemaOn ? 'Выключить Cinema Mode' : 'Включить Cinema Mode',
         hint: 'Чистый экран для второго монитора', meta: 'C', kw: 'cinema кино синема режим экран монитор фокус',
         run: () => clickById('cinema-toggle-btn')
       },
       {
-        group: 'Команды', icon: '◈', label: 'Вскрыть Бустер-пак', hint: 'ARCHIVE PACK · Top 16 и все 9–10★',
+        group: 'Команды', icon: 'PK', label: 'Вскрыть Бустер-пак', hint: 'ARCHIVE PACK · Top 16 и все 9–10',
         kw: 'booster pack бустер пак рандом карты randomizer крутануть', page: true,
         run: () => clickById('randomizer-btn')
       },
       {
-        group: 'Команды', icon: '⚔', label: 'Запустить Турнир 1v1', hint: 'Кто лучший из моего топа · Peak Fiction',
+        group: 'Команды', icon: 'VS', label: 'Запустить Турнир 1v1', hint: 'Кто лучший из моего топа · Peak Fiction',
         kw: 'tournament arena турнир арена битва 1v1 versus дуэль', page: true,
         run: () => clickById('collection-arena-btn')
       },
       {
-        group: 'Команды', icon: '⚔', label: 'Турнир 1v1 · Waifu', hint: 'Дуэли персонажей из WAIFU',
+        group: 'Команды', icon: 'VS', label: 'Турнир 1v1 · Waifu', hint: 'Дуэли персонажей из WAIFU',
         kw: 'tournament arena турнир арена waifu вайфу 1v1 дуэль', page: true,
         run: () => clickById('waifu-arena-btn')
       },
       {
-        group: 'Команды', icon: '◎', label: 'Перейти к проверке на базу', hint: 'Taste Match по нику Shikimori',
+        group: 'Команды', icon: 'TM', label: 'Перейти к проверке на базу', hint: 'Taste Match по нику Shikimori',
         kw: 'база taste match совместимость вкус проверка ник shikimori compatibility', page: true,
         run: () => goToSection('compatibility', '#base-nick-input')
       },
       {
-        group: 'Команды', icon: '✎', label: 'Перейти к гостевой стене', hint: 'Guestbook · GitHub Discussions',
+        group: 'Команды', icon: 'GB', label: 'Перейти к гостевой стене', hint: 'Guestbook · GitHub Discussions',
         kw: 'guestbook стена гостевая комментарии giscus отзывы', page: true,
         run: () => goToSection('guestbook')
       },
       {
-        group: 'Команды', icon: '♫', label: 'Открыть Spotify-плейлисты', hint: 'Шторка с плейлистами',
+        group: 'Команды', icon: 'SP', label: 'Открыть Spotify-плейлисты', hint: 'Шторка с плейлистами',
         kw: 'spotify спотифай плейлисты drawer музыка', page: true,
         run: () => clickById('hero-spotify-btn')
       }
@@ -290,7 +290,7 @@ export function initCommandPalette(player) {
     NAV_SECTIONS.forEach((s) => {
       if (!document.getElementById(s.id)) return;
       out.push({
-        group: 'Навигация', icon: '↳', label: `Перейти: ${s.label}`, hint: `#${s.id}`,
+        group: 'Навигация', icon: '→', label: `Перейти: ${s.label}`, hint: `#${s.id}`,
         kw: `перейти секция раздел ${s.kw}`, page: true,
         run: () => goToSection(s.id)
       });
@@ -312,23 +312,23 @@ export function initCommandPalette(player) {
       const current = player.getTrack();
       out.push(
         {
-          group: 'Музыка', icon: playing ? '❚❚' : '▶', label: playing ? 'Музыка: Пауза' : 'Музыка: Play',
+          group: 'Музыка', icon: playing ? '||' : '>', label: playing ? 'Музыка: Пауза' : 'Музыка: Play',
           hint: current ? `${current.title} — ${current.artist}` : 'Плейлист архива',
           kw: 'play pause плей пауза стоп играть музыка трек', run: () => player.toggle()
         },
         {
-          group: 'Музыка', icon: '⏭', label: 'Следующий трек', hint: 'Next',
+          group: 'Музыка', icon: '>>', label: 'Следующий трек', hint: 'Next',
           kw: 'next следующий дальше skip музыка', run: () => player.next()
         },
         {
-          group: 'Музыка', icon: '⏮', label: 'Предыдущий трек', hint: 'Prev',
+          group: 'Музыка', icon: '<<', label: 'Предыдущий трек', hint: 'Prev',
           kw: 'prev previous предыдущий назад музыка', run: () => player.prev()
         }
       );
       PLAYLIST.forEach((track, idx) => {
         const isCurrent = current === track;
         out.push({
-          group: 'Музыка', icon: '♪', label: track.title, hint: track.artist,
+          group: 'Музыка', icon: formatRank(idx + 1), label: track.title, hint: track.artist,
           meta: isCurrent ? (playing ? 'ИГРАЕТ' : 'ВЫБРАН') : formatRank(idx + 1), on: isCurrent && playing,
           kw: `трек песня track музыка play ${formatRank(idx + 1)}`,
           run: () => player.playTrack(idx)
@@ -338,7 +338,7 @@ export function initCommandPalette(player) {
 
     PEAK_FICTION.forEach((a, idx) => {
       out.push({
-        group: 'Peak Fiction · 3D-карты', thumb: appState.coverCache['anime_' + a.malId] || '', icon: '★',
+        group: 'Peak Fiction · 3D-карты', thumb: appState.coverCache['anime_' + a.malId] || '', icon: 'PF',
         label: a.title, hint: `${a.kind} · ${a.year}`, meta: `#${formatRank(a.rank)}`,
         kw: `peak fiction тайтл аниме карта ${a.year} ${(a.vibes || []).join(' ')}`, page: true,
         run: () => openHoloDeck('peak', idx)
@@ -347,7 +347,7 @@ export function initCommandPalette(player) {
 
     WAIFU_LIST.forEach((w, idx) => {
       out.push({
-        group: 'Waifu · 3D-карты', thumb: appState.coverCache['char_' + w.key] || w.shikiImg || '', icon: '♡',
+        group: 'Waifu · 3D-карты', thumb: appState.coverCache['char_' + w.key] || w.shikiImg || '', icon: 'WF',
         label: w.name, hint: w.anime, meta: `#${formatRank(w.rank)}`,
         kw: `waifu вайфу персонаж карта ${w.search || ''}`, page: true,
         run: () => openHoloDeck('waifu', idx)
@@ -356,7 +356,7 @@ export function initCommandPalette(player) {
 
     LITERALLY_ME.forEach((c, idx) => {
       out.push({
-        group: 'Literally Me · 3D-карты', thumb: appState.coverCache['char_' + c.key] || '', icon: '◇',
+        group: 'Literally Me · 3D-карты', thumb: appState.coverCache['char_' + c.key] || '', icon: 'LM',
         label: c.name, hint: c.anime, meta: `#${formatRank(c.rank)}`,
         kw: `literally me литерали персонаж карта ${c.search || ''}`, page: true,
         run: () => openHoloDeck('literally', idx)
@@ -366,7 +366,7 @@ export function initCommandPalette(player) {
     if (initErrors.length === 0) {
       out.push({
         group: 'Система · Диагностика',
-        icon: '✓',
+        icon: 'OK',
         label: 'Диагностика модулей',
         hint: 'Ошибок инициализации нет (0) · статус снапшота',
         meta: 'OK',
