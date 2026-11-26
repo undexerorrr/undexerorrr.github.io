@@ -106,10 +106,188 @@ export function initArchiveGalaxy(player) {
   const ASTROLABE_BASE_OPACITY = [0.14, 0.085, 0.06];
   const HIGHLIGHT_MAX_SEGS = 6;
 
+  // Frame-rate independent exponential smoothing constants (matched to 60 Hz feel)
+  const MAX_DT_SEC = 0.05;
+  const CAM_LAMBDA = 5.34;
+  const CAM_HOP_LAMBDA = 9.05;
+  const LOOK_LAMBDA = 5.0;
+  const LOOK_HOP_LAMBDA = 10.46;
+
+  // Angular velocities in radians/second (60 Hz baseline × 60)
+  const ORBIT_BASE_RAD_SEC = 0.084;
+  const ORBIT_BASS_RAD_SEC = 0.108;
+  const TM_ORBIT_BASE_RAD_SEC = 0.132;
+  const TM_ORBIT_BASS_RAD_SEC = 0.084;
+  const DUST_BASE_RAD_SEC = 0.0156;
+  const DUST_BASS_RAD_SEC = 0.033;
+  const ASTRO_BASE_RAD_SEC = 0.0252;
+  const ASTRO_MID_RAD_SEC = 0.015;
+
+  // Silent Adaptive Performance (downward-only per session + strict 6s cooldown)
+  const AP_WINDOW = 60;
+  const AP_SUSTAIN_MS = 2500;
+  const AP_COOLDOWN_MS = 6000;
+  const AP_WARMUP_MS = 2500;
+  const apState = {
+    frames: new Float32Array(AP_WINDOW),
+    count: 0,
+    cursor: 0,
+    sumMs: 0,
+    highRefreshOverCount: 0,
+    fastBaselineMs: 16.67,
+    warmupUntil: 0,
+    poorSince: 0,
+    lastStepAt: 0,
+    stepIdx: 0,
+    currentDpr: 1
+  };
+
+  function isCoarseMobileViewport() {
+    const coarse = Boolean(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+    return coarse || window.innerWidth <= 720;
+  }
+
+  function getAdaptiveSteps() {
+    if (isCoarseMobileViewport()) {
+      return [
+        { maxDpr: 1.25, dustScale: 1.0, dustAlpha: 1.0 },
+        { maxDpr: 1.0, dustScale: 0.82, dustAlpha: 0.78 }
+      ];
+    }
+    return [
+      { maxDpr: 1.5, dustScale: 1.0, dustAlpha: 1.0 },
+      { maxDpr: 1.15, dustScale: 0.88, dustAlpha: 0.86 },
+      { maxDpr: 1.0, dustScale: 0.74, dustAlpha: 0.70 }
+    ];
+  }
+
+  function getStartDprCeiling() {
+    return Math.min(window.devicePixelRatio || 1, isCoarseMobileViewport() ? 1.25 : 1.5);
+  }
+
+  function resetAdaptiveWindow(now, warmupMs) {
+    apState.count = 0;
+    apState.cursor = 0;
+    apState.sumMs = 0;
+    apState.highRefreshOverCount = 0;
+    apState.poorSince = 0;
+    apState.warmupUntil = (now || performance.now()) + (warmupMs || AP_WARMUP_MS);
+  }
+
+  function syncPerfGalaxyState() {
+    const ps = appState.perfState;
+    if (!ps) return;
+    const steps = getAdaptiveSteps();
+    ps.galaxyOpen = isOpen;
+    ps.webglRunning = rafId !== null;
+    ps.galaxyDpr = apState.currentDpr;
+    ps.galaxyStep = apState.stepIdx;
+    ps.galaxyStepsTotal = steps.length;
+  }
+
+  function applyAdaptiveStep(stepIdx, now) {
+    const steps = getAdaptiveSteps();
+    const clamped = Math.max(0, Math.min(steps.length - 1, stepIdx));
+    const cfg = steps[clamped];
+    const nextDpr = Math.min(window.devicePixelRatio || 1, cfg.maxDpr);
+    apState.stepIdx = clamped;
+    apState.currentDpr = nextDpr;
+    if (now) apState.lastStepAt = now;
+
+    if (renderer) {
+      renderer.setPixelRatio(nextDpr);
+      renderer.setSize(galaxyViewW, galaxyViewH, false);
+    }
+    if (starMat) starMat.uniforms.uPixelRatio.value = nextDpr;
+    if (dustMat) {
+      dustMat.uniforms.uPixelRatio.value = nextDpr;
+      dustMat.uniforms.uDustScale.value = cfg.dustScale;
+      dustMat.uniforms.uDustAlpha.value = cfg.dustAlpha;
+    }
+    syncPerfGalaxyState();
+  }
+
+  function sampleAdaptiveFrame(rawFrameMs, now) {
+    // Ignore tab/modal resume spikes or invalid intervals
+    if (!isFinite(rawFrameMs) || rawFrameMs <= 0.5 || rawFrameMs > 250) return;
+
+    // Track display's smooth baseline cadence (converges toward ~6.9ms on 144Hz, ~8.3ms on 120Hz, ~16.7ms on 60Hz)
+    if (rawFrameMs < apState.fastBaselineMs) {
+      apState.fastBaselineMs = apState.fastBaselineMs * 0.85 + rawFrameMs * 0.15;
+    } else if (rawFrameMs < 20) {
+      apState.fastBaselineMs = apState.fastBaselineMs * 0.992 + rawFrameMs * 0.008;
+    }
+
+    const idx = apState.cursor;
+    if (apState.count === AP_WINDOW) {
+      const evicted = apState.frames[idx];
+      apState.sumMs -= evicted;
+      if (evicted > 12) apState.highRefreshOverCount--;
+    } else {
+      apState.count++;
+    }
+    apState.frames[idx] = rawFrameMs;
+    apState.sumMs += rawFrameMs;
+    if (rawFrameMs > 12) apState.highRefreshOverCount++;
+    apState.cursor = (idx + 1) % AP_WINDOW;
+
+    const steps = getAdaptiveSteps();
+    if (apState.stepIdx >= steps.length - 1) return;
+    if (now < apState.warmupUntil) return;
+    if (apState.lastStepAt > 0 && (now - apState.lastStepAt) < AP_COOLDOWN_MS) return;
+    if (apState.count < AP_WINDOW) return;
+
+    const avgMs = apState.sumMs / apState.count;
+    const isHighRefresh = apState.fastBaselineMs < 11.5;
+    const isDegraded = isHighRefresh
+      ? (avgMs > 12.0 || (apState.highRefreshOverCount / apState.count) >= 0.35)
+      : (avgMs > 22.0);
+
+    if (isDegraded) {
+      if (apState.poorSince === 0) {
+        apState.poorSince = now;
+      } else if ((now - apState.poorSince) >= AP_SUSTAIN_MS) {
+        applyAdaptiveStep(apState.stepIdx + 1, now);
+        resetAdaptiveWindow(now, AP_COOLDOWN_MS);
+      }
+    } else {
+      apState.poorSince = 0;
+    }
+  }
+
   let isOpen = false;
   let isBooting = false;
   let rafId = null;
   let lastFrameAt = 0;
+
+  const holoModalEl = document.getElementById('holo-modal');
+  const detailModalEl = document.getElementById('detail-modal');
+  const hudTopEl = overlay.querySelector('.galaxy-hud-top');
+  const hudBottomEl = overlay.querySelector('.galaxy-hud-bottom');
+
+  function isGalaxyOccluded() {
+    return Boolean(
+      (holoModalEl && holoModalEl.classList.contains('is-open')) ||
+      (detailModalEl && detailModalEl.classList.contains('is-open'))
+    );
+  }
+
+  function updateMobileHudClearance() {
+    if (!overlay || !isOpen) return;
+    if (window.innerWidth > 720) {
+      overlay.style.removeProperty('--galaxy-top-h');
+      overlay.style.removeProperty('--galaxy-bottom-h');
+      return;
+    }
+    if (hudTopEl) {
+      const th = Math.ceil(hudTopEl.getBoundingClientRect().height);
+      if (th > 0) overlay.style.setProperty('--galaxy-top-h', `${th}px`);
+    }
+    if (hudBottomEl) {
+      const bh = Math.ceil(hudBottomEl.getBoundingClientRect().height);
+      if (bh > 0) overlay.style.setProperty('--galaxy-bottom-h', `${bh}px`);
+    }
+  }
 
   let THREE_LIB = null;
   let renderer = null;
@@ -146,8 +324,8 @@ export function initArchiveGalaxy(player) {
     chain: [],
     durations: [],
     segIdx: 0,
-    segStart: 0,
-    fadeStart: 0,
+    segElapsedMs: 0,
+    fadeElapsedMs: 0,
     fading: false,
     focusIdx: -1,
     hidePillTimer: null
@@ -688,7 +866,7 @@ export function initArchiveGalaxy(player) {
       depthWrite: false,
       blending: THREE_LIB.AdditiveBlending,
       uniforms: {
-        uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 1.5) },
+        uPixelRatio: { value: apState.currentDpr || getStartDprCeiling() },
         uTime: { value: 0 },
         uFocusIdx: { value: -1 },
         uBass: { value: 0 },
@@ -981,7 +1159,8 @@ export function initArchiveGalaxy(player) {
     hopState.chain = chain;
     hopState.durations = durations;
     hopState.segIdx = 0;
-    hopState.segStart = performance.now();
+    hopState.segElapsedMs = 0;
+    hopState.fadeElapsedMs = 0;
     hopState.fading = false;
     hopState.focusIdx = chain[1];
 
@@ -1001,13 +1180,71 @@ export function initArchiveGalaxy(player) {
     setHopHud(`ПРЫЖОК 1 / ${segCount}`, activeNodes[targetIdx].title, false);
   }
 
-  function updateStarHopFrame(now) {
+  function updateStarHopFrame(dtMs) {
     if (hopState.active && hopTrailGeom && hopTrailPosBuf && hopTrailColBuf && currentPos) {
       const chain = hopState.chain;
       const segCount = chain.length - 1;
+      hopState.segElapsedMs += dtMs;
+
+      // Advance segments using real elapsed ms with overshoot carry (identical duration on 60–144 Hz)
+      while (hopState.active) {
+        const s = hopState.segIdx;
+        const dur = hopState.durations[s] || 220;
+        if (hopState.segElapsedMs < dur) break;
+
+        if (s + 1 < segCount) {
+          hopState.segElapsedMs -= dur;
+          hopState.segIdx = s + 1;
+          const nextTarget = chain[s + 2];
+          hopState.focusIdx = nextTarget;
+
+          camState.targetLook.x = currentPos[nextTarget * 3];
+          camState.targetLook.y = currentPos[nextTarget * 3 + 1];
+          camState.targetLook.z = currentPos[nextTarget * 3 + 2];
+          camState.targetRadius = s + 2 >= segCount ? 84 : 112;
+          camState.targetTheta += 0.16;
+
+          setHopHud(`ПРЫЖОК ${s + 2} / ${segCount}`, activeNodes[nextTarget].title, false);
+        } else {
+          // Final landing on winning star!
+          const winnerIdx = chain[s + 1];
+          hopState.active = false;
+          hopState.focusIdx = -1;
+          hopState.fading = true;
+          hopState.fadeElapsedMs = 0;
+          reticle?.classList.remove('is-hopping');
+
+          // Render complete final chain on landing frame
+          const vertCount = Math.min(HOP_MAX_VERTS, segCount + 1);
+          for (let k = 0; k < vertCount; k++) {
+            const ni = chain[k];
+            hopTrailPosBuf[k * 3]     = currentPos[ni * 3];
+            hopTrailPosBuf[k * 3 + 1] = currentPos[ni * 3 + 1];
+            hopTrailPosBuf[k * 3 + 2] = currentPos[ni * 3 + 2];
+            const ageFade = (k + 1) / vertCount;
+            const lum = 0.32 + ageFade * 0.68;
+            hopTrailColBuf[k * 3]     = lum;
+            hopTrailColBuf[k * 3 + 1] = lum;
+            hopTrailColBuf[k * 3 + 2] = lum;
+          }
+          hopTrailGeom.setDrawRange(0, vertCount);
+          hopTrailGeom.getAttribute('position').needsUpdate = true;
+          hopTrailGeom.getAttribute('color').needsUpdate = true;
+
+          setHopHud('ВЫБРАНО', activeNodes[winnerIdx].title, true);
+          clearTimeout(hopState.hidePillTimer);
+          hopState.hidePillTimer = setTimeout(() => {
+            hopPill?.classList.remove('is-visible', 'is-locked');
+          }, 1650);
+
+          flyToStar(winnerIdx, true, true);
+          return;
+        }
+      }
+
       const s = hopState.segIdx;
       const dur = hopState.durations[s] || 220;
-      const rawT = Math.min(1, (now - hopState.segStart) / dur);
+      const rawT = Math.min(1, Math.max(0, hopState.segElapsedMs / dur));
       // Smooth cubic ease-out for snappy launch & crisp landing on each star
       const eased = 1 - Math.pow(1 - rawT, 3);
 
@@ -1050,42 +1287,9 @@ export function initArchiveGalaxy(player) {
       hopTrailGeom.setDrawRange(0, vertCount);
       hopTrailGeom.getAttribute('position').needsUpdate = true;
       hopTrailGeom.getAttribute('color').needsUpdate = true;
-
-      if (rawT >= 1) {
-        if (s + 1 < segCount) {
-          // Advance to next star hop!
-          hopState.segIdx = s + 1;
-          hopState.segStart = now;
-          const nextTarget = chain[s + 2];
-          hopState.focusIdx = nextTarget;
-
-          camState.targetLook.x = currentPos[nextTarget * 3];
-          camState.targetLook.y = currentPos[nextTarget * 3 + 1];
-          camState.targetLook.z = currentPos[nextTarget * 3 + 2];
-          camState.targetRadius = s + 2 >= segCount ? 84 : 112;
-          camState.targetTheta += 0.16;
-
-          setHopHud(`ПРЫЖОК ${s + 2} / ${segCount}`, activeNodes[nextTarget].title, false);
-        } else {
-          // Final landing on winning star!
-          const winnerIdx = toIdx;
-          hopState.active = false;
-          hopState.focusIdx = -1;
-          hopState.fading = true;
-          hopState.fadeStart = now;
-          reticle?.classList.remove('is-hopping');
-
-          setHopHud('ВЫБРАНО', activeNodes[winnerIdx].title, true);
-          clearTimeout(hopState.hidePillTimer);
-          hopState.hidePillTimer = setTimeout(() => {
-            hopPill?.classList.remove('is-visible', 'is-locked');
-          }, 1650);
-
-          flyToStar(winnerIdx, true, true);
-        }
-      }
     } else if (hopState.fading && hopTrailMat && hopTrailLine) {
-      const ft = Math.min(1, (now - hopState.fadeStart) / 950);
+      hopState.fadeElapsedMs += dtMs;
+      const ft = Math.min(1, hopState.fadeElapsedMs / 950);
       hopTrailMat.opacity = 0.94 * (1 - ft);
       if (ft >= 1) {
         hopState.fading = false;
@@ -1179,11 +1383,14 @@ export function initArchiveGalaxy(player) {
     }
 
     inspector.classList.add('is-open');
+    requestAnimationFrame(updateMobileHudClearance);
   }
 
   function initThreeScene() {
     const T = THREE_LIB;
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    apState.stepIdx = 0;
+    const dpr = getStartDprCeiling();
+    apState.currentDpr = dpr;
     renderer = new T.WebGLRenderer({ antialias: dpr <= 1.25, alpha: false, powerPreference: 'high-performance' });
     renderer.setPixelRatio(dpr);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -1234,7 +1441,9 @@ export function initArchiveGalaxy(player) {
         uPixelRatio: { value: dpr },
         uTime: { value: 0 },
         uBass: { value: 0 },
-        uHigh: { value: 0 }
+        uHigh: { value: 0 },
+        uDustScale: { value: 1.0 },
+        uDustAlpha: { value: 1.0 }
       },
       vertexShader: `
         attribute vec3 aColor;
@@ -1245,6 +1454,8 @@ export function initArchiveGalaxy(player) {
         uniform float uTime;
         uniform float uBass;
         uniform float uHigh;
+        uniform float uDustScale;
+        uniform float uDustAlpha;
         varying vec3 vColor;
         varying float vAlpha;
 
@@ -1256,8 +1467,8 @@ export function initArchiveGalaxy(player) {
           vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
           float dist = max(24.0, -mvPosition.z);
           float shimmer = 0.86 + 0.14 * sin(uTime * 0.95 + aPhase * 1.7) + uHigh * 0.16;
-          vAlpha = (0.14 + (1.0 - aDepth * 0.5) * 0.20 + uBass * 0.08) * shimmer;
-          gl_PointSize = clamp((aSize * (1.0 + uBass * 0.22) * uPixelRatio * 108.0) / dist, 1.4, 9.2);
+          vAlpha = (0.14 + (1.0 - aDepth * 0.5) * 0.20 + uBass * 0.08) * shimmer * uDustAlpha;
+          gl_PointSize = clamp((aSize * uDustScale * (1.0 + uBass * 0.22) * uPixelRatio * 108.0) / dist, 1.4, 9.2);
           gl_Position = projectionMatrix * mvPosition;
         }
       `,
@@ -1772,6 +1983,7 @@ export function initArchiveGalaxy(player) {
     camState.targetLook.z = 0;
     camState.targetRadius = baseR * 0.88;
     camState.targetPhi = 1.06;
+    requestAnimationFrame(updateMobileHudClearance);
   }
 
   function closeTimeMachine(restoreAll = true) {
@@ -1784,6 +1996,7 @@ export function initArchiveGalaxy(player) {
     tmPanel?.setAttribute('aria-hidden', 'true');
     tmToggleBtn?.classList.remove('active');
     tmToggleBtn?.setAttribute('aria-pressed', 'false');
+    requestAnimationFrame(updateMobileHudClearance);
 
     if (restoreAll && starGeom) {
       const revealAttr = starGeom.getAttribute('aReveal');
@@ -1938,14 +2151,23 @@ export function initArchiveGalaxy(player) {
   }
 
   function renderLoop(now) {
-    if (!isOpen || document.hidden || !renderer || !scene || !camera) {
+    if (!isOpen || document.hidden || isGalaxyOccluded() || !renderer || !scene || !camera) {
       rafId = null;
+      lastFrameAt = 0;
+      syncPerfGalaxyState();
       return;
     }
 
-    const dtMs = lastFrameAt > 0 ? Math.min(50, Math.max(0, now - lastFrameAt)) : 16.67;
-    const dtScale = dtMs / 16.67;
+    const hasPrev = lastFrameAt > 0;
+    const rawFrameMs = hasPrev ? Math.max(0, now - lastFrameAt) : 16.67;
+    const rawDt = rawFrameMs * 0.001;
+    const dt = Math.min(rawDt, MAX_DT_SEC);
+    const dtMs = dt * 1000;
     lastFrameAt = now;
+
+    if (hasPrev) {
+      sampleAdaptiveFrame(rawFrameMs, now);
+    }
 
     const spec = (player && typeof player.sampleSpectrum === 'function')
       ? player.sampleSpectrum(now)
@@ -1969,8 +2191,8 @@ export function initArchiveGalaxy(player) {
       }
     }
 
-    // 1b. Star-Hopping Roulette frame step (100% rAF synced)
-    updateStarHopFrame(now);
+    // 1b. Star-Hopping Roulette frame step (real elapsed dtMs, Hz-independent)
+    updateStarHopFrame(dtMs);
 
     // 1c. Chronological Time Machine playback & flash decay
     if (tmState.open) {
@@ -1981,7 +2203,7 @@ export function initArchiveGalaxy(player) {
         applyTimeMachineAt(nextProg, now, false, prevProg);
         if (!tmState.userDraggedCamera && !hopState.active && !flyState.active) {
           const baseR = activeLayout === 'eras' ? 215 : 178;
-          camState.targetTheta += (0.0022 + bass * 0.0014) * dtScale;
+          camState.targetTheta += (TM_ORBIT_BASE_RAD_SEC + bass * TM_ORBIT_BASS_RAD_SEC) * dt;
           camState.targetPhi = 1.06 + Math.sin(nextProg * Math.PI) * 0.14;
           camState.targetRadius = baseR * (0.86 + nextProg * 0.18);
         }
@@ -1993,7 +2215,7 @@ export function initArchiveGalaxy(player) {
       }
     }
 
-    // 2. Smooth cubic fly-to OR inertial camera orbit + zoom
+    // 2. Smooth cubic fly-to OR exponential frame-rate independent orbit + zoom
     if (flyState.active) {
       const rawT = Math.min(1, (now - flyState.startTime) / flyState.duration);
       const eased = rawT < 0.5 ? 4 * rawT * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 3) / 2;
@@ -2014,16 +2236,16 @@ export function initArchiveGalaxy(player) {
       }
     } else {
       if (autoOrbit && !hopState.active && !(tmState.open && tmState.playing)) {
-        camState.targetTheta += (0.0014 + bass * 0.0018) * dtScale;
+        camState.targetTheta += (ORBIT_BASE_RAD_SEC + bass * ORBIT_BASS_RAD_SEC) * dt;
       }
-      const camLerp = 1 - Math.pow(1 - (hopState.active ? 0.14 : 0.085), dtScale);
-      const lookLerp = 1 - Math.pow(1 - (hopState.active ? 0.16 : 0.08), dtScale);
-      camState.theta += (camState.targetTheta - camState.theta) * camLerp;
-      camState.phi += (camState.targetPhi - camState.phi) * camLerp;
-      camState.radius += (camState.targetRadius - camState.radius) * camLerp;
-      camState.look.x += (camState.targetLook.x - camState.look.x) * lookLerp;
-      camState.look.y += (camState.targetLook.y - camState.look.y) * lookLerp;
-      camState.look.z += (camState.targetLook.z - camState.look.z) * lookLerp;
+      const camAlpha = 1 - Math.exp(-(hopState.active ? CAM_HOP_LAMBDA : CAM_LAMBDA) * dt);
+      const lookAlpha = 1 - Math.exp(-(hopState.active ? LOOK_HOP_LAMBDA : LOOK_LAMBDA) * dt);
+      camState.theta += (camState.targetTheta - camState.theta) * camAlpha;
+      camState.phi += (camState.targetPhi - camState.phi) * camAlpha;
+      camState.radius += (camState.targetRadius - camState.radius) * camAlpha;
+      camState.look.x += (camState.targetLook.x - camState.look.x) * lookAlpha;
+      camState.look.y += (camState.targetLook.y - camState.look.y) * lookAlpha;
+      camState.look.z += (camState.targetLook.z - camState.look.z) * lookAlpha;
     }
 
     const sinPhi = Math.sin(camState.phi);
@@ -2034,10 +2256,10 @@ export function initArchiveGalaxy(player) {
     );
     camera.lookAt(camState.look.x, camState.look.y, camState.look.z);
 
-    // 3. Subtle cosmic motion & deep audio spectrum reactivity
+    // 3. Subtle cosmic motion (rad/sec * dt) & deep audio spectrum reactivity
     const timeSec = now * 0.001;
     if (dustPoints) {
-      dustPoints.rotation.y += (0.00026 + bass * 0.00055) * dtScale;
+      dustPoints.rotation.y += (DUST_BASE_RAD_SEC + bass * DUST_BASS_RAD_SEC) * dt;
     }
     if (dustMat) {
       dustMat.uniforms.uTime.value = timeSec;
@@ -2045,7 +2267,7 @@ export function initArchiveGalaxy(player) {
       dustMat.uniforms.uHigh.value = high;
     }
     if (astrolabeGroup) {
-      astrolabeGroup.rotation.y -= (0.00042 + mid * 0.00025) * dtScale;
+      astrolabeGroup.rotation.y -= (ASTRO_BASE_RAD_SEC + mid * ASTRO_MID_RAD_SEC) * dt;
       const ringScale = 1 + bass * 0.042;
       astrolabeGroup.scale.set(ringScale, 1, ringScale);
       for (let i = 0; i < astrolabeMats.length; i++) {
@@ -2182,6 +2404,7 @@ export function initArchiveGalaxy(player) {
   window.addEventListener('resize', () => {
     galaxyViewW = window.innerWidth;
     galaxyViewH = window.innerHeight;
+    if (isOpen) updateMobileHudClearance();
     if (!renderer || !camera) return;
     clearTimeout(galResizeTimer);
     galResizeTimer = setTimeout(() => {
@@ -2189,26 +2412,36 @@ export function initArchiveGalaxy(player) {
       galaxyViewH = window.innerHeight;
       camera.aspect = galaxyViewW / galaxyViewH;
       camera.updateProjectionMatrix();
-      renderer.setSize(galaxyViewW, galaxyViewH);
-      const nextDpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      if (starMat) starMat.uniforms.uPixelRatio.value = nextDpr;
-      if (dustMat) dustMat.uniforms.uPixelRatio.value = nextDpr;
+      applyAdaptiveStep(apState.stepIdx, 0);
+      if (isOpen) updateMobileHudClearance();
     }, 90);
   }, { passive: true });
 
-  document.addEventListener('visibilitychange', () => {
-    if (!isOpen) return;
-    if (document.hidden) {
+  function syncGalaxyLoop() {
+    const shouldRun = isOpen && !document.hidden && !isGalaxyOccluded() && Boolean(renderer && scene && camera);
+    if (!shouldRun) {
       lastFrameAt = 0;
-      if (rafId) {
+      if (rafId !== null) {
         cancelAnimationFrame(rafId);
         rafId = null;
       }
-    } else if (renderer && !rafId) {
+    } else if (rafId === null) {
       lastFrameAt = 0;
+      resetAdaptiveWindow(performance.now(), 1400);
       rafId = requestAnimationFrame(renderLoop);
     }
-  });
+    syncPerfGalaxyState();
+  }
+
+  document.addEventListener('visibilitychange', syncGalaxyLoop);
+
+  if (typeof MutationObserver !== 'undefined') {
+    const occlusionObserver = new MutationObserver(() => {
+      if (isOpen) syncGalaxyLoop();
+    });
+    if (holoModalEl) occlusionObserver.observe(holoModalEl, { attributes: true, attributeFilter: ['class'] });
+    if (detailModalEl) occlusionObserver.observe(detailModalEl, { attributes: true, attributeFilter: ['class'] });
+  }
 
   async function openGalaxy(opts) {
     const wantsTimeMachine = Boolean(opts && opts.startTimeMachine);
@@ -2226,6 +2459,7 @@ export function initArchiveGalaxy(player) {
     overlay.setAttribute('aria-hidden', 'false');
     document.body.classList.add('galaxy-active');
     player?.syncVisualizer?.();
+    requestAnimationFrame(updateMobileHudClearance);
 
     if (!renderer && !isBooting) {
       isBooting = true;
@@ -2240,6 +2474,7 @@ export function initArchiveGalaxy(player) {
         // Handled cleanly via WebGL loader message below
         if (loaderText) loaderText.textContent = 'WebGL / Three.js недоступен в этом браузере';
         isBooting = false;
+        syncPerfGalaxyState();
         return;
       }
       isBooting = false;
@@ -2247,9 +2482,11 @@ export function initArchiveGalaxy(player) {
       loader?.classList.add('is-hidden');
     }
 
-    if (!rafId) {
-      rafId = requestAnimationFrame(renderLoop);
-    }
+    // Start each open session from crisp DPR ceiling with downward-only adaptive stepping
+    apState.lastStepAt = 0;
+    applyAdaptiveStep(0, 0);
+    resetAdaptiveWindow(performance.now(), AP_WARMUP_MS);
+    syncGalaxyLoop();
 
     if (wantsTimeMachine && isOpen && renderer) {
       openTimeMachine(true);
@@ -2277,10 +2514,11 @@ export function initArchiveGalaxy(player) {
     document.body.classList.remove('galaxy-active');
     player?.syncVisualizer?.();
     updateHoverTooltip(-1, 0, 0);
-    if (rafId) {
+    if (rafId !== null) {
       cancelAnimationFrame(rafId);
       rafId = null;
     }
+    syncPerfGalaxyState();
   }
 
   // Hook live refresh when Shikimori finishes loading in background

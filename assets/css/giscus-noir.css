@@ -61,7 +61,7 @@ main {
   --color-accent-subtle: rgba(197, 203, 213, 0.06);
 
   --color-success-fg: #F3F4F6;
-  --color-success-emphasis: rgba(197, 203, 213, 0.18);
+  --color-success-emphasis: #F3F4F6;
   --color-success-muted: rgba(197, 203, 213, 0.22);
   --color-success-subtle: rgba(197, 203, 213, 0.06);
 
@@ -90,12 +90,25 @@ main {
   --color-btn-primary-border: #F3F4F6;
   --color-btn-primary-shadow: none;
   --color-btn-primary-inset-shadow: none;
-  --color-btn-primary-hover-bg: #ffffff;
-  --color-btn-primary-hover-border: #ffffff;
+  --color-btn-primary-hover-bg: #E2E6EC;
+  --color-btn-primary-hover-border: #E2E6EC;
+  --color-btn-primary-active-bg: #D5DAE2;
   --color-btn-primary-selected-bg: #C5CBD5;
   --color-btn-primary-disabled-text: #4B5260;
   --color-btn-primary-disabled-bg: #15181E;
   --color-btn-primary-disabled-border: rgba(197, 203, 213, 0.08);
+
+  /* Primer v21+ Primary Auth Button Tokens (Obsidian Noir Invert) */
+  --bgColor-success-emphasis: #F3F4F6;
+  --fgColor-onEmphasis: #08090B;
+  --button-primary-fgColor-rest: #08090B;
+  --button-primary-bgColor-rest: #F3F4F6;
+  --button-primary-borderColor-rest: #F3F4F6;
+  --button-primary-bgColor-hover: #E2E6EC;
+  --button-primary-borderColor-hover: #E2E6EC;
+  --button-primary-bgColor-active: #D5DAE2;
+  --button-primary-bgColor-disabled: #15181E;
+  --button-primary-fgColor-disabled: #4B5260;
 
   /* Reactions & Shadows */
   --color-social-reaction-bg-hover: rgba(197, 203, 213, 0.08);
@@ -203,9 +216,23 @@ main {
   transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
-.btn-primary:hover:not(:disabled) {
+.btn-primary,
+a.btn-primary,
+button.btn-primary,
+.gsc-comment-box-bottom .btn-primary {
   color: #08090B;
-  background-color: #ffffff;
+  background-color: #F3F4F6;
+  border-color: #F3F4F6;
+  box-shadow: none;
+}
+
+.btn-primary:hover:not(:disabled),
+a.btn-primary:hover,
+button.btn-primary:hover:not(:disabled),
+.gsc-comment-box-bottom .btn-primary:hover:not(:disabled) {
+  color: #08090B;
+  background-color: #E2E6EC;
+  border-color: #E2E6EC;
 }
 
 .gsc-direct-reaction-buttons {

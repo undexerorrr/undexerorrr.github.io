@@ -74,6 +74,7 @@
   --z-holo: 650;
   --z-holo-close: 660;
   --z-palette: 670;
+  --z-perf: 9990;
   --z-intro: 9999;
 
   /* === Unified Modal System Tokens === */

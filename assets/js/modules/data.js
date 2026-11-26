@@ -182,7 +182,16 @@ export const appState = {
   prefersReducedMotion: Boolean(reducedMotionMQ && reducedMotionMQ.matches),
   holoGalaxyList: [],
   snapshotMeta: null,
-  initErrors: []
+  initErrors: [],
+  perfState: {
+    webglRunning: false,
+    atmosphereRunning: false,
+    audioRunning: false,
+    galaxyOpen: false,
+    galaxyDpr: 0,
+    galaxyStep: 0,
+    galaxyStepsTotal: 1
+  }
 };
 
 if (reducedMotionMQ) {

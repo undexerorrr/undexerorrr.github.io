@@ -120,7 +120,10 @@ export function renderHistory(items, isLive) {
             data-fallback-src="${escapeHtml(fallbackSrc)}"
             ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''}
             alt="${escapeHtml(item.title)}"
+            width="40"
+            height="56"
             loading="lazy"
+            decoding="async"
           />
         </div>
         <div class="history-info">
@@ -457,7 +460,10 @@ export function renderHotTakes(stateInput, loadFailed) {
             data-fallback-src="${escapeHtml(item.shikiImg || '')}"
             ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''}
             alt="${escapeHtml(item.title)}"
+            width="46"
+            height="66"
             loading="lazy"
+            decoding="async"
           />
         </div>
         <div class="ht-body">
@@ -741,7 +747,10 @@ export function renderWatchingShelf(items) {
             data-fallback-src="${escapeHtml(item.shikiImg || '')}"
             ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''}
             alt="${escapeHtml(item.title)}"
+            width="52"
+            height="74"
             loading="lazy"
+            decoding="async"
           />
         </div>
         <div class="watching-info">
@@ -877,110 +886,6 @@ export function initWatchingControls() {
 }
 
 /* =========================================
-   GLASS SPOTLIGHT (EDGE + SURFACE REVEAL)
-   ========================================= */
-export function initGlassSpotlight() {
-  const isFine = !appState.prefersReducedMotion && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if (!isFine) return;
-
-  const SELECTOR = '.glass-card, .discord-card, .watching-card, .music-dock, .modal-card, .arena-card';
-  const PROXIMITY = 220;
-  let rafPending = false;
-  let lastX = -9999;
-  let lastY = -9999;
-  let cachedSurfaces = [];
-  let lastCacheAt = 0;
-
-  function updateSurfaces() {
-    rafPending = false;
-    if (document.body.classList.contains('galaxy-active') || document.body.classList.contains('is-modal-open')) {
-      return;
-    }
-    const now = performance.now();
-    if (!cachedSurfaces.length || now - lastCacheAt > 2500) {
-      cachedSurfaces = Array.from(document.querySelectorAll(SELECTOR))
-        .filter((el) => !el.closest('[hidden]'));
-      lastCacheAt = now;
-    }
-
-    // Phase 1: Pure READ pass (zero synchronous reflows between writes)
-    const vh = window.innerHeight;
-    const writes = [];
-    for (let i = 0; i < cachedSurfaces.length; i++) {
-      const el = cachedSurfaces[i];
-      const rect = el.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0 || rect.bottom < -PROXIMITY || rect.top > vh + PROXIMITY) {
-        if (el.dataset.spotOn === '1') {
-          writes.push({ el, active: false, x: 0, y: 0 });
-        }
-        continue;
-      }
-      const withinX = lastX >= rect.left - PROXIMITY && lastX <= rect.right + PROXIMITY;
-      const withinY = lastY >= rect.top - PROXIMITY && lastY <= rect.bottom + PROXIMITY;
-      if (withinX && withinY) {
-        writes.push({ el, active: true, x: lastX - rect.left, y: lastY - rect.top });
-      } else if (el.dataset.spotOn === '1') {
-        writes.push({ el, active: false, x: 0, y: 0 });
-      }
-    }
-
-    // Phase 2: Pure WRITE pass
-    for (let i = 0; i < writes.length; i++) {
-      const w = writes[i];
-      if (w.active) {
-        w.el.style.setProperty('--spot-x', w.x.toFixed(1) + 'px');
-        w.el.style.setProperty('--spot-y', w.y.toFixed(1) + 'px');
-        if (w.el.dataset.spotOn !== '1') {
-          w.el.dataset.spotOn = '1';
-          w.el.style.setProperty('--spot-o', '1');
-        }
-      } else {
-        w.el.dataset.spotOn = '0';
-        w.el.style.setProperty('--spot-o', '0');
-      }
-    }
-  }
-
-  window.addEventListener('pointermove', (e) => {
-    if (e.pointerType && e.pointerType !== 'mouse') return;
-    lastX = e.clientX;
-    lastY = e.clientY;
-    if (!rafPending) {
-      rafPending = true;
-      requestAnimationFrame(updateSurfaces);
-    }
-  }, { passive: true });
-
-  document.addEventListener('archive:sectorchange', () => {
-    for (let i = 0; i < cachedSurfaces.length; i++) {
-      const el = cachedSurfaces[i];
-      if (el.dataset.spotOn === '1') {
-        el.dataset.spotOn = '0';
-        el.style.setProperty('--spot-o', '0');
-      }
-    }
-    cachedSurfaces = [];
-    lastCacheAt = 0;
-    if (lastX > -1000 && lastY > -1000 && !rafPending) {
-      rafPending = true;
-      requestAnimationFrame(updateSurfaces);
-    }
-  });
-
-  document.addEventListener('mouseleave', () => {
-    lastX = -9999;
-    lastY = -9999;
-    for (let i = 0; i < cachedSurfaces.length; i++) {
-      const el = cachedSurfaces[i];
-      if (el.dataset.spotOn === '1') {
-        el.dataset.spotOn = '0';
-        el.style.setProperty('--spot-o', '0');
-      }
-    }
-  }, { passive: true });
-}
-
-/* =========================================
    RENDERING: WAIFU CAROUSEL + ARROWS + COUNTER
    ========================================= */
 export function renderWaifu() {
@@ -1001,7 +906,10 @@ export function renderWaifu() {
           data-cover-key="${coverKey}"
           ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''}
           alt="${escapeHtml(ch.name)}"
+          width="172"
+          height="254"
           loading="lazy"
+          decoding="async"
         />
         <div class="poster-fallback"><span>//</span>${escapeHtml(ch.name)}</div>
         <div class="waifu-name">${escapeHtml(ch.name)}</div>
@@ -1174,7 +1082,7 @@ export function renderCollection() {
           </div>
           <div class="poster-box">
             <span class="score-pill">${a.score.toFixed(2)}</span>
-            <img data-cover-key="${coverKey}" ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''} alt="${escapeHtml(a.title)}" loading="lazy" />
+            <img data-cover-key="${coverKey}" ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''} alt="${escapeHtml(a.title)}" width="240" height="360" loading="lazy" decoding="async" />
             <div class="poster-glare" aria-hidden="true"></div>
             <div class="poster-fallback"><span>//</span>${escapeHtml(a.title)}</div>
           </div>
@@ -1223,7 +1131,7 @@ export function renderCollection() {
             <span class="sc-index-lbl">${topLabel}</span>
           </div>
           <div class="poster-box">
-            <img data-cover-key="${coverKey}" ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''} alt="${escapeHtml(c.name)}" loading="lazy" />
+            <img data-cover-key="${coverKey}" ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''} alt="${escapeHtml(c.name)}" width="240" height="360" loading="lazy" decoding="async" />
             <div class="poster-glare" aria-hidden="true"></div>
             <div class="poster-fallback"><span>//</span>${escapeHtml(c.name)}</div>
           </div>
@@ -2111,7 +2019,10 @@ export function initTasteMatcher() {
             data-fallback-src="${escapeHtml(item.img || '')}"
             ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''}
             alt="${escapeHtml(item.title)}"
+            width="38"
+            height="54"
             loading="lazy"
+            decoding="async"
           />
         </div>
         <div class="base-row-info">
@@ -3422,7 +3333,7 @@ export function initRandomizer() {
       if (entry.rarity.key === 'mythic') cls.push('is-mythic');
       return `
         <button type="button" class="${cls.join(' ')}" data-hidx="${idx}" title="${escapeHtml(entry.anime.title)}">
-          <img src="${escapeHtml(img)}" alt="" />
+          <img src="${escapeHtml(img)}" alt="" width="20" height="28" loading="lazy" decoding="async" />
           <span>${escapeHtml(entry.anime.title)}</span>
         </button>
       `;

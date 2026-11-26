@@ -592,6 +592,8 @@ export function initVinylShelf(playerControls) {
         img = document.createElement('img');
         img.className = 'vinyl-cover-img';
         img.alt = `${item.artist} — ${item.title}`;
+        img.width = 300;
+        img.height = 300;
         img.loading = 'lazy';
         img.decoding = 'async';
         img.referrerPolicy = 'no-referrer';
@@ -660,7 +662,7 @@ export function initVinylShelf(playerControls) {
                   <span class="vinyl-typo-badge">33 RPM · LP</span>
                 </div>
                 <div class="vinyl-cover-slot"></div>
-                <span class="vinyl-stamp">${escapeHtml(item.catalogNo)} // 33 RPM</span>
+                <span class="vinyl-stamp">${escapeHtml(item.catalogNo)} · 33 RPM</span>
                 <span class="vinyl-play-indicator" aria-hidden="true">${SVG_PLAY}</span>
                 <div class="vinyl-progress-bar" aria-hidden="true">
                   <div class="vinyl-progress-meta">

@@ -17,13 +17,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/css/tokens.css?v=40" />
-  <link rel="stylesheet" href="./assets/css/layout.css?v=40" />
-  <link rel="stylesheet" href="./assets/css/sections.css?v=40" />
-  <link rel="stylesheet" href="./assets/css/overlays.css?v=40" />
-  <link rel="stylesheet" href="./assets/css/vinyl.css?v=40" />
-  <link rel="stylesheet" href="./assets/css/editorial-bw.css?v=40" />
-  <link rel="stylesheet" href="./assets/css/responsive.css?v=40" />
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=41" />
+  <link rel="stylesheet" href="./assets/css/layout.css?v=41" />
+  <link rel="stylesheet" href="./assets/css/sections.css?v=41" />
+  <link rel="stylesheet" href="./assets/css/overlays.css?v=41" />
+  <link rel="stylesheet" href="./assets/css/vinyl.css?v=41" />
+  <link rel="stylesheet" href="./assets/css/editorial-bw.css?v=41" />
+  <link rel="stylesheet" href="./assets/css/responsive.css?v=41" />
 </head>
 <body>
 
@@ -45,6 +45,7 @@
       class="bg-photo"
       src="./bg.jpg"
       alt=""
+      decoding="async"
       onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='https://i.ibb.co/VWwn4cn0/Gemini-Generated-Image-tus56atus56atus5.jpg';}"
     />
     <div class="bg-vignette"></div>
@@ -197,6 +198,10 @@
                   class="avatar-img"
                   src="https://shikimori.one/system/users/x160/1308586.png"
                   alt="undereror nyashka"
+                  width="84"
+                  height="84"
+                  decoding="async"
+                  fetchpriority="high"
                 />
               </div>
 
@@ -210,7 +215,7 @@
             <div class="pilot-presence">
               <div class="discord-card" id="discord-card">
                 <div class="discord-art-wrap">
-                  <img id="discord-art" class="discord-art is-round" src="https://shikimori.one/system/users/x160/1308586.png" alt="Discord" />
+                  <img id="discord-art" class="discord-art is-round" src="https://shikimori.one/system/users/x160/1308586.png" alt="Discord" width="46" height="46" decoding="async" />
                   <span class="discord-status-badge offline" id="discord-status-dot" title="Статус Discord"></span>
                 </div>
                 <div class="discord-body">
@@ -665,7 +670,7 @@
 
               <div class="base-verdict-center">
                 <div class="base-matchup-row">
-                  <img class="base-guest-avatar" id="base-guest-avatar" src="" alt="" />
+                  <img class="base-guest-avatar" id="base-guest-avatar" src="" alt="" width="28" height="28" loading="lazy" decoding="async" />
                   <span class="base-matchup-names">
                     <strong id="base-guest-name">Гость</strong> × <strong>undereror nyashka</strong>
                   </span>
@@ -764,8 +769,8 @@
               <div class="coop-summary-bar">
                 <div class="coop-players-pair">
                   <div class="coop-avatars-stack">
-                    <img id="coop-av-1" src="https://shikimori.one/system/users/x160/1308586.png" alt="" />
-                    <img id="coop-av-2" src="https://shikimori.one/assets/globals/missing_avatar/x160.png" alt="" />
+                    <img id="coop-av-1" src="https://shikimori.one/system/users/x160/1308586.png" alt="" width="34" height="34" loading="lazy" decoding="async" />
+                    <img id="coop-av-2" src="https://shikimori.one/assets/globals/missing_avatar/x160.png" alt="" width="34" height="34" loading="lazy" decoding="async" />
                   </div>
                   <div class="coop-pair-info">
                     <div class="coop-pair-names"><strong id="coop-name-1">Игрок 1</strong> × <strong id="coop-name-2">Игрок 2</strong></div>
@@ -1107,7 +1112,7 @@
           <button type="button" class="arena-contender" id="arena-left-btn" aria-label="Выбрать левого претендента">
             <div class="arena-poster">
               <span class="arena-key-hint">← / 1</span>
-              <img id="arena-left-img" src="" alt="" />
+              <img id="arena-left-img" src="" alt="" decoding="async" />
             </div>
             <div class="arena-contender-name" id="arena-left-name"></div>
             <div class="arena-contender-sub" id="arena-left-sub"></div>
@@ -1118,7 +1123,7 @@
           <button type="button" class="arena-contender" id="arena-right-btn" aria-label="Выбрать правого претендента">
             <div class="arena-poster">
               <span class="arena-key-hint">→ / 2</span>
-              <img id="arena-right-img" src="" alt="" />
+              <img id="arena-right-img" src="" alt="" decoding="async" />
             </div>
             <div class="arena-contender-name" id="arena-right-name"></div>
             <div class="arena-contender-sub" id="arena-right-sub"></div>
@@ -1132,7 +1137,7 @@
       <div class="arena-champion-view" id="arena-champion-view">
         <div class="arena-champ-hero">
           <div class="arena-champ-poster">
-            <img id="arena-champ-img" src="" alt="" />
+            <img id="arena-champ-img" src="" alt="" decoding="async" />
           </div>
           <div class="arena-champ-info">
             <span class="arena-champ-kicker" id="arena-champ-kicker">ТВОЙ #1 ЧЕМПИОН · PEAK FICTION</span>
@@ -1187,7 +1192,7 @@
 
         <div class="coop-deck-viewport">
           <div class="coop-swipe-card" id="coop-swipe-card">
-            <img class="coop-swipe-art" id="coop-swipe-img" src="" alt="" />
+            <img class="coop-swipe-art" id="coop-swipe-img" src="" alt="" decoding="async" />
             <div class="coop-swipe-stamp is-like" id="coop-stamp-like">ХОЧУ</div>
             <div class="coop-swipe-stamp is-pass" id="coop-stamp-pass">СКИП</div>
             <div class="coop-swipe-overlay">
@@ -1218,7 +1223,7 @@
       <div class="coop-ticket-view" id="coop-ticket-view">
         <div class="coop-ticket-card">
           <div class="coop-ticket-poster">
-            <img id="coop-ticket-img" src="" alt="" />
+            <img id="coop-ticket-img" src="" alt="" decoding="async" />
           </div>
           <div class="coop-ticket-body">
             <span class="coop-ticket-kicker" id="coop-ticket-kicker">IT'S A MATCH · СЕАНС НА ВЕЧЕР</span>
@@ -1288,7 +1293,7 @@
 
     <!-- Hover Preview Tooltip -->
     <div class="galaxy-hover-tip" id="galaxy-hover-tip" aria-hidden="true">
-      <div class="galaxy-tip-thumb"><img id="galaxy-tip-img" src="" alt="" /></div>
+      <div class="galaxy-tip-thumb"><img id="galaxy-tip-img" src="" alt="" width="38" height="54" decoding="async" /></div>
       <div class="galaxy-tip-body">
         <div class="galaxy-tip-title" id="galaxy-tip-title"></div>
         <div class="galaxy-tip-meta" id="galaxy-tip-meta"></div>
@@ -1323,7 +1328,7 @@
     <aside class="galaxy-inspector" id="galaxy-inspector" aria-label="Досье выбранной звезды">
       <button type="button" class="modal-close" id="galaxy-insp-close" aria-label="Закрыть досье" style="top:10px;right:10px;width:26px;height:26px;font-size:14px;">×</button>
       <div class="galaxy-insp-top">
-        <div class="galaxy-insp-poster"><img id="galaxy-insp-img" src="" alt="" /></div>
+        <div class="galaxy-insp-poster"><img id="galaxy-insp-img" src="" alt="" width="72" height="102" decoding="async" /></div>
         <div class="galaxy-insp-info">
           <span class="galaxy-insp-tag" id="galaxy-insp-tag">STAR // PEAK FICTION</span>
           <h3 class="galaxy-insp-title" id="galaxy-insp-title"></h3>
@@ -1407,7 +1412,7 @@
         <div class="holo-flipper" id="holo-flipper">
           <!-- FRONT FACE -->
           <div class="holo-face holo-front">
-            <img class="holo-art" id="holo-img" src="" alt="" />
+            <img class="holo-art" id="holo-img" src="" alt="" decoding="async" />
             <div class="holo-foil" aria-hidden="true"></div>
             <div class="holo-sparkle" aria-hidden="true"></div>
             <div class="holo-glare" aria-hidden="true"></div>
@@ -1559,7 +1564,7 @@
           <div class="holo-flipper" id="pack-holo-flipper">
             <!-- FRONT FACE -->
             <div class="holo-face holo-front">
-              <img class="holo-art" id="pack-card-img" src="" alt="" />
+              <img class="holo-art" id="pack-card-img" src="" alt="" decoding="async" />
               <div class="holo-foil" aria-hidden="true"></div>
               <div class="holo-sparkle" aria-hidden="true"></div>
               <div class="holo-glare" aria-hidden="true"></div>
@@ -1691,7 +1696,7 @@
     <div class="modal-card" role="dialog" aria-modal="true">
       <button type="button" class="modal-close" id="modal-close" aria-label="Закрыть">×</button>
       <div class="modal-poster">
-        <img id="modal-img" src="" alt="" />
+        <img id="modal-img" src="" alt="" decoding="async" />
       </div>
       <div class="modal-body">
         <div class="modal-tag" id="modal-tag">PEAK FICTION</div>
@@ -1752,6 +1757,6 @@
     </div>
   </div>
 
-  <script type="module" src="./assets/js/main.js?v=40"></script>
+  <script type="module" src="./assets/js/main.js?v=41"></script>
 </body>
 </html>

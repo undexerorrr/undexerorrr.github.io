@@ -141,6 +141,7 @@ export function initAtmosphereCanvas() {
     }, 120);
   }, { passive: true });
   window.addEventListener('mousemove', (e) => {
+    if (atmoRafId === null) return;
     mouse.x = e.clientX;
     mouse.y = e.clientY;
   }, { passive: true });
@@ -162,6 +163,12 @@ export function initAtmosphereCanvas() {
 
   let atmoRafId = null;
 
+  function setPerfAtmosphereRunning(running) {
+    if (appState.perfState) {
+      appState.perfState.atmosphereRunning = Boolean(running);
+    }
+  }
+
   function isAtmospherePaused() {
     if (document.hidden) return true;
     if (document.body.classList.contains('galaxy-active') || document.body.classList.contains('is-modal-open')) return true;
@@ -177,14 +184,19 @@ export function initAtmosphereCanvas() {
         cancelAnimationFrame(atmoRafId);
         atmoRafId = null;
       }
+      setPerfAtmosphereRunning(false);
     } else if (atmoRafId === null) {
       atmoRafId = requestAnimationFrame(frame);
+      setPerfAtmosphereRunning(true);
     }
   }
 
   function frame(now) {
     atmoRafId = null;
-    if (isAtmospherePaused()) return;
+    if (isAtmospherePaused()) {
+      setPerfAtmosphereRunning(false);
+      return;
+    }
     ctx.clearRect(0, 0, w, h);
     const mode = weatherEngineState.activeMode || 'clear';
     const beatBoost = 1 + appState.liveBeatEnergy * 1.15;
@@ -358,6 +370,9 @@ export function initAtmosphereCanvas() {
 
     if (!isAtmospherePaused()) {
       atmoRafId = requestAnimationFrame(frame);
+      setPerfAtmosphereRunning(true);
+    } else {
+      setPerfAtmosphereRunning(false);
     }
   }
 

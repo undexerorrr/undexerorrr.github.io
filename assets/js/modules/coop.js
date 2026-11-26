@@ -394,7 +394,10 @@ export function initCoopPicker() {
                 data-fallback-src="${escapeHtml(item.img || '')}"
                 ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''}
                 alt="${escapeHtml(item.title)}"
+                width="54"
+                height="78"
                 loading="lazy"
+                decoding="async"
               />
             </div>
             <div class="coop-card-info">

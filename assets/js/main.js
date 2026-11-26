@@ -35,7 +35,6 @@ import {
   renderActivityGraph,
   renderWatchingShelf,
   initWatchingControls,
-  initGlassSpotlight,
   renderWaifu,
   initWaifuControls,
   renderCollection,
@@ -83,12 +82,17 @@ safeInit('renderHistory', () => renderHistory(SNAPSHOT.history, false));
 safeInit('renderActivityGraph', () => renderActivityGraph(SNAPSHOT.activity));
 safeInit('renderWatchingShelf', () => renderWatchingShelf(appState.watchingList.length ? appState.watchingList : SNAPSHOT.watching));
 safeInit('initWatchingControls', () => initWatchingControls());
-safeInit('initGlassSpotlight', () => initGlassSpotlight());
 safeInit('renderWaifu', () => renderWaifu());
 safeInit('initWaifuControls', () => initWaifuControls());
 safeInit('renderCollection', () => renderCollection());
 safeInit('vinyl', () => initVinylShelf(playerControls));
 safeInit('initGuestbook', () => initGuestbook());
+
+if (new URLSearchParams(window.location.search).get('perf') === '1') {
+  import('./modules/perf.js')
+    .then((mod) => safeInit('initPerfHud', () => mod.initPerfHud()))
+    .catch(() => {});
+}
 
 bootstrapShikimoriSync(
   PEAK_FICTION.map((a) => a.malId),

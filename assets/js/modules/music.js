@@ -476,11 +476,18 @@ export function initMusicPlayer() {
     return isPlaying || smoothBeat > 0.004;
   }
 
+  function setPerfAudioRunning(running) {
+    if (appState.perfState) {
+      appState.perfState.audioRunning = Boolean(running);
+    }
+  }
+
   function stopVisualizerLoop() {
     if (visRafId !== null) {
       cancelAnimationFrame(visRafId);
       visRafId = null;
     }
+    setPerfAudioRunning(false);
   }
 
   function syncVisualizer() {
@@ -488,6 +495,7 @@ export function initMusicPlayer() {
       if (visRafId === null) {
         visRafId = requestAnimationFrame(visualizerFrame);
       }
+      setPerfAudioRunning(true);
     } else {
       stopVisualizerLoop();
       if (!isPlaying && !document.body.classList.contains('galaxy-active')) {
@@ -501,6 +509,7 @@ export function initMusicPlayer() {
   function visualizerFrame(now) {
     visRafId = null;
     if (!shouldRunVisualizer()) {
+      setPerfAudioRunning(false);
       if (!isPlaying && !document.body.classList.contains('galaxy-active')) {
         resetAudioSpectrum();
         writeBeatEnergy(0);
@@ -554,10 +563,14 @@ export function initMusicPlayer() {
 
     if (shouldRunVisualizer()) {
       visRafId = requestAnimationFrame(visualizerFrame);
-    } else if (!isPlaying) {
-      resetAudioSpectrum();
-      writeBeatEnergy(0);
-      drawIdleBaseline();
+      setPerfAudioRunning(true);
+    } else {
+      setPerfAudioRunning(false);
+      if (!isPlaying) {
+        resetAudioSpectrum();
+        writeBeatEnergy(0);
+        drawIdleBaseline();
+      }
     }
   }
 
@@ -608,6 +621,12 @@ export function initSpotifyDrawer(player) {
 
   let activeIdx = 0;
   let hasLoadedEmbed = false;
+  let hasFetchedTitles = false;
+
+  // Guarantee iframe carries zero network src until the very first drawer open
+  if (iframe.hasAttribute('src')) {
+    iframe.removeAttribute('src');
+  }
 
   function renderTabs() {
     tabsWrap.innerHTML = SPOTIFY_PLAYLISTS.map((pl, idx) => `
@@ -623,20 +642,39 @@ export function initSpotifyDrawer(player) {
     });
   }
 
+  function fetchPlaylistTitlesOnce() {
+    if (hasFetchedTitles) return;
+    hasFetchedTitles = true;
+    SPOTIFY_PLAYLISTS.forEach((pl, idx) => {
+      fetchJsonWithTimeout(`https://open.spotify.com/oembed?url=${encodeURIComponent(pl.url)}`, {}, 6500)
+        .then(({ ok, data }) => {
+          if (ok && data && data.title) {
+            SPOTIFY_PLAYLISTS[idx].label = `${formatRank(idx + 1)} · ${data.title}`;
+            renderTabs();
+          }
+        })
+        .catch(() => {});
+    });
+  }
+
   function selectPlaylist(idx) {
     activeIdx = idx;
     const pl = SPOTIFY_PLAYLISTS[idx];
     if (!pl) return;
     renderTabs();
-    iframe.src = `https://open.spotify.com/embed/playlist/${pl.id}?utm_source=generator&theme=0`;
+    const targetUrl = `https://open.spotify.com/embed/playlist/${pl.id}?utm_source=generator&theme=0`;
     if (extLink) extLink.href = pl.url;
-    hasLoadedEmbed = true;
+    if (!hasLoadedEmbed || iframe.getAttribute('src') !== targetUrl) {
+      iframe.src = targetUrl;
+      hasLoadedEmbed = true;
+    }
   }
 
   function openDrawer() {
     if (!hasLoadedEmbed) {
       selectPlaylist(activeIdx);
     }
+    fetchPlaylistTitlesOnce();
     drawer.classList.add('is-open');
     backdrop?.classList.add('is-open');
     drawer.setAttribute('aria-hidden', 'false');
@@ -661,18 +699,6 @@ export function initSpotifyDrawer(player) {
   });
 
   renderTabs();
-
-  // Try fetching actual Spotify playlist titles via public oEmbed
-  SPOTIFY_PLAYLISTS.forEach((pl, idx) => {
-    fetchJsonWithTimeout(`https://open.spotify.com/oembed?url=${encodeURIComponent(pl.url)}`, {}, 6500)
-      .then(({ ok, data }) => {
-        if (ok && data && data.title) {
-          SPOTIFY_PLAYLISTS[idx].label = `${formatRank(idx + 1)} · ${data.title}`;
-          renderTabs();
-        }
-      })
-      .catch(() => {});
-  });
 }
 
 /* =========================================
