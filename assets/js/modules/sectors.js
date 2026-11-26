@@ -2,7 +2,7 @@ import { NAV_MODE_STORAGE_KEY } from './config.js';
 import { appState } from './data.js';
 
 /* =========================================
-   ARCHIVE OS — 4-SECTOR NAVIGATION & VIEW TRANSITIONS
+   ARCHIVE OS — 4-SECTOR NAVIGATION & GPU EDITORIAL TRANSITIONS
    ========================================= */
 export const SECTORS = [
   {
@@ -109,10 +109,14 @@ const finePointerMQ = window.matchMedia
   ? window.matchMedia('(hover: hover) and (pointer: fine)')
   : null;
 
+const SECTOR_ENTER_DURATION_MS = 240;
+const SECTOR_STAGGER_STEP_MS = 40;
+const SECTOR_MAX_STAGGER_STEPS = 4;
+
 let initialized = false;
-let activeTransition = null;
 let allModeObserver = null;
-let fallbackEnterTimer = null;
+let enterCleanupTimer = null;
+let activeEnterCleanup = null;
 
 function prefersReducedMotion() {
   return Boolean(appState.prefersReducedMotion || (reducedMotionMQ && reducedMotionMQ.matches));
@@ -234,84 +238,83 @@ function applyPanelsVisibility(sectorId, navMode) {
   updateActiveIndicators(sectorId);
 }
 
-function clearFallbackClasses() {
-  if (fallbackEnterTimer !== null) {
-    clearTimeout(fallbackEnterTimer);
-    fallbackEnterTimer = null;
+function clearSectorEnterAnimation() {
+  if (enterCleanupTimer !== null) {
+    clearTimeout(enterCleanupTimer);
+    enterCleanupTimer = null;
   }
-  document.querySelectorAll('.sector-panel.is-vt-fallback-enter').forEach((el) => {
-    el.classList.remove('is-vt-fallback-enter');
+  if (typeof activeEnterCleanup === 'function') {
+    const fn = activeEnterCleanup;
+    activeEnterCleanup = null;
+    fn();
+  }
+  document.querySelectorAll('.sector-panel.is-sector-entering').forEach((panel) => {
+    panel.classList.remove('is-sector-entering');
+    panel.querySelectorAll(':scope > .sector-masthead, :scope > section').forEach((block) => {
+      block.style.removeProperty('--stagger-i');
+    });
   });
 }
 
-function triggerFallbackEnterAnimation(sectorId) {
-  if (prefersReducedMotion()) return;
-  clearFallbackClasses();
+function triggerSectorEnterAnimation(sectorId) {
+  if (document.hidden) return;
+  clearSectorEnterAnimation();
+
   const panel = document.querySelector(`.sector-panel[data-sector="${sectorId}"]`);
   if (!panel || panel.hidden) return;
+
+  const blocks = Array.from(
+    panel.querySelectorAll(':scope > .sector-masthead, :scope > section')
+  ).filter((el) => el.style.display !== 'none' && !el.hidden);
+
+  if (!blocks.length) return;
+
+  const maxStepIdx = Math.min(SECTOR_MAX_STAGGER_STEPS - 1, Math.max(0, blocks.length - 1));
+  blocks.forEach((block, idx) => {
+    const step = Math.min(SECTOR_MAX_STAGGER_STEPS - 1, idx);
+    block.style.setProperty('--stagger-i', String(step));
+  });
+
+  // Single reflow so rapid repeated switches cleanly restart GPU keyframes
   void panel.offsetWidth;
-  panel.classList.add('is-vt-fallback-enter');
-  const cleanup = () => {
-    panel.classList.remove('is-vt-fallback-enter');
-    if (fallbackEnterTimer !== null) {
-      clearTimeout(fallbackEnterTimer);
-      fallbackEnterTimer = null;
+  panel.classList.add('is-sector-entering');
+
+  const lastBlock = blocks[Math.min(blocks.length - 1, SECTOR_MAX_STAGGER_STEPS - 1)];
+  let finished = false;
+
+  const finalize = () => {
+    if (finished) return;
+    finished = true;
+    if (enterCleanupTimer !== null) {
+      clearTimeout(enterCleanupTimer);
+      enterCleanupTimer = null;
+    }
+    if (lastBlock) {
+      lastBlock.removeEventListener('animationend', onAnimEnd);
+    }
+    activeEnterCleanup = null;
+    panel.classList.remove('is-sector-entering');
+    blocks.forEach((block) => block.style.removeProperty('--stagger-i'));
+  };
+
+  const onAnimEnd = (e) => {
+    if (e.target === lastBlock && e.animationName === 'sector-block-enter') {
+      finalize();
     }
   };
-  panel.addEventListener('animationend', cleanup, { once: true });
-  fallbackEnterTimer = window.setTimeout(cleanup, 280);
-}
 
-function runViewTransition(updateDom, dir, onUpdated, targetSectorId) {
-  const root = document.documentElement;
-  const reduced = prefersReducedMotion();
-
-  if (reduced || typeof document.startViewTransition !== 'function' || document.hidden) {
-    updateDom();
-    if (!reduced && targetSectorId) triggerFallbackEnterAnimation(targetSectorId);
-    if (typeof onUpdated === 'function') onUpdated();
-    return Promise.resolve();
-  }
-
-  if (activeTransition && typeof activeTransition.skipTransition === 'function') {
-    try { activeTransition.skipTransition(); } catch (e) {}
-  }
-
-  clearFallbackClasses();
-  root.dataset.vtDir = dir || 'forward';
-  root.classList.add('is-sector-transitioning');
-
-  let vt = null;
-  try {
-    vt = document.startViewTransition(() => {
-      updateDom();
-    });
-  } catch (e) {
-    root.classList.remove('is-sector-transitioning');
-    delete root.dataset.vtDir;
-    updateDom();
-    if (targetSectorId) triggerFallbackEnterAnimation(targetSectorId);
-    if (typeof onUpdated === 'function') onUpdated();
-    return Promise.resolve();
-  }
-
-  activeTransition = vt;
-  if (vt.ready && typeof vt.ready.catch === 'function') vt.ready.catch(() => {});
-  if (vt.updateCallbackDone && typeof vt.updateCallbackDone.then === 'function') {
-    vt.updateCallbackDone.then(() => {
-      if (typeof onUpdated === 'function') onUpdated();
-    }).catch(() => {});
-  } else if (typeof onUpdated === 'function') {
-    onUpdated();
-  }
-
-  return (vt.finished ? vt.finished.catch(() => {}) : Promise.resolve()).finally(() => {
-    if (activeTransition === vt) {
-      activeTransition = null;
-      root.classList.remove('is-sector-transitioning');
-      delete root.dataset.vtDir;
+  activeEnterCleanup = () => {
+    if (lastBlock) {
+      lastBlock.removeEventListener('animationend', onAnimEnd);
     }
-  });
+  };
+
+  if (lastBlock) {
+    lastBlock.addEventListener('animationend', onAnimEnd);
+  }
+
+  const safetyMs = SECTOR_ENTER_DURATION_MS + maxStepIdx * SECTOR_STAGGER_STEP_MS + 65;
+  enterCleanupTimer = window.setTimeout(finalize, safetyMs);
 }
 
 function updateUrlHash(nextHash, replace) {
@@ -414,6 +417,9 @@ export function setSector(sectorId, opts) {
   if (appState.navMode === 'all') {
     appState.activeSector = nextSector;
     applyPanelsVisibility(nextSector, 'all');
+    if (transition && nextSector !== prevSector) {
+      triggerSectorEnterAnimation(nextSector);
+    }
     if (updateUrl) updateUrlHash(nextHash, replaceHistory);
     emitSectorChange(nextSector, prevSector, targetAnchor);
 
@@ -430,31 +436,24 @@ export function setSector(sectorId, opts) {
     return Promise.resolve();
   }
 
-  const prevMeta = SECTOR_MAP.get(prevSector) || SECTOR_MAP.get('dossier');
-  const dir = meta.index >= prevMeta.index ? 'forward' : 'backward';
+  appState.activeSector = nextSector;
+  applyPanelsVisibility(nextSector, 'os');
 
-  const applyDom = () => {
-    appState.activeSector = nextSector;
-    applyPanelsVisibility(nextSector, 'os');
-  };
-
-  const afterDom = () => {
-    if (updateUrl) updateUrlHash(nextHash, replaceHistory);
-    emitSectorChange(nextSector, prevSector, targetAnchor);
-    if (targetAnchor) {
-      scrollToTargetElement(targetAnchor, focusSelector);
-    } else if (scrollTop && window.scrollY > 2) {
-      window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
-    }
-  };
-
-  if (!transition) {
-    applyDom();
-    afterDom();
-    return Promise.resolve();
+  if (scrollTop && !targetAnchor && window.scrollY > 2) {
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }
 
-  return runViewTransition(applyDom, dir, afterDom, nextSector);
+  if (transition) {
+    triggerSectorEnterAnimation(nextSector);
+  }
+
+  if (updateUrl) updateUrlHash(nextHash, replaceHistory);
+  emitSectorChange(nextSector, prevSector, targetAnchor);
+  if (targetAnchor) {
+    scrollToTargetElement(targetAnchor, focusSelector);
+  }
+
+  return Promise.resolve();
 }
 
 export function setNavMode(mode, opts) {
@@ -475,35 +474,28 @@ export function setNavMode(mode, opts) {
   }
 
   const sector = appState.activeSector || 'dossier';
-  const dir = nextMode === 'all' ? 'forward' : 'backward';
 
-  const applyDom = () => {
-    appState.navMode = nextMode;
-    applyPanelsVisibility(sector, nextMode);
-  };
+  appState.navMode = nextMode;
+  applyPanelsVisibility(sector, nextMode);
 
-  const afterDom = () => {
-    if (nextMode === 'all') {
-      setupAllModeSpy();
-      if (sector !== 'dossier') {
-        scrollToTargetElement(`sector-${sector}`, null);
-      }
-    } else {
-      disconnectAllModeSpy();
-      if (window.scrollY > 2) {
-        window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
-      }
+  if (nextMode === 'all') {
+    setupAllModeSpy();
+    if (sector !== 'dossier') {
+      scrollToTargetElement(`sector-${sector}`, null);
     }
-    emitSectorChange(sector, sector, null);
-  };
-
-  if (!transition) {
-    applyDom();
-    afterDom();
-    return Promise.resolve();
+  } else {
+    disconnectAllModeSpy();
+    if (window.scrollY > 2) {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
   }
 
-  return runViewTransition(applyDom, dir, afterDom, sector);
+  if (transition) {
+    triggerSectorEnterAnimation(sector);
+  }
+
+  emitSectorChange(sector, sector, null);
+  return Promise.resolve();
 }
 
 export function toggleNavMode(opts) {
@@ -570,6 +562,9 @@ export function initSectors() {
       const prev = appState.activeSector;
       appState.activeSector = 'dossier';
       applyPanelsVisibility('dossier', 'all');
+      if (prev !== 'dossier') {
+        triggerSectorEnterAnimation('dossier');
+      }
       updateUrlHash('dossier', false);
       emitSectorChange('dossier', prev, null);
       window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });

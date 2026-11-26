@@ -2,6 +2,7 @@ import { PLAYLIST, formatRank, escapeHtml } from './config.js';
 import { appState, PEAK_FICTION, WAIFU_LIST, LITERALLY_ME } from './data.js';
 import { openHoloDeck } from './ui.js';
 import { SECTORS, getSectorState, setSector, toggleNavMode, navigateToTarget } from './sectors.js';
+import { isSfxEnabled, toggleSfx } from './sfx.js';
 
 /* =========================================
    ARCHIVE COMMAND PALETTE (CTRL+K / ⌘K)
@@ -182,6 +183,7 @@ export function initCommandPalette(player) {
   function buildItems() {
     const out = [];
     const cinemaOn = isCinemaActive();
+    const sfxOn = isSfxEnabled();
     const { sector: activeSector, navMode } = getSectorState();
     const initErrors = Array.isArray(appState.initErrors) ? appState.initErrors : [];
 
@@ -255,6 +257,12 @@ export function initCommandPalette(player) {
         group: 'Команды', icon: 'CN', label: cinemaOn ? 'Выключить Cinema Mode' : 'Включить Cinema Mode',
         hint: 'Чистый экран для второго монитора', meta: 'C', kw: 'cinema кино синема режим экран монитор фокус',
         run: () => clickById('cinema-toggle-btn')
+      },
+      {
+        group: 'Команды', icon: 'FX', label: sfxOn ? 'Звуки ARCHIVE PACK: Вкл' : 'Звуки ARCHIVE PACK: Выкл',
+        hint: 'Переключить звуки вскрытия бустер-пака', meta: sfxOn ? 'ВКЛ' : 'ВЫКЛ', on: sfxOn,
+        kw: 'sfx звук звуки аудио pack бустер пак archive mute тихо silent toggle',
+        run: () => toggleSfx()
       },
       {
         group: 'Команды', icon: 'PK', label: 'Вскрыть Бустер-пак', hint: 'ARCHIVE PACK · Top 16 и все 9–10',

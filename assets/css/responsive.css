@@ -2051,15 +2051,3 @@
     transition-delay: 0s;
   }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(sector-stage),
-  ::view-transition-old(sector-stage),
-  ::view-transition-new(sector-stage) {
-    animation: none !important;
-  }
-
-  .sector-panel.is-vt-fallback-enter {
-    animation: none !important;
-  }
-}

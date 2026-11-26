@@ -26,6 +26,12 @@ import {
   loadAnimeCoversBatch
 } from './shikimori.js';
 import { buildFallbackTrophiesState, renderTrophiesShowcase } from './trophies.js';
+import {
+  setSfxEnabled,
+  playPackTension,
+  playPackTear,
+  playPackReveal
+} from './sfx.js';
 
 /* =========================================
    RENDERING: STATS, HISTORY, GRAPH
@@ -1892,8 +1898,12 @@ export function initIntroOverlay(player) {
     entered = true;
     cleanupListeners();
     overlay.classList.add('is-hidden');
-    if (withSound && player && typeof player.play === 'function') {
-      player.play({ fadeIn: true });
+    if (withSound) {
+      if (player && typeof player.play === 'function') {
+        player.play({ fadeIn: true });
+      }
+    } else {
+      setSfxEnabled(false, { persist: false });
     }
     setTimeout(() => {
       overlay.style.display = 'none';
@@ -3463,6 +3473,7 @@ export function initRandomizer() {
     // Phase 1: Tactile tension & micro-vibration across tear seam
     stage.classList.add('is-tensioning');
     if (!fromDrag) {
+      playPackTension(0.25);
       const startAt = performance.now();
       const dur = 220;
       await new Promise((resolve) => {
@@ -3471,6 +3482,9 @@ export function initRandomizer() {
           const t = Math.min(1, (now - startAt) / dur);
           const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
           setTearProgress(eased);
+          if (eased > 0.35 && eased < 0.92) {
+            playPackTension(eased);
+          }
           if (t < 1) requestAnimationFrame(step);
           else resolve();
         }
@@ -3485,6 +3499,7 @@ export function initRandomizer() {
     stage.classList.remove('is-tensioning');
 
     // Phase 2: Crisp top-strip shear + physical anticipation squat (120–160ms by rarity)
+    playPackTear();
     topStrip?.classList.add('is-sheared');
     stage.classList.add('is-anticipating');
     const anticipationMs = rarity.key === 'mythic' ? 160 : (rarity.key === 'ssr' ? 140 : 120);
@@ -3493,6 +3508,7 @@ export function initRandomizer() {
     stage.classList.remove('is-anticipating');
 
     // Phase 3: Studio monochrome flash + rarity-scaled sparks + heavy pouch release
+    playPackReveal(rarity.key);
     stage.classList.remove('is-flashing');
     void stage.offsetWidth;
     stage.classList.add('is-flashing', 'is-dropping');
@@ -3626,6 +3642,7 @@ export function initRandomizer() {
       setTearProgress(pouchCurrentTear);
       if (pouchCurrentTear > 0.08) {
         stage.classList.add('is-tensioning');
+        playPackTension(pouchCurrentTear);
       }
       if (pouchCurrentTear >= 0.55) {
         pouchDown = false;

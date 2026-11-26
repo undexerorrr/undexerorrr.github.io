@@ -1109,85 +1109,30 @@ main[data-nav-mode="all"] #sector-signal > .sector-feed-divider {
   background: var(--border-subtle);
 }
 
-/* === Scoped View Transitions (No Blur, Zero Permanent will-change) === */
-html.is-sector-transitioning {
-  view-transition-name: none;
-}
-
-html.is-sector-transitioning .sector-stage {
-  view-transition-name: sector-stage;
-}
-
-html.is-sector-transitioning .sector-panel.is-active section,
+/* === Editorial GPU Sector Transitions (Always Active, Zero Permanent will-change) === */
 main[data-nav-mode="os"] .sector-panel.is-active > section:first-child,
 main[data-nav-mode="os"] .sector-panel.is-active > section:nth-of-type(1),
 main[data-nav-mode="os"] #sector-signal.is-active #guestbook,
-.sector-panel.is-vt-fallback-enter section {
+.sector-panel.is-sector-entering > section {
   content-visibility: visible;
 }
 
-::view-transition-group(sector-stage) {
-  animation: none;
+.sector-panel.is-sector-entering > .sector-masthead,
+.sector-panel.is-sector-entering > section {
+  will-change: opacity, transform;
+  animation: sector-block-enter 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--stagger-i, 0) * 40ms);
 }
 
-::view-transition-image-pair(sector-stage) {
-  isolation: isolate;
-  overflow: clip;
-}
-
-::view-transition-old(sector-stage),
-::view-transition-new(sector-stage) {
-  width: 100%;
-  height: auto;
-  animation-duration: 240ms;
-  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  animation-fill-mode: both;
-  mix-blend-mode: normal;
-}
-
-html[data-vt-dir="forward"]::view-transition-old(sector-stage) {
-  animation-name: vt-sector-out-fwd;
-}
-
-html[data-vt-dir="forward"]::view-transition-new(sector-stage) {
-  animation-name: vt-sector-in-fwd;
-}
-
-html[data-vt-dir="backward"]::view-transition-old(sector-stage) {
-  animation-name: vt-sector-out-bwd;
-}
-
-html[data-vt-dir="backward"]::view-transition-new(sector-stage) {
-  animation-name: vt-sector-in-bwd;
-}
-
-@keyframes vt-sector-out-fwd {
-  from { opacity: 1; transform: translate3d(0, 0, 0); }
-  to   { opacity: 0; transform: translate3d(0, -8px, 0); }
-}
-
-@keyframes vt-sector-in-fwd {
-  from { opacity: 0; transform: translate3d(0, 10px, 0); }
-  to   { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-
-@keyframes vt-sector-out-bwd {
-  from { opacity: 1; transform: translate3d(0, 0, 0); }
-  to   { opacity: 0; transform: translate3d(0, 8px, 0); }
-}
-
-@keyframes vt-sector-in-bwd {
-  from { opacity: 0; transform: translate3d(0, -10px, 0); }
-  to   { opacity: 1; transform: translate3d(0, 0, 0); }
-}
-
-.sector-panel.is-vt-fallback-enter {
-  animation: sector-fallback-in 230ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes sector-fallback-in {
-  from { opacity: 0; transform: translate3d(0, 8px, 0); }
-  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+@keyframes sector-block-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 /* === Mobile Dock Sector Numbers === */

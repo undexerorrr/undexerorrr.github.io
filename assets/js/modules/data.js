@@ -12,7 +12,8 @@ import {
   COOP_HOST_CACHE_KEY,
   TROPHIES_CACHE_KEY,
   VIEW_STORAGE_KEY,
-  NAV_MODE_STORAGE_KEY
+  NAV_MODE_STORAGE_KEY,
+  SFX_STORAGE_KEY
 } from './config.js';
 
 export const SNAPSHOT = {
@@ -156,6 +157,15 @@ export const appState = {
     try { return localStorage.getItem(VIEW_STORAGE_KEY) === 'showcase' ? 'showcase' : 'grid'; }
     catch (e) { return 'grid'; }
   })(),
+  sfxEnabled: (() => {
+    try {
+      const raw = localStorage.getItem(SFX_STORAGE_KEY);
+      return raw === null ? true : raw !== '0' && raw !== 'false';
+    } catch (e) {
+      return true;
+    }
+  })(),
+  sharedAudioContext: null,
   searchQuery: '',
   coverCache: loadCoverCache(),
   ratedAnimePool: loadRatedPoolCache(),

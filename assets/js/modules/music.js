@@ -10,6 +10,7 @@ import {
   fetchJsonWithTimeout
 } from './config.js';
 import { appState } from './data.js';
+import { getSharedAudioContext } from './sfx.js';
 
 /* =========================================
    BEAT-REACTIVE PLAYLIST PLAYER (REAL TRACKS + ANALYSER)
@@ -130,9 +131,8 @@ export function initMusicPlayer() {
   function setupAnalyser() {
     if (analyserConnected || !isHttp) return;
     try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      audioCtx = new AudioCtx();
+      audioCtx = getSharedAudioContext();
+      if (!audioCtx) return;
       const source = audioCtx.createMediaElementSource(audio);
       analyser = audioCtx.createAnalyser();
       analyser.fftSize = 128;

@@ -17,6 +17,7 @@ import { initGuestbook } from './modules/guestbook.js';
 import { initVinylShelf } from './modules/vinyl.js';
 import { initCommandPalette } from './modules/palette.js';
 import { initSectors } from './modules/sectors.js';
+import { initSfx } from './modules/sfx.js';
 import {
   initModalScrollLock,
   initIntroOverlay,
@@ -54,6 +55,7 @@ function safeInit(name, fn) {
 }
 
 safeInit('initModalScrollLock', () => initModalScrollLock());
+safeInit('initSfx', () => initSfx());
 safeInit('initSectors', () => initSectors());
 const playerControls = safeInit('initMusicPlayer', () => initMusicPlayer());
 safeInit('initIntroOverlay', () => initIntroOverlay(playerControls));
