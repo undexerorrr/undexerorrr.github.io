@@ -1,31 +1,33 @@
 /* =========================================
-   05. VINYL // AUDIO SHELF (PURE B&W EDITORIAL)
+   05. VINYL // AUDIO SHELF (LISTENING ROOM · OBSIDIAN NOIR)
    ========================================= */
 
 #vinyl {
   content-visibility: auto;
-  contain-intrinsic-size: auto 920px;
+  contain-intrinsic-size: auto 960px;
 }
 
 .vinyl-shelf-card {
-  padding: 22px 24px;
+  padding: 30px 32px 34px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 26px;
 }
 
 .vinyl-head {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 14px;
+  gap: 16px;
   flex-wrap: wrap;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .vinyl-head-left {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   min-width: 0;
 }
 
@@ -36,24 +38,24 @@
 }
 
 .vinyl-kicker {
-  color: rgb(var(--bright));
-  letter-spacing: 2.2px;
+  color: var(--text-label);
+  letter-spacing: 0.14em;
 }
 
 .vinyl-heading {
   font-family: var(--font-display);
-  font-size: clamp(16px, 2vw, 20px);
+  font-size: clamp(20px, 2.3vw, 25px);
   font-weight: 600;
-  color: #ffffff;
-  letter-spacing: 0.4px;
-  line-height: 1.25;
+  color: var(--text-ivory);
+  letter-spacing: -0.025em;
+  line-height: 1.18;
 }
 
 .vinyl-now-playing {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: rgba(var(--light), 0.70);
-  letter-spacing: 0.4px;
+  color: var(--text-label);
+  letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   overflow: hidden;
@@ -74,28 +76,29 @@
 }
 
 .vinyl-status-badge.is-active-badge {
-  background: #f0f0f0;
-  color: #080808;
-  border-color: #f0f0f0;
+  background: var(--text-ivory);
+  color: var(--bg-base);
+  border-color: var(--text-ivory);
 }
 
-/* --- 4 x 3 Editorial Grid --- */
+/* --- 4 x 3 Listening Room Shelf on Unified #111318 Slab --- */
 
 .vinyl-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  gap: 28px 24px;
 }
 
 .vinyl-card {
   display: flex;
   flex-direction: column;
-  gap: 11px;
-  padding: 11px 11px 12px;
+  gap: 14px;
+  padding: 18px 14px 16px;
   border-radius: var(--radius-md);
-  background: var(--surface-1);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--edge-specular);
+  background: transparent;
+  border: 1px solid transparent;
+  border-top-color: var(--border-subtle);
+  box-shadow: none;
   min-width: 0;
   overflow: hidden;
   transition: border-color 0.24s ease, background 0.24s ease, box-shadow 0.24s ease;
@@ -103,22 +106,23 @@
 
 .vinyl-card.is-playing {
   background: var(--surface-2);
-  border-color: #ededed;
-  box-shadow: var(--edge-specular-hover);
+  border-color: rgba(243, 244, 246, 0.28);
+  box-shadow: var(--edge-specular);
 }
 
 .vinyl-card.is-paused {
+  background: rgba(21, 24, 30, 0.55);
   border-color: var(--border-strong);
 }
 
 /* --- Sleeve + Sliding Vinyl Stage ---
-   Reserve 26% on the right inside each column so a 34% vinyl slide-out
+   Reserve 28% on the right inside each column so a 34% vinyl slide-out
    stays strictly inside its own grid cell (zero neighbor overlap, zero overflow). */
 
 .vinyl-stage {
   position: relative;
   width: 100%;
-  padding-right: 26%;
+  padding-right: 28%;
   min-width: 0;
 }
 
@@ -152,37 +156,39 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(197, 203, 213, 0.20);
   background:
     conic-gradient(
       from 28deg,
-      rgba(255, 255, 255, 0.14) 0deg,
-      rgba(255, 255, 255, 0.03) 26deg,
+      rgba(243, 244, 246, 0.13) 0deg,
+      rgba(243, 244, 246, 0.03) 26deg,
       transparent 55deg,
       transparent 150deg,
-      rgba(255, 255, 255, 0.12) 186deg,
-      rgba(255, 255, 255, 0.02) 216deg,
+      rgba(243, 244, 246, 0.11) 186deg,
+      rgba(243, 244, 246, 0.02) 216deg,
       transparent 245deg,
       transparent 332deg,
-      rgba(255, 255, 255, 0.14) 360deg
+      rgba(243, 244, 246, 0.13) 360deg
     ),
     repeating-radial-gradient(
       circle at 50% 50%,
-      #0a0a0a 0px,
-      #0a0a0a 2px,
-      #1e1e1e 2.6px,
-      #0e0e0e 4px
+      #08090B 0px,
+      #08090B 2px,
+      #1C2029 2.6px,
+      #0D0F13 4px
     );
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.72);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.72);
   display: flex;
   align-items: center;
   justify-content: center;
   animation: vinyl-spin 2.4s linear infinite;
   animation-play-state: paused;
+  transition: border-color 0.28s ease;
 }
 
 .vinyl-card.is-playing .vinyl-disc {
   animation-play-state: running;
+  border-color: rgba(243, 244, 246, 0.46);
 }
 
 .vinyl-disc-label {
@@ -190,9 +196,9 @@
   width: 42%;
   height: 42%;
   border-radius: 50%;
-  background: #e6e6e6;
-  border: 1px solid #080808;
-  color: #080808;
+  background: var(--text-ivory);
+  border: 1px solid var(--bg-base);
+  color: var(--bg-base);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -212,8 +218,8 @@
   width: 24%;
   height: 24%;
   border-radius: 50%;
-  background: #080808;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: var(--bg-base);
+  border: 1px solid rgba(243, 244, 246, 0.26);
   transform: translate(-50%, -50%);
 }
 
@@ -267,13 +273,13 @@
   border-radius: var(--radius-sm);
   overflow: hidden;
   border: 1px solid var(--border-default);
-  background: #0b0b0b;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.62);
+  background: linear-gradient(155deg, var(--surface-2) 0%, var(--surface-1) 52%, var(--bg-base) 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.64);
   transition: border-color 0.24s ease;
 }
 
 .vinyl-card.is-playing .vinyl-sleeve {
-  border-color: #f0f0f0;
+  border-color: rgba(243, 244, 246, 0.48);
 }
 
 /* Monochrome Typographic Fallback Sleeve */
@@ -282,7 +288,7 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  padding: 32px 10px 10px;
+  padding: 34px 11px 11px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -290,12 +296,12 @@
   background:
     repeating-linear-gradient(
       0deg,
-      rgba(255, 255, 255, 0.025) 0px,
-      rgba(255, 255, 255, 0.025) 1px,
+      rgba(197, 203, 213, 0.025) 0px,
+      rgba(197, 203, 213, 0.025) 1px,
       transparent 1px,
       transparent 8px
     ),
-    #0c0c0c;
+    var(--bg-base);
   transition: opacity 0.28s ease;
 }
 
@@ -305,18 +311,18 @@
 
 .vinyl-typo-cat {
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 1.4px;
-  color: rgba(var(--muted), 0.78);
+  font-size: 10.5px;
+  letter-spacing: 0.10em;
+  color: var(--text-label);
 }
 
 .vinyl-typo-artist {
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(var(--light), 0.82);
+  color: var(--text-silver);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -324,10 +330,10 @@
 
 .vinyl-typo-title {
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 600;
   line-height: 1.25;
-  color: #ffffff;
+  color: var(--text-ivory);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -340,17 +346,17 @@
   padding: 2px 6px;
   border-radius: var(--radius-xs);
   border: 1px solid var(--border-default);
-  background: #141414;
+  background: var(--surface-2);
   font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 1px;
-  color: rgba(var(--light), 0.85);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--text-silver);
 }
 
 .vinyl-card.is-no-preview .vinyl-typo-badge {
   border-style: dashed;
-  border-color: #ededed;
-  color: #f0f0f0;
+  border-color: var(--text-ivory);
+  color: var(--text-ivory);
 }
 
 /* Album Art Cover Layer */
@@ -367,7 +373,7 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  filter: grayscale(0.28) saturate(0.75) contrast(1.04) brightness(0.95);
+  filter: grayscale(0.28) saturate(0.76) contrast(1.03) brightness(0.94);
   transition: filter 0.3s ease, opacity 0.35s ease;
 }
 
@@ -377,41 +383,41 @@
 
 .vinyl-card:focus-within .vinyl-cover-img,
 .vinyl-card.is-playing .vinyl-cover-img {
-  filter: grayscale(0) saturate(1.08) contrast(1.03) brightness(1.04);
+  filter: grayscale(0) saturate(1.06) contrast(1.02) brightness(1.03);
 }
 
 /* Catalog Stamp (Top-Left) & Play Indicator (Top-Right) */
 
 .vinyl-stamp {
   position: absolute;
-  top: 6px;
-  left: 6px;
+  top: 7px;
+  left: 7px;
   z-index: 3;
-  padding: 2px 6px;
+  padding: 2px 7px;
   border-radius: var(--radius-xs);
-  background: rgba(8, 8, 8, 0.88);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(8, 9, 11, 0.90);
+  border: 1px solid var(--border-default);
   font-family: var(--font-mono);
-  font-size: 8.5px;
-  font-weight: 600;
-  letter-spacing: 0.75px;
-  color: rgb(var(--bright));
-  line-height: 1.3;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--text-ivory);
+  line-height: 1.35;
   pointer-events: none;
   font-variant-numeric: tabular-nums;
 }
 
 .vinyl-play-indicator {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 7px;
+  right: 7px;
   z-index: 3;
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   border-radius: var(--radius-xs);
-  background: rgba(8, 8, 8, 0.88);
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  color: #f0f0f0;
+  background: rgba(8, 9, 11, 0.90);
+  border: 1px solid var(--border-default);
+  color: var(--text-ivory);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -420,14 +426,14 @@
 }
 
 .vinyl-card.is-playing .vinyl-play-indicator {
-  background: #f0f0f0;
-  color: #080808;
-  border-color: #f0f0f0;
+  background: var(--text-ivory);
+  color: var(--bg-base);
+  border-color: var(--text-ivory);
 }
 
 .vinyl-card.is-no-preview .vinyl-play-indicator {
-  color: rgba(var(--muted), 0.72);
-  border-color: rgba(255, 255, 255, 0.14);
+  color: var(--text-steel);
+  border-color: var(--border-subtle);
 }
 
 /* Active 30s Progress Overlay & 2px Track */
@@ -441,8 +447,8 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 6px 7px 0;
-  background: linear-gradient(180deg, rgba(8, 8, 8, 0) 0%, rgba(8, 8, 8, 0.90) 34%, rgba(8, 8, 8, 0.96) 100%);
+  padding: 8px 8px 0;
+  background: linear-gradient(180deg, rgba(8, 9, 11, 0) 0%, rgba(8, 9, 11, 0.90) 34%, rgba(8, 9, 11, 0.96) 100%);
   opacity: 0;
   transform: translateY(4px);
   pointer-events: none;
@@ -461,36 +467,36 @@
   justify-content: space-between;
   gap: 6px;
   font-family: var(--font-mono);
-  font-size: 8.5px;
-  letter-spacing: 0.5px;
-  color: rgb(var(--bright));
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  color: var(--text-ivory);
   font-variant-numeric: tabular-nums;
 }
 
 .vinyl-progress-label {
-  color: rgba(var(--muted), 0.90);
+  color: var(--text-label);
 }
 
 .vinyl-card.is-playing .vinyl-progress-label {
-  color: #ffffff;
+  color: var(--text-ivory);
 }
 
 .vinyl-timer {
-  color: #ffffff;
+  color: var(--text-ivory);
   font-weight: 600;
 }
 
 .vinyl-progress-track {
   width: 100%;
   height: 2px;
-  background: rgba(255, 255, 255, 0.20);
+  background: rgba(197, 203, 213, 0.20);
   overflow: hidden;
 }
 
 .vinyl-progress-fill {
   width: 100%;
   height: 100%;
-  background: #ffffff;
+  background: var(--text-ivory);
   transform-origin: left center;
   transform: scaleX(0);
 }
@@ -500,7 +506,7 @@
 .vinyl-meta {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
   min-width: 0;
 }
 
@@ -517,10 +523,10 @@
   background: var(--surface-2);
   border: 1px solid var(--border-subtle);
   font-family: var(--font-mono);
-  font-size: 8.5px;
-  font-weight: 600;
-  letter-spacing: 0.7px;
-  color: rgba(var(--light), 0.82);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--text-silver);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -528,18 +534,18 @@
 
 .vinyl-year {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  color: rgba(var(--muted), 0.90);
+  font-size: 10.5px;
+  color: var(--text-label);
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
 
 .vinyl-title {
   font-family: var(--font-sans);
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 600;
-  line-height: 1.3;
-  color: #ffffff;
+  line-height: 1.32;
+  color: var(--text-ivory);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -547,9 +553,9 @@
 
 .vinyl-sub {
   font-family: var(--font-mono);
-  font-size: 10px;
-  line-height: 1.3;
-  color: rgba(var(--muted), 0.92);
+  font-size: 10.5px;
+  line-height: 1.32;
+  color: var(--text-label);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -559,12 +565,13 @@
 
 @media (hover: hover) and (pointer: fine) {
   .vinyl-card:hover {
-    border-color: var(--border-strong);
-    background: var(--surface-2);
+    border-color: var(--border-default);
+    background: rgba(21, 24, 30, 0.62);
   }
 
   .vinyl-card.is-playing:hover {
-    border-color: #ffffff;
+    background: var(--surface-2);
+    border-color: rgba(243, 244, 246, 0.36);
   }
 
   .vinyl-card:not(.is-no-preview):hover .vinyl-disc-slot {
@@ -576,13 +583,13 @@
   }
 
   .vinyl-card:hover .vinyl-cover-img {
-    filter: grayscale(0) saturate(1.08) contrast(1.03) brightness(1.04);
+    filter: grayscale(0) saturate(1.06) contrast(1.02) brightness(1.03);
   }
 
   .vinyl-card:not(.is-no-preview):not(.is-playing):hover .vinyl-play-indicator {
-    background: #1b1b1b;
-    border-color: #ededed;
-    color: #ffffff;
+    background: var(--surface-3);
+    border-color: var(--border-strong);
+    color: var(--text-ivory);
   }
 }
 
@@ -590,11 +597,11 @@
 
 @media (hover: none), (pointer: coarse) {
   .vinyl-cover-img {
-    filter: grayscale(0.10) saturate(0.96) contrast(1.04) brightness(0.98);
+    filter: grayscale(0.10) saturate(0.96) contrast(1.03) brightness(0.98);
   }
 
   .vinyl-card.is-playing .vinyl-cover-img {
-    filter: grayscale(0) saturate(1.08) contrast(1.03) brightness(1.04);
+    filter: grayscale(0) saturate(1.06) contrast(1.02) brightness(1.03);
   }
 }
 
@@ -603,14 +610,14 @@
 @media (max-width: 1020px) {
   .vinyl-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    gap: 22px 18px;
   }
 }
 
 @media (max-width: 720px) {
   .vinyl-shelf-card {
-    padding: 16px 15px;
-    gap: 14px;
+    padding: 20px 16px 22px;
+    gap: 18px;
   }
 
   .vinyl-now-playing {
@@ -621,11 +628,11 @@
 @media (max-width: 480px) {
   .vinyl-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 16px;
   }
 
   .vinyl-card {
-    padding: 12px;
+    padding: 16px 12px 14px;
   }
 
   .vinyl-play-indicator {
@@ -634,11 +641,11 @@
   }
 
   .vinyl-title {
-    font-size: 13.5px;
+    font-size: 14px;
   }
 
   .vinyl-sub {
-    font-size: 10.5px;
+    font-size: 11px;
   }
 }
 

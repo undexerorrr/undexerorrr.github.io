@@ -150,15 +150,16 @@ body {
   height: 100%;
   object-fit: cover;
   object-position: center 22%;
-  opacity: 0.32;
-  filter: grayscale(0.42) contrast(1.04);
+  opacity: 0.20;
+  filter: grayscale(0.52) contrast(1.02) brightness(0.88);
 }
 
 .bg-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, rgba(8, 9, 11, 0.44) 16%, rgba(8, 9, 11, 0.94) 100%),
-    linear-gradient(180deg, rgba(8, 9, 11, 0.72) 0%, rgba(8, 9, 11, 0.80) 52%, rgba(8, 9, 11, 0.96) 100%);
+  background:
+    radial-gradient(ellipse 78% 66% at 50% 24%, rgba(8, 9, 11, 0.56) 0%, rgba(8, 9, 11, 0.88) 68%, rgba(8, 9, 11, 0.98) 100%),
+    linear-gradient(180deg, rgba(8, 9, 11, 0.80) 0%, rgba(8, 9, 11, 0.86) 48%, rgba(8, 9, 11, 0.97) 100%);
 }
 
 #atmosphere-canvas {

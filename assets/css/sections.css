@@ -199,7 +199,7 @@
 .stat-hero-sub {
   font-family: var(--font-sans);
   font-size: 12.5px;
-  color: var(--text-steel);
+  color: var(--text-label);
 }
 
 .progress-track {
@@ -388,7 +388,7 @@
 
 .activity-sub-hint {
   font-size: 11.5px;
-  color: var(--text-steel);
+  color: var(--text-label);
   margin-top: 3px;
 }
 
@@ -406,9 +406,9 @@
   background: var(--surface-2);
   border: 1px solid var(--border-subtle);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   letter-spacing: 0.08em;
-  color: var(--text-steel);
+  color: var(--text-label);
   white-space: nowrap;
 }
 
@@ -598,7 +598,7 @@
   font-family: var(--font-mono);
   font-size: 10.5px;
   letter-spacing: 0.1em;
-  color: var(--text-steel);
+  color: var(--text-label);
   margin: 0 4px;
 }
 
@@ -873,9 +873,9 @@
   border-radius: var(--radius-xs);
   border: 1px solid transparent;
   background: transparent;
-  color: var(--text-steel);
+  color: var(--text-label);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -959,27 +959,66 @@
   transform: scale(1.035);
 }
 
+/* === Static Obsidian Poster Skeleton (Zero Shimmer / Zero Mass Animation) === */
+
+.poster-box:not(:has(img.loaded)):not(:has(img.is-error)),
+.waifu-card:not(:has(img.loaded)):not(:has(img.is-error)),
+.watching-poster:not(:has(img.loaded)):not(:has(img.is-error)),
+.history-thumb:not(:has(img.loaded)):not(:has(img.is-error)),
+.base-row-thumb:not(:has(img.loaded)):not(:has(img.is-error)),
+.ht-thumb:not(:has(img.loaded)):not(:has(img.is-error)),
+.coop-thumb:not(:has(img.loaded)):not(:has(img.is-error)) {
+  background:
+    linear-gradient(155deg, var(--surface-2) 0%, var(--surface-1) 52%, var(--bg-base) 100%);
+}
+
+.poster-box:not(:has(img.loaded)):not(:has(img.is-error))::before,
+.waifu-card:not(:has(img.loaded)):not(:has(img.is-error))::before,
+.watching-poster:not(:has(img.loaded)):not(:has(img.is-error))::before,
+.history-thumb:not(:has(img.loaded)):not(:has(img.is-error))::before,
+.base-row-thumb:not(:has(img.loaded)):not(:has(img.is-error))::before,
+.ht-thumb:not(:has(img.loaded)):not(:has(img.is-error))::before,
+.coop-thumb:not(:has(img.loaded)):not(:has(img.is-error))::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  z-index: 1;
+  border: 1px solid rgba(197, 203, 213, 0.06);
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+/* Clean Typographic Fallback on Load Error */
+
 .poster-fallback {
   position: absolute;
   inset: 0;
   z-index: 1;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 12px;
   text-align: center;
   font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-steel);
+  font-size: 10.5px;
+  color: var(--text-label);
   letter-spacing: 0.08em;
+  background: var(--surface-1);
   pointer-events: none;
 }
 
 .poster-fallback span {
-  font-size: 16px;
-  color: var(--text-dim);
+  font-size: 15px;
+  color: var(--text-steel);
   margin-bottom: 6px;
+}
+
+.poster-box:has(img.is-error) .poster-fallback,
+.waifu-card:has(img.is-error) .poster-fallback,
+.poster-box.is-poster-error .poster-fallback,
+.waifu-card.is-poster-error .poster-fallback {
+  display: flex;
 }
 
 .poster-box img.loaded + .poster-fallback,
@@ -989,6 +1028,25 @@
   display: none !important;
 }
 
+.watching-poster:has(img.is-error)::after,
+.history-thumb:has(img.is-error)::after,
+.base-row-thumb:has(img.is-error)::after,
+.ht-thumb:has(img.is-error)::after,
+.coop-thumb:has(img.is-error)::after {
+  content: "//";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--text-steel);
+  background: var(--surface-1);
+  pointer-events: none;
+}
+
 .score-pill {
   position: absolute;
   right: 7px;
@@ -996,11 +1054,11 @@
   z-index: 10;
   padding: 2px 6px;
   border-radius: var(--radius-xs);
-  background: rgba(8, 9, 11, 0.88);
+  background: rgba(8, 9, 11, 0.90);
   border: 1px solid var(--border-default);
   color: var(--text-ivory);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 500;
   transition: border-color 0.22s ease, transform 0.22s ease;
 }
@@ -1030,19 +1088,23 @@
   gap: 6px;
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--text-steel);
+  color: var(--text-label);
   text-shadow: none;
 }
 
 /* =========================================
-   GUESTBOOK (GITHUB DISCUSSIONS / GISCUS)
+   GUESTBOOK (GITHUB DISCUSSIONS / GISCUS — UNIFIED OBSIDIAN SLAB)
    ========================================= */
 
+#guestbook {
+  margin-bottom: 28px;
+}
+
 .guestbook-card {
-  padding: 22px 24px;
+  padding: 28px 30px 36px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
 }
 
 .gb-head {
@@ -1051,19 +1113,21 @@
   justify-content: space-between;
   gap: 14px;
   flex-wrap: wrap;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .gb-head-left {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   max-width: 700px;
   min-width: 0;
 }
 
 .gb-kicker {
-  color: rgb(237, 237, 237);
-  letter-spacing: 2.4px;
+  color: var(--text-label);
+  letter-spacing: 0.14em;
 }
 
 .gb-head-badges {
@@ -1077,24 +1141,24 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 11px;
-  border-radius: 3px;
-  background: var(--surface-1);
+  padding: 5px 12px;
+  border-radius: var(--radius-xs);
+  background: var(--surface-3);
   border: 1px solid var(--border-default);
-  color: rgba(var(--light), 0.88);
+  color: var(--text-ivory);
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 1px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
-  transition: border-color 0.24s ease, color 0.24s ease, box-shadow 0.24s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .gb-ext-link:hover {
-  color: #fff;
+  color: var(--text-ivory);
+  background: var(--surface-2);
   border-color: var(--border-strong);
   box-shadow: none;
-  transform: translateY(-1px);
 }
 
 .gb-stage {
@@ -1103,12 +1167,12 @@
   isolation: isolate;
   contain: paint;
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: #0e0e0e;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: var(--edge-specular);
-  padding: 16px;
-  min-height: 220px;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  min-height: 180px;
 }
 
 .gb-stage[data-state="loaded"] {
@@ -1128,7 +1192,7 @@
 .gb-skel-bar,
 .gb-skel-line {
   border-radius: var(--radius-xs);
-  background: linear-gradient(90deg, rgba(var(--bright), 0.08) 0%, rgba(var(--bright), 0.16) 50%, rgba(var(--bright), 0.08) 100%);
+  background: rgba(197, 203, 213, 0.10);
   animation: gb-pulse 2s ease-in-out infinite;
 }
 
@@ -1143,7 +1207,7 @@
   gap: 10px;
   padding: 14px;
   border-radius: var(--radius-md);
-  background: rgba(14, 14, 14, 0.76);
+  background: var(--surface-2);
   border: 1px solid var(--border-subtle);
 }
 
@@ -1175,8 +1239,8 @@
   padding-top: 2px;
   font-family: var(--font-mono);
   font-size: 10.5px;
-  letter-spacing: 0.9px;
-  color: rgba(var(--muted), 0.85);
+  letter-spacing: 0.08em;
+  color: var(--text-label);
   text-align: center;
 }
 
@@ -1187,7 +1251,7 @@
 }
 
 .gb-stage[data-state="error"] .gb-skel-note {
-  color: #b7b7b7;
+  color: var(--text-silver);
 }
 
 .gb-mount {
@@ -1290,10 +1354,10 @@
   align-items: center;
   gap: 7px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-steel);
+  color: var(--text-label);
 }
 
 .discord-kicker .live-tag {
@@ -1352,9 +1416,9 @@ a.discord-main-title:hover {
 
 .spotify-bar-time {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  color: var(--text-steel);
-  min-width: 28px;
+  font-size: 10.5px;
+  color: var(--text-label);
+  min-width: 30px;
 }
 
 .spotify-bar-time.end {
@@ -1379,7 +1443,7 @@ a.discord-main-title:hover {
   background: var(--surface-3);
   color: var(--text-silver);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1447,7 +1511,7 @@ a.discord-main-title:hover {
   background: var(--surface-2);
   color: var(--text-silver);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   letter-spacing: 0.06em;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -1466,7 +1530,7 @@ a.discord-main-title:hover {
   border-radius: var(--radius-xs);
   background: var(--surface-1);
   border: 1px solid var(--border-subtle);
-  font-size: 9.5px;
+  font-size: 10.5px;
   color: var(--text-silver);
   margin-left: 2px;
 }
@@ -2149,14 +2213,14 @@ a.discord-main-title:hover {
 }
 
 /* =========================================
-   TASTE MATCH («ПРОВЕРКА НА БАЗУ»)
+   03 // ARENA — TASTE MATCH («ПРОВЕРКА НА БАЗУ») & CO-OP PICKER
    ========================================= */
 
 .base-check-card {
-  padding: 24px 26px;
+  padding: 28px 30px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
 }
 
 .base-head {
@@ -2165,12 +2229,14 @@ a.discord-main-title:hover {
   justify-content: space-between;
   gap: 14px;
   flex-wrap: wrap;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .base-head-left {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .base-title-row {
@@ -2181,15 +2247,17 @@ a.discord-main-title:hover {
 }
 
 .base-heading {
-  font-size: clamp(18px, 2.4vw, 22px);
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.3px;
+  font-size: clamp(18px, 2.2vw, 23px);
+  font-weight: 600;
+  color: var(--text-ivory);
+  letter-spacing: -0.025em;
 }
 
 .base-subtitle {
-  font-size: 12.5px;
-  color: rgba(var(--light), 0.68);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-label);
+  max-width: 68ch;
 }
 
 .base-form {
@@ -2207,35 +2275,37 @@ a.discord-main-title:hover {
 
 .base-input-icon {
   position: absolute;
-  left: 15px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
   font-family: var(--font-mono);
-  font-size: 13px;
-  color: rgba(var(--bright), 0.72);
+  font-size: 11px;
+  color: var(--text-steel);
   pointer-events: none;
+  display: inline-flex;
+  align-items: center;
 }
 
 .base-input {
   width: 100%;
-  padding: 12px 16px 12px 38px;
-  border-radius: 3px;
-  border: 1px solid rgba(var(--bright), 0.28);
-  background: rgba(8, 8, 8, 0.92);
-  color: #fff;
+  padding: 11px 16px 11px 38px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--bg-base);
+  color: var(--text-ivory);
   font-family: var(--font-sans);
   font-size: 13.5px;
   outline: none;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .base-input::placeholder {
-  color: rgba(var(--light), 0.44);
+  color: var(--text-steel);
 }
 
 .base-input:focus {
-  background: rgba(14, 14, 14, 0.90);
-  border-color: rgba(var(--bright), 0.85);
+  background: var(--surface-2);
+  border-color: var(--border-strong);
   box-shadow: none;
 }
 
@@ -2244,31 +2314,30 @@ a.discord-main-title:hover {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 22px;
-  border-radius: 3px;
-  border: 1px solid rgba(var(--bright), 0.68);
-  background: #141414;
-  color: #fff;
+  padding: 11px 22px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--surface-3);
+  color: var(--text-ivory);
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 1.6px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
   white-space: nowrap;
   box-shadow: none;
-  animation: none;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
 
 .base-submit-btn:hover:not(:disabled) {
-  transform: translateY(-1px) scale(1.02);
-  border-color: #fff;
+  background: var(--surface-2);
+  border-color: var(--border-strong);
   box-shadow: none;
 }
 
 .base-submit-btn:disabled {
-  opacity: 0.55;
+  opacity: 0.50;
   cursor: default;
 }
 
@@ -2277,12 +2346,12 @@ a.discord-main-title:hover {
   align-items: center;
   gap: 10px;
   padding: 10px 14px;
-  border-radius: 4px;
-  background: rgba(14, 14, 14, 0.72);
-  border: 1px solid rgba(var(--bright), 0.22);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
   font-family: var(--font-mono);
   font-size: 11px;
-  color: rgba(var(--light), 0.86);
+  color: var(--text-silver);
 }
 
 .base-status-line.is-visible {
@@ -2290,17 +2359,18 @@ a.discord-main-title:hover {
 }
 
 .base-status-line.is-error {
-  border-color: rgba(142, 142, 142, 0.48);
-  color: #d5d5d5;
-  background: rgba(20, 20, 20, 0.62);
+  border-style: dashed;
+  border-color: var(--border-strong);
+  color: var(--text-ivory);
+  background: var(--surface-2);
 }
 
 .base-spinner {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid rgba(var(--bright), 0.22);
-  border-top-color: #fff;
+  border: 2px solid rgba(197, 203, 213, 0.20);
+  border-top-color: var(--text-ivory);
   animation: orbit-spin 0.8s linear infinite;
   flex-shrink: 0;
 }
@@ -2308,46 +2378,41 @@ a.discord-main-title:hover {
 .base-result {
   display: none;
   flex-direction: column;
-  gap: 18px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(var(--bright), 0.16);
-  animation: card-in 0.45s ease backwards;
+  gap: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+  animation: card-in 0.4s ease backwards;
 }
 
 .base-result.is-visible {
   display: flex;
 }
 
-.base-verdict-hero {
+/* Verdict Hero Band (Hairline Divided — Zero Nested Boxes) */
+
+.base-verdict-hero,
+.base-verdict-hero.tier-high,
+.base-verdict-hero.tier-low {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 18px 22px;
-  padding: 18px 20px;
-  border-radius: 4px;
-  background: linear-gradient(135deg, rgba(var(--bright), 0.12), rgba(8, 8, 8, 0.78));
-  border: 1px solid rgba(var(--bright), 0.30);
-}
-
-.base-verdict-hero.tier-high {
-  border-color: rgba(202, 202, 202, 0.46);
-  background: linear-gradient(135deg, rgba(202, 202, 202, 0.10), rgba(8, 8, 8, 0.82));
-}
-
-.base-verdict-hero.tier-low {
-  border-color: rgba(142, 142, 142, 0.42);
-  background: linear-gradient(135deg, rgba(142, 142, 142, 0.09), rgba(8, 8, 8, 0.82));
+  gap: 18px 24px;
+  padding: 2px 0 22px;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .base-score-ring {
   position: relative;
-  width: 102px;
-  height: 102px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: conic-gradient(var(--match-color, #e7e7e7) calc(var(--match-pct, 0) * 1%), rgba(255, 255, 255, 0.09) 0);
-  padding: 5px;
+  background: conic-gradient(var(--match-color, #F3F4F6) calc(var(--match-pct, 0) * 1%), rgba(197, 203, 213, 0.10) 0);
+  padding: 4px;
   box-shadow: none;
   flex-shrink: 0;
 }
@@ -2356,28 +2421,28 @@ a.discord-main-title:hover {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: #0e0e0e;
+  background: var(--surface-1);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(var(--bright), 0.18);
+  border: 1px solid var(--border-subtle);
 }
 
 .base-pct-num {
   font-weight: 700;
-  color: #fff;
+  color: var(--text-ivory);
   line-height: 1;
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 21px;
   letter-spacing: -0.02em;
 }
 
 .base-pct-lbl {
   font-family: var(--font-mono);
-  font-size: 8.5px;
-  letter-spacing: 1.4px;
-  color: rgba(var(--light), 0.56);
+  font-size: 10.5px;
+  letter-spacing: 0.10em;
+  color: var(--text-label);
   text-transform: uppercase;
   margin-top: 3px;
 }
@@ -2401,91 +2466,105 @@ a.discord-main-title:hover {
   height: 28px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid rgba(var(--bright), 0.45);
-  background: #0e0e0e;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
   flex-shrink: 0;
 }
 
 .base-matchup-names {
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.8px;
-  color: rgba(var(--light), 0.80);
+  letter-spacing: 0.06em;
+  color: var(--text-label);
 }
 
 .base-matchup-names strong {
-  color: #fff;
+  color: var(--text-ivory);
 }
 
 .base-rank-title {
   font-weight: 700;
-  color: #fff;
+  color: var(--text-ivory);
   line-height: 1.2;
   text-shadow: none;
   font-family: var(--font-display);
   font-size: clamp(15px, 2vw, 19px);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .base-rank-desc {
-  font-size: 12.5px;
-  color: rgba(var(--light), 0.78);
-  line-height: 1.45;
+  font-size: 13px;
+  color: var(--text-silver);
+  line-height: 1.48;
 }
 
 .base-mini-metrics {
   display: grid;
-  grid-template-columns: repeat(3, minmax(74px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(3, minmax(76px, 1fr));
+  gap: 0;
   flex-shrink: 0;
+  border-left: 1px solid var(--border-subtle);
 }
 
 .base-metric-box {
-  padding: 10px 10px;
-  border-radius: 3px;
-  background: rgba(8, 8, 8, 0.72);
-  border: 1px solid rgba(var(--bright), 0.16);
+  padding: 6px 16px;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
   text-align: center;
+}
+
+.base-metric-box + .base-metric-box {
+  border-left: 1px solid var(--border-subtle);
 }
 
 .base-metric-box .m-val {
   display: block;
   font-family: var(--font-mono);
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-ivory);
 }
 
 .base-metric-box .m-lbl {
   display: block;
   font-family: var(--font-mono);
-  font-size: 8.5px;
-  letter-spacing: 0.8px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(var(--light), 0.56);
+  color: var(--text-label);
   margin-top: 3px;
 }
+
+/* 2-Column Hairline Split (Shared 9-10 vs Conflicts) */
 
 .base-details-grid {
   display: grid;
   grid-template-columns: 1.05fr 1fr;
-  gap: 16px;
+  gap: 0;
+  align-items: stretch;
 }
 
-.base-subpanel {
-  padding: 15px 16px;
-  border-radius: 4px;
-  background: rgba(8, 8, 8, 0.56);
-  border: 1px solid rgba(var(--bright), 0.16);
+.base-subpanel,
+.base-subpanel.is-conflict-panel {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
-  gap: 11px;
+  gap: 0;
   min-width: 0;
 }
 
-.base-subpanel.is-conflict-panel {
-  border-color: rgba(142, 142, 142, 0.28);
-  background: linear-gradient(155deg, rgba(20, 20, 20, 0.42), rgba(8, 8, 8, 0.62));
+.base-subpanel:first-child {
+  padding-right: 26px;
+}
+
+.base-subpanel + .base-subpanel {
+  padding-left: 26px;
+  border-left: 1px solid var(--border-subtle);
 }
 
 .base-subpanel-head {
@@ -2493,54 +2572,62 @@ a.discord-main-title:hover {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .base-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
 }
 
 .base-anime-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 7px 9px;
-  border-radius: 3px;
-  background: rgba(14, 14, 14, 0.62);
-  border: 1px solid rgba(var(--bright), 0.14);
+  gap: 12px;
+  padding: 10px 8px;
+  margin: 0 -8px;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border-subtle);
   text-decoration: none;
   color: inherit;
-  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  transition: background 0.2s ease;
 }
 
-.base-anime-row:hover {
-  transform: translateY(-2px);
-  background: rgba(20, 20, 20, 0.84);
-  border-color: rgba(var(--bright), 0.50);
+.base-anime-row:last-child {
+  border-bottom: 0;
 }
 
+.base-anime-row:hover,
 .base-subpanel.is-conflict-panel .base-anime-row:hover {
-  border-color: rgba(142, 142, 142, 0.60);
+  transform: none;
+  background: var(--surface-2);
+  border-color: var(--border-subtle);
 }
 
 .base-row-thumb {
-  width: 34px;
-  height: 48px;
-  border-radius: 6px;
+  position: relative;
+  width: 38px;
+  height: 54px;
+  border-radius: var(--radius-xs);
   overflow: hidden;
   flex-shrink: 0;
-  background: rgba(20, 20, 20, 0.9);
-  border: 1px solid rgba(var(--bright), 0.20);
+  background: var(--bg-base);
+  border: 1px solid var(--border-subtle);
 }
 
 .base-row-thumb img {
+  position: relative;
+  z-index: 2;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
   opacity: 0;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.35s ease, transform 0.3s ease, filter 0.3s ease;
 }
 
 .base-row-thumb img.loaded {
@@ -2553,10 +2640,10 @@ a.discord-main-title:hover {
 }
 
 .base-row-title {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #fff;
-  line-height: 1.25;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-ivory);
+  line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2569,34 +2656,34 @@ a.discord-main-title:hover {
   margin-top: 4px;
   flex-wrap: wrap;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
 }
 
 .score-tag {
   padding: 2px 7px;
-  border-radius: 5px;
-  background: rgba(var(--bright), 0.14);
-  border: 1px solid rgba(var(--bright), 0.26);
-  color: #f5f5f5;
+  border-radius: var(--radius-xs);
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-silver);
 }
 
 .score-tag.is-guest {
-  background: rgba(202, 202, 202, 0.12);
-  border-color: rgba(202, 202, 202, 0.34);
-  color: #f0f0f0;
+  background: var(--surface-2);
+  border-color: var(--border-default);
+  color: var(--text-ivory);
 }
 
 .score-tag.is-diff {
-  background: rgba(142, 142, 142, 0.16);
-  border-color: rgba(142, 142, 142, 0.42);
-  color: #d5d5d5;
+  background: transparent;
+  border: 1px dashed var(--border-default);
+  color: var(--text-label);
 }
 
 .base-empty-note {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: rgba(var(--light), 0.56);
-  padding: 14px 6px;
+  color: var(--text-label);
+  padding: 18px 8px;
   text-align: center;
 }
 
@@ -2606,7 +2693,8 @@ a.discord-main-title:hover {
   justify-content: space-between;
   gap: 10px;
   flex-wrap: wrap;
-  padding-top: 4px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .base-actions-group {
@@ -2622,33 +2710,40 @@ a.discord-main-title:hover {
   justify-content: center;
   gap: 7px;
   padding: 9px 16px;
-  border-radius: 3px;
-  border: 1px solid rgba(var(--bright), 0.36);
-  background: rgba(14, 14, 14, 0.80);
-  color: #fff;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--surface-3);
+  color: var(--text-ivory);
   font-family: var(--font-mono);
   font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
 
-.base-action-btn:hover {
-  transform: translateY(-1px);
-  border-color: #fff;
+.base-action-btn:hover:not(:disabled) {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
   box-shadow: none;
 }
 
-.base-action-btn.is-primary {
-  border-color: rgba(202, 202, 202, 0.58);
-  background: linear-gradient(to bottom, rgba(202, 202, 202, 0.22), rgba(14, 14, 14, 0.88));
-  color: #f5f5f5;
+.base-action-btn:disabled {
+  opacity: 0.48;
+  cursor: default;
 }
 
-.base-action-btn.is-primary:hover {
-  border-color: #cacaca;
+.base-action-btn.is-primary {
+  border-color: var(--text-ivory);
+  background: var(--text-ivory);
+  color: var(--bg-base);
+}
+
+.base-action-btn.is-primary:hover:not(:disabled) {
+  border-color: #ffffff;
+  background: #ffffff;
+  color: var(--bg-base);
   box-shadow: none;
 }
 
@@ -2692,18 +2787,18 @@ a.discord-main-title:hover {
 
 .base-anime-row:hover .base-row-thumb img,
 .ht-card:hover .ht-thumb img {
-  transform: scale(1.06);
+  transform: scale(1.04);
 }
 
 /* =========================================
-   HOT TAKES SECTION (MAIN DISAGREEMENTS WITH SHIKIMORI)
+   HOT TAKES SECTION (MAIN DISAGREEMENTS WITH SHIKIMORI — HAIRLINE SLAB)
    ========================================= */
 
 .hottakes-card {
-  padding: 24px 26px;
+  padding: 28px 30px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
 }
 
 .ht-head {
@@ -2712,12 +2807,14 @@ a.discord-main-title:hover {
   justify-content: space-between;
   gap: 14px;
   flex-wrap: wrap;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .ht-head-left {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   max-width: 700px;
 }
 
@@ -2729,8 +2826,9 @@ a.discord-main-title:hover {
 }
 
 .ht-subtitle {
-  font-size: 12.5px;
-  color: rgba(var(--light), 0.68);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-label);
 }
 
 .ht-head-badges {
@@ -2743,28 +2841,31 @@ a.discord-main-title:hover {
 .ht-columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  gap: 0;
+  align-items: stretch;
 }
 
-.ht-panel {
-  padding: 16px 17px;
-  border-radius: 4px;
-  background: rgba(8, 8, 8, 0.56);
-  border: 1px solid rgba(var(--bright), 0.16);
+.ht-panel,
+.ht-panel.is-gems,
+.ht-panel.is-overrated {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
   min-width: 0;
 }
 
-.ht-panel.is-gems {
-  border-color: rgba(202, 202, 202, 0.24);
-  background: linear-gradient(155deg, rgba(27, 27, 27, 0.34), rgba(8, 8, 8, 0.62));
+.ht-panel:first-child {
+  padding-right: 26px;
 }
 
-.ht-panel.is-overrated {
-  border-color: rgba(142, 142, 142, 0.26);
-  background: linear-gradient(155deg, rgba(20, 20, 20, 0.38), rgba(8, 8, 8, 0.62));
+.ht-panel + .ht-panel {
+  padding-left: 26px;
+  border-left: 1px solid var(--border-subtle);
 }
 
 .ht-panel-head {
@@ -2772,15 +2873,15 @@ a.discord-main-title:hover {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(var(--bright), 0.12);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .ht-panel-title {
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 1.8px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   display: inline-flex;
   align-items: center;
@@ -2788,59 +2889,61 @@ a.discord-main-title:hover {
 }
 
 .ht-panel.is-gems .ht-panel-title {
-  color: #e0e0e0;
+  color: var(--text-ivory);
 }
 
 .ht-panel.is-overrated .ht-panel-title {
-  color: #b7b7b7;
+  color: var(--text-silver);
 }
 
 .ht-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
 }
 
 .ht-card {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: 4px;
-  background: rgba(14, 14, 14, 0.68);
-  border: 1px solid rgba(var(--bright), 0.15);
+  gap: 13px;
+  padding: 12px 8px;
+  margin: 0 -8px;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: none;
   color: inherit;
   text-align: left;
-  width: 100%;
+  width: calc(100% + 16px);
   font-family: inherit;
-  transition: transform 0.24s ease, border-color 0.24s ease, background 0.24s ease, box-shadow 0.24s ease;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-.ht-card:hover {
-  transform: translateY(-2px);
-  background: rgba(20, 20, 20, 0.88);
+.ht-card:last-child {
+  border-bottom: 0;
 }
 
-.ht-panel.is-gems .ht-card:hover {
-  border-color: rgba(202, 202, 202, 0.56);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.52);
-}
-
+.ht-card:hover,
+.ht-panel.is-gems .ht-card:hover,
 .ht-panel.is-overrated .ht-card:hover {
-  border-color: rgba(142, 142, 142, 0.56);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.52);
+  transform: none;
+  background: var(--surface-2);
+  border-color: var(--border-subtle);
+  box-shadow: none;
 }
 
 .ht-thumb {
   position: relative;
-  width: 48px;
-  height: 68px;
-  border-radius: 3px;
+  width: 46px;
+  height: 66px;
+  border-radius: var(--radius-xs);
   overflow: hidden;
   flex-shrink: 0;
-  background: linear-gradient(155deg, rgba(27, 27, 27, 0.94), rgba(14, 14, 14, 0.98));
-  border: 1px solid rgba(var(--bright), 0.22);
+  background: var(--bg-base);
+  border: 1px solid var(--border-subtle);
 }
 
 .ht-thumb img {
@@ -2866,10 +2969,10 @@ a.discord-main-title:hover {
 }
 
 .ht-anime-title {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
-  color: #fff;
-  line-height: 1.25;
+  color: var(--text-ivory);
+  line-height: 1.28;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2881,53 +2984,53 @@ a.discord-main-title:hover {
   gap: 6px;
   flex-wrap: wrap;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
 }
 
 .ht-chip-me {
-  padding: 2px 7px;
-  border-radius: 5px;
-  background: rgba(var(--bright), 0.16);
-  border: 1px solid rgba(var(--bright), 0.34);
-  color: #fff;
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  background: var(--surface-2);
+  border: 1px solid var(--border-default);
+  color: var(--text-ivory);
   font-weight: 600;
 }
 
 .ht-chip-shiki {
-  padding: 2px 7px;
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(var(--bright), 0.16);
-  color: rgba(var(--light), 0.78);
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-silver);
 }
 
 .ht-chip-meta {
-  color: rgba(var(--light), 0.50);
-  font-size: 9.5px;
+  color: var(--text-label);
+  font-size: 10.5px;
 }
 
 .ht-meter {
   position: relative;
-  height: 4px;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.08);
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(197, 203, 213, 0.10);
   overflow: visible;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 .ht-meter-fill {
   height: 100%;
-  border-radius: 3px;
+  border-radius: 2px;
   transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .ht-panel.is-gems .ht-meter-fill {
-  background: linear-gradient(90deg, rgba(202, 202, 202, 0.45), #e0e0e0);
+  background: var(--text-ivory);
   box-shadow: none;
 }
 
 .ht-panel.is-overrated .ht-meter-fill {
-  background: linear-gradient(90deg, rgba(142, 142, 142, 0.45), #b7b7b7);
+  background: var(--text-silver);
   box-shadow: none;
 }
 
@@ -2935,16 +3038,16 @@ a.discord-main-title:hover {
   position: absolute;
   top: -2.5px;
   width: 2px;
-  height: 9px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.85);
+  height: 8px;
+  border-radius: 1px;
+  background: var(--text-ivory);
   box-shadow: none;
   transform: translateX(-1px);
 }
 
 .ht-take-line {
-  font-size: 11px;
-  color: rgba(var(--light), 0.66);
+  font-size: 11.5px;
+  color: var(--text-label);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2952,9 +3055,9 @@ a.discord-main-title:hover {
 
 .ht-delta-badge {
   flex-shrink: 0;
-  min-width: 66px;
+  min-width: 64px;
   padding: 7px 9px;
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -2964,15 +3067,15 @@ a.discord-main-title:hover {
 }
 
 .ht-panel.is-gems .ht-delta-badge {
-  background: rgba(202, 202, 202, 0.11);
-  border: 1px solid rgba(202, 202, 202, 0.38);
-  color: #e0e0e0;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  color: var(--text-ivory);
 }
 
 .ht-panel.is-overrated .ht-delta-badge {
-  background: rgba(142, 142, 142, 0.12);
-  border: 1px solid rgba(142, 142, 142, 0.40);
-  color: #d5d5d5;
+  background: var(--surface-2);
+  border: 1px solid var(--border-default);
+  color: var(--text-silver);
 }
 
 .ht-delta-val {
@@ -2985,21 +3088,22 @@ a.discord-main-title:hover {
 
 .ht-delta-lbl {
   font-family: var(--font-mono);
-  font-size: 8px;
-  letter-spacing: 0.9px;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  opacity: 0.72;
+  color: var(--text-label);
 }
 
 .ht-skeleton {
   padding: 24px 12px;
-  border-radius: 3px;
-  background: rgba(14, 14, 14, 0.48);
-  border: 1px dashed rgba(var(--bright), 0.18);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px dashed var(--border-default);
+  margin-top: 12px;
   text-align: center;
   font-family: var(--font-mono);
   font-size: 11px;
-  color: rgba(var(--light), 0.58);
+  color: var(--text-label);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3012,18 +3116,18 @@ a.discord-main-title:hover {
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
-  padding-top: 12px;
-  border-top: 1px solid rgba(var(--bright), 0.12);
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .ht-summary-note {
   font-family: var(--font-mono);
   font-size: 10.5px;
-  color: rgba(var(--light), 0.65);
+  color: var(--text-label);
 }
 
 .ht-summary-note strong {
-  color: #fff;
+  color: var(--text-ivory);
 }
 
 .ht-footer-actions {
@@ -3040,11 +3144,11 @@ a.discord-main-title:hover {
 .station-switcher {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 3px;
-  background: rgba(8, 8, 8, 0.78);
-  border: 1px solid rgba(var(--bright), 0.24);
+  gap: 3px;
+  padding: 3px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
   align-self: flex-start;
 }
 
@@ -3053,32 +3157,21 @@ a.discord-main-title:hover {
   align-items: center;
   gap: 7px;
   padding: 7px 15px;
-  border-radius: 3px;
-  border: 0;
+  border-radius: var(--radius-xs);
+  border: 1px solid transparent;
   background: transparent;
-  color: rgba(var(--light), 0.68);
+  color: var(--text-label);
   font-family: var(--font-mono);
   font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 1.2px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  transition: color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .station-tab:hover {
-  color: #fff;
-}
-
-.station-tab.active {
-  color: #fff;
-  background: rgba(var(--bright), 0.24);
-  box-shadow: none;
-}
-
-.station-tab.is-coop.active {
-  background: linear-gradient(135deg, rgba(202, 202, 202, 0.22), rgba(var(--bright), 0.22));
-  box-shadow: none;
-  color: #f5f5f5;
+  color: var(--text-ivory);
 }
 
 .station-pane {
@@ -3103,29 +3196,30 @@ a.discord-main-title:hover {
 .coop-swap-btn {
   width: 38px;
   height: 38px;
-  border-radius: 3px;
-  border: 1px solid rgba(var(--bright), 0.28);
-  background: #141414;
-  color: rgba(var(--light), 0.85);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--surface-3);
+  color: var(--text-silver);
   font-size: 15px;
   display: grid;
   place-items: center;
+  cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 
 .coop-swap-btn:hover {
-  background: #f0f0f0;
-  color: #080808;
-  border-color: #f0f0f0;
+  background: var(--text-ivory);
+  color: var(--bg-base);
+  border-color: var(--text-ivory);
   box-shadow: none;
 }
 
 .coop-result {
   display: none;
   flex-direction: column;
-  gap: 16px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(var(--bright), 0.16);
+  gap: 18px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
   animation: card-in 0.4s ease backwards;
 }
 
@@ -3139,16 +3233,17 @@ a.discord-main-title:hover {
   justify-content: space-between;
   gap: 14px;
   flex-wrap: wrap;
-  padding: 14px 16px;
-  border-radius: 4px;
-  background: linear-gradient(135deg, rgba(202, 202, 202, 0.08), rgba(14, 14, 14, 0.80));
-  border: 1px solid rgba(202, 202, 202, 0.28);
+  padding: 0 0 18px;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .coop-players-pair {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
@@ -3162,14 +3257,14 @@ a.discord-main-title:hover {
   height: 34px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #0e0e0e;
-  background: #141414;
+  border: 2px solid var(--surface-1);
+  background: var(--surface-2);
   box-shadow: none;
 }
 
 .coop-avatars-stack img + img {
   margin-left: -10px;
-  border-color: rgba(202, 202, 202, 0.65);
+  border-color: var(--border-strong);
 }
 
 .coop-pair-info {
@@ -3181,17 +3276,17 @@ a.discord-main-title:hover {
 .coop-pair-names {
   font-family: var(--font-mono);
   font-size: 11.5px;
-  color: rgba(var(--light), 0.85);
+  color: var(--text-silver);
 }
 
 .coop-pair-names strong {
-  color: #fff;
+  color: var(--text-ivory);
 }
 
 .coop-pair-stats {
   font-family: var(--font-mono);
-  font-size: 10px;
-  color: #e0e0e0;
+  font-size: 10.5px;
+  color: var(--text-label);
 }
 
 .coop-hero-actions {
@@ -3211,96 +3306,92 @@ a.discord-main-title:hover {
 
 .coop-cat-tabs,
 .coop-fmt-tabs {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 3px;
+  padding: 3px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
   flex-wrap: wrap;
 }
 
 .coop-chip {
-  padding: 6px 12px;
-  border-radius: 3px;
-  border: 1px solid rgba(var(--bright), 0.22);
-  background: rgba(14, 14, 14, 0.72);
-  color: rgba(var(--light), 0.74);
+  padding: 6px 11px;
+  border-radius: var(--radius-xs);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-label);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 500;
-  letter-spacing: 0.7px;
-  transition: all 0.2s ease;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .coop-chip:hover {
-  color: #fff;
-  border-color: rgba(var(--bright), 0.56);
+  color: var(--text-ivory);
 }
 
-.coop-chip.active {
-  color: #fff;
-  background: rgba(var(--bright), 0.22);
-  border-color: rgba(var(--bright), 0.86);
-  box-shadow: none;
-}
-
-.coop-chip.is-fmt.active {
-  border-color: rgba(202, 202, 202, 0.72);
-  background: rgba(202, 202, 202, 0.14);
-  color: #f5f5f5;
-}
+/* 1px Hairline Matrix for Co-op Candidates */
 
 .coop-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 1px;
+  background: var(--border-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 
-.coop-card {
+.coop-card,
+.coop-card.is-both-planned {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  padding: 11px;
-  border-radius: 4px;
-  background: rgba(14, 14, 14, 0.72);
-  border: 1px solid rgba(var(--bright), 0.18);
-  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+  gap: 10px;
+  padding: 15px;
+  border-radius: 0;
+  background: var(--surface-1);
+  border: 0;
+  box-shadow: none;
+  transition: background 0.2s ease;
 }
 
 .coop-card:hover {
-  transform: translateY(-3px);
-  background: rgba(20, 20, 20, 0.88);
-  border-color: rgba(var(--bright), 0.54);
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.56);
-}
-
-.coop-card.is-both-planned {
-  border-color: rgba(202, 202, 202, 0.34);
+  transform: none;
+  background: var(--surface-2);
+  box-shadow: none;
 }
 
 .coop-card-top {
   display: flex;
-  gap: 11px;
+  gap: 12px;
   align-items: flex-start;
 }
 
 .coop-thumb {
+  position: relative;
   width: 54px;
   height: 78px;
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
   overflow: hidden;
   flex-shrink: 0;
-  background: linear-gradient(155deg, rgba(27, 27, 27, 0.94), rgba(14, 14, 14, 0.98));
-  border: 1px solid rgba(var(--bright), 0.22);
+  background: var(--bg-base);
+  border: 1px solid var(--border-subtle);
 }
 
 .coop-thumb img {
+  position: relative;
+  z-index: 2;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
   opacity: 0;
-  filter: grayscale(0.55) saturate(0.45) contrast(1.08);
-  transition: opacity 0.4s ease, filter 0.38s ease, transform 0.35s ease;
+  transition: opacity 0.4s ease, filter 0.35s ease, transform 0.35s ease;
 }
 
 .coop-thumb img.loaded {
@@ -3308,8 +3399,7 @@ a.discord-main-title:hover {
 }
 
 .coop-card:hover .coop-thumb img {
-  filter: grayscale(0) saturate(1.12) contrast(1.04) brightness(1.06);
-  transform: scale(1.06);
+  transform: scale(1.04);
 }
 
 .coop-card-info {
@@ -3321,10 +3411,10 @@ a.discord-main-title:hover {
 }
 
 .coop-card-title {
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
-  color: #fff;
-  line-height: 1.28;
+  color: var(--text-ivory);
+  line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -3333,8 +3423,8 @@ a.discord-main-title:hover {
 
 .coop-card-meta {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  color: rgba(var(--light), 0.64);
+  font-size: 10.5px;
+  color: var(--text-label);
 }
 
 .coop-reason-pill {
@@ -3343,24 +3433,24 @@ a.discord-main-title:hover {
   gap: 5px;
   width: fit-content;
   max-width: 100%;
-  padding: 2px 8px;
-  border-radius: 3px;
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
   font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  background: rgba(var(--bright), 0.14);
-  border: 1px solid rgba(var(--bright), 0.30);
-  color: #efefef;
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-silver);
 }
 
 .coop-reason-pill.is-gold {
-  background: rgba(202, 202, 202, 0.14);
-  border-color: rgba(202, 202, 202, 0.42);
-  color: #e0e0e0;
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  color: var(--text-ivory);
 }
 
 .coop-card-foot {
@@ -3368,38 +3458,40 @@ a.discord-main-title:hover {
   align-items: center;
   gap: 7px;
   margin-top: auto;
-  padding-top: 8px;
-  border-top: 1px solid rgba(var(--bright), 0.10);
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .coop-pick-btn {
   flex: 1;
   padding: 6px 10px;
-  border-radius: 3px;
-  border: 1px solid rgba(202, 202, 202, 0.38);
-  background: rgba(202, 202, 202, 0.10);
-  color: #f5f5f5;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-default);
+  background: var(--surface-3);
+  color: var(--text-ivory);
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .coop-pick-btn:hover {
-  border-color: #cacaca;
-  background: rgba(202, 202, 202, 0.22);
+  border-color: var(--text-ivory);
+  background: var(--text-ivory);
+  color: var(--bg-base);
   box-shadow: none;
 }
 
 .coop-ext-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 3px;
-  border: 1px solid rgba(var(--bright), 0.26);
-  background: #141414;
-  color: rgba(var(--light), 0.85);
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-2);
+  color: var(--text-silver);
   text-decoration: none;
   display: grid;
   place-items: center;
@@ -3409,9 +3501,9 @@ a.discord-main-title:hover {
 }
 
 .coop-ext-btn:hover {
-  background: #f0f0f0;
-  color: #080808;
-  border-color: #f0f0f0;
+  background: var(--text-ivory);
+  color: var(--bg-base);
+  border-color: var(--text-ivory);
 }
 
 /* =========================================
@@ -3477,9 +3569,9 @@ a.discord-main-title:hover {
 
 .trophies-rank-kicker {
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  color: var(--text-steel);
+  font-size: 10.5px;
+  letter-spacing: 0.10em;
+  color: var(--text-label);
 }
 
 .trophies-rank-val {
@@ -3515,9 +3607,9 @@ a.discord-main-title:hover {
   border-radius: var(--radius-xs);
   border: 1px solid transparent;
   background: transparent;
-  color: var(--text-steel);
+  color: var(--text-label);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -3542,9 +3634,9 @@ a.discord-main-title:hover {
   justify-content: space-between;
   gap: 8px;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   letter-spacing: 0.08em;
-  color: var(--text-steel);
+  color: var(--text-label);
 }
 
 .trophies-xp-meta strong {
@@ -3625,16 +3717,16 @@ a.discord-main-title:hover {
   justify-content: space-between;
   gap: 6px;
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  color: var(--text-steel);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--text-label);
 }
 
 .trophy-tier-pill {
   padding: 1px 6px;
   border-radius: var(--radius-xs);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -3936,7 +4028,7 @@ a.discord-main-title:hover {
 
 .trophy-sub {
   font-size: 11.5px;
-  color: var(--text-steel);
+  color: var(--text-label);
   line-height: 1.35;
 }
 
@@ -3952,7 +4044,7 @@ a.discord-main-title:hover {
 
 .trophy-metric-val {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 500;
   color: var(--text-silver);
 }
@@ -4011,9 +4103,9 @@ a.discord-main-title:hover {
   border-radius: var(--radius-xs);
   border: 1px solid transparent;
   background: transparent;
-  color: var(--text-steel);
+  color: var(--text-label);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -4043,15 +4135,15 @@ a.discord-main-title:hover {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.06em;
-  color: var(--text-steel);
+  color: var(--text-label);
 }
 
 .card-rank-meta {
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-dim);
+  color: var(--text-steel);
 }
 
 .catalog-card.is-top5 .card-serial-num {
@@ -4169,11 +4261,11 @@ a.discord-main-title:hover {
 }
 
 .sc-index-lbl {
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-weight: 500;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-steel);
+  color: var(--text-label);
 }
 
 .sc-inline-rank {
@@ -4310,14 +4402,18 @@ a.discord-main-title:hover {
 .waifu-counter,
 .score-pill,
 .card-serial-num,
-.trophy-metric-val {
+.trophy-metric-val,
+.arena-featured-stat-val {
   font-variant-numeric: tabular-nums;
 }
 
 .base-check-card,
-.hottakes-card,
+.hottakes-card {
+  padding: 28px 30px;
+}
+
 .guestbook-card {
-  padding: 26px 28px;
+  padding: 28px 30px 36px;
 }
 
 .section-head {
@@ -4366,215 +4462,334 @@ a.discord-main-title:hover {
   contain-intrinsic-size: auto 460px;
 }
 
-/* === Sector 03 // Arena Quick Launchpad === */
+/* === Sector 03 // Arena Featured Experience Stage & 2-Column Strip === */
 .arena-launchpad {
-  padding: 18px 20px;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 0;
+  overflow: hidden;
 }
 
-.arena-launch-head {
+.arena-featured {
+  padding: 28px 30px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.arena-featured-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.arena-featured-pool {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.arena-featured-pool strong {
+  color: var(--text-ivory);
+  font-weight: 600;
+}
+
+.arena-featured-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 24px 32px;
+}
+
+.arena-featured-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.arena-featured-spec {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-steel);
+}
+
+.arena-featured-title {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+  color: var(--text-ivory);
+}
+
+.arena-featured-desc {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.56;
+  color: var(--text-silver);
+  max-width: 60ch;
+}
+
+.arena-featured-aside {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-left: 28px;
+  border-left: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.arena-featured-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+.arena-featured-stat-val {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text-ivory);
+}
+
+.arena-featured-stat-lbl {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-label);
+  white-space: nowrap;
+}
+
+.arena-featured-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border-radius: var(--radius-sm);
+  background: var(--text-ivory);
+  color: var(--bg-base);
+  border: 1px solid var(--text-ivory);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: none;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.arena-featured-cta:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: var(--bg-base);
+  transform: translateY(-1px);
+}
+
+/* 2-Column Architectural Strip (1v1 Arena + 3D Galaxy) */
+
+.arena-secondary-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--border-subtle);
+}
+
+.arena-strip-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 20px 30px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-silver);
+  text-align: left;
+  min-width: 0;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.arena-strip-cell + .arena-strip-cell {
+  border-left: 1px solid var(--border-subtle);
+}
+
+.arena-strip-cell:hover {
+  background: var(--surface-2);
+  color: var(--text-ivory);
+}
+
+.arena-strip-top {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-.arena-launch-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 9px;
+.arena-strip-index {
+  color: var(--text-label);
 }
 
-.arena-launch-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.arena-launch-tile {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 12px 13px;
-  border-radius: var(--radius-md);
-  background: var(--surface-1);
+.arena-strip-tag {
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  background: var(--surface-2);
   border: 1px solid var(--border-subtle);
-  box-shadow: var(--edge-specular);
-  color: rgb(var(--light));
-  text-align: left;
-  min-width: 0;
-  cursor: pointer;
-  transition: border-color 0.22s ease, background 0.22s ease, transform 0.2s ease, box-shadow 0.22s ease;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--text-silver);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-.arena-launch-tile:hover {
-  color: #fff;
+.arena-strip-cell:hover .arena-strip-tag {
   background: var(--surface-3);
   border-color: var(--border-strong);
-  box-shadow: var(--edge-specular-hover);
-  transform: translateY(-1px);
+  color: var(--text-ivory);
 }
 
-.arena-tile-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-sm);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  background: rgba(var(--bright), 0.08);
-  border: 1px solid var(--border-default);
-  color: rgb(var(--bright));
-  font-size: 14px;
-}
-
-.arena-launch-tile.is-cosmos .arena-tile-icon {
-  color: #cacaca;
-  border-color: rgba(202, 202, 202, 0.36);
-  background: rgba(202, 202, 202, 0.08);
-}
-
-.arena-tile-body {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.arena-tile-title {
-  font-family: var(--font-sans);
-  font-size: 13px;
+.arena-strip-title {
+  font-family: var(--font-display);
+  font-size: 16px;
   font-weight: 600;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--text-ivory);
+  margin-top: 2px;
 }
 
-.arena-tile-sub {
+.arena-strip-sub {
   font-family: var(--font-mono);
-  font-size: 10px;
-  color: rgba(var(--muted), 0.88);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 10.5px;
+  color: var(--text-label);
+  line-height: 1.4;
 }
 
-.arena-tile-badge {
-  padding: 3px 7px;
-  border-radius: 3px;
-  background: rgba(var(--bright), 0.09);
-  border: 1px solid var(--border-subtle);
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.7px;
-  color: rgba(var(--bright), 0.92);
-  flex-shrink: 0;
-}
-
-.arena-launch-tile.is-cosmos .arena-tile-badge {
-  border-color: rgba(202, 202, 202, 0.35);
-  color: #e0e0e0;
-}
-
-/* === Sector 04 // Signal Direct Channels === */
+/* === Sector 04 // Signal Compact Editorial Channels Strip === */
 .signal-card {
-  padding: 18px 20px;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 0;
+  overflow: hidden;
 }
 
 .signal-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
+  padding: 13px 24px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.signal-head-meta {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: var(--text-steel);
 }
 
 .signal-links-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
 }
 
 .signal-tile {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 11px 13px;
-  border-radius: var(--radius-md);
-  background: var(--surface-1);
-  border: 1px solid var(--border-subtle);
-  box-shadow: var(--edge-specular);
-  color: rgb(var(--light));
+  padding: 13px 18px;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--border-subtle);
+  box-shadow: none;
+  color: var(--text-silver);
+  font-family: var(--font-sans);
   text-decoration: none;
   text-align: left;
   min-width: 0;
   cursor: pointer;
-  transition: border-color 0.22s ease, background 0.22s ease, transform 0.2s ease, box-shadow 0.22s ease;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.signal-tile:last-child {
+  border-right: 0;
 }
 
 .signal-tile:hover {
-  color: #fff;
-  background: var(--surface-3);
-  border-color: var(--border-strong);
-  box-shadow: var(--edge-specular-hover);
-  transform: translateY(-1px);
+  color: var(--text-ivory);
+  background: var(--surface-2);
+  box-shadow: none;
+  transform: none;
 }
 
-.signal-tile-glyph {
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-xs);
+.signal-tile-index {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--text-steel);
   flex-shrink: 0;
-  background: rgba(var(--bright), 0.08);
-  border: 1px solid var(--border-subtle);
-  color: rgb(var(--bright));
-  font-size: 13px;
-}
-
-.signal-tile.is-spotify .signal-tile-glyph {
-  color: #cacaca;
-  border-color: rgba(202, 202, 202, 0.35);
-  background: rgba(202, 202, 202, 0.08);
+  font-variant-numeric: tabular-nums;
 }
 
 .signal-discord-dot {
-  width: 9px;
-  height: 9px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: rgba(var(--muted), 0.65);
+  background: var(--text-dim);
+  flex-shrink: 0;
 }
 
 .signal-discord-dot.online {
-  background: #ffffff;
+  background: var(--text-ivory);
   box-shadow: none;
 }
 
 .signal-discord-dot.idle {
-  background: #b0b0b0;
+  background: var(--text-silver);
   box-shadow: none;
 }
 
 .signal-discord-dot.dnd {
   background: transparent;
-  border: 1.5px solid #ededed;
+  border: 1.5px solid var(--text-ivory);
   box-shadow: none;
 }
 
 .signal-discord-dot.offline {
-  background: #666666;
+  background: var(--text-dim);
 }
 
 .signal-tile-body {
@@ -4582,14 +4797,14 @@ a.discord-main-title:hover {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
 }
 
 .signal-tile-name {
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-ivory);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4597,8 +4812,8 @@ a.discord-main-title:hover {
 
 .signal-tile-sub {
   font-family: var(--font-mono);
-  font-size: 10px;
-  color: rgba(var(--muted), 0.88);
+  font-size: 10.5px;
+  color: var(--text-label);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4607,6 +4822,11 @@ a.discord-main-title:hover {
 .signal-tile-arrow {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: rgba(var(--muted), 0.72);
+  color: var(--text-steel);
   flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+
+.signal-tile:hover .signal-tile-arrow {
+  color: var(--text-ivory);
 }

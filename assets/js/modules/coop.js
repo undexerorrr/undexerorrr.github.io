@@ -392,7 +392,7 @@ export function initCoopPicker() {
               <img
                 data-cover-key="${coverKey}"
                 data-fallback-src="${escapeHtml(item.img || '')}"
-                src="${escapeHtml(imgSrc)}"
+                ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''}
                 alt="${escapeHtml(item.title)}"
                 loading="lazy"
               />

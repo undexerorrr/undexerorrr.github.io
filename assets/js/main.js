@@ -38,7 +38,8 @@ import {
   initGlassSpotlight,
   renderWaifu,
   initWaifuControls,
-  renderCollection
+  renderCollection,
+  finalizeUnresolvedPosters
 } from './modules/ui.js';
 
 function safeInit(name, fn) {
@@ -97,4 +98,6 @@ bootstrapShikimoriSync(
     name: 'bootstrapShikimoriSync',
     message: String(err?.message || err)
   });
+}).finally(() => {
+  finalizeUnresolvedPosters();
 });

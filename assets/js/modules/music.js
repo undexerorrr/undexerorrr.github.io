@@ -292,8 +292,11 @@ export function initMusicPlayer() {
     const min = dock.classList.contains('is-minimized');
     dockMinBtn.textContent = min ? '+' : '–';
     dockMinBtn.setAttribute('aria-expanded', String(!min));
+    dockMinBtn.setAttribute('title', min ? 'Развернуть плеер' : 'Свернуть плеер');
+    dockMinBtn.setAttribute('aria-label', min ? 'Развернуть плеер' : 'Свернуть плеер');
   }
 
+  dock?.classList.add('is-minimized');
   syncDockMinimizeUI();
 
   dockListBtn?.addEventListener('click', () => {
@@ -309,7 +312,11 @@ export function initMusicPlayer() {
   });
 
   dockMinBtn?.addEventListener('click', () => {
-    dock?.classList.toggle('is-minimized');
+    const nextMin = dock?.classList.toggle('is-minimized');
+    if (nextMin && dockPlaylist) {
+      dockPlaylist.classList.remove('is-open');
+      dockListBtn?.classList.remove('active');
+    }
     syncDockMinimizeUI();
   });
 

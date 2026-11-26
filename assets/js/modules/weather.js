@@ -463,9 +463,21 @@ export function initLiveWeather() {
     hudBtn?.setAttribute('aria-expanded', String(open));
   }
 
+  function closePopoverIfOpen() {
+    if (hud && hud.classList.contains('is-open')) {
+      setPopoverOpen(false);
+    }
+  }
+
   hudBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
     setPopoverOpen(!hud?.classList.contains('is-open'));
+  });
+
+  document.addEventListener('pointerdown', (e) => {
+    if (hud && hud.classList.contains('is-open') && !hud.contains(e.target)) {
+      setPopoverOpen(false);
+    }
   });
 
   document.addEventListener('click', (e) => {
@@ -475,22 +487,15 @@ export function initLiveWeather() {
   });
 
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && hud && hud.classList.contains('is-open')) {
-      setPopoverOpen(false);
+    if (e.key === 'Escape') {
+      closePopoverIfOpen();
     }
   });
 
-  document.addEventListener('archive:sectorchange', () => {
-    if (hud && hud.classList.contains('is-open')) {
-      setPopoverOpen(false);
-    }
-  });
-
-  window.addEventListener('scroll', () => {
-    if (hud && hud.classList.contains('is-open')) {
-      setPopoverOpen(false);
-    }
-  }, { passive: true });
+  document.addEventListener('archive:sectorchange', closePopoverIfOpen);
+  window.addEventListener('scroll', closePopoverIfOpen, { passive: true, capture: true });
+  window.addEventListener('resize', closePopoverIfOpen, { passive: true });
+  window.addEventListener('blur', closePopoverIfOpen);
 
   chips.forEach((chip) => {
     chip.addEventListener('click', () => {

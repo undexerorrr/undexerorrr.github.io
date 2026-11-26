@@ -118,7 +118,7 @@ export function renderHistory(items, isLive) {
           <img
             data-cover-key="${escapeHtml(cacheKey)}"
             data-fallback-src="${escapeHtml(fallbackSrc)}"
-            src="${escapeHtml(imgSrc)}"
+            ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''}
             alt="${escapeHtml(item.title)}"
             loading="lazy"
           />
@@ -455,7 +455,7 @@ export function renderHotTakes(stateInput, loadFailed) {
           <img
             data-cover-key="${coverKey}"
             data-fallback-src="${escapeHtml(item.shikiImg || '')}"
-            src="${escapeHtml(imgSrc)}"
+            ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''}
             alt="${escapeHtml(item.title)}"
             loading="lazy"
           />
@@ -739,7 +739,7 @@ export function renderWatchingShelf(items) {
           <img
             data-cover-key="${coverKey}"
             data-fallback-src="${escapeHtml(item.shikiImg || '')}"
-            src="${escapeHtml(imgSrc)}"
+            ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''}
             alt="${escapeHtml(item.title)}"
             loading="lazy"
           />
@@ -999,7 +999,7 @@ export function renderWaifu() {
         <span class="waifu-rank">${formatRank(ch.rank)}</span>
         <img
           data-cover-key="${coverKey}"
-          src="${escapeHtml(imgSrc)}"
+          ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''}
           alt="${escapeHtml(ch.name)}"
           loading="lazy"
         />
@@ -1174,7 +1174,7 @@ export function renderCollection() {
           </div>
           <div class="poster-box">
             <span class="score-pill">${a.score.toFixed(2)}</span>
-            <img data-cover-key="${coverKey}" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(a.title)}" loading="lazy" />
+            <img data-cover-key="${coverKey}" ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''} alt="${escapeHtml(a.title)}" loading="lazy" />
             <div class="poster-glare" aria-hidden="true"></div>
             <div class="poster-fallback"><span>//</span>${escapeHtml(a.title)}</div>
           </div>
@@ -1223,7 +1223,7 @@ export function renderCollection() {
             <span class="sc-index-lbl">${topLabel}</span>
           </div>
           <div class="poster-box">
-            <img data-cover-key="${coverKey}" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(c.name)}" loading="lazy" />
+            <img data-cover-key="${coverKey}" ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''} alt="${escapeHtml(c.name)}" loading="lazy" />
             <div class="poster-glare" aria-hidden="true"></div>
             <div class="poster-fallback"><span>//</span>${escapeHtml(c.name)}</div>
           </div>
@@ -1260,11 +1260,26 @@ export function renderCollection() {
 export function attachImageHandlers(root) {
   root.querySelectorAll('img').forEach((img) => {
     const markLoaded = () => {
-      if (img.naturalWidth > 0) img.classList.add('loaded');
+      if (img.naturalWidth > 0) {
+        img.classList.remove('is-error');
+        img.classList.add('loaded');
+      }
     };
-    if (img.getAttribute('src')) {
+    const srcAttr = img.getAttribute('src');
+    if (srcAttr) {
+      img.classList.remove('is-error');
       if (img.complete && img.naturalWidth > 0) {
         img.classList.add('loaded');
+      } else if (img.complete && img.naturalWidth === 0) {
+        const fallback = img.dataset.fallbackSrc;
+        if (fallback && img.src !== fallback) {
+          img.dataset.fallbackSrc = '';
+          img.addEventListener('load', markLoaded, { once: true });
+          img.src = fallback;
+        } else {
+          img.classList.remove('loaded');
+          img.classList.add('is-error');
+        }
       } else {
         img.addEventListener('load', markLoaded, { once: true });
       }
@@ -1273,9 +1288,12 @@ export function attachImageHandlers(root) {
       const fallback = img.dataset.fallbackSrc;
       if (fallback && img.src !== fallback) {
         img.dataset.fallbackSrc = '';
+        img.classList.remove('is-error');
+        img.addEventListener('load', markLoaded, { once: true });
         img.src = fallback;
       } else {
         img.classList.remove('loaded');
+        img.classList.add('is-error');
       }
     });
   });
@@ -1285,12 +1303,42 @@ export function applyCoverToDOM(coverKey, url) {
   if (!url) return;
   document.querySelectorAll(`img[data-cover-key="${coverKey}"]`).forEach((img) => {
     if (img.getAttribute('src') === url && img.classList.contains('loaded')) return;
+    img.classList.remove('is-error');
     img.onload = () => {
-      if (img.naturalWidth > 0) img.classList.add('loaded');
+      if (img.naturalWidth > 0) {
+        img.classList.remove('is-error');
+        img.classList.add('loaded');
+      }
+    };
+    img.onerror = () => {
+      const fallback = img.dataset.fallbackSrc;
+      if (fallback && img.src !== fallback) {
+        img.dataset.fallbackSrc = '';
+        img.src = fallback;
+      } else {
+        img.classList.remove('loaded');
+        img.classList.add('is-error');
+      }
     };
     img.src = url;
     if (img.complete && img.naturalWidth > 0) {
+      img.classList.remove('is-error');
       img.classList.add('loaded');
+    }
+  });
+}
+
+export function finalizeUnresolvedPosters() {
+  document.querySelectorAll('img[data-cover-key]').forEach((img) => {
+    const srcAttr = img.getAttribute('src');
+    if (!srcAttr && !img.classList.contains('loaded')) {
+      const fallback = img.dataset.fallbackSrc;
+      if (fallback) {
+        img.dataset.fallbackSrc = '';
+        img.src = fallback;
+      } else {
+        img.classList.add('is-error');
+      }
     }
   });
 }
@@ -2061,7 +2109,7 @@ export function initTasteMatcher() {
           <img
             data-cover-key="anime_${item.id}"
             data-fallback-src="${escapeHtml(item.img || '')}"
-            src="${escapeHtml(imgSrc)}"
+            ${imgSrc ? `src="${escapeHtml(imgSrc)}"` : ''}
             alt="${escapeHtml(item.title)}"
             loading="lazy"
           />

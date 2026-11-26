@@ -28,8 +28,8 @@ export const SECTORS = [
     num: '03',
     label: 'ARENA',
     title: '03 // ARENA',
-    subtitle: 'TASTE MATCH, CO-OP & HOT TAKES',
-    hint: 'Проверка на базу, Кооп, Hot Takes, Бустер-пак, Турнир',
+    subtitle: 'FEATURED PACK, TASTE MATCH & HOT TAKES',
+    hint: 'ARCHIVE PACK, Турнир 1v1, Проверка на базу, Кооп, Hot Takes',
     kw: 'arena арена база совместимость кооп coop hot takes турнир бустер галактика 03'
   },
   {
@@ -37,9 +37,9 @@ export const SECTORS = [
     num: '04',
     label: 'SIGNAL',
     title: '04 // SIGNAL',
-    subtitle: 'CHANNELS, VINYL & GUESTBOOK',
-    hint: 'Контакты, Виниловая полка, Spotify и Гостевая стена',
-    kw: 'signal сигнал контакты ссылки tiktok discord spotify vinyl винил пластинки audio стена guestbook giscus 04'
+    subtitle: 'LISTENING ROOM, CHANNELS & GUESTBOOK',
+    hint: 'Виниловая полка, Контакты, GitHub, Spotify и Гостевая стена',
+    kw: 'signal сигнал контакты ссылки tiktok discord github spotify vinyl винил пластинки audio стена guestbook giscus 04'
   }
 ];
 

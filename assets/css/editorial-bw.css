@@ -17,27 +17,35 @@
   box-shadow: var(--edge-specular-hover);
 }
 
-/* Sector 03 & 04 nested panels cleanly inherit Obsidian L2 / L3 */
-.arena-launch-tile,
-.signal-tile,
+/* Sector 03 & 04: Zero Nested Boxes — hairline sections sit directly on Obsidian L1 (#111318) */
 .base-subpanel,
 .ht-panel,
-.vinyl-card,
 .gb-stage {
-  background: var(--surface-2);
-  border-color: var(--border-subtle);
-  box-shadow: var(--edge-specular);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
 }
 
-.arena-launch-tile:hover,
+.arena-strip-cell,
+.signal-tile {
+  background: transparent;
+  box-shadow: none;
+}
+
+.arena-strip-cell:hover,
 .signal-tile:hover {
-  background: var(--surface-3);
-  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+
+.vinyl-card {
+  background: transparent;
+  box-shadow: none;
 }
 
 .vinyl-card.is-playing {
-  background: var(--surface-3);
-  border-color: var(--text-ivory);
+  background: var(--surface-2);
+  border-color: rgba(243, 244, 246, 0.30);
+  box-shadow: var(--edge-specular);
 }
 
 /* Active Invert States: Ivory #F3F4F6 on Void Black #08090B */
@@ -71,6 +79,7 @@
 .sector-tel-mode-btn[aria-pressed="true"],
 .audio-btn.is-playing,
 body.is-audio-playing .dock-play-btn,
+.arena-featured-cta,
 .base-action-btn.is-primary,
 .holo-ctrl-btn.is-pack-primary {
   background: var(--text-ivory);
@@ -111,11 +120,12 @@ body.is-audio-playing .dock-play-btn,
 .audio-btn.is-playing:hover,
 .audio-btn.is-playing span,
 body.is-audio-playing .dock-play-btn:hover,
+.arena-featured-cta:hover,
 .base-action-btn.is-primary:hover,
 .holo-ctrl-btn.is-pack-primary:hover {
   color: var(--bg-base);
-  background: var(--text-ivory);
-  border-color: var(--text-ivory);
+  background: #ffffff;
+  border-color: #ffffff;
 }
 
 .sector-tel-mode-btn[aria-pressed="true"] .sector-tel-mode-dot,
