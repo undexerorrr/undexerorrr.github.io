@@ -287,14 +287,30 @@ export function initMusicPlayer() {
   dockPrevBtn?.addEventListener('click', () => loadTrack(trackIdx - 1, true));
   dockNextBtn?.addEventListener('click', () => loadTrack(trackIdx + 1, true));
 
+  function syncDockMinimizeUI() {
+    if (!dock || !dockMinBtn) return;
+    const min = dock.classList.contains('is-minimized');
+    dockMinBtn.textContent = min ? '+' : '–';
+    dockMinBtn.setAttribute('aria-expanded', String(!min));
+  }
+
+  syncDockMinimizeUI();
+
   dockListBtn?.addEventListener('click', () => {
+    if (dock?.classList.contains('is-minimized')) {
+      dock.classList.remove('is-minimized');
+      syncDockMinimizeUI();
+      dockPlaylist.classList.add('is-open');
+      dockListBtn.classList.add('active');
+      return;
+    }
     const open = dockPlaylist.classList.toggle('is-open');
     dockListBtn.classList.toggle('active', open);
   });
 
   dockMinBtn?.addEventListener('click', () => {
-    const min = dock.classList.toggle('is-minimized');
-    dockMinBtn.textContent = min ? '+' : '–';
+    dock?.classList.toggle('is-minimized');
+    syncDockMinimizeUI();
   });
 
   dockSeek?.addEventListener('input', () => {

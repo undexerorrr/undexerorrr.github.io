@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /*!
- * undexeror // archive — Pure B&W Editorial Noir Theme for Giscus
- * Matte neutral obsidian surfaces, zero blur filters, sharp editorial geometry
+ * undexeror // archive — Obsidian Noir Theme for Giscus
+ * Cold graphite-steel obsidian surfaces (#08090B / #111318 / #15181E / #1C2029), zero blur, architectural hairlines
  */
 
 main {
@@ -12,101 +12,101 @@ main {
   color-scheme: dark;
   font-family: var(--font-sans);
 
-  /* Syntax & Code Highlights (Pure B&W Monochrome) */
-  --color-prettylights-syntax-comment: #767676;
-  --color-prettylights-syntax-constant: #d6d6d6;
-  --color-prettylights-syntax-entity: #ebebeb;
-  --color-prettylights-syntax-storage-modifier-import: #d6d6d6;
-  --color-prettylights-syntax-entity-tag: #ffffff;
-  --color-prettylights-syntax-keyword: #ebebeb;
-  --color-prettylights-syntax-string: #cccccc;
-  --color-prettylights-syntax-variable: #d6d6d6;
-  --color-prettylights-syntax-brackethighlighter-unmatched: #ffffff;
-  --color-prettylights-syntax-invalid-illegal-text: #ffffff;
-  --color-prettylights-syntax-invalid-illegal-bg: rgba(255, 255, 255, 0.16);
-  --color-prettylights-syntax-markup-heading: #ffffff;
-  --color-prettylights-syntax-markup-bold: #ffffff;
-  --color-prettylights-syntax-markup-italic: #d6d6d6;
-  --color-prettylights-syntax-markup-inserted-text: #ebebeb;
-  --color-prettylights-syntax-markup-inserted-bg: rgba(255, 255, 255, 0.10);
-  --color-prettylights-syntax-markup-deleted-text: #cccccc;
-  --color-prettylights-syntax-markup-deleted-bg: rgba(255, 255, 255, 0.08);
+  /* Syntax & Code Highlights (Obsidian Noir Monochrome) */
+  --color-prettylights-syntax-comment: #777F8D;
+  --color-prettylights-syntax-constant: #C5CBD5;
+  --color-prettylights-syntax-entity: #F3F4F6;
+  --color-prettylights-syntax-storage-modifier-import: #C5CBD5;
+  --color-prettylights-syntax-entity-tag: #F3F4F6;
+  --color-prettylights-syntax-keyword: #F3F4F6;
+  --color-prettylights-syntax-string: #C5CBD5;
+  --color-prettylights-syntax-variable: #C5CBD5;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #F3F4F6;
+  --color-prettylights-syntax-invalid-illegal-text: #F3F4F6;
+  --color-prettylights-syntax-invalid-illegal-bg: rgba(197, 203, 213, 0.14);
+  --color-prettylights-syntax-markup-heading: #F3F4F6;
+  --color-prettylights-syntax-markup-bold: #F3F4F6;
+  --color-prettylights-syntax-markup-italic: #C5CBD5;
+  --color-prettylights-syntax-markup-inserted-text: #F3F4F6;
+  --color-prettylights-syntax-markup-inserted-bg: rgba(197, 203, 213, 0.08);
+  --color-prettylights-syntax-markup-deleted-text: #C5CBD5;
+  --color-prettylights-syntax-markup-deleted-bg: rgba(197, 203, 213, 0.06);
 
-  /* Canvas & Neutral Obsidian Surfaces */
-  --color-canvas-default: #080808;
-  --color-canvas-overlay: #141414;
-  --color-canvas-inset: #0e0e0e;
-  --color-canvas-subtle: #0e0e0e;
+  /* Canvas & Obsidian Surfaces */
+  --color-canvas-default: #08090B;
+  --color-canvas-overlay: #15181E;
+  --color-canvas-inset: #111318;
+  --color-canvas-subtle: #111318;
 
   /* Foreground Typography */
-  --color-fg-default: #d6d6d6;
-  --color-fg-muted: #848484;
-  --color-fg-subtle: rgba(214, 214, 214, 0.62);
-  --color-fg-on-emphasis: #080808;
+  --color-fg-default: #C5CBD5;
+  --color-fg-muted: #777F8D;
+  --color-fg-subtle: #4B5260;
+  --color-fg-on-emphasis: #08090B;
 
-  /* Borders */
-  --color-border-default: rgba(255, 255, 255, 0.16);
-  --color-border-muted: rgba(255, 255, 255, 0.10);
-  --color-border-subtle: rgba(255, 255, 255, 0.10);
+  /* Architectural Hairline Borders */
+  --color-border-default: rgba(197, 203, 213, 0.12);
+  --color-border-muted: rgba(197, 203, 213, 0.08);
+  --color-border-subtle: rgba(197, 203, 213, 0.08);
 
-  /* Neutral & Semantic Monochrome */
-  --color-neutral-emphasis-plus: #2a2a2a;
-  --color-neutral-emphasis: rgba(255, 255, 255, 0.24);
-  --color-neutral-muted: rgba(255, 255, 255, 0.12);
-  --color-neutral-subtle: rgba(255, 255, 255, 0.06);
+  /* Neutral & Semantic Obsidian */
+  --color-neutral-emphasis-plus: #1C2029;
+  --color-neutral-emphasis: rgba(197, 203, 213, 0.18);
+  --color-neutral-muted: rgba(197, 203, 213, 0.10);
+  --color-neutral-subtle: rgba(197, 203, 213, 0.05);
 
-  --color-accent-fg: #ebebeb;
-  --color-accent-emphasis: rgba(255, 255, 255, 0.24);
-  --color-accent-muted: rgba(255, 255, 255, 0.28);
-  --color-accent-subtle: rgba(255, 255, 255, 0.08);
+  --color-accent-fg: #F3F4F6;
+  --color-accent-emphasis: rgba(197, 203, 213, 0.18);
+  --color-accent-muted: rgba(197, 203, 213, 0.22);
+  --color-accent-subtle: rgba(197, 203, 213, 0.06);
 
-  --color-success-fg: #ffffff;
-  --color-success-emphasis: rgba(255, 255, 255, 0.24);
-  --color-success-muted: rgba(255, 255, 255, 0.28);
-  --color-success-subtle: rgba(255, 255, 255, 0.08);
+  --color-success-fg: #F3F4F6;
+  --color-success-emphasis: rgba(197, 203, 213, 0.18);
+  --color-success-muted: rgba(197, 203, 213, 0.22);
+  --color-success-subtle: rgba(197, 203, 213, 0.06);
 
-  --color-attention-fg: #ebebeb;
-  --color-attention-muted: rgba(255, 255, 255, 0.24);
-  --color-attention-subtle: rgba(255, 255, 255, 0.08);
+  --color-attention-fg: #F3F4F6;
+  --color-attention-muted: rgba(197, 203, 213, 0.18);
+  --color-attention-subtle: rgba(197, 203, 213, 0.06);
 
-  --color-danger-fg: #ebebeb;
-  --color-danger-muted: rgba(255, 255, 255, 0.28);
-  --color-danger-subtle: rgba(255, 255, 255, 0.10);
+  --color-danger-fg: #F3F4F6;
+  --color-danger-muted: rgba(197, 203, 213, 0.22);
+  --color-danger-subtle: rgba(197, 203, 213, 0.08);
 
-  /* Buttons */
-  --color-btn-text: #d6d6d6;
-  --color-btn-bg: #141414;
-  --color-btn-border: rgba(255, 255, 255, 0.18);
-  --color-btn-shadow: 0 4px 12px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  --color-btn-inset-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --color-btn-hover-bg: #1b1b1b;
-  --color-btn-hover-border: #ededed;
-  --color-btn-active-bg: #f0f0f0;
-  --color-btn-active-border: #f0f0f0;
-  --color-btn-selected-bg: rgba(255, 255, 255, 0.14);
+  /* Buttons (Obsidian L3 #1C2029 -> Active Ivory #F3F4F6) */
+  --color-btn-text: #C5CBD5;
+  --color-btn-bg: #1C2029;
+  --color-btn-border: rgba(197, 203, 213, 0.12);
+  --color-btn-shadow: inset 0 1px 0 rgba(243, 244, 246, 0.06);
+  --color-btn-inset-shadow: inset 0 1px 0 rgba(243, 244, 246, 0.05);
+  --color-btn-hover-bg: #15181E;
+  --color-btn-hover-border: rgba(197, 203, 213, 0.18);
+  --color-btn-active-bg: #F3F4F6;
+  --color-btn-active-border: #F3F4F6;
+  --color-btn-selected-bg: rgba(197, 203, 213, 0.12);
 
-  --color-btn-primary-text: #080808;
-  --color-btn-primary-bg: #f0f0f0;
-  --color-btn-primary-border: #f0f0f0;
+  --color-btn-primary-text: #08090B;
+  --color-btn-primary-bg: #F3F4F6;
+  --color-btn-primary-border: #F3F4F6;
   --color-btn-primary-shadow: none;
   --color-btn-primary-inset-shadow: none;
   --color-btn-primary-hover-bg: #ffffff;
   --color-btn-primary-hover-border: #ffffff;
-  --color-btn-primary-selected-bg: #ebebeb;
-  --color-btn-primary-disabled-text: rgba(214, 214, 214, 0.42);
-  --color-btn-primary-disabled-bg: #141414;
-  --color-btn-primary-disabled-border: rgba(255, 255, 255, 0.10);
+  --color-btn-primary-selected-bg: #C5CBD5;
+  --color-btn-primary-disabled-text: #4B5260;
+  --color-btn-primary-disabled-bg: #15181E;
+  --color-btn-primary-disabled-border: rgba(197, 203, 213, 0.08);
 
   /* Reactions & Shadows */
-  --color-social-reaction-bg-hover: rgba(255, 255, 255, 0.10);
-  --color-social-reaction-bg-reacted-hover: rgba(255, 255, 255, 0.18);
-  --color-shadow-small: 0 4px 12px rgba(0, 0, 0, 0.52);
-  --color-shadow-medium: 0 12px 32px rgba(0, 0, 0, 0.62);
-  --color-shadow-large: 0 20px 48px rgba(0, 0, 0, 0.78);
+  --color-social-reaction-bg-hover: rgba(197, 203, 213, 0.08);
+  --color-social-reaction-bg-reacted-hover: rgba(197, 203, 213, 0.14);
+  --color-shadow-small: none;
+  --color-shadow-medium: 0 12px 28px rgba(0, 0, 0, 0.56);
+  --color-shadow-large: 0 20px 48px rgba(0, 0, 0, 0.72);
   --color-primer-shadow-focus: none;
 
   /* Giscus Loader */
-  --color-scale-gray-8: #141414;
+  --color-scale-gray-8: #15181E;
 }
 
 .gsc-main {
@@ -134,40 +134,40 @@ main {
 .gsc-comments-count,
 .gsc-reactions-count {
   letter-spacing: 0.04em;
-  color: #ffffff;
+  color: #F3F4F6;
 }
 
 .gsc-comment-box,
 .gsc-comment > div,
 .gsc-reply-box {
-  background: #141414;
-  border-color: rgba(255, 255, 255, 0.16);
+  background: #111318;
+  border-color: rgba(197, 203, 213, 0.08);
   border-radius: 4px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.52), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(243, 244, 246, 0.06);
 }
 
 .gsc-comment-box-tabs {
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+  border-bottom-color: rgba(197, 203, 213, 0.08);
 }
 
 .gsc-comment-box-textarea,
 .gsc-comment-box textarea {
   font-family: var(--font-sans);
-  background-color: #0e0e0e;
-  border-color: rgba(255, 255, 255, 0.16);
+  background-color: #08090B;
+  border-color: rgba(197, 203, 213, 0.12);
   border-radius: 3px;
-  color: #ffffff;
+  color: #F3F4F6;
 }
 
 .gsc-comment-box-textarea:focus,
 .gsc-comment-box textarea:focus {
-  border-color: #ededed;
+  border-color: rgba(197, 203, 213, 0.18);
   box-shadow: none;
 }
 
 .gsc-comment-box-textarea::placeholder,
 .gsc-comment-box textarea::placeholder {
-  color: #848484;
+  color: #777F8D;
 }
 
 .gsc-comment-content {
@@ -177,23 +177,23 @@ main {
 
 .gsc-comment-author a,
 .gsc-comment-header a {
-  color: #ffffff;
+  color: #F3F4F6;
 }
 
 .gsc-social-reaction-summary-item {
   border-radius: 3px;
-  border-color: rgba(255, 255, 255, 0.18);
-  background: #0e0e0e;
+  border-color: rgba(197, 203, 213, 0.12);
+  background: #15181E;
 }
 
 .gsc-social-reaction-summary-item:hover {
-  border-color: #ededed;
+  border-color: rgba(197, 203, 213, 0.18);
 }
 
 .gsc-social-reaction-summary-item.has-reacted {
-  background: #f0f0f0;
-  border-color: #f0f0f0;
-  color: #080808;
+  background: #F3F4F6;
+  border-color: #F3F4F6;
+  color: #08090B;
 }
 
 .btn {
@@ -204,7 +204,7 @@ main {
 }
 
 .btn-primary:hover:not(:disabled) {
-  color: #080808;
+  color: #08090B;
   background-color: #ffffff;
 }
 
@@ -213,5 +213,5 @@ main {
 }
 
 .gsc-loading-image {
-  filter: grayscale(1) brightness(1.2);
+  filter: grayscale(1) brightness(1.15);
 }

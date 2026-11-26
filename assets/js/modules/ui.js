@@ -80,7 +80,7 @@ export function renderStats(anime, manga, lifetimeText) {
   const badge = document.getElementById('rank-badge');
   if (badge && completed >= 400) {
     const milestone = Math.floor(completed / 50) * 50;
-    badge.textContent = `${milestone}+ ТАЙТЛОВ · АНИМЕ ПСИХ`;
+    badge.textContent = `${milestone}+ ТАЙТЛОВ · PERSONAL ARCHIVE`;
   }
 }
 
@@ -248,7 +248,16 @@ export function renderAnimeDna(dnaInput) {
   if (archName) archName.textContent = arch.title;
   if (archDesc) archDesc.textContent = arch.desc;
 
-  if (meanEl) meanEl.textContent = Number(dna.meanScore || 0).toFixed(2);
+  const meanFormatted = Number(dna.meanScore || 0).toFixed(2);
+  if (meanEl) meanEl.textContent = meanFormatted;
+  const heroMeanEl = document.getElementById('stat-mean-score');
+  const heroMeanNote = document.getElementById('stat-mean-note');
+  if (heroMeanEl) heroMeanEl.textContent = meanFormatted;
+  if (heroMeanNote) {
+    heroMeanNote.textContent = dna.ratedCount
+      ? `по ${dna.ratedCount} оценённым тайтлам`
+      : 'по оценённым тайтлам';
+  }
   if (eliteEl) eliteEl.textContent = `${Math.round(dna.eliteShare || 0)}%`;
   if (eliteSub) eliteSub.textContent = `${dna.eliteCount || 0} тайтлов на 9–10`;
   if (epsEl) epsEl.textContent = Number(dna.totalEpisodes || 0).toLocaleString('ru-RU');
@@ -987,7 +996,7 @@ export function renderWaifu() {
     if (ch.rank === 1) classes.push('is-top1');
     return `
       <article class="${classes.join(' ')}" data-waifu-key="${ch.key}" data-rarity="${rarity.key}">
-        <span class="waifu-rank">${formatRank(ch.rank)}<em>${rarity.short}</em></span>
+        <span class="waifu-rank">${formatRank(ch.rank)}</span>
         <img
           data-cover-key="${coverKey}"
           src="${escapeHtml(imgSrc)}"
@@ -1020,13 +1029,17 @@ export function initWaifuControls() {
   const counter = document.getElementById('waifu-counter');
   if (!slider) return;
 
-  const stepPx = 148 * 3;
+  let cardUnit = 190;
   let cachedClientW = slider.clientWidth || 1;
   let cachedMaxScroll = Math.max(0, slider.scrollWidth - cachedClientW);
   let navRaf = false;
   let scrollEndTimer = null;
 
   function measureMetrics() {
+    const firstCard = slider.querySelector('.waifu-card');
+    if (firstCard && firstCard.offsetWidth > 0) {
+      cardUnit = firstCard.offsetWidth + 18;
+    }
     cachedClientW = slider.clientWidth || 1;
     cachedMaxScroll = Math.max(0, slider.scrollWidth - cachedClientW);
   }
@@ -1040,19 +1053,19 @@ export function initWaifuControls() {
     if (nextBtn) nextBtn.disabled = sl >= cachedMaxScroll - 4;
 
     if (counter) {
-      const firstIdx = Math.min(total, Math.max(1, Math.round(sl / 148) + 1));
-      const visibleCount = Math.max(1, Math.floor((cachedClientW + 16) / 148));
+      const firstIdx = Math.min(total, Math.max(1, Math.round(sl / cardUnit) + 1));
+      const visibleCount = Math.max(1, Math.floor((cachedClientW + 18) / cardUnit));
       const lastIdx = Math.min(total, firstIdx + visibleCount - 1);
       counter.textContent = `${formatRank(firstIdx)}–${formatRank(lastIdx)} / ${formatRank(total)}`;
     }
   }
 
   prevBtn?.addEventListener('click', () => {
-    slider.scrollBy({ left: -stepPx, behavior: 'smooth' });
+    slider.scrollBy({ left: -(cardUnit * 3), behavior: 'smooth' });
   });
 
   nextBtn?.addEventListener('click', () => {
-    slider.scrollBy({ left: stepPx, behavior: 'smooth' });
+    slider.scrollBy({ left: cardUnit * 3, behavior: 'smooth' });
   });
 
   slider.addEventListener('scroll', () => {
@@ -1142,16 +1155,22 @@ export function renderCollection() {
       const classes = ['catalog-card'];
       if (a.rank <= 5) classes.push('is-top5');
       if (a.rank <= 3) classes.push('rank-' + a.rank);
+      const rankStr = formatRank(a.rank);
+      const topLabel = a.rank === 1 ? 'TOP 01' : (a.rank <= 5 ? 'TOP 05' : 'ARCHIVE');
       const vibesHtml = (a.vibes || []).slice(0, 3).map((v) =>
         `<span class="sc-vibe-chip">${escapeHtml(v)}</span>`
       ).join('');
-      const userScoreNote = a.userScore ? `Моя оценка ${a.userScore}/10 · ` : '';
+      const userScoreNote = a.userScore ? `Личная оценка ${a.userScore}/10 · ` : '';
 
       return `
-        <article class="${classes.join(' ')}" data-type="peak" data-id="${a.malId}" data-rarity="${rarity.key}" style="animation-delay:${(idx * 0.03).toFixed(3)}s">
+        <article class="${classes.join(' ')}" data-type="peak" data-id="${a.malId}" data-rarity="${rarity.key}" style="animation-delay:${(idx * 0.025).toFixed(3)}s">
           <div class="card-serial-bar">
-            <span class="card-serial-num">NO.${formatRank(a.rank)}</span>
-            <span class="card-rarity-tag">${rarity.short}</span>
+            <span class="card-serial-num">${rankStr}</span>
+            <span class="card-rank-meta">${a.rank <= 5 ? topLabel : a.year}</span>
+          </div>
+          <div class="sc-index-col" aria-hidden="true">
+            <span class="sc-index-num">${rankStr}</span>
+            <span class="sc-index-lbl">${topLabel}</span>
           </div>
           <div class="poster-box">
             <span class="score-pill">${a.score.toFixed(2)}</span>
@@ -1168,15 +1187,14 @@ export function renderCollection() {
           </div>
           <div class="card-showcase-body">
             <div class="sc-head-row">
-              <span class="sc-serial">NO.${formatRank(a.rank)} <span class="card-rarity-tag">// ${rarity.short}</span></span>
-              <span>${escapeHtml(a.kind)} · ${a.year}</span>
+              <span class="sc-serial"><span class="sc-inline-rank">${rankStr} ·</span> ${escapeHtml(a.kind)} · ${a.year}</span>
+              <span class="sc-score-meta">${escapeHtml(userScoreNote)}Shikimori ${a.score.toFixed(2)}</span>
             </div>
             <h3 class="sc-title">${escapeHtml(a.title)}</h3>
-            <p class="sc-note">«${escapeHtml(a.note)}»</p>
-            <div class="sc-vibes">${vibesHtml}</div>
+            <p class="sc-note">${escapeHtml(a.note)}</p>
             <div class="sc-foot-row">
-              <span>${escapeHtml(userScoreNote)}Шики ${a.score.toFixed(2)}</span>
-              <span class="sc-cta">3D-карта →</span>
+              <div class="sc-vibes">${vibesHtml}</div>
+              <span class="sc-cta">Открыть 3D-досье →</span>
             </div>
           </div>
         </article>
@@ -1191,12 +1209,18 @@ export function renderCollection() {
       const classes = ['catalog-card'];
       if (c.rank <= 5) classes.push('is-top5');
       if (c.rank <= 3) classes.push('rank-' + c.rank);
+      const rankStr = formatRank(c.rank);
+      const topLabel = c.rank === 1 ? 'TOP 01' : (c.rank <= 5 ? 'TOP 05' : 'CHARACTER');
 
       return `
-        <article class="${classes.join(' ')}" data-type="literally" data-id="${c.key}" data-rarity="${rarity.key}" style="animation-delay:${(idx * 0.03).toFixed(3)}s">
+        <article class="${classes.join(' ')}" data-type="literally" data-id="${c.key}" data-rarity="${rarity.key}" style="animation-delay:${(idx * 0.025).toFixed(3)}s">
           <div class="card-serial-bar">
-            <span class="card-serial-num">NO.${formatRank(c.rank)}</span>
-            <span class="card-rarity-tag">${rarity.short}</span>
+            <span class="card-serial-num">${rankStr}</span>
+            <span class="card-rank-meta">${topLabel}</span>
+          </div>
+          <div class="sc-index-col" aria-hidden="true">
+            <span class="sc-index-num">${rankStr}</span>
+            <span class="sc-index-lbl">${topLabel}</span>
           </div>
           <div class="poster-box">
             <img data-cover-key="${coverKey}" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(c.name)}" loading="lazy" />
@@ -1211,18 +1235,17 @@ export function renderCollection() {
           </div>
           <div class="card-showcase-body">
             <div class="sc-head-row">
-              <span class="sc-serial">NO.${formatRank(c.rank)} <span class="card-rarity-tag">// ${rarity.short}</span></span>
-              <span>LITERALLY ME</span>
+              <span class="sc-serial"><span class="sc-inline-rank">${rankStr} ·</span> LITERALLY ME</span>
+              <span class="sc-score-meta">${escapeHtml(c.anime)}</span>
             </div>
             <h3 class="sc-title">${escapeHtml(c.name)}</h3>
-            <p class="sc-note">Персонаж из личного списка «literally me» — точное попадание в характер, мотивацию и внутренний вайб тайтла ${escapeHtml(c.anime)}.</p>
-            <div class="sc-vibes">
-              <span class="sc-vibe-chip">#literally-me</span>
-              <span class="sc-vibe-chip">#${rarity.key}</span>
-            </div>
+            <p class="sc-note">Персонаж из личного каталога «Literally Me» — точное попадание в характер, мотивацию и внутреннюю драматургию тайтла «${escapeHtml(c.anime)}».</p>
             <div class="sc-foot-row">
-              <span>${escapeHtml(c.anime)}</span>
-              <span class="sc-cta">3D-карта →</span>
+              <div class="sc-vibes">
+                <span class="sc-vibe-chip">#literally-me</span>
+                <span class="sc-vibe-chip">#${rarity.key}</span>
+              </div>
+              <span class="sc-cta">Открыть 3D-досье →</span>
             </div>
           </div>
         </article>
@@ -1281,12 +1304,12 @@ export function attachCardInteractions(grid) {
       let lx = 0, ly = 0;
 
       card.addEventListener('pointerenter', (e) => {
-        if (e.pointerType === 'touch') return;
+        if (e.pointerType === 'touch' || appState.currentView === 'showcase') return;
         card.classList.add('is-tilting');
       });
 
       card.addEventListener('pointermove', (e) => {
-        if (e.pointerType === 'touch') return;
+        if (e.pointerType === 'touch' || appState.currentView === 'showcase') return;
         if (!card.classList.contains('is-tilting')) card.classList.add('is-tilting');
         lx = e.clientX;
         ly = e.clientY;
@@ -1299,12 +1322,12 @@ export function attachCardInteractions(grid) {
           const ny = Math.max(0, Math.min(1, (ly - rect.top) / rect.height));
           const dx = nx - 0.5;
           const dy = ny - 0.5;
-          const maxTilt = appState.currentView === 'showcase' ? 6 : 12;
-          card.style.setProperty('--lift', '-7px');
+          const maxTilt = 4.2;
+          card.style.setProperty('--lift', '-3px');
           card.style.setProperty('--rx', `${(-dy * maxTilt).toFixed(2)}deg`);
           card.style.setProperty('--ry', `${(dx * maxTilt).toFixed(2)}deg`);
-          card.style.setProperty('--cx', (dx * 2).toFixed(3));
-          card.style.setProperty('--cy', (dy * 2).toFixed(3));
+          card.style.setProperty('--cx', (dx * 1.4).toFixed(3));
+          card.style.setProperty('--cy', (dy * 1.4).toFixed(3));
           card.style.setProperty('--gx', `${(nx * 100).toFixed(1)}%`);
           card.style.setProperty('--gy', `${(ny * 100).toFixed(1)}%`);
         });

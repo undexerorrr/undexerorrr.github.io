@@ -3788,10 +3788,10 @@ body.is-cinema-mode .bg-layer {
   row-gap: 8px;
   padding: 8px 10px 8px 12px;
   border-radius: var(--radius-xl);
-  background: var(--surface-3);
-  border: 1px solid var(--border-default);
+  background: var(--surface-1);
+  border: 1px solid var(--border-strong);
   box-shadow: var(--shadow-floating);
-  color: rgb(var(--light));
+  color: var(--text-silver);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;

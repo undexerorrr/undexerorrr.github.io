@@ -12,8 +12,8 @@
   <meta property="og:description" content="415+ тайтлов · Аниме-ДНК · Live Discord/Spotify · Проверь свой ник на базу по Shikimori." />
   <meta property="og:image" content="https://undexerorrr.github.io/bg.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="theme-color" content="#080808" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%274%27%20fill%3D%27%23080808%27/%3E%3Crect%20x%3D%275%27%20y%3D%275%27%20width%3D%2722%27%20height%3D%2722%27%20fill%3D%27none%27%20stroke%3D%27%23d6d6d6%27%20stroke-width%3D%271.5%27/%3E%3Cpath%20d%3D%27M16%209%20L21.5%2016%20L16%2023%20L10.5%2016%20Z%27%20fill%3D%27%23ffffff%27/%3E%3C/svg%3E" />
+  <meta name="theme-color" content="#08090B" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20viewBox%3D%270%200%2032%2032%27%3E%3Crect%20width%3D%2732%27%20height%3D%2732%27%20rx%3D%274%27%20fill%3D%27%2308090B%27/%3E%3Crect%20x%3D%275%27%20y%3D%275%27%20width%3D%2722%27%20height%3D%2722%27%20fill%3D%27none%27%20stroke%3D%27%23C5CBD5%27%20stroke-width%3D%271.5%27/%3E%3Cpath%20d%3D%27M16%209%20L21.5%2016%20L16%2023%20L10.5%2016%20Z%27%20fill%3D%27%23F3F4F6%27/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -132,110 +132,149 @@
             <span class="sector-feed-tag">SECTOR 01 // DOSSIER</span>
             <span class="sector-feed-line"></span>
           </div>
-          <!-- HERO BENTO COMMAND DECK & ANIME-DNA -->
+
+          <!-- EDITORIAL MASTHEAD + INLINE WEATHER TELEMETRY (53.9° N) -->
+          <header class="sector-masthead dossier-masthead">
+            <div class="sector-masthead-left">
+              <span class="sector-masthead-index">01 // DOSSIER</span>
+              <h2 class="sector-masthead-title">Досье и телеметрия</h2>
+            </div>
+
+            <div class="weather-hud" id="weather-hud" aria-label="Погода в точке 53.9° N">
+              <div class="weather-inline-bar">
+                <button type="button" class="weather-hud-pill" id="weather-hud-btn" aria-label="Панель живой погоды 53.9° N" aria-expanded="false" aria-controls="weather-popover" title="Живая погода 53.9° N · нажми для выбора эффекта">
+                  <span class="weather-hud-dot" aria-hidden="true"></span>
+                  <span class="weather-hud-icon" id="weather-hud-icon" aria-hidden="true"></span>
+                  <span class="weather-hud-coord">53.9° N</span>
+                  <span class="weather-hud-sep">·</span>
+                  <span id="weather-hud-clock">--:--</span>
+                  <span class="weather-hud-sep">·</span>
+                  <span id="weather-hud-temp">--°C</span>
+                  <span class="weather-hud-sep">·</span>
+                  <span class="weather-hud-cond" id="weather-hud-cond">SYNC</span>
+                </button>
+                <button type="button" class="pilot-weather-chip" id="pilot-weather-chip" aria-label="Быстро переключить режим погоды 53.9° N" title="Быстро сменить режим погоды 53.9° N">
+                  <svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.5 5.5A4.8 4.8 0 0 0 3.2 4M2.5 8.5a4.8 4.8 0 0 0 8.3 1.5"/><polyline points="11.8,2.6 11.8,5.6 8.8,5.6"/><polyline points="2.2,11.4 2.2,8.4 5.2,8.4"/></svg>
+                </button>
+              </div>
+
+              <div class="weather-popover" id="weather-popover" role="region" aria-label="Управление погодой">
+                <div class="weather-pop-head">
+                  <span>ATMOS // <strong>53.9° N</strong></span>
+                  <span id="weather-pop-mode">LIVE</span>
+                </div>
+                <div class="weather-pop-meta">
+                  <span id="weather-pop-desc">Синхронизация Open-Meteo...</span>
+                  <span id="weather-pop-wind">— м/с</span>
+                </div>
+                <div class="weather-chips-grid" id="weather-chips-grid">
+                  <button type="button" class="weather-chip is-live-chip active" data-wmode="live">LIVE</button>
+                  <button type="button" class="weather-chip" data-wmode="clear">Ясно</button>
+                  <button type="button" class="weather-chip" data-wmode="rain">Дождь</button>
+                  <button type="button" class="weather-chip" data-wmode="snow">Снег</button>
+                  <button type="button" class="weather-chip" data-wmode="fog">Туман</button>
+                  <button type="button" class="weather-chip" data-wmode="storm">Гроза</button>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <!-- ASYMMETRIC EDITORIAL BENTO & ANIME-DNA -->
       <section class="hero" id="profile">
         <div class="bento-deck">
-          <!-- TILE 1: PILOT DOSSIER -->
+          <!-- SLAB 1: PROFILE & INTEGRATED LIVE PRESENCE -->
           <div class="glass-card bento-pilot">
             <div class="pilot-top-bar">
-              <span class="pilot-id-tag">DOSSIER // 1308586</span>
-              <button type="button" class="pilot-weather-chip" id="pilot-weather-chip" aria-label="Переключить режим погоды 53.9° N" title="Погода в точке 53.9° N (нажми для переключения режима)">53.9° N · SYNC...</button>
+              <span class="pilot-id-tag">ID // 1308586</span>
+              <span class="rank-badge" id="rank-badge">400+ ТАЙТЛОВ · PERSONAL ARCHIVE</span>
             </div>
 
-            <div class="avatar-wrap">
-              <div class="avatar-beat-ring" aria-hidden="true"></div>
-              <img
-                id="profile-avatar"
-                class="avatar-img"
-                src="https://shikimori.one/system/users/x160/1308586.png"
-                alt="undereror nyashka"
-              />
+            <div class="pilot-identity">
+              <div class="avatar-wrap">
+                <div class="avatar-beat-ring" aria-hidden="true"></div>
+                <img
+                  id="profile-avatar"
+                  class="avatar-img"
+                  src="https://shikimori.one/system/users/x160/1308586.png"
+                  alt="undereror nyashka"
+                />
+              </div>
+
+              <div class="pilot-identity-body">
+                <h1 class="hero-nick" id="profile-nick">undereror nyashka</h1>
+                <div class="pilot-bio-line" id="profile-bio-meta">муж. · 20 лет · на сайте с 2023 г.</div>
+                <div class="solo-badge">Solo Player · вне гильдий</div>
+              </div>
             </div>
 
-            <div>
-              <h1 class="hero-nick" id="profile-nick">undereror nyashka</h1>
-              <div class="pilot-bio-line" id="profile-bio-meta">муж. · 20 лет · на сайте с 2023 г.</div>
-            </div>
-
-            <div class="hero-badges">
-              <span class="rank-badge" id="rank-badge">400+ ТАЙТЛОВ · АНИМЕ ПСИХ</span>
-              <span class="solo-badge">SOLO PLAYER · ВНЕ ГИЛЬДИЙ</span>
+            <div class="pilot-presence">
+              <div class="discord-card" id="discord-card">
+                <div class="discord-art-wrap">
+                  <img id="discord-art" class="discord-art is-round" src="https://shikimori.one/system/users/x160/1308586.png" alt="Discord" />
+                  <span class="discord-status-badge offline" id="discord-status-dot" title="Статус Discord"></span>
+                </div>
+                <div class="discord-body">
+                  <div class="discord-kicker">
+                    <span id="discord-state-label">DISCORD · SYNCING</span>
+                    <span id="discord-username"></span>
+                  </div>
+                  <div class="discord-main-title" id="discord-main-title">Подключение к Lanyard...</div>
+                  <div class="discord-sub" id="discord-sub">Проверка онлайна, игр и Spotify</div>
+                  <div class="spotify-progress" id="spotify-progress">
+                    <span class="spotify-bar-time" id="sp-time-cur">0:00</span>
+                    <div class="spotify-bar-track"><div class="spotify-bar-fill" id="sp-bar-fill"></div></div>
+                    <span class="spotify-bar-time end" id="sp-time-end">0:00</span>
+                  </div>
+                </div>
+                <div class="discord-actions">
+                  <button type="button" class="spotify-open-pill" id="discord-spotify-btn">Плейлисты</button>
+                </div>
+              </div>
             </div>
 
             <div class="pilot-socials">
-              <a class="social-pill" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">TikTok</a>
-              <a class="social-pill" id="shiki-profile-link" href="https://shikimori.one/undereror+nyashka" target="_blank" rel="noopener noreferrer">Shikimori</a>
-              <a class="social-pill" href="https://github.com/undexerorrr" target="_blank" rel="noopener noreferrer">GitHub</a>
-              <button type="button" class="social-pill" id="hero-spotify-btn" style="font-family:inherit;">Spotify</button>
+              <a class="social-pill" href="https://www.tiktok.com/@undexeror" target="_blank" rel="noopener noreferrer">TikTok ↗</a>
+              <a class="social-pill" id="shiki-profile-link" href="https://shikimori.one/undereror+nyashka" target="_blank" rel="noopener noreferrer">Shikimori ↗</a>
+              <a class="social-pill" href="https://github.com/undexerorrr" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+              <button type="button" class="social-pill" id="hero-spotify-btn">Spotify</button>
             </div>
           </div>
 
-          <!-- TILE 2: LIVE DISCORD / SPOTIFY PRESENCE (LANYARD API) -->
-          <div class="bento-discord-slot">
-            <div class="discord-card" id="discord-card">
-              <div class="discord-art-wrap">
-                <img id="discord-art" class="discord-art is-round" src="https://shikimori.one/system/users/x160/1308586.png" alt="Discord" />
-                <span class="discord-status-badge offline" id="discord-status-dot" title="Статус Discord"></span>
-              </div>
-              <div class="discord-body">
-                <div class="discord-kicker">
-                  <span id="discord-state-label">DISCORD · SYNCING</span>
-                  <span id="discord-username"></span>
-                </div>
-                <div class="discord-main-title" id="discord-main-title">Подключение к Lanyard...</div>
-                <div class="discord-sub" id="discord-sub">Проверка онлайна, игр и Spotify</div>
-                <div class="spotify-progress" id="spotify-progress">
-                  <span class="spotify-bar-time" id="sp-time-cur">0:00</span>
-                  <div class="spotify-bar-track"><div class="spotify-bar-fill" id="sp-bar-fill"></div></div>
-                  <span class="spotify-bar-time end" id="sp-time-end">0:00</span>
-                </div>
-              </div>
-              <div class="discord-actions">
-                <button type="button" class="spotify-open-pill" id="discord-spotify-btn">Плейлисты</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- TILE 3: UNIFIED ANIME & MANGA TELEMETRY -->
+          <!-- SLAB 2: HIERARCHICAL ARCHIVE TELEMETRY -->
           <div class="glass-card bento-telemetry">
-            <div>
-              <div class="card-kicker">Телеметрия списков · Shikimori</div>
-              <div class="stat-top">
-                <div>
-                  <span class="stat-hero-val" id="anime-completed">415</span>
-                  <span class="stat-hero-label">просмотрено</span>
-                </div>
-                <div class="stat-total">
-                  Всего в списке
-                  <strong id="anime-total">625</strong>
-                </div>
-              </div>
-              <div class="progress-track" id="anime-progress">
-                <div class="prog-seg prog-completed" style="width: 66.4%"></div>
-                <div class="prog-seg prog-watching" style="width: 2.6%"></div>
-                <div class="prog-seg prog-planned" style="width: 27.5%"></div>
-                <div class="prog-seg prog-other" style="width: 3.5%"></div>
-              </div>
-              <div class="mini-stats">
-                <div class="mini-stat"><span class="lbl">Заплан.</span><span class="num" id="st-planned">172</span></div>
-                <div class="mini-stat"><span class="lbl">Смотрю</span><span class="num" id="st-watching">16</span></div>
-                <div class="mini-stat"><span class="lbl">Просм.</span><span class="num" id="st-completed">415</span></div>
-                <div class="mini-stat"><span class="lbl">Отлож.</span><span class="num" id="st-onhold">10</span></div>
-                <div class="mini-stat"><span class="lbl">Брошено</span><span class="num" id="st-dropped">12</span></div>
+            <div class="telemetry-top-row">
+              <span class="card-kicker">SHIKIMORI // СТАТИСТИКА СПИСКОВ</span>
+              <span class="stat-total">Всего в списке: <strong id="anime-total">625</strong></span>
+            </div>
+
+            <div class="stat-hero-block">
+              <span class="stat-hero-val" id="anime-completed">415</span>
+              <div class="stat-hero-meta">
+                <span class="stat-hero-label">просмотрено тайтлов</span>
+                <span class="stat-hero-sub">Завершённые сериалы, фильмы, OVA и ONA</span>
               </div>
             </div>
 
-            <div class="telemetry-footer">
-              <div class="telemetry-manga-compact">
-                <span class="manga-stat-chip">Манга <b id="manga-completed">13</b></span>
-                <span class="manga-stat-chip">Читаю <b id="manga-reading">5</b></span>
-                <span id="manga-done-pill" style="display:none;">13</span>
-              </div>
-              <div class="telemetry-lifetime-compact">
-                <div class="lifetime-head">
-                  <span class="lifetime-label">Время в тайтлах</span>
-                  <span class="lifetime-val" id="lifetime-text">5 месяцев и 3 недели</span>
+            <div class="progress-track" id="anime-progress">
+              <div class="prog-seg prog-completed" style="width: 66.4%"></div>
+              <div class="prog-seg prog-watching" style="width: 2.6%"></div>
+              <div class="prog-seg prog-planned" style="width: 27.5%"></div>
+              <div class="prog-seg prog-other" style="width: 3.5%"></div>
+            </div>
+
+            <div class="stat-tier-secondary">
+              <div class="stat-sec-cell">
+                <span class="stat-sec-label">Средняя оценка</span>
+                <div class="stat-sec-val-wrap">
+                  <strong class="stat-sec-val" id="stat-mean-score">8.12</strong>
+                  <span class="stat-sec-unit">/ 10</span>
                 </div>
+                <span class="stat-sec-sub" id="stat-mean-note">по оценённым тайтлам</span>
+              </div>
+
+              <div class="stat-sec-cell">
+                <span class="stat-sec-label">Время в тайтлах</span>
+                <strong class="stat-sec-val is-lifetime" id="lifetime-text">5 месяцев и 3 недели</strong>
                 <div class="milestones" id="milestones-row">
                   <div class="milestone checked"><span class="ms-dot" aria-hidden="true"></span><span>1н</span></div>
                   <div class="milestone checked"><span class="ms-dot" aria-hidden="true"></span><span>1м</span></div>
@@ -245,14 +284,27 @@
                 </div>
               </div>
             </div>
+
+            <div class="stat-mono-strip">
+              <span class="stat-mono-item">Смотрю <b id="st-watching">16</b></span>
+              <span class="stat-mono-sep" aria-hidden="true">·</span>
+              <span class="stat-mono-item">В планах <b id="st-planned">172</b></span>
+              <span class="stat-mono-sep" aria-hidden="true">·</span>
+              <span class="stat-mono-item">Отложено <b id="st-onhold">10</b></span>
+              <span class="stat-mono-sep" aria-hidden="true">·</span>
+              <span class="stat-mono-item">Брошено <b id="st-dropped">12</b></span>
+              <span class="stat-mono-sep" aria-hidden="true">·</span>
+              <span class="stat-mono-item">Манга <b id="manga-completed">13</b> · читаю <b id="manga-reading">5</b></span>
+              <span id="st-completed" hidden>415</span>
+              <span id="manga-done-pill" hidden>13</span>
+            </div>
           </div>
 
-          <!-- TILE 4: ANIME-DNA // TASTE X-RAY -->
+          <!-- SLAB 3: ANIME-DNA // TASTE X-RAY -->
           <div class="glass-card bento-dna" id="anime-dna-card">
             <div class="dna-header">
               <div class="dna-title-wrap">
-                <span class="dna-pulse-icon" aria-hidden="true"></span>
-                <span class="card-kicker" style="color: rgb(235, 235, 235); letter-spacing: 2.4px;">Аниме-ДНК // Рентген вкуса</span>
+                <span class="card-kicker">01.1 // АНИМЕ-ДНК · РЕНТГЕН ВКУСА</span>
                 <span class="dna-sub-note" id="dna-sub-note">Автоанализ всех просмотренных тайтлов</span>
               </div>
               <div class="dna-head-right">
@@ -332,10 +384,13 @@
       <!-- WATCHING NOW (SHIKIMORI LIVE SHELF) -->
       <section id="watching">
         <div class="watching-head-bar">
-          <h2 class="section-title">
-            <span class="watching-live-dot" aria-hidden="true"></span>
-            <a href="https://shikimori.one/undereror+nyashka/list/anime/mylist/watching" target="_blank" rel="noopener noreferrer">Сейчас смотрю →</a>
-          </h2>
+          <div class="editorial-sec-head">
+            <span class="editorial-sec-index">01.2 // В РОТАЦИИ</span>
+            <h2 class="section-title">
+              <span class="watching-live-dot" aria-hidden="true"></span>
+              <a href="https://shikimori.one/undereror+nyashka/list/anime/mylist/watching" target="_blank" rel="noopener noreferrer">Сейчас смотрю →</a>
+            </h2>
+          </div>
           <div class="watching-nav-controls">
             <span class="waifu-counter" id="watching-counter">01–01 / 01</span>
             <button type="button" class="carousel-arrow" id="watching-prev" aria-label="Прокрутить влево">‹</button>
@@ -348,26 +403,31 @@
       <!-- HISTORY & ACTIVITY -->
       <section id="activity">
         <div class="section-head">
-          <h2 class="section-title">История и активность</h2>
-        </div>
-        <div class="activity-grid">
-          <div class="glass-card">
-            <div class="panel-header">
-              <span class="card-kicker">Последние обновления</span>
-              <span class="panel-badge" id="history-source-badge">SNAPSHOT</span>
-            </div>
-            <div class="history-list" id="history-list"></div>
+          <div class="editorial-sec-head">
+            <span class="editorial-sec-index">01.3 // ХРОНОЛОГИЯ</span>
+            <h2 class="section-title">История и активность</h2>
           </div>
-
-          <div class="glass-card graph-wrap">
-            <div class="panel-header">
-              <div>
-                <div class="card-kicker">График просмотров</div>
-                <div style="font-size: 11px; color: rgba(var(--light), 0.55); margin-top: 2px;">Наведите или нажмите на столбик для деталей</div>
+        </div>
+        <div class="glass-card activity-slab">
+          <div class="activity-grid">
+            <div class="activity-col">
+              <div class="panel-header">
+                <span class="card-kicker">Последние обновления</span>
+                <span class="panel-badge" id="history-source-badge">SNAPSHOT</span>
               </div>
-              <span class="panel-badge" id="graph-tooltip">Активность</span>
+              <div class="history-list" id="history-list"></div>
             </div>
-            <div class="graph-bars" id="activity-graph"></div>
+
+            <div class="activity-col graph-wrap">
+              <div class="panel-header">
+                <div>
+                  <div class="card-kicker">График просмотров</div>
+                  <div class="activity-sub-hint">Наведите или нажмите на столбик для деталей</div>
+                </div>
+                <span class="panel-badge" id="graph-tooltip">Активность</span>
+              </div>
+              <div class="graph-bars" id="activity-graph"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -382,17 +442,20 @@
             <span class="sector-feed-line"></span>
           </div>
 
+          <!-- EDITORIAL MASTHEAD FOR 02 // VAULT -->
+          <header class="sector-masthead vault-masthead">
+            <div class="sector-masthead-left">
+              <span class="sector-masthead-index">02 // VAULT</span>
+              <h2 class="sector-masthead-title">Частный киноархив</h2>
+            </div>
+            <div class="tabs-bar" role="tablist" aria-label="Категория коллекции">
+              <button type="button" class="tab-btn active" data-tab="peak" role="tab" aria-selected="true">Peak Fiction</button>
+              <button type="button" class="tab-btn" data-tab="literally" role="tab" aria-selected="false">Literally Me</button>
+            </div>
+          </header>
+
       <!-- COLLECTION (PEAK FICTION / LITERALLY ME) -->
       <section id="collection">
-        <div class="section-head">
-          <h2 class="section-title">Коллекция</h2>
-        </div>
-
-        <div class="tabs-bar" role="tablist">
-          <button type="button" class="tab-btn active" data-tab="peak" role="tab" aria-selected="true">peak fiction</button>
-          <button type="button" class="tab-btn" data-tab="literally" role="tab" aria-selected="false">literally me</button>
-        </div>
-
         <div class="toolbar">
           <div class="search-box">
             <span class="search-icon" aria-hidden="true"><svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.5 10.5L14 14"></path></svg></span>
@@ -405,10 +468,10 @@
               <button type="button" class="sort-btn" data-sort="year">По году</button>
             </div>
             <div class="view-toggle-group" id="view-toggle-controls" role="tablist" aria-label="Вид коллекции">
-              <button type="button" class="view-toggle-btn active" data-cview="grid" role="tab" aria-selected="true" title="Компактная сетка карточек">Сетка</button>
-              <button type="button" class="view-toggle-btn" data-cview="showcase" role="tab" aria-selected="false" title="Журнальный режим «Витрина»">Витрина</button>
+              <button type="button" class="view-toggle-btn active" data-cview="grid" role="tab" aria-selected="true" title="Галерейная сетка">Сетка</button>
+              <button type="button" class="view-toggle-btn" data-cview="showcase" role="tab" aria-selected="false" title="Журнальный каталог Showcase 2.0">Витрина</button>
             </div>
-            <button type="button" class="randomizer-btn" id="randomizer-btn" title="Открыть фольгированный бустер-пак ARCHIVE PACK (Top 16 и все твои 9–10 на Shikimori)">Бустер-пак · Что посмотреть <span class="randomizer-count-badge" id="randomizer-count-badge">16</span></button>
+            <button type="button" class="randomizer-btn" id="randomizer-btn" title="Открыть фольгированный бустер-пак ARCHIVE PACK (Top 16 и все твои 9–10 на Shikimori)">Бустер-пак <span class="randomizer-count-badge" id="randomizer-count-badge">16</span></button>
             <button type="button" class="arena-launch-btn" id="collection-arena-btn" title="Мини-турнир 1v1: выбери лучшего из моего топа за 15 секунд">Турнир 1v1</button>
           </div>
         </div>
@@ -419,14 +482,15 @@
       <!-- WAIFU CAROUSEL -->
       <section id="waifu">
         <div class="waifu-head-bar">
-          <div class="waifu-head-left">
-            <button type="button" class="arena-launch-btn" id="waifu-arena-btn" title="Мини-турнир 1v1 по WAIFU">Турнир 1v1</button>
+          <div class="editorial-sec-head">
+            <span class="editorial-sec-index">02.2 // ИЗБРАННЫЕ ПЕРСОНАЖИ</span>
+            <h2 class="section-title">
+              <a href="https://shikimori.one/undereror+nyashka/favorites" target="_blank" rel="noopener noreferrer">WAIFU →</a>
+            </h2>
           </div>
-          <h2 class="section-title">
-            <a href="https://shikimori.one/undereror+nyashka/favorites" target="_blank" rel="noopener noreferrer">WAIFU →</a>
-          </h2>
           <div class="waifu-nav-controls">
-            <span class="waifu-counter" id="waifu-counter">01–08 / 15</span>
+            <button type="button" class="arena-launch-btn" id="waifu-arena-btn" title="Мини-турнир 1v1 по WAIFU">Турнир 1v1</button>
+            <span class="waifu-counter" id="waifu-counter">01–06 / 15</span>
             <button type="button" class="carousel-arrow" id="waifu-prev" aria-label="Прокрутить влево">‹</button>
             <button type="button" class="carousel-arrow" id="waifu-next" aria-label="Прокрутить вправо">›</button>
           </div>
@@ -442,11 +506,10 @@
           <div class="trophies-head">
             <div class="trophies-head-left">
               <div class="ht-title-row">
-                <span class="dna-pulse-icon" aria-hidden="true"></span>
-                <span class="card-kicker" style="color: rgb(235, 235, 235); letter-spacing: 2.4px;">Трофеи архива // 3D Medallions</span>
+                <span class="card-kicker">02.3 // ТРОФЕИ АРХИВА · 3D MEDALLIONS</span>
               </div>
               <h2 class="ht-heading">Коллекционные жетоны достижений</h2>
-              <p class="ht-subtitle">Автоматически чеканятся по реальному списку Shikimori — наведи на любой жетон для 3D-блика или кликни, чтобы открыть досье трофея.</p>
+              <p class="ht-subtitle">Автоматически чеканятся по списку Shikimori — наведи на жетон для 3D-блика или открой карточку трофея.</p>
             </div>
             <div class="trophies-head-right">
               <div class="trophies-rank-box">
@@ -900,7 +963,7 @@
   </div>
 
   <!-- Floating Music Player Dock -->
-  <aside class="music-dock" id="music-dock" aria-label="Аудиоплеер">
+  <aside class="music-dock is-minimized" id="music-dock" aria-label="Аудиоплеер">
     <div class="dock-top">
       <button type="button" class="dock-play-btn" id="dock-play-btn" aria-label="Воспроизвести или поставить на паузу" title="Play / Pause"><svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><polygon points="3,2 10,6 3,10"/></svg></button>
       <div class="dock-meta">
@@ -912,7 +975,7 @@
         <button type="button" class="dock-icon-btn" id="dock-next-btn" aria-label="Следующий трек" title="Следующий трек"><svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="11" y1="3" x2="11" y2="11"/><polyline points="3,3 9,7 3,11"/></svg></button>
         <button type="button" class="dock-icon-btn" id="dock-list-btn" aria-label="Список треков" title="Список треков"><svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><line x1="2" y1="4" x2="12" y2="4"/><line x1="2" y1="7" x2="12" y2="7"/><line x1="2" y1="10" x2="12" y2="10"/></svg></button>
         <button type="button" class="dock-icon-btn" id="dock-spotify-btn" aria-label="Плейлисты Spotify" title="Плейлисты Spotify"><svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="5"/><circle cx="7" cy="7" r="1.5"/></svg></button>
-        <button type="button" class="dock-icon-btn" id="dock-min-btn" aria-label="Свернуть или развернуть плеер" title="Свернуть / развернуть">–</button>
+        <button type="button" class="dock-icon-btn" id="dock-min-btn" aria-label="Свернуть или развернуть плеер" aria-expanded="false" title="Свернуть / развернуть">+</button>
       </div>
     </div>
 
@@ -960,38 +1023,6 @@
       <a class="spotify-ext-link" id="spotify-ext-link" href="https://open.spotify.com/playlist/2gmA2vop3KA3QGCGsUkTpC" target="_blank" rel="noopener noreferrer">Открыть в Spotify ↗</a>
     </div>
   </aside>
-
-  <!-- Live Weather HUD (53.9° N · Open-Meteo) -->
-  <div class="weather-hud" id="weather-hud" aria-label="Погода в точке 53.9° N">
-    <div class="weather-popover" id="weather-popover" role="region" aria-label="Управление погодой">
-      <div class="weather-pop-head">
-        <span>ATMOS // <strong>53.9° N</strong></span>
-        <span id="weather-pop-mode">LIVE</span>
-      </div>
-      <div class="weather-pop-meta">
-        <span id="weather-pop-desc">Синхронизация Open-Meteo...</span>
-        <span id="weather-pop-wind">— м/с</span>
-      </div>
-      <div class="weather-chips-grid" id="weather-chips-grid">
-        <button type="button" class="weather-chip is-live-chip active" data-wmode="live">LIVE</button>
-        <button type="button" class="weather-chip" data-wmode="clear">Ясно</button>
-        <button type="button" class="weather-chip" data-wmode="rain">Дождь</button>
-        <button type="button" class="weather-chip" data-wmode="snow">Снег</button>
-        <button type="button" class="weather-chip" data-wmode="fog">Туман</button>
-        <button type="button" class="weather-chip" data-wmode="storm">Гроза</button>
-      </div>
-    </div>
-    <button type="button" class="weather-hud-pill" id="weather-hud-btn" aria-label="Панель живой погоды 53.9° N" title="Живая погода 53.9° N · нажми для переключения эффектов">
-      <span class="weather-hud-icon" id="weather-hud-icon" aria-hidden="true"></span>
-      <span>53.9° N</span>
-      <span class="weather-hud-sep">·</span>
-      <span id="weather-hud-clock">--:--</span>
-      <span class="weather-hud-sep">·</span>
-      <span id="weather-hud-temp">--°C</span>
-      <span class="weather-hud-sep">·</span>
-      <span id="weather-hud-cond">SYNC</span>
-    </button>
-  </div>
 
   <!-- Cinema Mode HUD (second monitor / clean vibe) -->
   <div class="cinema-hud" id="cinema-hud" role="region" aria-label="Cinema Mode" aria-hidden="true" inert>

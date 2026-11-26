@@ -205,7 +205,7 @@ export function initAtmosphereCanvas() {
       const py = mouse.y > -1000 ? (mouse.y / h - 0.5) * 10 * s.depth : 0;
       ctx.beginPath();
       ctx.arc(s.x - px, s.y - py, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(235, 235, 235, ${alpha.toFixed(3)})`;
+      ctx.fillStyle = `rgba(243, 244, 246, ${alpha.toFixed(3)})`;
       ctx.fill();
     }
 
@@ -219,8 +219,8 @@ export function initAtmosphereCanvas() {
         if (fb.x + fb.r < -80) fb.x = w + fb.r + 60;
 
         const g = ctx.createRadialGradient(fb.x, fb.y, 10, fb.x, fb.y, fb.r);
-        g.addColorStop(0, `rgba(214, 214, 214, ${(fb.alpha * fogScale).toFixed(3)})`);
-        g.addColorStop(0.55, `rgba(165, 165, 165, ${(fb.alpha * fogScale * 0.45).toFixed(3)})`);
+        g.addColorStop(0, `rgba(197, 203, 213, ${(fb.alpha * fogScale).toFixed(3)})`);
+        g.addColorStop(0.55, `rgba(119, 127, 141, ${(fb.alpha * fogScale * 0.45).toFixed(3)})`);
         g.addColorStop(1, 'transparent');
         ctx.fillStyle = g;
         ctx.beginPath();
@@ -259,7 +259,7 @@ export function initAtmosphereCanvas() {
         ctx.beginPath();
         ctx.moveTo(d.x, d.y);
         ctx.lineTo(d.x + windSlant * 1.45, d.y + d.len * (isStorm ? 1.25 : 1));
-        ctx.strokeStyle = `rgba(214, 214, 214, ${(d.alpha * (isStorm ? 1.22 : 1)).toFixed(3)})`;
+        ctx.strokeStyle = `rgba(197, 203, 213, ${(d.alpha * (isStorm ? 1.22 : 1)).toFixed(3)})`;
         ctx.lineWidth = d.width;
         ctx.stroke();
       }
@@ -275,7 +275,7 @@ export function initAtmosphereCanvas() {
         }
         ctx.beginPath();
         ctx.ellipse(sp.x, sp.y, sp.r * 1.6, sp.r * 0.42, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(224, 224, 224, ${sp.alpha.toFixed(3)})`;
+        ctx.strokeStyle = `rgba(197, 203, 213, ${sp.alpha.toFixed(3)})`;
         ctx.lineWidth = 0.8;
         ctx.stroke();
       }
@@ -287,7 +287,7 @@ export function initAtmosphereCanvas() {
           nextLightningAt = now + 3800 + Math.random() * 6800;
         }
         if (lightningAlpha > 0.004) {
-          ctx.fillStyle = `rgba(235, 235, 235, ${lightningAlpha.toFixed(3)})`;
+          ctx.fillStyle = `rgba(243, 244, 246, ${lightningAlpha.toFixed(3)})`;
           ctx.fillRect(0, 0, w, h);
           lightningAlpha *= 0.86;
         }
@@ -318,7 +318,7 @@ export function initAtmosphereCanvas() {
 
         ctx.beginPath();
         ctx.arc(sf.x, sf.y, sf.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(240, 240, 240, ${sf.alpha.toFixed(3)})`;
+        ctx.fillStyle = `rgba(243, 244, 246, ${sf.alpha.toFixed(3)})`;
         ctx.fill();
       }
     } else {
@@ -350,7 +350,7 @@ export function initAtmosphereCanvas() {
         ctx.rotate(p.rot);
         ctx.beginPath();
         ctx.ellipse(0, 0, p.rx, p.ry, 0, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(225, 225, 225, ${(p.alpha * petalAlphaMul).toFixed(3)})`;
+        ctx.fillStyle = `rgba(197, 203, 213, ${(p.alpha * petalAlphaMul).toFixed(3)})`;
         ctx.fill();
         ctx.restore();
       }
@@ -421,7 +421,12 @@ export function initLiveWeather() {
     if (popWind) popWind.textContent = `Ветер ${windStr}`;
 
     if (pilotChip) {
-      pilotChip.textContent = `53.9° N · ${clock} · ${tempStr} · ${preset.short}`;
+      const summary = `53.9° N · ${clock} · ${tempStr} · ${preset.short}`;
+      pilotChip.title = `${summary} · нажми для быстрой смены эффекта`;
+      pilotChip.setAttribute('aria-label', `Сменить режим погоды (${summary})`);
+      if (!pilotChip.querySelector('svg')) {
+        pilotChip.textContent = summary;
+      }
     }
 
     document.body.classList.toggle('weather-night', weatherEngineState.isDay === 0);
@@ -452,16 +457,40 @@ export function initLiveWeather() {
     }
   }
 
+  function setPopoverOpen(open) {
+    if (!hud) return;
+    hud.classList.toggle('is-open', open);
+    hudBtn?.setAttribute('aria-expanded', String(open));
+  }
+
   hudBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
-    hud?.classList.toggle('is-open');
+    setPopoverOpen(!hud?.classList.contains('is-open'));
   });
 
   document.addEventListener('click', (e) => {
     if (hud && hud.classList.contains('is-open') && !hud.contains(e.target)) {
-      hud.classList.remove('is-open');
+      setPopoverOpen(false);
     }
   });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && hud && hud.classList.contains('is-open')) {
+      setPopoverOpen(false);
+    }
+  });
+
+  document.addEventListener('archive:sectorchange', () => {
+    if (hud && hud.classList.contains('is-open')) {
+      setPopoverOpen(false);
+    }
+  });
+
+  window.addEventListener('scroll', () => {
+    if (hud && hud.classList.contains('is-open')) {
+      setPopoverOpen(false);
+    }
+  }, { passive: true });
 
   chips.forEach((chip) => {
     chip.addEventListener('click', () => {

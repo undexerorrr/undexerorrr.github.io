@@ -1,42 +1,46 @@
 /* =========================================
-   05. PURE B&W EDITORIAL NOIR — FINAL OVERRIDE LAYER
+   06. OBSIDIAN NOIR — FINAL OVERRIDE LAYER
    ========================================= */
 
 /* =========================================
-   PURE B&W EDITORIAL NOIR — ACTIVE INVERT & SURFACE HIERARCHY
+   OBSIDIAN NOIR — 3-LEVEL MATTE DEPTH & ACTIVE INVERT
    ========================================= */
 
-.glass-card,
-.bento-discord-slot .discord-card {
-  background: rgba(20, 20, 20, 0.95);
-  border-color: rgba(255, 255, 255, 0.18);
+.glass-card {
+  background: var(--surface-1);
+  border-color: var(--border-subtle);
+  box-shadow: var(--edge-specular);
 }
 
-.glass-card:hover,
-.bento-discord-slot .discord-card:hover {
-  border-color: rgba(255, 255, 255, 0.34);
+.glass-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--edge-specular-hover);
 }
 
-.dna-col,
-.dna-archetype-box,
-.dna-kpi,
-.mini-stat,
-.manga-stat-chip,
+/* Sector 03 & 04 nested panels cleanly inherit Obsidian L2 / L3 */
 .arena-launch-tile,
 .signal-tile,
 .base-subpanel,
 .ht-panel,
-.trophy-card,
-.vinyl-card {
-  background: #0e0e0e;
-  border-color: rgba(255, 255, 255, 0.14);
+.vinyl-card,
+.gb-stage {
+  background: var(--surface-2);
+  border-color: var(--border-subtle);
+  box-shadow: var(--edge-specular);
+}
+
+.arena-launch-tile:hover,
+.signal-tile:hover {
+  background: var(--surface-3);
+  border-color: var(--border-strong);
 }
 
 .vinyl-card.is-playing {
-  background: #141414;
-  border-color: #ededed;
+  background: var(--surface-3);
+  border-color: var(--text-ivory);
 }
 
+/* Active Invert States: Ivory #F3F4F6 on Void Black #08090B */
 .os-tab.is-active,
 .os-mode-btn.is-active,
 .tab-btn.active,
@@ -69,9 +73,9 @@
 body.is-audio-playing .dock-play-btn,
 .base-action-btn.is-primary,
 .holo-ctrl-btn.is-pack-primary {
-  background: #f0f0f0;
-  color: #080808;
-  border-color: #f0f0f0;
+  background: var(--text-ivory);
+  color: var(--bg-base);
+  border-color: var(--text-ivory);
   box-shadow: none;
 }
 
@@ -109,56 +113,57 @@ body.is-audio-playing .dock-play-btn,
 body.is-audio-playing .dock-play-btn:hover,
 .base-action-btn.is-primary:hover,
 .holo-ctrl-btn.is-pack-primary:hover {
-  color: #080808;
-  background: #f0f0f0;
-  border-color: #f0f0f0;
+  color: var(--bg-base);
+  background: var(--text-ivory);
+  border-color: var(--text-ivory);
 }
 
 .sector-tel-mode-btn[aria-pressed="true"] .sector-tel-mode-dot,
 .audio-btn.is-playing .eq-bars span {
-  background: #080808;
+  background: var(--bg-base);
 }
 
 .cmdk-item.is-active {
-  background: #1b1b1b;
-  border-color: #ededed;
-  color: #ffffff;
+  background: var(--surface-3);
+  border-color: var(--border-strong);
+  color: var(--text-ivory);
   box-shadow: none;
 }
 
 .cmdk-meta.is-on {
-  background: #f0f0f0;
-  color: #080808;
-  border-color: #f0f0f0;
+  background: var(--text-ivory);
+  color: var(--bg-base);
+  border-color: var(--text-ivory);
 }
 
-.rank-badge,
+/* Interactive Controls: Obsidian L3 (#1C2029) */
 .randomizer-btn,
 .arena-launch-btn,
 .base-submit-btn,
 .galaxy-nav-btn,
-.cinema-nav-btn {
-  background: #141414;
-  border-color: rgba(255, 255, 255, 0.24);
-  color: #f0f0f0;
+.cinema-nav-btn,
+.cmdk-nav-btn {
+  background: var(--surface-3);
+  border-color: var(--border-default);
+  color: var(--text-ivory);
   box-shadow: none;
 }
 
-.rank-badge:hover,
 .randomizer-btn:hover,
 .arena-launch-btn:hover,
 .base-submit-btn:hover,
 .galaxy-nav-btn:hover,
-.cinema-nav-btn:hover {
-  background: #1b1b1b;
-  border-color: #ededed;
-  color: #ffffff;
+.cinema-nav-btn:hover,
+.cmdk-nav-btn:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  color: var(--text-ivory);
 }
 
 .randomizer-count-badge {
-  background: #242424;
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.22);
+  background: var(--surface-1);
+  color: var(--text-silver);
+  border-color: var(--border-subtle);
 }
 
 /* Posters & covers: subtle desaturation at rest, pure 100% color on hover/focus */
@@ -173,8 +178,8 @@ body.is-audio-playing .dock-play-btn:hover,
 .coop-ticket-poster img,
 .arena-poster img,
 .modal-poster img {
-  filter: grayscale(0.28) saturate(0.75) contrast(1.04) brightness(0.95);
-  transition: filter 0.3s ease, transform 0.35s ease, opacity 0.4s ease;
+  filter: grayscale(0.24) saturate(0.78) contrast(1.03) brightness(0.94);
+  transition: filter 0.32s ease, transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
 }
 
 .catalog-card:hover .poster-box img,
@@ -194,5 +199,5 @@ body.is-audio-playing .dock-play-btn:hover,
 .coop-ticket-poster:hover img,
 .modal-poster:hover img,
 .holo-art {
-  filter: grayscale(0) saturate(1.08) contrast(1.03) brightness(1.04);
+  filter: grayscale(0) saturate(1.06) contrast(1.02) brightness(1.02);
 }

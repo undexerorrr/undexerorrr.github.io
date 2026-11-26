@@ -3,32 +3,39 @@
    ========================================= */
 
 :root {
-  /* === Color Palette (Pure B&W Editorial Noir) === */
-  --bg-base: #080808;
-  --white: 255, 255, 255;
-  --light: 214, 214, 214;
-  --muted: 132, 132, 132;
-  --bright: 235, 235, 235;
-  --accent-dark: 42, 42, 42;
+  /* === Color Palette (Obsidian Noir — Cold Graphite & Steel) === */
+  --bg-base: #08090B;
+  --white: 243, 244, 246;
+  --bright: 243, 244, 246;
+  --light: 197, 203, 213;
+  --muted: 119, 127, 141;
+  --dim: 75, 82, 96;
+  --accent-dark: 28, 32, 41;
 
-  /* === Surface Hierarchy (Matte Obsidian Monochrome — Zero Blur) === */
-  --surface-1: #0e0e0e;
-  --surface-2: #141414;
-  --surface-3: #1b1b1b;
-  --surface-modal: #141414;
-  --surface-overlay: rgba(8, 8, 8, 0.90);
-  --glass-bg: var(--surface-2);
+  --text-ivory: #F3F4F6;
+  --text-silver: #C5CBD5;
+  --text-label: #8E97A6;
+  --text-steel: #777F8D;
+  --text-dim: #4B5260;
 
-  /* === Border & Specular Edge Hierarchy === */
-  --border-subtle: rgba(255, 255, 255, 0.10);
-  --border-default: rgba(255, 255, 255, 0.16);
-  --border-strong: rgba(255, 255, 255, 0.24);
-  --glass-border: var(--border-default);
-  --edge-specular: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  --edge-specular-hover: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.56), var(--edge-specular);
-  --shadow-card-hover: 0 16px 38px rgba(0, 0, 0, 0.68), var(--edge-specular-hover);
-  --shadow-floating: 0 16px 42px rgba(0, 0, 0, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  /* === Surface Hierarchy (Matte Obsidian — Zero Blur, Zero Glow) === */
+  --surface-1: #111318;
+  --surface-2: #15181E;
+  --surface-3: #1C2029;
+  --surface-modal: #111318;
+  --surface-overlay: rgba(8, 9, 11, 0.92);
+  --glass-bg: var(--surface-1);
+
+  /* === Architectural Hairlines & Studio Specular Edge === */
+  --border-subtle: rgba(197, 203, 213, 0.08);
+  --border-default: rgba(197, 203, 213, 0.12);
+  --border-strong: rgba(197, 203, 213, 0.18);
+  --glass-border: var(--border-subtle);
+  --edge-specular: inset 0 1px 0 rgba(243, 244, 246, 0.06);
+  --edge-specular-hover: inset 0 1px 0 rgba(243, 244, 246, 0.09);
+  --shadow-card: var(--edge-specular);
+  --shadow-card-hover: var(--edge-specular-hover);
+  --shadow-floating: 0 20px 48px rgba(0, 0, 0, 0.72), var(--edge-specular);
 
   /* === Radii & Layout Rhythm (Strict Editorial Geometry) === */
   --radius-xs: 2px;
@@ -38,8 +45,8 @@
   --radius-xl: 6px;
   --radius-pill: 3px;
   --container-max: 1160px;
-  --section-gap: 48px;
-  --section-gap-mobile: 34px;
+  --section-gap: 56px;
+  --section-gap-mobile: 38px;
 
   /* === Typography === */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -71,10 +78,10 @@
 
   /* === Unified Modal System Tokens === */
   --modal-radius: 6px;
-  --modal-border: rgba(255, 255, 255, 0.24);
-  --modal-backdrop: rgba(8, 8, 8, 0.88);
-  --modal-backdrop-deep: rgba(8, 8, 8, 0.94);
-  --modal-shadow: 0 24px 64px rgba(0, 0, 0, 0.86), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --modal-border: rgba(197, 203, 213, 0.18);
+  --modal-backdrop: rgba(8, 9, 11, 0.88);
+  --modal-backdrop-deep: rgba(8, 9, 11, 0.94);
+  --modal-shadow: 0 28px 68px rgba(0, 0, 0, 0.84), var(--edge-specular);
   --modal-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* === Dynamic Runtime State === */
@@ -95,11 +102,12 @@
 html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
-  scrollbar-color: rgba(var(--bright), 0.55) #080808;
+  scrollbar-color: rgba(197, 203, 213, 0.26) var(--bg-base);
   background-color: var(--bg-base);
-  color: rgb(var(--light));
+  color: var(--text-silver);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -107,17 +115,18 @@ body {
   overflow-x: hidden;
   overflow-x: clip;
   background-color: var(--bg-base);
+  color: var(--text-silver);
   position: relative;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 ::selection {
-  background: rgba(var(--bright), 0.32);
-  color: #fff;
+  background: rgba(243, 244, 246, 0.22);
+  color: var(--text-ivory);
 }
 
 :is(a, button, input, [tabindex]):focus-visible {
-  outline: 2px solid rgba(var(--bright), 0.88);
+  outline: 1.5px solid rgba(243, 244, 246, 0.82);
   outline-offset: 2px;
 }
 
@@ -131,31 +140,25 @@ body {
   z-index: var(--z-bg);
   pointer-events: none;
   overflow: hidden;
-  background: #080808;
+  background: var(--bg-base);
 }
 
 .bg-photo {
   position: absolute;
-  inset: -3%;
-  width: 106%;
-  height: 106%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center 22%;
-  opacity: 0.72;
-  transform-origin: center;
-  animation: bg-breathe 40s ease-in-out infinite alternate;
+  opacity: 0.32;
+  filter: grayscale(0.42) contrast(1.04);
 }
 
 .bg-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 28%, rgba(8, 8, 8, 0.78) 100%),
-    linear-gradient(180deg, rgba(8, 8, 8, 0.42) 0%, rgba(8, 8, 8, 0.54) 55%, rgba(8, 8, 8, 0.74) 100%);
-}
-
-@keyframes bg-breathe {
-  from { transform: scale(1); }
-  to   { transform: scale(1.06); }
+  background: radial-gradient(ellipse at center, rgba(8, 9, 11, 0.44) 16%, rgba(8, 9, 11, 0.94) 100%),
+    linear-gradient(180deg, rgba(8, 9, 11, 0.72) 0%, rgba(8, 9, 11, 0.80) 52%, rgba(8, 9, 11, 0.96) 100%);
 }
 
 #atmosphere-canvas {
@@ -168,7 +171,7 @@ body {
 }
 
 /* =========================================
-   FILM GRAIN + DISPLAY FONTS + NOIR POSTER FILTER + HOT TAKES
+   FILM GRAIN
    ========================================= */
 
 .film-grain {
@@ -178,7 +181,7 @@ body {
   height: 100%;
   z-index: var(--z-grain);
   pointer-events: none;
-  opacity: 0.026;
+  opacity: 0.022;
   background-repeat: repeat;
   background-size: 200px 200px;
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%27200%27%20height%3D%27200%27%3E%3Cfilter%20id%3D%27n%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.82%27%20numOctaves%3D%272%27%20stitchTiles%3D%27stitch%27/%3E%3C/filter%3E%3Crect%20width%3D%27200%27%20height%3D%27200%27%20filter%3D%27url(%23n)%27%20opacity%3D%271%27/%3E%3C/svg%3E");

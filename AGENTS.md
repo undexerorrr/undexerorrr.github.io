@@ -10,26 +10,37 @@
   - `index.html` — разметка, мета-теги (`viewport-fit=cover`), шрифты Google Fonts и подключение ресурсов с версионированием.
   - `assets/css/` — 7 логических таблиц стилей, подключаемых в `index.html` строго в порядке каскада `1 → 7` (без CSS `@import`):
     1. `assets/css/tokens.css` — `:root` переменные, сбросы, шрифты, скроллбар, базовый фон, `#atmosphere-canvas`, `.film-grain`.
-    2. `assets/css/layout.css` — `.topbar`, `.os-nav-cluster`, `.sector-telemetry`, `.sector-stage`, View Transitions, `.music-dock`, `.weather-hud`, `.mobile-dock`, `.footer`, `.intro-overlay`.
-    3. `assets/css/sections.css` — стили всех 4 секторов Archive OS (Bento/Hero, Discord/Lanyard, Аниме-ДНК, Сейчас смотрю, История/График, Коллекция/Витрина, WAIFU, Трофеи, База/Кооп, Hot Takes, Arena Launchpad, Signal Hub, Гостевая) и `content-visibility`.
+    2. `assets/css/layout.css` — `.topbar`, `.os-nav-cluster`, `.sector-telemetry`, `.sector-masthead`, `.sector-stage`, View Transitions, `.music-dock`, встроенный `.weather-hud` (`53.9° N`), `.mobile-dock`, `.footer`, `.intro-overlay`.
+    3. `assets/css/sections.css` — стили всех 4 секторов Archive OS (асимметричный Editorial Bento, интегрированный Discord/Lanyard, Аниме-ДНК на 1px-разделителях, Сейчас смотрю, История/График, Коллекция + Showcase 2.0, WAIFU, матрица Трофеев, База/Кооп, Hot Takes, Arena Launchpad, Signal Hub, Гостевая) и `content-visibility`.
     4. `assets/css/overlays.css` — полноэкранные режимы и модалки (3D-Галактика + Time Machine, 3D-Голокарты, Бустер-пак, Турнир 1v1, Кооп-свайп, Трофей-инспектор, Spotify Drawer, Cinema Mode, Command Palette ⌘K, единая система модалок).
     5. `assets/css/vinyl.css` — витрина `VINYL // AUDIO` (12 LP в отсеке `04 // SIGNAL`, выезжающая вращающаяся пластинка, полоса прогресса 30с-превью и адаптив).
-    6. `assets/css/editorial-bw.css` — финальный слой Pure B&W Editorial Noir (перебивающие ЧБ-правила, 3-уровневый контраст поверхностей, инверты активных состояний, цветной hover постеров).
+    6. `assets/css/editorial-bw.css` — финальный слой Obsidian Noir (перебивающие правила обсидиановой палитры, 3-уровневый контраст матовых поверхностей, инверты активных состояний `#F3F4F6` / `#08090B`, цветной hover постеров).
     7. `assets/css/responsive.css` — все capability-запросы (`hover`/`pointer`), `@media`-брейкпоинты строго по убыванию ширин (`1280/1160/1080/860/720/480/420px`) и `prefers-reduced-motion`.
-    - Дополнительно: `assets/css/giscus-noir.css` — кастомная нуар-тема для iframe Giscus.
+    - Дополнительно: `assets/css/giscus-noir.css` — кастомная Obsidian Noir тема для iframe Giscus (`#08090B` / `#111318` / `#15181E` / `#C5CBD5`).
   - `assets/js/main.js` + `assets/js/modules/` — модульная ES-архитектура без сборщика (`config.js`, `data.js`, `sectors.js`, `shikimori.js`, `music.js`, `weather.js`, `galaxy.js`, `coop.js`, `trophies.js`, `cinema.js`, `vinyl.js`, `guestbook.js`, `palette.js`, `ui.js`), где `main.js` выступает точкой входа и задаёт порядок инициализации (с ранним запуском `initSectors()` до модулей рендера/ленивой загрузки), а `data.js` хранит общее состояние `appState`, локальные снапшоты (`SNAPSHOT`, `PEAK_FICTION`, `WAIFU_LIST`, `LITERALLY_ME`, `PLAYLIST`) и `localStorage`-кэши; сетевые интеграции — Shikimori, AniList GraphQL, Lanyard, Open-Meteo, Spotify Embed/oEmbed, iTunes Search API (ленивая очередь для `vinyl.js` с 7-дневным кэшем и 30с превью), Giscus / GitHub Discussions (ленивая загрузка) и локальный `assets/js/vendor/three.min.js` для 3D-Галактики (`Galaxy 2.0`: кастомные GLSL-шейдеры звёзд, пыли и созвездий `starMat`/`dustMat`/`linkMat`/`highlightMat`, интерактивная «Машина времени» с осями `updatedAt`/`year`, скраббингом и импульсами `aReveal`/`aFlash`, плюс zero-alloc спектр Web Audio через `player.sampleSpectrum(now)` из `music.js`).
   - `assets/data/snapshot.json` + `scripts/sync-snapshot.mjs` + `.github/workflows/sync-snapshot.yml` — система ежедневного авто-снапшота данных Shikimori + AniList (чистый Node.js 20+, 0 внешних зависимостей; запуск по `schedule` в `03:15 UTC` и `workflow_dispatch` с защитой от порчи данных и проверкой диффа). При старте сайта `bootstrapShikimoriSync()` мгновенно гидрирует все блоки и HD-обложки (`dnaMeta.covers`) из `assets/data/snapshot.json`, после чего тихо запускает фоновый `syncShikimoriLive()` (при недоступности API сохраняется статус `SNAPSHOT`).
 - Сохранять существующий порядок CSS-каскада, ключи `localStorage` и работу в оффлайн/fallback-режиме (через `SNAPSHOT`, `assets/data/snapshot.json` и `fetchWithTimeout`).
 
 ---
 
-## 2. Визуальная система: Pure B&W Editorial Noir (100% чёрно-белый монохром)
+## 2. Визуальная система: Obsidian Noir (Editorial Noir · Cinematic Interface · Zero Clutter)
 
-- **Палитра**: строго **100% чёрно-белый монохром** (Pure B&W Editorial Noir) вокруг `--bg-base: #080808`, нейтральных матовых поверхностей (`#0e0e0e`, `#141414`, `#1b1b1b`), нейтральной серой типографики (`--bright: 235, 235, 235`, `--light: 214, 214, 214`, `--muted: 132, 132, 132`) и чистых рамок (`rgba(255, 255, 255, 0.10)` / `rgba(255, 255, 255, 0.24)`).
-  - **0 цветных акцентов в UI**: запрещены мятный (`#6ee7b7`), циан, синий, зелёный, фиолетовый/лавандовый, янтарный, красный и любые цветные/синеватые оттенки в шапке, табах, кнопках, статус-точках, прогресс-барах, эквалайзере, PNG-карточках и 3D-Галактике.
-  - **Единственный цвет на сайте** — сами постеры и обложки контента (лёгкое приглушение в покое → 100% цвет при наведении/фокусе).
-  - **Монохромные статусы**: активный LIVE/онлайн — `#ffffff`; снапшот/неактивно — `#666666` или полый `1px` контур; `STALE` — контрастная пунктирная рамка `1px dashed #ededed` без цвета.
-  - **Активные состояния**: чёткий монохромный инверт (`background: #f0f0f0; color: #080808; border-color: #f0f0f0;`) либо строгая `1px` рамка `#ededed`.
+- **Палитра**: холодный обсидиановый монохром с графитово-стальным подтоном (**Obsidian Noir**):
+  - **Поверхности**:
+    - Void Black (`--bg-base: #08090B`) — базовый фон страницы.
+    - Obsidian L1 (`--surface-1: #111318`) — крупные архитектурные плиты.
+    - Obsidian L2 (`--surface-2: #15181E`) — приподнятые поверхности и состояние hover.
+    - Obsidian L3 (`--surface-3: #1C2029`) — интерактивные контролы и кнопки.
+  - **Типографика по тону**:
+    - Ivory (`--text-ivory: #F3F4F6`, `--bright: 243, 244, 246`) — основной текст, заголовки, ключевые цифры.
+    - Silver (`--text-silver: #C5CBD5`, `--light: 197, 203, 213`) — вторичный текст и описания.
+    - Steel (`--text-steel: #777F8D`, `--muted: 119, 127, 141`) — телеметрия, метаданные, технические подписи.
+    - Dim (`--text-dim: #4B5260`, `--dim: 75, 82, 96`) — служебные индексы и разделители.
+  - **Линии и студийный блик**: тонкие архитектурные hairline-границы `--border-subtle: rgba(197, 203, 213, 0.08)` по умолчанию, `--border-default: rgba(197, 203, 213, 0.12)` на контролах, `--border-strong: rgba(197, 203, 213, 0.18)` на акцентах/hover и верхний студийный блик `--edge-specular: inset 0 1px 0 rgba(243, 244, 246, 0.06)`.
+  - **0 цветных акцентов в UI**: запрещены мятный (`#6ee7b7`), циан, синий, зелёный, фиолетовый/лавандовый, янтарный, красный и любые яркие цветные акценты в шапке, табах, кнопках, статус-точках, прогресс-барах, эквалайзере, PNG-карточках и 3D-Галактике.
+  - **Единственный цвет на сайте** — сами постеры и обложки контента (лёгкое приглушение в покое → 100% чистый цвет при наведении/фокусе).
+  - **Монохромные статусы**: активный LIVE/онлайн — `#F3F4F6`; снапшот/неактивно — `#777F8D` / `#4B5260` или полый `1px` контур; `STALE` — контрастная пунктирная рамка `1px dashed #F3F4F6` без цвета.
+  - **Активные состояния**: чёткий обсидианово-айвори инверт (`background: #F3F4F6; color: #08090B; border-color: #F3F4F6;`) либо строгая `1px` рамка `rgba(197, 203, 213, 0.18)`.
 - **Строгая геометрия (без pill-капсул и glow)**:
   - **Запрет на `border-radius: 999px`** для кнопок, табов, фильтров, чипов, инпутов и бейджей — использовать строгую геометрию (`2px–3px` для кнопок, бейджей и инпутов; `4px–6px` для карточек, контейнеров и модалок; `50%` допускается только для круглых аватаров и статус-точек).
   - **Запрет на декоративное свечение (glow)** (`box-shadow: 0 0 ...`, `text-shadow: 0 0 ...`), цветные/градиентные заливки кнопок, а также анимации `shimmer-text` и `badge-sheen`.
