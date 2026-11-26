@@ -3147,6 +3147,7 @@ export function initRandomizer() {
 
   function resetTiltOn(el) {
     if (!el) return;
+    el.classList.remove('is-tilting');
     el.classList.add('is-resetting');
     el.style.setProperty('--rx', '0deg');
     el.style.setProperty('--ry', '0deg');
@@ -3167,6 +3168,7 @@ export function initRandomizer() {
     const rx = (-dy * maxX).toFixed(2);
     const ry = (dx * maxY).toFixed(2);
     const intensity = Math.min(0.88, 0.28 + Math.hypot(dx, dy) * 0.95);
+    el.classList.add('is-tilting');
     el.classList.remove('is-resetting');
     el.style.setProperty('--rx', `${rx}deg`);
     el.style.setProperty('--ry', `${ry}deg`);
@@ -3200,7 +3202,8 @@ export function initRandomizer() {
     packState = 'sealed';
     cardFlipped = false;
     stage.dataset.state = 'sealed';
-    stage.classList.remove('is-flashing', 'is-dropping');
+    delete stage.dataset.rarity;
+    stage.classList.remove('is-tensioning', 'is-anticipating', 'is-flashing', 'is-dropping', 'is-revealing');
     topStrip?.classList.remove('is-sheared');
     holoFlipper.classList.remove('is-flipped');
     setTearProgress(0);
@@ -3345,7 +3348,8 @@ export function initRandomizer() {
         if (!entry || packState === 'ripping') return;
         packState = 'revealed';
         stage.dataset.state = 'revealed';
-        stage.classList.remove('is-flashing', 'is-dropping');
+        stage.dataset.rarity = entry.rarity.key;
+        stage.classList.remove('is-tensioning', 'is-anticipating', 'is-flashing', 'is-dropping', 'is-revealing');
         if (sealedActions) sealedActions.style.display = 'none';
         if (revealedActions) revealedActions.style.display = 'flex';
         renderDropCard(entry);
@@ -3372,18 +3376,21 @@ export function initRandomizer() {
     }
 
     const winner = pendingWinner || pickRandomAnime(getActivePool(), lastMalId);
+    const rarity = computeDropRarity(winner);
+    stage.dataset.rarity = rarity.key;
     lastMalId = winner.malId;
     preloadWinnerArt(winner);
 
-    // Animate the glowing tear line across if clicked rather than dragged
+    // Phase 1: Tactile tension & micro-vibration across tear seam
+    stage.classList.add('is-tensioning');
     if (!fromDrag) {
       const startAt = performance.now();
-      const dur = 240;
+      const dur = 220;
       await new Promise((resolve) => {
         function step(now) {
           if (myToken !== ripSeqToken) { resolve(); return; }
           const t = Math.min(1, (now - startAt) / dur);
-          const eased = 1 - Math.pow(1 - t, 2);
+          const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
           setTearProgress(eased);
           if (t < 1) requestAnimationFrame(step);
           else resolve();
@@ -3392,34 +3399,39 @@ export function initRandomizer() {
       });
     } else {
       setTearProgress(1);
+      await sleep(65);
     }
 
     if (myToken !== ripSeqToken || !backdrop.classList.contains('is-open')) return;
+    stage.classList.remove('is-tensioning');
 
-    // Shear top foil strip + flash + silver micro-sparks
+    // Phase 2: Crisp top-strip shear + physical anticipation squat (120–160ms by rarity)
     topStrip?.classList.add('is-sheared');
+    stage.classList.add('is-anticipating');
+    const anticipationMs = rarity.key === 'mythic' ? 160 : (rarity.key === 'ssr' ? 140 : 120);
+    await sleep(anticipationMs);
+    if (myToken !== ripSeqToken || !backdrop.classList.contains('is-open')) return;
+    stage.classList.remove('is-anticipating');
+
+    // Phase 3: Studio monochrome flash + rarity-scaled sparks + heavy pouch release
     stage.classList.remove('is-flashing');
     void stage.offsetWidth;
-    stage.classList.add('is-flashing');
-
-    await sleep(165);
-    if (myToken !== ripSeqToken || !backdrop.classList.contains('is-open')) return;
-
-    // Drop the torn pouch away and eject the 3D Holo card
-    stage.classList.add('is-dropping');
-    await sleep(135);
+    stage.classList.add('is-flashing', 'is-dropping');
+    const dropMs = rarity.key === 'mythic' ? 165 : (rarity.key === 'ssr' ? 140 : 120);
+    await sleep(dropMs);
     if (myToken !== ripSeqToken || !backdrop.classList.contains('is-open')) return;
 
     dropNumber++;
     const dropEntry = {
       num: dropNumber,
       anime: winner,
-      rarity: computeDropRarity(winner)
+      rarity
     };
     sessionDrops = [dropEntry, ...sessionDrops.filter((d) => d.anime.malId !== winner.malId)].slice(0, 5);
 
     packState = 'revealed';
     stage.dataset.state = 'revealed';
+    stage.classList.add('is-revealing');
     renderDropCard(dropEntry);
 
     if (sealedActions) sealedActions.style.display = 'none';
@@ -3427,6 +3439,13 @@ export function initRandomizer() {
     if (kbdHint) {
       kbdHint.textContent = 'Двигай мышкой для 3D-голограммы · Клик / Пробел — переворот · R — новый пак';
     }
+
+    const cleanMs = rarity.key === 'mythic' ? 1350 : (rarity.key === 'ssr' ? 1120 : 920);
+    window.setTimeout(() => {
+      if (myToken === ripSeqToken) {
+        stage.classList.remove('is-revealing', 'is-flashing');
+      }
+    }, cleanMs);
   }
 
   function togglePackCardFlip() {
@@ -3469,6 +3488,7 @@ export function initRandomizer() {
     const rx = (-dy * maxX).toFixed(2);
     const ry = (dx * maxY).toFixed(2);
     const intensity = Math.min(0.86, 0.28 + Math.hypot(dx, dy) * 0.90);
+    el.classList.add('is-tilting');
     el.classList.remove('is-resetting');
     el.style.setProperty('--rx', `${rx}deg`);
     el.style.setProperty('--ry', `${ry}deg`);
@@ -3525,6 +3545,9 @@ export function initRandomizer() {
     if (dx > 6) {
       pouchCurrentTear = Math.min(1, dx / dragSpan);
       setTearProgress(pouchCurrentTear);
+      if (pouchCurrentTear > 0.08) {
+        stage.classList.add('is-tensioning');
+      }
       if (pouchCurrentTear >= 0.55) {
         pouchDown = false;
         triggerRipOpen(true);
@@ -3545,6 +3568,7 @@ export function initRandomizer() {
     } else {
       pouchCurrentTear = 0;
       setTearProgress(0);
+      stage.classList.remove('is-tensioning');
     }
   }
 
@@ -3554,6 +3578,7 @@ export function initRandomizer() {
     if (packState === 'sealed') {
       pouchCurrentTear = 0;
       setTearProgress(0);
+      stage.classList.remove('is-tensioning');
       resetTiltOn(pouch);
     }
   });

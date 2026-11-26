@@ -16,7 +16,8 @@ const ITUNES_LOOKUP_BASE = 'https://itunes.apple.com/lookup';
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const QUEUE_CONCURRENCY = 2;
 const QUEUE_DELAY_MS = 160;
-const PREVIEW_VOLUME = 0.35;
+const VINYL_VOLUME_STORAGE_KEY = 'undexeror_archive_vinyl_vol_v1';
+const DEFAULT_PREVIEW_VOLUME = 0.15;
 const DEFAULT_PREVIEW_DURATION = 30;
 
 const SVG_PLAY =
@@ -25,6 +26,30 @@ const SVG_PAUSE =
   '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true"><line x1="5.5" y1="3.5" x2="5.5" y2="12.5"/><line x1="10.5" y1="3.5" x2="10.5" y2="12.5"/></svg>';
 const SVG_UNAVAILABLE =
   '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><line x1="4.2" y1="4.2" x2="11.8" y2="11.8"/></svg>';
+const SVG_VOL_ON =
+  '<svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="2.5,5.8 5.5,5.8 9,2.8 9,13.2 5.5,10.2 2.5,10.2"/><path d="M11.4 5.4a3.6 3.6 0 0 1 0 5.2"/></svg>';
+const SVG_VOL_MUTE =
+  '<svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="2.5,5.8 5.5,5.8 9,2.8 9,13.2 5.5,10.2 2.5,10.2"/><line x1="11.2" y1="5.8" x2="14.2" y2="10.2"/><line x1="14.2" y1="5.8" x2="11.2" y2="10.2"/></svg>';
+
+function loadSavedVinylVolume() {
+  try {
+    const raw = localStorage.getItem(VINYL_VOLUME_STORAGE_KEY);
+    if (raw === null || raw === '') return DEFAULT_PREVIEW_VOLUME;
+    const parsed = Number(raw);
+    if (Number.isFinite(parsed) && parsed >= 0 && parsed <= 1) {
+      return Math.round(parsed * 100) / 100;
+    }
+  } catch (e) {}
+  return DEFAULT_PREVIEW_VOLUME;
+}
+
+function saveVinylVolume(vol) {
+  try {
+    const clamped = Math.max(0, Math.min(1, Number(vol)));
+    if (!Number.isFinite(clamped)) return;
+    localStorage.setItem(VINYL_VOLUME_STORAGE_KEY, (Math.round(clamped * 100) / 100).toFixed(2));
+  } catch (e) {}
+}
 
 const PENALTY_KEYWORDS = [
   'karaoke',
@@ -283,6 +308,10 @@ export function initVinylShelf(playerControls) {
   const countBadge = document.getElementById('vinyl-count-badge');
   const statusBadge = document.getElementById('vinyl-status-badge');
   const nowPlayingEl = document.getElementById('vinyl-now-playing');
+  const volControl = document.getElementById('vinyl-vol-control');
+  const volMuteBtn = document.getElementById('vinyl-vol-mute');
+  const volSlider = document.getElementById('vinyl-vol-slider');
+  const volPct = document.getElementById('vinyl-vol-pct');
 
   if (!section || !grid) return null;
 
@@ -294,9 +323,56 @@ export function initVinylShelf(playerControls) {
     countBadge.textContent = `${VINYL_SHELF.length} LP`;
   }
 
+  let currentVolume = loadSavedVinylVolume();
+  let lastNonZeroVolume = currentVolume > 0 ? currentVolume : DEFAULT_PREVIEW_VOLUME;
+
   const previewAudio = new Audio();
   previewAudio.preload = 'none';
-  previewAudio.volume = PREVIEW_VOLUME;
+  previewAudio.volume = currentVolume;
+
+  function applyVolume(nextVol, persist) {
+    const raw = Number(nextVol);
+    const clamped = Number.isFinite(raw) ? Math.max(0, Math.min(1, raw)) : DEFAULT_PREVIEW_VOLUME;
+    const rounded = Math.round(clamped * 100) / 100;
+    currentVolume = rounded;
+    if (rounded > 0) {
+      lastNonZeroVolume = rounded;
+    }
+    previewAudio.volume = rounded;
+
+    const isMuted = rounded <= 0;
+    if (volSlider) {
+      volSlider.value = rounded.toFixed(2);
+    }
+    if (volPct) {
+      volPct.textContent = `${Math.round(rounded * 100)}%`;
+    }
+    if (volMuteBtn) {
+      volMuteBtn.innerHTML = isMuted ? SVG_VOL_MUTE : SVG_VOL_ON;
+      volMuteBtn.setAttribute('aria-pressed', String(isMuted));
+      volMuteBtn.setAttribute('title', isMuted ? 'Включить звук' : 'Выключить звук');
+    }
+    if (volControl) {
+      volControl.classList.toggle('is-muted', isMuted);
+    }
+    if (persist) {
+      saveVinylVolume(rounded);
+    }
+  }
+
+  volSlider?.addEventListener('input', () => {
+    applyVolume(parseFloat(volSlider.value), true);
+  });
+
+  volMuteBtn?.addEventListener('click', () => {
+    if (currentVolume > 0) {
+      applyVolume(0, true);
+    } else {
+      applyVolume(lastNonZeroVolume > 0 ? lastNonZeroVolume : DEFAULT_PREVIEW_VOLUME, true);
+    }
+  });
+
+  applyVolume(currentVolume, false);
 
   let activeId = null;
   let isPlaying = false;

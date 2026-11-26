@@ -921,8 +921,11 @@
   touch-action: none;
 }
 
-.holo-backdrop.is-open .holo-tilt-wrap,
-.pack-backdrop.is-open .pack-holo-tilt {
+.holo-backdrop.is-open .holo-tilt-wrap {
+  will-change: transform;
+}
+
+.pack-holo-tilt.is-tilting {
   will-change: transform;
 }
 
@@ -2781,33 +2784,97 @@ body.galaxy-active .film-grain {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  --spark-reach: 1;
+  --spark-scale: 1;
+  --spark-dur: 0.68s;
+  --flash-dur: 0.56s;
+  --flash-sx: 1.5;
+  --flash-sy: 3.1;
+  --emerge-dur: 0.74s;
+  --sheen-delay: 0.34s;
+  --sheen-dur: 0.56s;
 }
 
-/* Slit Burst Flash & Silver Micro-Sparks */
+.pack-stage[data-rarity="sr"] {
+  --spark-reach: 0.78;
+  --spark-scale: 0.86;
+  --spark-dur: 0.52s;
+  --flash-dur: 0.42s;
+  --flash-sx: 1.25;
+  --flash-sy: 2.2;
+  --emerge-dur: 0.56s;
+  --sheen-delay: 0.24s;
+  --sheen-dur: 0.44s;
+}
+
+.pack-stage[data-rarity="ssr"] {
+  --spark-reach: 1.06;
+  --spark-scale: 1.08;
+  --spark-dur: 0.68s;
+  --flash-dur: 0.56s;
+  --flash-sx: 1.58;
+  --flash-sy: 3.2;
+  --emerge-dur: 0.74s;
+  --sheen-delay: 0.34s;
+  --sheen-dur: 0.54s;
+}
+
+.pack-stage[data-rarity="mythic"] {
+  --spark-reach: 1.38;
+  --spark-scale: 1.32;
+  --spark-dur: 0.88s;
+  --flash-dur: 0.74s;
+  --flash-sx: 1.95;
+  --flash-sy: 4.3;
+  --emerge-dur: 0.94s;
+  --sheen-delay: 0.46s;
+  --sheen-dur: 0.66s;
+}
+
+/* Slit Burst Flash & Silver Micro-Sparks (Strictly GPU transform/opacity, zero blur/glow) */
 
 .pack-flash {
   position: absolute;
   left: 50%;
   top: 22%;
   width: 340px;
-  height: 18px;
+  height: 22px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 20;
   opacity: 0;
-  transform: translate(-50%, -50%) scaleX(0.15) scaleY(0.4);
-  background: radial-gradient(ellipse at center, #ffffff 0%, rgba(230, 230, 230, 0.92) 34%, rgba(189, 189, 189, 0.28) 65%, transparent 100%);
-  filter: blur(2px);
+  transform: translate3d(-50%, -50%, 0) scaleX(0.12) scaleY(0.35);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(243, 244, 246, 0.98) 0%,
+    rgba(229, 233, 240, 0.84) 28%,
+    rgba(197, 203, 213, 0.30) 58%,
+    rgba(197, 203, 213, 0) 100%
+  );
 }
 
 .pack-stage.is-flashing .pack-flash {
-  animation: pack-slit-burst 0.56s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+  animation: pack-slit-burst var(--flash-dur, 0.56s) cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes pack-slit-burst {
-  0%   { opacity: 0; transform: translate(-50%, -50%) scaleX(0.15) scaleY(0.4); }
-  22%  { opacity: 1; transform: translate(-50%, -50%) scaleX(1.35) scaleY(3.4); }
-  100% { opacity: 0; transform: translate(-50%, -50%) scaleX(1.8) scaleY(0.2); }
+  0% {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scaleX(0.12) scaleY(0.35);
+  }
+  18% {
+    opacity: 1;
+    transform: translate3d(-50%, -50%, 0) scaleX(var(--flash-sx, 1.5)) scaleY(var(--flash-sy, 3.1));
+  }
+  42% {
+    opacity: 0.72;
+    transform: translate3d(-50%, -50%, 0) scaleX(calc(var(--flash-sx, 1.5) * 1.12)) scaleY(calc(var(--flash-sy, 3.1) * 0.52));
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scaleX(calc(var(--flash-sx, 1.5) * 1.32)) scaleY(0.14);
+  }
 }
 
 .pack-sparks {
@@ -2827,27 +2894,38 @@ body.galaxy-active .film-grain {
   width: 5px;
   height: 5px;
   border-radius: 1px;
-  background: #f5f5f5;
+  background: var(--text-ivory);
   box-shadow: none;
   opacity: 0;
-  transform: translate3d(0, 0, 0) rotate(45deg) scale(0.4);
+  transform: translate3d(0, 0, 0) rotate(45deg) scale(0.35);
+}
+
+.pack-sparks span:nth-child(even) {
+  background: var(--text-silver);
+  width: 4px;
+  height: 6px;
 }
 
 .pack-stage.is-flashing .pack-sparks span {
-  animation: pack-spark-fly 0.68s cubic-bezier(0.16, 1, 0.3, 1) var(--sd, 0ms) forwards;
+  will-change: transform, opacity;
+  animation: pack-spark-fly var(--spark-dur, 0.68s) cubic-bezier(0.14, 1, 0.28, 1) var(--sd, 0ms) forwards;
 }
 
 @keyframes pack-spark-fly {
   0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(45deg) scale(calc(var(--ss, 1) * var(--spark-scale, 1) * 0.45));
+  }
+  14% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) rotate(45deg) scale(var(--ss, 1));
+    transform: translate3d(calc(var(--sx, 0px) * 0.24 * var(--spark-reach, 1)), calc(var(--sy, -100px) * 0.24 * var(--spark-reach, 1)), 0) rotate(95deg) scale(calc(var(--ss, 1) * var(--spark-scale, 1)));
   }
   70% {
-    opacity: 0.85;
+    opacity: 0.84;
   }
   100% {
     opacity: 0;
-    transform: translate3d(var(--sx, 0px), var(--sy, -100px), 0) rotate(225deg) scale(0.15);
+    transform: translate3d(calc(var(--sx, 0px) * var(--spark-reach, 1)), calc(var(--sy, -100px) * var(--spark-reach, 1)), 0) rotate(245deg) scale(0.12);
   }
 }
 
@@ -2860,7 +2938,8 @@ body.galaxy-active .film-grain {
   align-items: center;
   justify-content: center;
   transform-style: preserve-3d;
-  transition: opacity 0.32s ease, transform 0.44s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate3d(0, 0, 0);
+  transition: opacity 0.30s ease, transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
   z-index: 6;
 }
 
@@ -2875,11 +2954,31 @@ body.galaxy-active .film-grain {
 
 .pack-stage[data-state="ripping"] .pack-pouch-wrap {
   pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.pack-stage.is-tensioning .pack-pouch-wrap {
+  will-change: transform;
+  animation: pack-pouch-tension 0.14s linear infinite;
+}
+
+@keyframes pack-pouch-tension {
+  0%   { transform: translate3d(-1.5px, 2px, 0) scale(0.992); }
+  25%  { transform: translate3d(1.6px, 3px, 0) scale(0.988) rotateZ(-0.45deg); }
+  50%  { transform: translate3d(-1.2px, 4px, 0) scale(0.986) rotateZ(0.45deg); }
+  75%  { transform: translate3d(1.4px, 2.5px, 0) scale(0.99) rotateZ(-0.3deg); }
+  100% { transform: translate3d(-1.5px, 2px, 0) scale(0.992); }
+}
+
+.pack-stage.is-anticipating .pack-pouch-wrap {
+  transition: transform 0.13s cubic-bezier(0.32, 0, 0.67, 0);
+  transform: translate3d(0, 14px, -22px) scale(0.952, 0.968) rotateX(4.5deg);
 }
 
 .pack-stage.is-dropping .pack-pouch-wrap {
   opacity: 0;
-  transform: translate3d(0, 96px, -80px) scale(0.86) rotateX(10deg);
+  transition: opacity 0.26s ease, transform 0.38s cubic-bezier(0.2, 0.9, 0.3, 1);
+  transform: translate3d(0, 128px, -110px) scale(0.82) rotateX(14deg);
   pointer-events: none;
 }
 
@@ -2907,7 +3006,7 @@ body.galaxy-active .film-grain {
   outline: none;
 }
 
-.pack-backdrop.is-open .pack-pouch {
+.pack-pouch.is-tilting {
   will-change: transform;
 }
 
@@ -2954,13 +3053,17 @@ body.galaxy-active .film-grain {
   border-right: 1px solid rgba(223, 223, 223, 0.36);
   border-radius: 4px 4px 0 0;
   transform-origin: right bottom;
-  transform: translate3d(calc(var(--tear, 0) * 14px), calc(var(--tear, 0) * -14px), 0) rotate(calc(var(--tear, 0) * 7deg));
-  transition: transform 0.12s ease-out, opacity 0.25s ease;
+  transform: translate3d(calc(var(--tear, 0) * 18px), calc(var(--tear, 0) * -16px), 0) rotate(calc(var(--tear, 0) * 9deg));
+  transition: transform 0.08s ease-out, opacity 0.25s ease;
+}
+
+.pack-stage[data-state="ripping"] .pack-top-strip {
+  will-change: transform, opacity;
 }
 
 .pack-top-strip.is-sheared {
-  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.36s ease;
-  transform: translate3d(72px, -118px, 40px) rotate(19deg) !important;
+  transition: transform 0.40s cubic-bezier(0.18, 0.9, 0.28, 1), opacity 0.30s ease;
+  transform: translate3d(118px, -148px, 60px) rotate(28deg) scale(0.92) !important;
   opacity: 0;
 }
 
@@ -3238,7 +3341,7 @@ body.galaxy-active .film-grain {
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transform: translate3d(0, 56px, -60px) scale(0.76);
+  transform: translate3d(0, 64px, -70px) scale(0.74);
   z-index: 10;
 }
 
@@ -3246,7 +3349,11 @@ body.galaxy-active .film-grain {
   opacity: 1;
   pointer-events: none;
   transform: none;
-  animation: pack-card-emerge 0.72s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.pack-stage.is-revealing .pack-card-wrap {
+  will-change: transform, opacity;
+  animation: pack-card-emerge var(--emerge-dur, 0.74s) cubic-bezier(0.16, 1.08, 0.3, 1) backwards;
 }
 
 .pack-backdrop.is-open .pack-stage[data-state="revealed"] .pack-card-wrap {
@@ -3256,15 +3363,59 @@ body.galaxy-active .film-grain {
 @keyframes pack-card-emerge {
   0% {
     opacity: 0;
-    transform: translate3d(0, 74px, -90px) scale(0.70) rotateY(-165deg);
+    transform: translate3d(0, 88px, -110px) scale(0.68) rotateY(-155deg) rotateX(10deg);
   }
-  55% {
+  58% {
     opacity: 1;
-    transform: translate3d(0, -10px, 24px) scale(1.03) rotateY(10deg);
+    transform: translate3d(0, -12px, 28px) scale(1.035) rotateY(9deg) rotateX(-2deg);
+  }
+  82% {
+    opacity: 1;
+    transform: translate3d(0, 3px, 4px) scale(0.994) rotateY(-2.5deg) rotateX(0.5deg);
   }
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1) rotateY(0deg);
+    transform: translate3d(0, 0, 0) scale(1) rotateY(0deg) rotateX(0deg);
+  }
+}
+
+.pack-holo-tilt .holo-front::after {
+  content: "";
+  position: absolute;
+  inset: -12% -45%;
+  z-index: 7;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    112deg,
+    transparent 34%,
+    rgba(243, 244, 246, 0.14) 44%,
+    rgba(243, 244, 246, 0.46) 50%,
+    rgba(197, 203, 213, 0.14) 56%,
+    transparent 66%
+  );
+  transform: translate3d(-120%, 0, 0);
+}
+
+.pack-stage.is-revealing .pack-holo-tilt .holo-front::after {
+  will-change: transform, opacity;
+  animation: pack-foil-sweep var(--sheen-dur, 0.54s) cubic-bezier(0.22, 1, 0.36, 1) var(--sheen-delay, 0.34s) forwards;
+}
+
+@keyframes pack-foil-sweep {
+  0% {
+    opacity: 0;
+    transform: translate3d(-115%, 0, 0);
+  }
+  20% {
+    opacity: 0.95;
+  }
+  75% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(125%, 0, 0);
   }
 }
 

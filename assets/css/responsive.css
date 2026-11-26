@@ -87,7 +87,10 @@
   .cmdk-nav-btn,
   .cmdk-nav-btn *,
   .cinema-nav-btn,
-  .cinema-nav-btn * {
+  .cinema-nav-btn *,
+  .vinyl-vol-btn,
+  .vinyl-vol-btn *,
+  .vinyl-vol-slider {
     cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http://www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cpath%20d%3D%27M3.5%202.5%20L18.5%2011.2%20L11.4%2012.6%20L8.6%2019.6%20Z%27%20fill%3D%27%23ffffff%27%20stroke%3D%27%23080808%27%20stroke-width%3D%271.35%27%20stroke-linejoin%3D%27round%27/%3E%3Cpath%20d%3D%27M16.5%2015.2%20L19.8%2018.5%20L16.5%2021.8%20L13.2%2018.5%20Z%27%20fill%3D%27%23cccccc%27%20stroke%3D%27%23080808%27%20stroke-width%3D%270.9%27/%3E%3C/svg%3E") 3 2, pointer !important;
   }
 
@@ -534,8 +537,8 @@
     text-decoration: none;
     font-family: var(--font-mono);
     font-weight: 500;
-    letter-spacing: 0.7px;
-    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    text-transform: none;
     transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.16s ease;
     -webkit-tap-highlight-color: transparent;
     min-height: 48px;
@@ -1867,8 +1870,6 @@
   }
 
   .bg-photo,
-  .pack-stage[data-state="sealed"] .pack-pouch-wrap,
-  .pack-stage[data-state="revealed"] .pack-card-wrap,
   .gb-skel-bar,
   .gb-skel-line {
     animation: none !important;

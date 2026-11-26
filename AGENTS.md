@@ -84,7 +84,7 @@
   - На экранах `<= 720px` сохранять `font-size: 16px` для текстовых полей ввода (исключает автозум в iOS Safari).
   - На `<= 480px` соблюдать эргономичные тач-цели (`40–48px` для основных кнопок и контролов).
   - Hover-эффекты, кастомный курсор и 3D-tilt ограничивать `@media (hover: hover) and (pointer: fine)` / `@media (any-hover: hover) and (any-pointer: fine)`; для тач-устройств поддерживать `@media (hover: none), (pointer: coarse)`.
-  - Поддерживать `@media (prefers-reduced-motion: reduce)` в CSS и `appState.prefersReducedMotion` в JS, но **никогда не блокировать фоновые частицы погоды (`initAtmosphereCanvas` / `#atmosphere-canvas`) через `prefers-reduced-motion`**.
+  - Поддерживать `@media (prefers-reduced-motion: reduce)` в CSS и `appState.prefersReducedMotion` в JS, но **никогда не блокировать через `prefers-reduced-motion` фоновые частицы погоды (`initAtmosphereCanvas` / `#atmosphere-canvas`), вращение винила (`.vinyl-disc`) и анимацию вскрытия `ARCHIVE PACK` (`#pack-modal`)**.
 
 ---
 

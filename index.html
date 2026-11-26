@@ -17,13 +17,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/css/tokens.css?v=41" />
-  <link rel="stylesheet" href="./assets/css/layout.css?v=41" />
-  <link rel="stylesheet" href="./assets/css/sections.css?v=41" />
-  <link rel="stylesheet" href="./assets/css/overlays.css?v=41" />
-  <link rel="stylesheet" href="./assets/css/vinyl.css?v=41" />
-  <link rel="stylesheet" href="./assets/css/editorial-bw.css?v=41" />
-  <link rel="stylesheet" href="./assets/css/responsive.css?v=41" />
+  <link rel="stylesheet" href="./assets/css/tokens.css?v=42" />
+  <link rel="stylesheet" href="./assets/css/layout.css?v=42" />
+  <link rel="stylesheet" href="./assets/css/sections.css?v=42" />
+  <link rel="stylesheet" href="./assets/css/overlays.css?v=42" />
+  <link rel="stylesheet" href="./assets/css/vinyl.css?v=42" />
+  <link rel="stylesheet" href="./assets/css/editorial-bw.css?v=42" />
+  <link rel="stylesheet" href="./assets/css/responsive.css?v=42" />
 </head>
 <body>
 
@@ -62,23 +62,23 @@
           <span>undexeror // archive</span>
         </a>
         <div class="os-nav-cluster">
-          <nav class="os-tabs" role="tablist" aria-label="Отсеки Archive OS">
+          <nav class="os-tabs" role="tablist" aria-label="Разделы сайта">
             <button type="button" class="os-tab is-active" role="tab" aria-selected="true" aria-controls="sector-dossier" data-sector-tab="dossier">
-              <span class="os-tab-num">01</span><span class="os-tab-lbl">DOSSIER</span>
+              <span class="os-tab-lbl">Профиль</span>
             </button>
             <button type="button" class="os-tab" role="tab" aria-selected="false" aria-controls="sector-vault" data-sector-tab="vault">
-              <span class="os-tab-num">02</span><span class="os-tab-lbl">VAULT</span>
+              <span class="os-tab-lbl">Коллекция</span>
             </button>
             <button type="button" class="os-tab" role="tab" aria-selected="false" aria-controls="sector-arena" data-sector-tab="arena">
-              <span class="os-tab-num">03</span><span class="os-tab-lbl">ARENA</span>
+              <span class="os-tab-lbl">Интерактив</span>
             </button>
             <button type="button" class="os-tab" role="tab" aria-selected="false" aria-controls="sector-signal" data-sector-tab="signal">
-              <span class="os-tab-num">04</span><span class="os-tab-lbl">SIGNAL</span>
+              <span class="os-tab-lbl">Музыка</span>
             </button>
           </nav>
           <div class="os-mode-switch" role="group" aria-label="Режим отображения">
-            <button type="button" class="os-mode-btn is-active" data-nav-mode="os" aria-pressed="true" title="Отсеки Archive OS">OS</button>
-            <button type="button" class="os-mode-btn" data-nav-mode="all" aria-pressed="false" title="Вся лента целиком">ALL</button>
+            <button type="button" class="os-mode-btn is-active" data-nav-mode="os" aria-pressed="true" title="По разделам">Разделы</button>
+            <button type="button" class="os-mode-btn" data-nav-mode="all" aria-pressed="false" title="Вся лента целиком">Всё</button>
           </div>
         </div>
         <div class="topbar-controls">
@@ -111,15 +111,15 @@
       <div class="sector-telemetry" id="sector-telemetry" aria-live="polite">
         <div class="sector-tel-left">
           <span class="sector-tel-dot" aria-hidden="true"></span>
-          <span class="sector-tel-code" id="sector-tel-code">SECTOR 01 // DOSSIER</span>
+          <span class="sector-tel-code" id="sector-tel-code">Профиль</span>
           <span class="sector-tel-sep" aria-hidden="true">·</span>
-          <span class="sector-tel-desc" id="sector-tel-desc">PILOT DECK, WATCHING &amp; TELEMETRY</span>
+          <span class="sector-tel-desc" id="sector-tel-desc">Профиль, сейчас смотрю и активность</span>
         </div>
         <div class="sector-tel-right">
-          <span class="sector-tel-kbd" aria-hidden="true">KEYS 1–4</span>
-          <button type="button" class="sector-tel-mode-btn" id="sector-tel-mode-btn" data-nav-mode-toggle aria-pressed="false" title="Переключить режим: Отсеки (OS) / Вся лента (ALL)">
+          <span class="sector-tel-kbd" aria-hidden="true">1–4</span>
+          <button type="button" class="sector-tel-mode-btn" id="sector-tel-mode-btn" data-nav-mode-toggle aria-pressed="false" title="Переключить режим: Разделы / Всё">
             <span class="sector-tel-mode-dot" aria-hidden="true"></span>
-            <span id="sector-tel-mode-label">VIEW: OS</span>
+            <span id="sector-tel-mode-label">Разделы</span>
           </button>
         </div>
       </div>
@@ -130,15 +130,14 @@
              ========================================================= -->
         <div class="sector-panel is-active" id="sector-dossier" data-sector="dossier">
           <div class="sector-feed-divider" aria-hidden="true">
-            <span class="sector-feed-tag">SECTOR 01 // DOSSIER</span>
+            <span class="sector-feed-tag">Профиль</span>
             <span class="sector-feed-line"></span>
           </div>
 
           <!-- EDITORIAL MASTHEAD + INLINE WEATHER TELEMETRY (53.9° N) -->
           <header class="sector-masthead dossier-masthead">
             <div class="sector-masthead-left">
-              <span class="sector-masthead-index">01 // DOSSIER</span>
-              <h2 class="sector-masthead-title">Досье и телеметрия</h2>
+              <h2 class="sector-masthead-title">Профиль</h2>
             </div>
 
             <div class="weather-hud" id="weather-hud" aria-label="Погода в точке 53.9° N">
@@ -309,7 +308,7 @@
           <div class="glass-card bento-dna" id="anime-dna-card">
             <div class="dna-header">
               <div class="dna-title-wrap">
-                <span class="card-kicker">01.1 // АНИМЕ-ДНК · РЕНТГЕН ВКУСА</span>
+                <span class="card-kicker">Вкус и оценки</span>
                 <span class="dna-sub-note" id="dna-sub-note">Автоанализ всех просмотренных тайтлов</span>
               </div>
               <div class="dna-head-right">
@@ -390,7 +389,6 @@
       <section id="watching">
         <div class="watching-head-bar">
           <div class="editorial-sec-head">
-            <span class="editorial-sec-index">01.2 // В РОТАЦИИ</span>
             <h2 class="section-title">
               <span class="watching-live-dot" aria-hidden="true"></span>
               <a href="https://shikimori.one/undereror+nyashka/list/anime/mylist/watching" target="_blank" rel="noopener noreferrer">Сейчас смотрю →</a>
@@ -409,7 +407,6 @@
       <section id="activity">
         <div class="section-head">
           <div class="editorial-sec-head">
-            <span class="editorial-sec-index">01.3 // ХРОНОЛОГИЯ</span>
             <h2 class="section-title">История и активность</h2>
           </div>
         </div>
@@ -443,15 +440,14 @@
              ========================================================= -->
         <div class="sector-panel" id="sector-vault" data-sector="vault" hidden>
           <div class="sector-feed-divider" aria-hidden="true">
-            <span class="sector-feed-tag">SECTOR 02 // VAULT</span>
+            <span class="sector-feed-tag">Коллекция</span>
             <span class="sector-feed-line"></span>
           </div>
 
           <!-- EDITORIAL MASTHEAD FOR 02 // VAULT -->
           <header class="sector-masthead vault-masthead">
             <div class="sector-masthead-left">
-              <span class="sector-masthead-index">02 // VAULT</span>
-              <h2 class="sector-masthead-title">Частный киноархив</h2>
+              <h2 class="sector-masthead-title">Коллекция</h2>
             </div>
             <div class="tabs-bar" role="tablist" aria-label="Категория коллекции">
               <button type="button" class="tab-btn active" data-tab="peak" role="tab" aria-selected="true">Peak Fiction</button>
@@ -488,7 +484,6 @@
       <section id="waifu">
         <div class="waifu-head-bar">
           <div class="editorial-sec-head">
-            <span class="editorial-sec-index">02.2 // ИЗБРАННЫЕ ПЕРСОНАЖИ</span>
             <h2 class="section-title">
               <a href="https://shikimori.one/undereror+nyashka/favorites" target="_blank" rel="noopener noreferrer">WAIFU →</a>
             </h2>
@@ -511,7 +506,7 @@
           <div class="trophies-head">
             <div class="trophies-head-left">
               <div class="ht-title-row">
-                <span class="card-kicker">02.3 // ТРОФЕИ АРХИВА · 3D MEDALLIONS</span>
+                <span class="card-kicker">Трофеи архива</span>
               </div>
               <h2 class="ht-heading">Коллекционные жетоны достижений</h2>
               <p class="ht-subtitle">Автоматически чеканятся по списку Shikimori — наведи на жетон для 3D-блика или открой карточку трофея.</p>
@@ -558,17 +553,15 @@
              ========================================================= -->
         <div class="sector-panel" id="sector-arena" data-sector="arena" hidden>
           <div class="sector-feed-divider" aria-hidden="true">
-            <span class="sector-feed-tag">SECTOR 03 // ARENA</span>
+            <span class="sector-feed-tag">Интерактив</span>
             <span class="sector-feed-line"></span>
           </div>
 
           <!-- EDITORIAL MASTHEAD FOR 03 // ARENA -->
           <header class="sector-masthead arena-masthead">
             <div class="sector-masthead-left">
-              <span class="sector-masthead-index">03 // ARENA</span>
-              <h2 class="sector-masthead-title">Интерактивная сцена и вердикты</h2>
+              <h2 class="sector-masthead-title">Интерактив</h2>
             </div>
-            <span class="panel-badge">3 MODES · SHIKIMORI LIVE</span>
           </header>
 
       <!-- FEATURED EXPERIENCE STAGE + 2-COLUMN ARCHITECTURAL STRIP -->
@@ -576,7 +569,6 @@
         <div class="glass-card arena-launchpad">
           <div class="arena-featured">
             <div class="arena-featured-top">
-              <span class="card-kicker">03.1 // FEATURED EXPERIENCE</span>
               <span class="arena-featured-pool">ПУЛ ВЫДАЧИ: <strong data-pack-pool-count>16</strong> ТАЙТЛОВ · VOL.01</span>
             </div>
 
@@ -634,7 +626,7 @@
           <div class="station-pane" id="station-pane-base">
             <div class="base-head-left">
               <div class="base-title-row">
-                <span class="card-kicker">03.2 // TASTE MATCH · ПРОВЕРКА НА БАЗУ</span>
+                <span class="card-kicker">Совместимость</span>
               </div>
               <h2 class="base-heading">Насколько наши вкусы совпадают?</h2>
               <p class="base-subtitle">Вбей свой ник или ссылку на профиль Shikimori — сравню твой список со всеми моими тайтлами и выдам вердикт.</p>
@@ -728,7 +720,7 @@
           <div class="station-pane is-hidden" id="station-pane-coop">
             <div class="base-head-left">
               <div class="base-title-row">
-                <span class="card-kicker">03.2 // CO-OP MATCHMAKER · ВЕЧЕРНИЙ СЕАНС</span>
+                <span class="card-kicker">Кооп на вечер</span>
               </div>
               <h2 class="base-heading">Кооп-подборщик тайтла на вечер</h2>
               <p class="base-subtitle">Скрещу два списка с Shikimori: найду общие планы, фильмы и короткие сериалы, которые никто из вас не видел — плюс быстрый Кооп-Свайп (Tinder) и билет на просмотр.</p>
@@ -814,7 +806,7 @@
           <div class="ht-head">
             <div class="ht-head-left">
               <div class="ht-title-row">
-                <span class="card-kicker">03.3 // HOT TAKES · ПРОТИВ ТОЛПЫ</span>
+                <span class="card-kicker">Против толпы</span>
               </div>
               <h2 class="ht-heading">Главные несогласия с рейтингом Шикимори</h2>
               <p class="ht-subtitle">Автоматическая выборка по всем моим оценкам: где я пошёл против комьюнити сильнее всего — недооценённые гемы и переоценённые хиты.</p>
@@ -861,17 +853,15 @@
              ========================================================= -->
         <div class="sector-panel" id="sector-signal" data-sector="signal" hidden>
           <div class="sector-feed-divider" aria-hidden="true">
-            <span class="sector-feed-tag">SECTOR 04 // SIGNAL</span>
+            <span class="sector-feed-tag">Музыка и гостевая</span>
             <span class="sector-feed-line"></span>
           </div>
 
           <!-- EDITORIAL MASTHEAD FOR 04 // SIGNAL -->
           <header class="sector-masthead signal-masthead">
             <div class="sector-masthead-left">
-              <span class="sector-masthead-index">04 // SIGNAL</span>
-              <h2 class="sector-masthead-title">Комната прослушивания и гостевая</h2>
+              <h2 class="sector-masthead-title">Музыка и гостевая</h2>
             </div>
-            <span class="panel-badge">53.9° N · LISTENING ROOM</span>
           </header>
 
       <!-- VINYL // AUDIO SHELF (12 LP · ITUNES PREVIEW — LISTENING ROOM CENTERPIECE) -->
@@ -879,13 +869,17 @@
         <div class="glass-card vinyl-shelf-card">
           <div class="vinyl-head">
             <div class="vinyl-head-left">
-              <div class="vinyl-title-row">
-                <span class="card-kicker vinyl-kicker">04.1 // VINYL · AUDIO</span>
-              </div>
               <h2 class="vinyl-heading">Виниловая полка</h2>
               <div class="vinyl-now-playing" id="vinyl-now-playing" aria-live="polite">Архивная полка · 33 RPM</div>
             </div>
             <div class="vinyl-head-badges">
+              <div class="vinyl-vol-control" id="vinyl-vol-control" role="group" aria-label="Громкость виниловых превью">
+                <button type="button" class="vinyl-vol-btn" id="vinyl-vol-mute" aria-label="Выключить или включить звук винила" aria-pressed="false" title="Выключить звук">
+                  <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="2.5,5.8 5.5,5.8 9,2.8 9,13.2 5.5,10.2 2.5,10.2"/><path d="M11.4 5.4a3.6 3.6 0 0 1 0 5.2"/></svg>
+                </button>
+                <input type="range" class="vinyl-vol-slider" id="vinyl-vol-slider" min="0" max="1" step="0.01" value="0.15" aria-label="Громкость винила" />
+                <span class="vinyl-vol-pct" id="vinyl-vol-pct">15%</span>
+              </div>
               <span class="panel-badge" id="vinyl-count-badge">12 LP</span>
               <span class="panel-badge vinyl-status-badge" id="vinyl-status-badge">STANDBY</span>
             </div>
@@ -899,7 +893,7 @@
       <section id="signal-hub">
         <div class="glass-card signal-card">
           <div class="signal-head">
-            <span class="card-kicker">04.2 // SIGNAL · DIRECT CHANNELS</span>
+            <span class="card-kicker">Ссылки</span>
             <span class="signal-head-meta">SHIKIMORI · TIKTOK · DISCORD · GITHUB · SPOTIFY</span>
           </div>
           <div class="signal-links-grid">
@@ -956,7 +950,7 @@
           <div class="gb-head">
             <div class="gb-head-left">
               <div class="ht-title-row">
-                <span class="card-kicker gb-kicker">04.3 // GUESTBOOK · GITHUB DISCUSSIONS</span>
+                <span class="card-kicker gb-kicker">Гостевая</span>
               </div>
               <h2 class="ht-heading">Оставь след</h2>
               <p class="ht-subtitle">Гостевая стена архива — напиши пару слов, посоветуй тайтл или поспорь с моим топом. Вход через GitHub.</p>
@@ -1252,29 +1246,29 @@
   </div>
 
   <!-- Mobile Bottom Navigation Dock -->
-  <nav class="mobile-dock" id="mobile-dock" aria-label="Мобильная навигация Archive OS">
-    <button type="button" class="mdock-btn is-active" data-sector-tab="dossier" data-mdock-sector="dossier" aria-label="Отсек 01: Dossier">
+  <nav class="mobile-dock" id="mobile-dock" aria-label="Мобильная навигация">
+    <button type="button" class="mdock-btn is-active" data-sector-tab="dossier" data-mdock-sector="dossier" aria-label="Раздел: Профиль">
       <span class="mdock-icon mdock-num" aria-hidden="true">01</span>
-      <span>DOSSIER</span>
+      <span>Профиль</span>
     </button>
-    <button type="button" class="mdock-btn" data-sector-tab="vault" data-mdock-sector="vault" aria-label="Отсек 02: Vault">
+    <button type="button" class="mdock-btn" data-sector-tab="vault" data-mdock-sector="vault" aria-label="Раздел: Коллекция">
       <span class="mdock-icon mdock-num" aria-hidden="true">02</span>
-      <span>VAULT</span>
+      <span>Коллекция</span>
     </button>
-    <button type="button" class="mdock-btn" data-sector-tab="arena" data-mdock-sector="arena" aria-label="Отсек 03: Arena">
+    <button type="button" class="mdock-btn" data-sector-tab="arena" data-mdock-sector="arena" aria-label="Раздел: Интерактив">
       <span class="mdock-icon mdock-num" aria-hidden="true">03</span>
-      <span>ARENA</span>
+      <span>Интерактив</span>
     </button>
-    <button type="button" class="mdock-btn" data-sector-tab="signal" data-mdock-sector="signal" aria-label="Отсек 04: Signal">
+    <button type="button" class="mdock-btn" data-sector-tab="signal" data-mdock-sector="signal" aria-label="Раздел: Музыка">
       <span class="mdock-icon mdock-num" aria-hidden="true">04</span>
-      <span>SIGNAL</span>
+      <span>Музыка</span>
     </button>
     <button type="button" class="mdock-btn mdock-music-btn" id="mdock-music-btn" aria-label="Открыть панель музыки" aria-expanded="false">
       <span class="mdock-icon" aria-hidden="true">
         <span class="mdock-music-glyph"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="6" x2="3" y2="10"/><line x1="6.5" y1="3" x2="6.5" y2="13"/><line x1="10" y1="5" x2="10" y2="11"/><line x1="13.5" y1="6.5" x2="13.5" y2="9.5"/></svg></span>
         <span class="mdock-eq"><span></span><span></span><span></span></span>
       </span>
-      <span>AUDIO</span>
+      <span>Плеер</span>
     </button>
   </nav>
 
@@ -1757,6 +1751,6 @@
     </div>
   </div>
 
-  <script type="module" src="./assets/js/main.js?v=41"></script>
+  <script type="module" src="./assets/js/main.js?v=42"></script>
 </body>
 </html>

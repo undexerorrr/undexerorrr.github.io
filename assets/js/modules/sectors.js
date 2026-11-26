@@ -8,38 +8,38 @@ export const SECTORS = [
   {
     id: 'dossier',
     num: '01',
-    label: 'DOSSIER',
-    title: '01 // DOSSIER',
-    subtitle: 'PILOT DECK, WATCHING & TELEMETRY',
-    hint: 'Профиль, Сейчас смотрю, Активность',
-    kw: 'dossier досье профиль главная днк смотрю активность 01'
+    label: 'Профиль',
+    title: 'Профиль',
+    subtitle: 'Профиль, сейчас смотрю и активность',
+    hint: 'Профиль, вкус и оценки, сейчас смотрю, активность',
+    kw: 'dossier досье профиль главная вкус оценки днк смотрю активность 01'
   },
   {
     id: 'vault',
     num: '02',
-    label: 'VAULT',
-    title: '02 // VAULT',
-    subtitle: 'COLLECTIBLES, WAIFU & 3D TROPHIES',
-    hint: 'Коллекция, Waifu, Трофеи архива',
+    label: 'Коллекция',
+    title: 'Коллекция',
+    subtitle: 'Peak Fiction, Literally Me, Waifu и трофеи',
+    hint: 'Коллекция, Waifu, трофеи архива',
     kw: 'vault сейф коллекция peak fiction literally me waifu вайфу трофеи 02'
   },
   {
     id: 'arena',
     num: '03',
-    label: 'ARENA',
-    title: '03 // ARENA',
-    subtitle: 'FEATURED PACK, TASTE MATCH & HOT TAKES',
-    hint: 'ARCHIVE PACK, Турнир 1v1, Проверка на базу, Кооп, Hot Takes',
-    kw: 'arena арена база совместимость кооп coop hot takes турнир бустер галактика 03'
+    label: 'Интерактив',
+    title: 'Интерактив',
+    subtitle: 'ARCHIVE PACK, турнир 1v1, совместимость и против толпы',
+    hint: 'ARCHIVE PACK, Турнир 1v1, Совместимость, Кооп, Против толпы',
+    kw: 'arena арена интерактив база совместимость кооп coop hot takes против толпы турнир бустер галактика 03'
   },
   {
     id: 'signal',
     num: '04',
-    label: 'SIGNAL',
-    title: '04 // SIGNAL',
-    subtitle: 'LISTENING ROOM, CHANNELS & GUESTBOOK',
-    hint: 'Виниловая полка, Контакты, GitHub, Spotify и Гостевая стена',
-    kw: 'signal сигнал контакты ссылки tiktok discord github spotify vinyl винил пластинки audio стена guestbook giscus 04'
+    label: 'Музыка',
+    title: 'Музыка и гостевая',
+    subtitle: 'Виниловая полка, ссылки и гостевая',
+    hint: 'Виниловая полка, ссылки, Spotify и гостевая',
+    kw: 'signal сигнал музыка контакты ссылки tiktok discord github spotify vinyl винил пластинки audio стена гостевая guestbook giscus 04'
   }
 ];
 
@@ -202,7 +202,7 @@ function updateActiveIndicators(sectorId) {
     }
   });
 
-  if (telCode) telCode.textContent = `SECTOR ${meta.num} // ${meta.label}`;
+  if (telCode) telCode.textContent = meta.title;
   if (telDesc) telDesc.textContent = meta.subtitle;
 }
 
@@ -228,7 +228,7 @@ function applyPanelsVisibility(sectorId, navMode) {
     telModeBtn.setAttribute('aria-pressed', String(isAll));
   }
   if (telModeLabel) {
-    telModeLabel.textContent = isAll ? 'VIEW: ALL' : 'VIEW: OS';
+    telModeLabel.textContent = isAll ? 'Всё' : 'Разделы';
   }
 
   updateActiveIndicators(sectorId);

@@ -19,13 +19,14 @@ const BLOCKING_MODAL_IDS = [
 ];
 
 const NAV_SECTIONS = [
-  { id: 'profile', label: 'Профиль', kw: 'profile hero главная пилот discord' },
-  { id: 'hottakes', label: 'Hot Takes', kw: 'хот тейки мнения толпа оценки' },
+  { id: 'profile', label: 'Профиль', kw: 'profile hero главная пилот discord вкус оценки' },
+  { id: 'hottakes', label: 'Против толпы', kw: 'hot takes хот тейки мнения толпа оценки' },
   { id: 'trophies', label: 'Трофеи', kw: 'trophies достижения ачивки xp' },
   { id: 'activity', label: 'Активность', kw: 'activity история график' },
   { id: 'watching', label: 'Смотрю сейчас', kw: 'watching онгоинги полка' },
   { id: 'waifu', label: 'Waifu', kw: 'вайфу персонажи избранное' },
-  { id: 'collection', label: 'Коллекция', kw: 'collection peak fiction топ литерали' }
+  { id: 'collection', label: 'Коллекция', kw: 'collection peak fiction топ литерали' },
+  { id: 'signal-hub', label: 'Ссылки', kw: 'links контакты соцсети tiktok discord github spotify' }
 ];
 
 const WEATHER_ITEMS = [
@@ -214,26 +215,26 @@ export function initCommandPalette(player) {
     SECTORS.forEach((sec) => {
       const isActive = sec.id === activeSector && navMode === 'os';
       out.push({
-        group: 'Отсеки · Archive OS',
+        group: 'Разделы',
         icon: sec.num,
-        label: `Отсек ${sec.title}`,
+        label: sec.title,
         hint: sec.hint,
         meta: isActive ? 'АКТИВЕН' : `KEY ${Number(sec.num)}`,
         on: isActive,
-        kw: `сектор отсек sector os ${sec.kw}`,
+        kw: `раздел сектор отсек sector os ${sec.kw}`,
         page: true,
         run: () => setSector(sec.id)
       });
     });
 
     out.push({
-      group: 'Отсеки · Archive OS',
-      icon: 'OS',
-      label: navMode === 'os' ? 'Режим просмотра: Вся лента (ALL)' : 'Режим просмотра: Отсеки (OS)',
-      hint: navMode === 'os' ? 'Показать все 4 отсека одной лентой' : 'Переключиться в режим 4 отсеков Archive OS',
-      meta: navMode.toUpperCase(),
+      group: 'Разделы',
+      icon: 'ALL',
+      label: navMode === 'os' ? 'Показать всё одной лентой' : 'Переключить в режим разделов',
+      hint: navMode === 'os' ? 'Открыть все 4 раздела сразу' : 'Показать разделы по отдельности',
+      meta: navMode === 'all' ? 'ВСЁ' : 'РАЗДЕЛЫ',
       on: navMode === 'all',
-      kw: 'режим mode os all лента отсеки все секции',
+      kw: 'режим mode os all лента отсеки разделы все секции',
       page: true,
       run: () => toggleNavMode()
     });
@@ -271,17 +272,17 @@ export function initCommandPalette(player) {
         run: () => clickById('waifu-arena-btn')
       },
       {
-        group: 'Команды', icon: 'TM', label: 'Перейти к проверке на базу', hint: 'Taste Match по нику Shikimori',
+        group: 'Команды', icon: 'TM', label: 'Совместимость вкусов', hint: 'Проверка на базу по нику Shikimori',
         kw: 'база taste match совместимость вкус проверка ник shikimori compatibility', page: true,
         run: () => goToSection('compatibility', '#base-nick-input')
       },
       {
-        group: 'Команды', icon: 'LP', label: 'Виниловая полка / Vinyl', hint: 'VINYL // AUDIO · 12 LP в отсеке 04',
+        group: 'Команды', icon: 'LP', label: 'Виниловая полка', hint: '12 пластинок с 30с-превью',
         kw: 'vinyl винил виниловая полка пластинки audio lp музыка deftones violent vira panchiko lil peep com truise', page: true,
         run: () => goToSection('vinyl')
       },
       {
-        group: 'Команды', icon: 'GB', label: 'Перейти к гостевой стене', hint: 'Guestbook · GitHub Discussions',
+        group: 'Команды', icon: 'GB', label: 'Гостевая', hint: 'Оставить запись через GitHub Discussions',
         kw: 'guestbook стена гостевая комментарии giscus отзывы', page: true,
         run: () => goToSection('guestbook')
       },
