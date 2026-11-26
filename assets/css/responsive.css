@@ -1150,6 +1150,27 @@
   .signal-head-meta {
     display: none;
   }
+
+  .intro-arc {
+    width: clamp(290px, min(52vh, 76vw), 460px);
+    top: 45%;
+  }
+
+  .intro-stage {
+    padding: calc(20px + env(safe-area-inset-top, 0px)) 16px calc(22px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .intro-emblem {
+    margin-top: 18px;
+  }
+
+  .intro-title {
+    margin-top: 18px;
+  }
+
+  .intro-enter-btn {
+    margin-top: 26px;
+  }
 }
 
 /* --- <= 640px --- */
@@ -1793,6 +1814,60 @@
   .signal-tile {
     min-height: 48px;
   }
+
+  .intro-arc {
+    width: min(320px, calc(100vw - 28px));
+    top: 45%;
+  }
+
+  .intro-eyebrow {
+    gap: 10px;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+  }
+
+  .intro-rule {
+    width: 18px;
+  }
+
+  .intro-emblem {
+    width: 36px;
+    height: 36px;
+    margin-top: 16px;
+  }
+
+  .intro-title {
+    margin-top: 16px;
+    font-size: clamp(20px, 6.2vw, 26px);
+  }
+
+  .intro-sub {
+    margin-top: 11px;
+    font-size: 13px;
+    max-width: 320px;
+  }
+
+  .intro-enter-btn {
+    margin-top: 24px;
+    min-height: 44px;
+    min-width: 210px;
+    padding: 13px 26px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+  }
+
+  .intro-hint {
+    margin-top: 16px;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+  }
+
+  .intro-mute-btn {
+    min-height: 40px;
+    padding: 10px 16px;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+  }
 }
 
 /* --- <= 420px --- */
@@ -1859,6 +1934,88 @@
     bottom: calc(var(--galaxy-bottom-h, 316px) + 16px + env(safe-area-inset-bottom, 0px));
     max-height: calc(100vh - var(--galaxy-bottom-h, 316px) - var(--galaxy-top-h, 108px) - 32px);
     max-height: calc(100dvh - var(--galaxy-bottom-h, 316px) - var(--galaxy-top-h, 108px) - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  }
+
+  .intro-arc {
+    width: min(286px, calc(100vw - 24px));
+  }
+
+  .intro-stage {
+    padding: calc(18px + env(safe-area-inset-top, 0px)) 14px calc(18px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .intro-eyebrow {
+    gap: 8px;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+  }
+
+  .intro-rule {
+    width: 14px;
+  }
+
+  .intro-title {
+    font-size: 19px;
+  }
+
+  .intro-sub {
+    font-size: 12.5px;
+    max-width: 290px;
+  }
+
+  .intro-enter-btn {
+    width: min(100%, 248px);
+    min-width: 0;
+    padding: 13px 18px;
+    letter-spacing: 0.18em;
+  }
+}
+
+/* --- Short Viewports (Landscape Mobile) --- */
+
+@media (max-height: 620px) {
+  .intro-arc {
+    width: min(320px, 66vh);
+    top: 46%;
+  }
+
+  .intro-stage {
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 16px calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .intro-spacer {
+    flex: 0.4 1 8px;
+    min-height: 6px;
+  }
+
+  .intro-emblem {
+    width: 34px;
+    height: 34px;
+    margin-top: 10px;
+  }
+
+  .intro-title {
+    margin-top: 10px;
+    font-size: clamp(20px, 3.2vw, 30px);
+  }
+
+  .intro-sub {
+    margin-top: 8px;
+    font-size: 12.5px;
+  }
+
+  .intro-enter-btn {
+    margin-top: 16px;
+    padding: 11px 28px;
+  }
+
+  .intro-hint {
+    margin-top: 10px;
+  }
+
+  .intro-foot {
+    padding-top: 8px;
+    min-height: 36px;
   }
 }
 

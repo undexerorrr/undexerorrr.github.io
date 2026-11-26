@@ -1794,40 +1794,115 @@ export function initCollectionControls() {
 }
 
 /* =========================================
-   INTRO OVERLAY ([ CLICK TO ENTER ])
+   INTRO OVERLAY (OBSIDIAN NOIR CHAMBER)
    ========================================= */
 export function initIntroOverlay(player) {
   const overlay = document.getElementById('intro-overlay');
   const enterBtn = document.getElementById('intro-enter-btn');
   const muteBtn = document.getElementById('intro-mute-btn');
+  const bgImg = document.getElementById('intro-bg-img');
   if (!overlay) return;
 
   let entered = false;
+  let parallaxRaf = 0;
+  let curX = 0;
+  let curY = 0;
+  let targetX = 0;
+  let targetY = 0;
+  let lastTs = 0;
+  const finePointer = typeof window.matchMedia === 'function' && window.matchMedia('(pointer: fine)').matches;
+
+  function stepParallax(ts) {
+    parallaxRaf = 0;
+    if (entered || !bgImg) return;
+    const rawDt = lastTs ? (ts - lastTs) / 1000 : 1 / 60;
+    lastTs = ts;
+    const dt = Math.min(Math.max(rawDt, 0.001), 0.05);
+    const alpha = 1 - Math.exp(-7 * dt);
+
+    curX += (targetX - curX) * alpha;
+    curY += (targetY - curY) * alpha;
+
+    if (Math.abs(targetX - curX) < 0.04 && Math.abs(targetY - curY) < 0.04) {
+      curX = targetX;
+      curY = targetY;
+      bgImg.style.setProperty('--intro-px', `${curX.toFixed(2)}px`);
+      bgImg.style.setProperty('--intro-py', `${curY.toFixed(2)}px`);
+      lastTs = 0;
+      return;
+    }
+
+    bgImg.style.setProperty('--intro-px', `${curX.toFixed(2)}px`);
+    bgImg.style.setProperty('--intro-py', `${curY.toFixed(2)}px`);
+    parallaxRaf = window.requestAnimationFrame(stepParallax);
+  }
+
+  function scheduleParallax() {
+    if (entered || !bgImg || parallaxRaf) return;
+    lastTs = 0;
+    parallaxRaf = window.requestAnimationFrame(stepParallax);
+  }
+
+  function onPointerMove(e) {
+    if (entered || !bgImg) return;
+    const vw = window.innerWidth || 1;
+    const vh = window.innerHeight || 1;
+    const nx = (e.clientX / vw - 0.5) * 2;
+    const ny = (e.clientY / vh - 0.5) * 2;
+    targetX = Math.max(-12, Math.min(12, -nx * 12));
+    targetY = Math.max(-8, Math.min(8, -ny * 8));
+    scheduleParallax();
+  }
+
+  function onPointerLeave() {
+    if (entered || !bgImg) return;
+    targetX = 0;
+    targetY = 0;
+    scheduleParallax();
+  }
+
   function onIntroKeydown(e) {
-    if (entered) return;
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (entered || overlay.classList.contains('is-hidden')) return;
+    if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === 'Enter') {
       e.preventDefault();
+      e.stopPropagation();
       dismiss(true);
     } else if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
       dismiss(false);
     }
   }
 
+  function cleanupListeners() {
+    window.removeEventListener('keydown', onIntroKeydown, true);
+    if (finePointer) {
+      overlay.removeEventListener('pointermove', onPointerMove);
+      overlay.removeEventListener('pointerleave', onPointerLeave);
+    }
+    if (parallaxRaf) {
+      window.cancelAnimationFrame(parallaxRaf);
+      parallaxRaf = 0;
+    }
+  }
+
   function dismiss(withSound) {
-    if (entered) return;
+    if (entered || overlay.classList.contains('is-hidden')) return;
     entered = true;
-    window.removeEventListener('keydown', onIntroKeydown);
+    cleanupListeners();
     overlay.classList.add('is-hidden');
     if (withSound && player && typeof player.play === 'function') {
       player.play({ fadeIn: true });
     }
     setTimeout(() => {
       overlay.style.display = 'none';
-    }, 620);
+      overlay.setAttribute('aria-hidden', 'true');
+    }, 760);
   }
 
   overlay.addEventListener('click', (e) => {
-    if (e.target === muteBtn) return;
+    if (e.target === muteBtn || (muteBtn && muteBtn.contains(e.target))) return;
     dismiss(true);
   });
   enterBtn?.addEventListener('click', (e) => {
@@ -1839,7 +1914,11 @@ export function initIntroOverlay(player) {
     dismiss(false);
   });
 
-  window.addEventListener('keydown', onIntroKeydown);
+  if (finePointer && bgImg) {
+    overlay.addEventListener('pointermove', onPointerMove, { passive: true });
+    overlay.addEventListener('pointerleave', onPointerLeave, { passive: true });
+  }
+  window.addEventListener('keydown', onIntroKeydown, true);
 }
 
 /* =========================================
@@ -3675,10 +3754,12 @@ export function initModalScrollLock() {
     'cmdk-modal'
   ];
   const modalEls = modalIds.map((id) => document.getElementById(id)).filter(Boolean);
+  const introEl = document.getElementById('intro-overlay');
   let isLocked = false;
 
   function syncModalScrollLock() {
-    let anyOpen = document.body.classList.contains('galaxy-active');
+    let anyOpen = document.body.classList.contains('galaxy-active') ||
+      Boolean(introEl && !introEl.classList.contains('is-hidden') && introEl.style.display !== 'none');
     if (!anyOpen) {
       for (let i = 0; i < modalEls.length; i++) {
         if (modalEls[i].classList.contains('is-open')) {
@@ -3705,6 +3786,7 @@ export function initModalScrollLock() {
     const mo = new MutationObserver(syncModalScrollLock);
     mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
     modalEls.forEach((el) => mo.observe(el, { attributes: true, attributeFilter: ['class'] }));
+    if (introEl) mo.observe(introEl, { attributes: true, attributeFilter: ['class', 'style'] });
   }
   syncModalScrollLock();
 }
